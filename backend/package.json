@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "coverage": "jest --coverage"
   },
   "author": "SE2 2023 Group 15",
   "license": "ISC",
