@@ -17,7 +17,7 @@ function HomePage() {
             .catch(error => {
                 console.error("error in fetch login: " + error);
             });
-    }
+    };
 
     useEffect(() => {
         fetchLogin();
