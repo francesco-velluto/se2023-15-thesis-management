@@ -1,0 +1,7 @@
+{
+    "API_URL": "http://localhost:8080/api",
+    "API_REQUEST_HEADERS": {
+        "Content-Type": "application/json",
+        "Accept": "application/json"
+    }
+}
