@@ -6,7 +6,13 @@ From this folder, run the following commands:
 npm install
 npm start
 ```
-This will install all the dependencies and start the server on port 8000.
+This will install all the dependencies and start the server on port 8080.
+
+### Configuration
+
+A configuration file is present in `src/config.json`. 
+Currently it contains the following configuration options:
+- `BACKEND_SERVER_PORT`: Port on which the backend server will run
 
 ### Starting the server in development mode
 ```bash
