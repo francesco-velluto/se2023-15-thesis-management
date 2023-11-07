@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - BACKEND_SERVER_PORT=${BACKEND_SERVER_PORT}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    networks:
+      - mynetwork
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      - FRONTEND_PORT=${FRONTEND_PORT}
+    ports:
+      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+    networks:
+      - mynetwork
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB='Thesis-Management-System'
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./database/Thesis-Management-System-initDocker.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - mynetwork
+    ports:
+      - "5432:5432"
+
+networks:
+  mynetwork:
+    driver: bridge
