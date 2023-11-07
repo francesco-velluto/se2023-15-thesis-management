@@ -133,28 +133,6 @@ CREATE TABLE public.career (
 
 ALTER TABLE public.career OWNER TO postgres;
 
-
---
--- Name: Users; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.users (
-    user_id VARCHAR(10) PRIMARY KEY,
-    email VARCHAR(100) NOT NULL,
-    password VARCHAR(100) NOT NULL,
-    role VARCHAR(30) NOT NULL
-);
-
-ALTER TABLE public.users OWNER TO postgres;
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_fk_student FOREIGN KEY (user_id) REFERENCES public.student(student_id);
-
-ALTER TABLE ONLY public.users
-    ADD CONSTRAINT users_fk_teacher FOREIGN KEY (user_id) REFERENCES public.teacher(teacher_id);
-
-
-
 --
 -- Name: in; Type: TABLE; Schema: public; Owner: postgres
 --
