@@ -3,7 +3,7 @@
 const express = require('express');
 const app = express();
 
-const config = require('./config.json');
+require('dotenv').config()
 
 const cors = require('cors');
 
@@ -21,6 +21,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', api);
 
-app.listen(config.BACKEND_SERVER_PORT, () => {
-    console.info('[BACKEND-SERVER] Server successfully started on port ' + config.BACKEND_SERVER_PORT);
+app.listen(process.env.BACKEND_SERVER_PORT, () => {
+    console.info('[BACKEND-SERVER] Server successfully started on port ' + process.env.BACKEND_SERVER_PORT);
 });
