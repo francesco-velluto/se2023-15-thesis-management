@@ -7,10 +7,13 @@ require('dotenv').config()
 
 const cors = require('cors');
 
+const db = require("./service/db");
+
 const api = require('./routes/api');
+const port = process.env.FRONTEND_PORT;
 
 const corsOptions = {
-    origin: ['http://localhost:3000'],
+    origin: [`http://localhost:${port}`],
     credentials: true
 }
 
@@ -24,3 +27,5 @@ app.use('/api', api);
 app.listen(process.env.BACKEND_SERVER_PORT, () => {
     console.info('[BACKEND-SERVER] Server successfully started on port ' + process.env.BACKEND_SERVER_PORT);
 });
+
+// TODO : testing db connection
