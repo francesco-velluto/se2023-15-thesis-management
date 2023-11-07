@@ -1,13 +1,5 @@
 # Thesis Management System Backend Server
 
-## .env file 
-```
-BACKEND_SERVER_PORT=
-FRONTEND_PORT=
-DB_PASSORWORD=
-DB_USER=
-```
-
 ## Installation and Booting
 From this folder, run the following commands:
 ```bash
@@ -44,46 +36,6 @@ To generate the code coverage report, run the following command:
 npm run coverage
 ```
 This will generate a code coverage report in the `coverage` folder.
-
-## Using Docker 
-
-### Docker-compose
-Make sure you have [Docker compose](https://docs.docker.com/compose/install/) installed.
-
-
-
-### Backend 
-To start only the backend :
-```
-cd backend 
-docker build . -t backend-image
-docker run -d --env-file .env --name backend -p 127.0.0.1:<BACKEND_SERVER_PORT>:<BACKEND_SERVER_PORT> backend-image
-```
-Replace <BACKEND_SERVER_PORT> by the value in `.env` . 
-
-
-To check that everything is working : 
-```
-docker logs backend 
-```
-
-NOTE :
-If you need to run again the container dont forget to first stop and remove the previous "backend" container.
-```
-docker stop backend 
-docker rm backend 
-```
-To list all containers :
-```
-docker ps -a
-```
-To list all images :
-```
-docker image ls 
-```
-
-### Frontend 
-
 
 ## API Documentation
 _TODO:_ Please note that the following documentation is just an example, change if needed.

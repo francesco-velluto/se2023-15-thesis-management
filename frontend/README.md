@@ -1,5 +1,41 @@
 # Thesis Management System Frontend Server
 
+## Create a .env file with these informations
+
+```
+BACKEND_SERVER_PORT=
+FRONTEND_PORT=
+DB_PASSWORD=
+DB_USER=
+```
+
+## Starting using docker
+Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed.
+
+Modify the file `./backend/service/db.js`, replace 
+``` 
+ host: 'localhost',
+```
+by
+```
+ host: 'db',
+```
+Run the command 
+``` 
+docker compose up -d
+```
+Here you are ! :) 
+
+NOTE :
+To list all containers :
+```
+docker ps -a
+```
+To list all images :
+```
+docker image ls 
+```
+
 ## Installation and Booting
 From this folder, run the following commands:
 ```bash
