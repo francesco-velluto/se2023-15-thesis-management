@@ -7,7 +7,7 @@ const db = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
     database: 'Thesis-Management-System',
-    password: process.env.DB_PASSORWORD,
+    password: process.env.DB_PASSWORD,
     port: 5432,
 });
 
