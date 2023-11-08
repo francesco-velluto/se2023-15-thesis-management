@@ -1,0 +1,7 @@
+## Get all teachers
+GET http://localhost:8080/api/teachers HTTP/1.1
+###
+
+## Get all degrees
+GET http://localhost:8080/api/degrees HTTP/1.1
+###

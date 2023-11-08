@@ -1,6 +1,6 @@
 "use strict";
 
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 
 /**
@@ -8,8 +8,10 @@ const router = express.Router();
  * Here are imported all the routes of the APIs based on the resource
  */
 
-const authentication = require('./authentication');
-const proposals = require('./proposals');
+const authentication = require("./authentication");
+const proposals = require("./proposals");
+const { getTeachers } = require("../controllers/teachers");
+const { getDegrees } = require("../controllers/degrees");
 
 /**
  * Authentication routes
@@ -18,7 +20,7 @@ const proposals = require('./proposals');
  *
  * Route /api/authentication
  */
-router.use('/authentication', authentication);
+router.use("/authentication", authentication);
 
 /**
  * Proposals routes
@@ -27,6 +29,11 @@ router.use('/authentication', authentication);
  *
  * Route /api/proposals
  */
-router.use('/proposals', proposals);
+router.use("/proposals", proposals);
+
+// TO-DO: maybe move them to another file ??
+router.get("/teachers", getTeachers);
+
+router.get("/degrees", getDegrees);
 
 module.exports = router;
