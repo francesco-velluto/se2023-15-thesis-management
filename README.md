@@ -2,7 +2,7 @@
 
 The Thesis Management System is a web application that allows students to submit their thesis proposals and faculty to review and approve them.
 
-## Create a .env file with these informations
+## Create a .env file with these informations in the backend folder
 
 ```
 BACKEND_SERVER_PORT=
