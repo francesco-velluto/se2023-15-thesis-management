@@ -9,9 +9,12 @@ services:
       - db
     environment:
       - BACKEND_SERVER_PORT=${BACKEND_SERVER_PORT}
+      - FRONTEND_PORT=${FRONTEND_PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
+    ports:
+      - "${BACKEND_SERVER_PORT}:${BACKEND_SERVER_PORT}"
     networks:
       - mynetwork
 
