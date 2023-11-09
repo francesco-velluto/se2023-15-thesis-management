@@ -5,3 +5,23 @@ GET http://localhost:8080/api/teachers HTTP/1.1
 ## Get all degrees
 GET http://localhost:8080/api/degrees HTTP/1.1
 ###
+
+## Insert new proposal
+POST http://localhost:8080/api/proposals HTTP/1.1
+content-type: application/json
+
+{
+    "thesis_id": "T101",
+    "title": "This is a new inserted thesis (number 2)",
+    "supervisor_id": "T002",
+    "keywords": ["keyword1", "keyword2"],
+    "type": "Master",
+    "groups": ["Group A", "Group B"],
+    "description": "A master thesis just to test the insert API call",
+    "required_knowledge": "Node.js, PostgreSQL, React.js",
+    "notes": "These are the notes...",
+    "expiration_date": "2024-06-30",
+    "level": "Undergraduate",
+    "cds_programmes": ["CD008"] 
+}
+###

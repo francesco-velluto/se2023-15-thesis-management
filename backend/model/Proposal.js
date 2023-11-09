@@ -3,7 +3,7 @@
 /**
  * Thesis model
  */
-module.exports = function Thesis(
+module.exports = function Proposal(
   thesis_id = '',
   title = '',
   supervisor_id = '',

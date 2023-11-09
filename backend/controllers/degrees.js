@@ -4,6 +4,7 @@ const { getDegrees } = require("../service/degrees.service");
 
 module.exports = {
   getDegrees: async (req, res) => {
+    // TO-DO: check auth
     try {
       const degrees = await getDegrees();
       res.status(200).json({ degrees });

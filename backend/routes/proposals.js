@@ -25,5 +25,8 @@ const proposalsController = require('../controllers/proposals');
  */
 router.get('/', proposalsController.getAllProposals);
 
+
+router.post("/", proposalsController.insertProposal);
+
 module.exports = router;
 
