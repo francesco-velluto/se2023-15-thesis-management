@@ -2,7 +2,7 @@
 
 The Thesis Management System is a web application that allows students to submit their thesis proposals and faculty to review and approve them.
 
-## Create a .env file with these informations in the backend folder
+## Create a .env file with these informations in the root directory
 
 ```
 BACKEND_SERVER_PORT=
@@ -15,13 +15,9 @@ DB_HOST=
 ## Starting using docker
 Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
-Modify the file `./backend/service/db.js`, replace 
+Modify `.env` file :
 ``` 
- host: 'localhost',
-```
-by
-```
- host: 'db',
+DB_HOST=db
 ```
 Run the command 
 ``` 
