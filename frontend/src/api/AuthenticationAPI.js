@@ -21,10 +21,20 @@ module.exports = {
      * @error: 500 Internal Server Error - if something went wrong
      */
     login: async (username, password) => {
-        return fetch(AuthenticationAPIURL + '/login', {
+        fetch(AuthenticationAPIURL + '/login', {
             method: 'POST',
             headers: APIConfig.API_REQUEST_HEADERS,
             body: JSON.stringify({ username, password })
+        }).then(async response => {
+            let data = await response.json();
+
+            if (response.ok) {
+                console.log("dati restituiti: " + data);
+            } else {
+                console.error("errore: " + data.error);
+            }
+        }).catch(error => {
+            console.error("error in fetch login: " + error);
         });
     }
 }
