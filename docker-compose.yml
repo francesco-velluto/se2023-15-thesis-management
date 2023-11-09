@@ -6,7 +6,8 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       - BACKEND_SERVER_PORT=${BACKEND_SERVER_PORT}
       - DB_USER=${DB_USER}
@@ -38,6 +39,11 @@ services:
       - mynetwork
     ports:
       - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 networks:
   mynetwork:
