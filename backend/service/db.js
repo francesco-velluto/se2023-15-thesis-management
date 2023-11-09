@@ -1,6 +1,6 @@
 "use strict";
 
-require('dotenv').config()
+require('dotenv').config({path:'../.env'})
 const { Client } = require('pg');
 
 const db = new Client({
