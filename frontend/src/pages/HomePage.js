@@ -1,7 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import AuthenticationAPI from "../api/AuthenticationAPI";
 import {useEffect} from "react";
 
 function HomePage() {
+
+    const navigate = useNavigate();
+
     // TODO - this is an example of usage of the API using then/catch instead of async/await, remove it when you start working on the project
     const fetchLogin = () => {
         AuthenticationAPI.login('admin', 'admin')
@@ -21,7 +25,12 @@ function HomePage() {
 
     useEffect(() => {
         fetchLogin();
-    });
+    }, []);
+
+    useEffect(() => {
+        //TODO: If user logged in, go to proposals list, otherwise go to login page
+        navigate("/proposals");
+    }, []);
 
     return (
         <div>
