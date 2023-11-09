@@ -15,13 +15,9 @@ DB_HOST=
 ## Starting using docker
 Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
-Modify the file `./backend/service/db.js`, replace 
+Modify `.env` file :
 ``` 
- host: 'localhost',
-```
-by
-```
- host: 'db',
+DB_HOST=db
 ```
 Run the command 
 ``` 
