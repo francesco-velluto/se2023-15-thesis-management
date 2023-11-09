@@ -1,10 +1,10 @@
 'use strict';
 
 /**
- * Thesis model
+ * Proposal model
  */
-module.exports = function Thesis(
-  thesis_id = '',
+module.exports = function Proposal(
+  proposal_id = '',
   title = '',
   supervisor_id = '',
   keywords = [],
@@ -17,7 +17,7 @@ module.exports = function Thesis(
   level = '',
   cds_programmes = []
 ) {
-  this.thesis_id = thesis_id;
+  this.proposal_id = proposal_id;
   this.title = title;
   this.supervisor_id = supervisor_id;
   this.keywords = keywords;
