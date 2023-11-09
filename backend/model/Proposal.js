@@ -4,11 +4,7 @@
  * Proposal model
  */
 module.exports = function Proposal(
-<<<<<<< HEAD
-  thesis_id = '',
-=======
   proposal_id = '',
->>>>>>> origin/main
   title = '',
   supervisor_id = '',
   keywords = [],

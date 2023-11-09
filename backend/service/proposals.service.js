@@ -5,7 +5,7 @@ const Proposal = require("../model/Proposal");
 
 const rowToProposal = (row) => {
   return new Proposal(
-    row.thesis_id,
+    row.proposal_id,
     row.title,
     row.supervisor_id,
     row.keywords,
@@ -30,14 +30,14 @@ exports.getAllProposals = async () => {
 exports.insertProposal = async (proposal) => {
   try {
     const result = await db.query(
-      `INSERT INTO thesis 
-        (thesis_id, title, supervisor_id, keywords, type,
+      `INSERT INTO proposals 
+        (proposal_id, title, supervisor_id, keywords, type,
         groups, description, required_knowledge, notes,
         expiration_date, level, cds_programmes)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         RETURNING *;`,
       [
-        proposal.thesis_id, // TO-DO: generate a new thesis ID
+        proposal.proposal_id,
         proposal.title,
         proposal.supervisor_id,
         proposal.keywords,
@@ -52,6 +52,18 @@ exports.insertProposal = async (proposal) => {
       ]
     );
     return rowToProposal(result.rows[0]);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+exports.getMaxProposalIdNumber = async () => {
+  try {
+    const result = await db.query(`SELECT MAX(proposal_id) FROM proposals;`);
+    const max = result.rows[0].max;
+    if (max == null) return 0;
+    else return Number(max.slice(1));
   } catch (err) {
     console.log(err);
     throw err;
