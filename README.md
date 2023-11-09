@@ -9,6 +9,7 @@ BACKEND_SERVER_PORT=
 FRONTEND_PORT=
 DB_PASSWORD=
 DB_USER=
+DB_HOST=
 ```
 
 ## Starting using docker
