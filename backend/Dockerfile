@@ -10,6 +10,4 @@ COPY . .
 
 EXPOSE ${BACKEND_SERVER_PORT}
 
-ARG FRONTEND_PORT
-
 CMD ["node", "index.js"]
