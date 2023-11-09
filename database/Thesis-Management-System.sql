@@ -244,11 +244,11 @@ ALTER TABLE ONLY public.passed
     ADD CONSTRAINT passed_fk_career FOREIGN KEY (career_id) REFERENCES public.career(id);
 
 --
--- Name: Thesis; Type: TABLE; Schema: public; Owner: postgres
+-- Name: Proposals; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE public.thesis (
-    thesis_id VARCHAR(10) PRIMARY KEY,
+CREATE TABLE public.proposals (
+    proposal_id VARCHAR(10) PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     supervisor_id VARCHAR(10),
     keywords TEXT[],
@@ -262,23 +262,23 @@ CREATE TABLE public.thesis (
     cds_programmes TEXT[]
 );
 
-INSERT INTO public.thesis (thesis_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, cds_programmes) VALUES
-  ('T001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Bachelor', ARRAY['Group A'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Undergraduate', ARRAY['CD001']),
-  ('T002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Master', ARRAY['Group B'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Graduate', ARRAY['CD002']),
-  ('T003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Master', ARRAY['Group A'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Graduate', ARRAY['CD003']),
-  ('T004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Analysis'], 'Master', ARRAY['Group B'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Graduate', ARRAY['CD004']),
-  ('T005', 'Marketing Strategies', 'T005', ARRAY['Marketing', 'Strategies'], 'Bachelor', ARRAY['Group C'], 'A marketing strategies thesis description.', 'Marketing fundamentals', 'N/A', '2023-10-20', 'Undergraduate', ARRAY['CD005']),
-  ('T006', 'Robotics and Automation', 'T006', ARRAY['Robotics', 'Automation'], 'Master', ARRAY['Group A'], 'A robotics and automation thesis description.', 'Robotics knowledge', 'N/A', '2024-02-28', 'Graduate', ARRAY['CD006']),
-  ('T007', 'Climate Change Impact', 'T007', ARRAY['Climate Change', 'Impact'], 'Master', ARRAY['Group B'], 'A thesis on climate change impact analysis.', 'Environmental Science knowledge', 'N/A', '2024-03-15', 'Graduate', ARRAY['CD007']),
-  ('T008', 'Literary Analysis', 'T008', ARRAY['Literature', 'Analysis'], 'Bachelor', ARRAY['Group D'], 'A literary analysis thesis description.', 'Literary analysis skills', 'N/A', '2023-11-10', 'Undergraduate', ARRAY['CD008']),
-  ('T009', 'Financial Risk Management', 'T009', ARRAY['Financial', 'Risk Management'], 'Master', ARRAY['Group C'], 'A thesis on financial risk management.', 'Finance knowledge', 'N/A', '2024-04-10', 'Graduate', ARRAY['CD009']),
-  ('T010', 'Introduction to Machine Learning', 'T010', ARRAY['Machine Learning', 'AI'], 'Bachelor', ARRAY['Group A'], 'An introductory thesis on machine learning.', 'Basic AI knowledge', 'N/A', '2023-09-30', 'Undergraduate', ARRAY['CD001']);
+INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, cds_programmes) VALUES
+  ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Bachelor', ARRAY['Group A'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Undergraduate', ARRAY['CD001']),
+  ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Master', ARRAY['Group B'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Graduate', ARRAY['CD002']),
+  ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Master', ARRAY['Group A'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Graduate', ARRAY['CD003']),
+  ('P004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Analysis'], 'Master', ARRAY['Group B'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Graduate', ARRAY['CD004']),
+  ('P005', 'Marketing Strategies', 'T005', ARRAY['Marketing', 'Strategies'], 'Bachelor', ARRAY['Group C'], 'A marketing strategies thesis description.', 'Marketing fundamentals', 'N/A', '2023-10-20', 'Undergraduate', ARRAY['CD005']),
+  ('P006', 'Robotics and Automation', 'T006', ARRAY['Robotics', 'Automation'], 'Master', ARRAY['Group A'], 'A robotics and automation thesis description.', 'Robotics knowledge', 'N/A', '2024-02-28', 'Graduate', ARRAY['CD006']),
+  ('P007', 'Climate Change Impact', 'T007', ARRAY['Climate Change', 'Impact'], 'Master', ARRAY['Group B'], 'A thesis on climate change impact analysis.', 'Environmental Science knowledge', 'N/A', '2024-03-15', 'Graduate', ARRAY['CD007']),
+  ('P008', 'Literary Analysis', 'T008', ARRAY['Literature', 'Analysis'], 'Bachelor', ARRAY['Group D'], 'A literary analysis thesis description.', 'Literary analysis skills', 'N/A', '2023-11-10', 'Undergraduate', ARRAY['CD008']),
+  ('P009', 'Financial Risk Management', 'T009', ARRAY['Financial', 'Risk Management'], 'Master', ARRAY['Group C'], 'A thesis on financial risk management.', 'Finance knowledge', 'N/A', '2024-04-10', 'Graduate', ARRAY['CD009']),
+  ('P010', 'Introduction to Machine Learning', 'T010', ARRAY['Machine Learning', 'AI'], 'Bachelor', ARRAY['Group A'], 'An introductory thesis on machine learning.', 'Basic AI knowledge', 'N/A', '2023-09-30', 'Undergraduate', ARRAY['CD001']);
 
 
-ALTER TABLE public.thesis OWNER TO postgres;
+ALTER TABLE public.proposals OWNER TO postgres;
 
-ALTER TABLE ONLY public.thesis
-    ADD CONSTRAINT thesis_fk_teacher FOREIGN KEY (supervisor_id) REFERENCES public.teacher(teacher_id);
+ALTER TABLE ONLY public.proposals
+    ADD CONSTRAINT proposals_fk_teacher FOREIGN KEY (supervisor_id) REFERENCES public.teacher(teacher_id);
 
 --
 -- Name: Applications; Type: TABLE; Schema: public; Owner: postgres
@@ -286,23 +286,23 @@ ALTER TABLE ONLY public.thesis
 
 CREATE TABLE public.applications (
     application_id SERIAL PRIMARY KEY,
-    thesis_id VARCHAR(10) NOT NULL,
+    proposal_id VARCHAR(10) NOT NULL,
     student_id VARCHAR(10) NOT NULL,
     status VARCHAR(255) NOT NULL, 
     application_date DATE
 );
 
-INSERT INTO public.applications (thesis_id, student_id, status, application_date) VALUES
-  ('T001', 'S001', 'Pending', '2023-11-01'),
-  ('T002', 'S002', 'Accepted', '2023-10-15'),
-  ('T003', 'S003', 'Pending', '2023-11-05'),
-  ('T004', 'S004', 'Accepted', '2023-10-25'),
-  ('T005', 'S005', 'Pending', '2023-11-08'),
-  ('T006', 'S006', 'Accepted', '2023-10-12'),
-  ('T007', 'S007', 'Pending', '2023-11-15'),
-  ('T008', 'S008', 'Accepted', '2023-10-10'),
-  ('T009', 'S009', 'Pending', '2023-11-18'),
-  ('T010', 'S010', 'Accepted', '2023-10-05');
+INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
+  ('P001', 'S001', 'Pending', '2023-11-01'),
+  ('P002', 'S002', 'Accepted', '2023-10-15'),
+  ('P003', 'S003', 'Pending', '2023-11-05'),
+  ('P004', 'S004', 'Accepted', '2023-10-25'),
+  ('P005', 'S005', 'Pending', '2023-11-08'),
+  ('P006', 'S006', 'Accepted', '2023-10-12'),
+  ('P007', 'S007', 'Pending', '2023-11-15'),
+  ('P008', 'S008', 'Accepted', '2023-10-10'),
+  ('P009', 'S009', 'Pending', '2023-11-18'),
+  ('P010', 'S010', 'Accepted', '2023-10-05');
 
 ALTER TABLE public.applications OWNER TO postgres;
 
@@ -310,7 +310,7 @@ ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_fk_student FOREIGN KEY (student_id) REFERENCES public.student(student_id);
 
 ALTER TABLE ONLY public.applications
-    ADD CONSTRAINT applications_fk_thesis FOREIGN KEY (thesis_id) REFERENCES public.thesis(thesis_id);
+    ADD CONSTRAINT applications_fk_proposals FOREIGN KEY (proposal_id) REFERENCES public.proposals(proposal_id);
 
 
 --
