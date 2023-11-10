@@ -24,11 +24,10 @@ function Main() {
 
     useEffect(() => {
         fetchCurrentUser()                        // reload current session, it gets the user information from the server
-            .then(user => { 
-                console.log("fetching");
+            .then(user => {
                 setLoggedUser(user);
             })
-            .catch(err => console.log(err));
+            .catch(err => { });
     }, []);
     return (
         <Routes>

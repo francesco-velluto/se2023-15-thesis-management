@@ -35,8 +35,6 @@ export const LoggedUserProvider = ({ children }) => {
         try {
             logout();
         } catch (err) {
-            console.log("errore logout");
-            console.log(err);
             setErrors(err);
         }
         setLoggedUser(null);        // delete the state for the logged user

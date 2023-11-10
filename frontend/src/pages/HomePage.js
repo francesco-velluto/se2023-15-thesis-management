@@ -7,8 +7,6 @@ import { Link } from "react-router-dom";
 function HomePage() {
     const { loggedUser, handleLogout } = useContext(LoggedUserContext);
 
-    console.log(loggedUser);
-
     return (
         <Container className="home-page">
             <Row>

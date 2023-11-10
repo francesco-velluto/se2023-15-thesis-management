@@ -30,13 +30,6 @@ authentication.inializeAuthentication(app);     // it should be set before the r
 
 app.use('/api', api);
 
-
-// TODO: testing the authentication service
-//const { authUser } = require('./service/authentication');
-//authUser("david.lee@example.com", "S003");
-//authUser("chen.li@example.com", "T004");
-
-
 app.listen(process.env.BACKEND_SERVER_PORT, () => {
     console.info('[BACKEND-SERVER] Server successfully started on port ' + process.env.BACKEND_SERVER_PORT);
 });
