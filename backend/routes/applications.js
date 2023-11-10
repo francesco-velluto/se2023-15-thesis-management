@@ -15,7 +15,7 @@ const applicationsController = require('../controllers/applications');
  *
  * @params student_id
  * @body none
- * @returns
+ * @returns { [ { thesis_id: number, title: string, description: string, application_date: date, status: string } ] }
  * @error 401 Unauthorized - if the user is not authenticated or student_id is not the same as the authenticated user
  * @error 404 Not Found - if the student_id is not found
  * @error 500 Internal Server Error - if something went wrong
