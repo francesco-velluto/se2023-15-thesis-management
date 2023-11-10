@@ -4,31 +4,34 @@ const passport = require('passport');
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 
-const { validationResult, body } = require('express-validator');
+const { validationResult } = require('express-validator');
 const { authUser, getUserById } = require('../service/authentication');
+const CryptoJS = require('crypto-js');
 
 
 module.exports = {
     /**
-     * Login a user
-     *
-     * @params: none
-     * @body: { username: string, password: string }
-     * @returns: { token: string }
-     * @error: 400 Bad Request - if username or password are not present
-     * @error: 401 Unauthorized - if username or password are not valid
-     * @error: 500 Internal Server Error - if something went wrong
-     */
+    * Authenticate a user and issue a session token upon successful login.
+    *
+    * @function
+    * @name login
+    * @memberof module:authenticationController
+    * @param {Object} req - Express request object
+    * @param {Object} res - Express response object
+    * @param {function} next - Express next middleware function
+    * @returns {JSON} - User information or errors
+    * @throws {JSON} - 400 Bad Request if username or password are not present,
+    *                  401 Unauthorized if username or password are not valid,
+    *                  500 Internal Server Error if something went wrong
+    */
     login: (req, res, next) => {
-        //const { username, password } = req.body;
-
         // Check if validation is ok
-        /*const err = validationResult(req);
+        const err = validationResult(req);
         const errList = [];
         if (!err.isEmpty()) {
             errList.push(...err.errors.map(e => e.msg));
             return res.status(400).json({ errors: errList });
-        }*/
+        }
 
         // Perform the actual authentication
         passport.authenticate("local", (err, user, info) => {
@@ -53,13 +56,20 @@ module.exports = {
     },
 
     /**
-     * Fetch the current user
-     * @param {*} req 
-     * @param {*} res 
-     */
+      * Fetch information about the currently authenticated user.
+      *
+      * @async
+      * @function
+      * @name currentUser
+      * @memberof module:authenticationController
+      * @param {Object} req - Express request object
+      * @param {Object} res - Express response object
+      * @returns {JSON} - Current user information
+      * @throws {JSON} - 500 Internal Server Error if a database error occurs
+      */
     currentUser: async (req, res) => {
         try {
-            const user = await getUserById(req.user.student_id);
+            const user = await getUserById(req?.user?.id);
             return res.json(user);
         } catch (err) {
             res.status(500).json({ errors: ["Database error"] });
@@ -67,30 +77,38 @@ module.exports = {
     },
 
     /**
-     * Logout
+     * Fetch information about the currently authenticated user.
+     *
+     * @async
+     * @function
+     * @name currentUser
+     * @memberof module:authenticationController
+     * @param {Object} req - Express request object
+     * @param {Object} res - Express response object
+     * @returns {JSON} - Current user information
+     * @throws {JSON} - 500 Internal Server Error if a database error occurs
      */
     logout: (req, res) => {
         req.logout(() => res.end());
     },
 
     /**
-     * Helper function to initialize passport authentication with the LocalStrategy
-     * 
-     * @param app express app
+     * Initialize passport authentication with the LocalStrategy.
+     *
+     * @function
+     * @name inializeAuthentication
+     * @memberof module:authenticationController
+     * @param {Object} app - Express app object
+     * @returns {undefined}
      */
     inializeAuthentication: (app) => {
         passport.use(new LocalStrategy((username, password, done) => {
-            console.log("email: " + username);
-            console.log("password: " + password);
-
             authUser(username, password)
                 .then(user => {
                     if (user) {
-                        console.log("successful");
                         done(null, user);
                     }
                     else {
-                        console.log("error");
                         done({ status: 401, msg: 'Incorrect email and/or password!' }, false);
                     }
                 })
@@ -101,22 +119,30 @@ module.exports = {
 
         // Serialization and deserialization of the user to and from a cookie
         passport.serializeUser((user, done) => {
-            console.log("serializzazione: " + user);
-
-            done(null, user.student_id);
-        })
+            done(null, user.id);
+        });
 
         passport.deserializeUser((id, done) => {
-            console.log("deserializzazione: " + id);
-
             getUserById(id)
                 .then(user => done(null, user))
                 .catch(e => done(e, null));
-        })
+        });
+
+        function generateHash(length) {
+            const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let input = '';
+        
+            for (let i = 0; i < length; i++) {
+                const randomIndex = Math.floor(Math.random() * characters.length);
+                input += characters.charAt(randomIndex);
+            }
+        
+            return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
+        }
 
         // Initialize express-session
         app.use(session({
-            secret: "326e60a6eb6f34186ae167a0dea7ee1dfa4109314e8c73610671de01f9662191",
+            secret: generateHash(32),
             resave: false,
             saveUninitialized: false,
         }));
@@ -128,11 +154,19 @@ module.exports = {
 
     /**
      * Express middleware to check if the user is authenticated.
-     * Responds with a 401 Unauthorized in case they're not.
+     * Responds with a 401 Unauthorized if they're not.
+     *
+     * @function
+     * @name isLoggedIn
+     * @memberof module:authenticationController
+     * @param {Object} req - Express request object
+     * @param {Object} res - Express response object
+     * @param {function} next - Express next middleware function
+     * @returns {undefined}
      */
-    /*isLoggedIn: (req, res, next) => {
+    isLoggedIn: (req, res, next) => {
         if (req.isAuthenticated()) return next();
         return res.status(401).json({ errors: ['Must be authenticated to make this request!'] });
-    }*/
+    }
 
 }

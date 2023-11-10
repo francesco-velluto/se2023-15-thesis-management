@@ -17,12 +17,14 @@ function HomePage() {
                     <>
                         <h2>Hi {loggedUser.name + " " + loggedUser.surname} </h2>
                         <ul style={{ marginLeft: '20px', fontSize: '20px' }}>
-                            <li>student id: {loggedUser.student_id} </li>
-                            <li>gender: {loggedUser.gender} </li>
+                            <li>id: {loggedUser.id} </li>
                             <li>email: {loggedUser.email} </li>
-                            <li>nationality: {loggedUser.nationality} </li>
-                            <li>cod degree: {loggedUser.cod_degree} </li>
-                            <li>enrollment year: {loggedUser.enrollment_year} </li>
+                            {loggedUser.cod_group && <li>gender: {loggedUser.cod_group} </li>}
+                            {loggedUser.cod_department && <li>gender: {loggedUser.cod_department} </li>}
+                            {loggedUser.gender && <li>gender: {loggedUser.gender} </li>}
+                            {loggedUser.nationality && <li>nationality: {loggedUser.nationality} </li>}
+                            {loggedUser.cod_degree && <li>cod degree: {loggedUser.cod_degree} </li>}
+                            {loggedUser.enrollment_year && <li>enrollment year: {loggedUser.enrollment_year} </li>}
                         </ul>
                         <Button onClick={handleLogout}>Logout</Button>
                     </>

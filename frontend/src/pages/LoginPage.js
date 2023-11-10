@@ -1,29 +1,34 @@
 import { useContext, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { LoggedUserContext } from "../api/Context";
 
 function LoginPage() {
-    const [username, setUsername] = useState('david.lee@example.com');
-    const [password, setPassword] = useState('S003');
+    const [username, setUsername] = useState('david.lee@example.com');          //  useState('michael.wilson@example.com');
+    const [password, setPassword] = useState('S003');                           //  useState('T002');
+    const [disableButtonSubmit, setDisableButtonSubmit] = useState(true);
 
-    const { handleLogin } = useContext(LoggedUserContext);    // context for logged user  
+    const { handleLogin, errors, setErrors } = useContext(LoggedUserContext);    // context for logged user  
+
+    const regexEmail = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+    const regexPassword = /^[a-zA-Z\d]{4,}$/;
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();
-
-        try {
-            handleLogin(username, password);
-            console.log("login effettuato con successo");
-        } catch (err) {
-            console.log("errore");
-            console.log(err);
-        }
-
+        handleLogin(username, password);
     }
 
     return (
         <Container fluid className="login-page">
             <Col xs={12} md={6} lg={4} className="login-section">
+                {errors?.map((error, index) => (
+                    <Alert variant='danger'
+                        dismissible={true}
+                        onClose={() => setErrors(undefined)}
+                        sx={{ marginBottom: '1.5rem' }}
+                        key={index}>
+                        {error}
+                    </Alert>
+                ))}
                 <Form>
                     <Row>
                         <h2 className="my-4 text-center"><strong>Sign In</strong></h2>
@@ -36,9 +41,14 @@ function LoginPage() {
                                 placeholder="Enter your email"
                                 style={{ background: '#f0f0f0' }}
                                 value={username}
-                                onChange={e => (
-                                    setUsername(e.target.value)
-                                )}
+                                onChange={e => {
+                                    setUsername(e.target.value);
+                                    setDisableButtonSubmit(true);
+                                    if (e.target.value !== '' && regexEmail.test(e.target.value) && regexPassword.test(password)) {
+                                        setDisableButtonSubmit(false);
+                                    }
+                                }}
+                                required
                             />
                         </Form.Group>
                     </Row>
@@ -49,15 +59,20 @@ function LoginPage() {
                                 placeholder="Enter your password"
                                 style={{ background: '#f0f0f0' }}
                                 value={password}
-                                onChange={e => (
-                                    setPassword(e.target.value)
-                                )}
+                                onChange={e => {
+                                    setPassword(e.target.value);
+                                    setDisableButtonSubmit(true);
+                                    if (e.target.value !== '' && regexPassword.test(e.target.value) && regexEmail.test(username)) {
+                                        setDisableButtonSubmit(false);
+                                    }
+                                }}
+                                required
                             />
                         </Form.Group>
                     </Row>
                     <Row className="mt-4 d-flex justify-content-center">
                         <Col xs={6}>
-                            <Button variant="primary" type="submit" className="w-100" onClick={handleSubmitLogin}>
+                            <Button variant="primary" type="submit" className="w-100" disabled={disableButtonSubmit} onClick={handleSubmitLogin}>
                                 Login
                             </Button>
                         </Col>
