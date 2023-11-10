@@ -5,6 +5,14 @@ const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const proposalsController = require("../controllers/proposals");
 
+/* const isProfessor = (req, res, next) => {
+  if (!req.authenticated())
+    return res.status(401).json({ error: "Not authenticated" });
+  if (req.user.role !== "professor")
+    return res.status(401).json({ error: "Not authorized" });
+  next();
+} */
+
 // This function is used to format express-validator errors as strings
 const errorFormatter = ({ location, msg, path, value, nestedErrors }) => {
   return `${location}[${path}]: ${msg}`;
@@ -46,11 +54,12 @@ router.get("/", proposalsController.getAllProposals);
 
 router.post(
   "/",
+  // isProfessor,
   check("title").isString().notEmpty(),
   check("supervisor_id").isString().notEmpty(),
   check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings), // can the keywords array be empty ??
   check("type").isString().notEmpty(),
-  check("groups").isArray({ min: 1 }).custom(isArrayOfStrings), // can the groups array be empty ??
+  check("groups").optional().isArray({ min: 0 }).custom(isArrayOfStrings),
   check("description").isString(), // or .optional().isString() if it can be empty
   check("required_knowledge").isString().notEmpty(),
   check("notes").optional().isString(),

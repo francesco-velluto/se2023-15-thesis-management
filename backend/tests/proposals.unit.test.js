@@ -10,13 +10,21 @@ const app = require("../app");
 jest.mock("../service/proposals.service");
 
 beforeAll(() => {
-    jest.clearAllMocks();
+  jest.clearAllMocks();
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'info').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 
 beforeEach(() => {
-    jest.clearAllMocks();
-})
+  //jest.clearAllMocks();
+    getMaxProposalIdNumber.mockClear();
+    insertProposal.mockClear();
+});
 
+afterAll(() => {
+    jest.restoreAllMocks();
+})
 
 /* describe.skip("T1 - Get all proposals Unit Tests", () => {
   test("ERROR 401 | Unauthorized", () => {
@@ -91,7 +99,7 @@ describe("T2 - Insert proposals unit tests", () => {
     expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" });
   });
 
-  test.only("T2.2 - SUCCESS | New proposal inserted", async () => {
+  test("T2.2 - SUCCESS 201 | New proposal inserted", async () => {
     const mockProposalReq = {
       title: "Test title",
       supervisor_id: "T002",
@@ -126,7 +134,7 @@ describe("T2 - Insert proposals unit tests", () => {
     expect(res.json).toHaveBeenCalledWith({ proposal: mockProposalRes });
   });
 
-  test.only("T2.2 - ERROR 422 | Empty title field", (done) => {
+  test("T2.2 - ERROR 422 | Empty title field", (done) => {
     const mockProposalReq = {
       title: "",
       supervisor_id: "T002",
@@ -142,15 +150,228 @@ describe("T2 - Insert proposals unit tests", () => {
     };
 
     request(app)
-        .post("/api/proposals")
-        .send(mockProposalReq)
-        .then((res) => {
-            expect(res.status).toBe(422);
-            expect(res.body.error).not.toBeFalsy();
-            expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-            expect(insertProposal).not.toHaveBeenCalled();
-            done();
-        })
-        .catch((err) => done(err))
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.3 - SUCCESS 201 | Undefined notes field", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: ["Group A", "Group B"],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: undefined,
+      expiration_date: "2024-06-30",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    const mockProposalRes = {...mockProposalReq, proposal_id: "P011"}
+    getMaxProposalIdNumber.mockResolvedValue(10);
+
+    insertProposal.mockResolvedValue(mockProposalRes);
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(201);
+        expect(res.body).toEqual({ proposal: mockProposalRes });
+        expect(getMaxProposalIdNumber).toHaveBeenCalled();
+        expect(insertProposal).toHaveBeenCalledWith({...mockProposalRes});
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.4 - SUCCESS 201 | Undefined groups field", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: undefined,
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "notes",
+      expiration_date: "2024-06-30",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    const mockProposalRes = {...mockProposalReq, proposal_id: "P011"}
+    getMaxProposalIdNumber.mockResolvedValue(10);
+
+    insertProposal.mockResolvedValue(mockProposalRes);
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(201);
+        expect(res.body).toEqual({ proposal: mockProposalRes });
+        expect(getMaxProposalIdNumber).toHaveBeenCalled();
+        expect(insertProposal).toHaveBeenCalledWith({...mockProposalRes});
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.5 - ERROR 422 | Missing date field", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: ["Group A", "Group B"],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "notes",
+      expiration_date: undefined,
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.6 - ERROR 422 | Invalid date format", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: ["Group A", "Group B"],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "notes",
+      expiration_date: "20-10-2023",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.7 - ERROR 422 | Invalid date", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: ["Group A", "Group B"],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "notes",
+      expiration_date: "2023-02-29",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.8 - ERROR 422 | Array of strings contains some elements which are not strings", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", 123],
+      type: "Master",
+      groups: ["Group A", "Group B"],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "notes",
+      expiration_date: "2024-06-30",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.9 - ERROR 500 | Database error", (done) => {
+    const mockProposalReq = {
+      title: "TEST",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: ["Group A", "Group B"],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "notes",
+      expiration_date: "2024-06-30",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    const mockProposalRes = {...mockProposalReq, proposal_id: "P011"}
+    getMaxProposalIdNumber.mockResolvedValue(10);
+
+    insertProposal.mockImplementation(() => {
+        throw Error("some error");
+    });
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).toHaveBeenCalled();
+        expect(insertProposal).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
   });
 });
