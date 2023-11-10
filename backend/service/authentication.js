@@ -32,8 +32,33 @@ exports.authUser = async (email, password) => {
                 user = mapObjToTeacher(teachers?.rows[0]);
             }
         }
+        return user;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
 
-        console.log(user);
+/**
+   * Get the user from the db from his id
+   * 
+   * @param id user id
+   * 
+   * */
+exports.getUserById = async (id) => {
+    try {
+        let user = undefined;
+
+        let students = await db.query('SELECT * FROM student WHERE student_id = $1;', [id]);        // it gets the user from the db
+        if (students.rows.length > 0) {
+            user = mapObjToStudent(students?.rows[0]);
+        } else {
+            let teachers = await db.query('SELECT * FROM teacher WHERE teacher_id = $1;', [id]);    // it gets the user from the db
+            if (teachers.rows.length > 0) {
+                user = mapObjToTeacher(teachers?.rows[0]);
+            }
+        }
+
         return user;
     } catch (err) {
         console.log(err);

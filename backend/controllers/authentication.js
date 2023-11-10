@@ -1,8 +1,12 @@
-"use strict";
+'use strict';
 
 const passport = require('passport');
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
+
+const { validationResult, body } = require('express-validator');
+const { authUser, getUserById } = require('../service/authentication');
+
 
 module.exports = {
     /**
@@ -15,117 +19,84 @@ module.exports = {
      * @error: 401 Unauthorized - if username or password are not valid
      * @error: 500 Internal Server Error - if something went wrong
      */
-    login: (req, res) => {
-        console.log("login richiesto: " + req + " " + res);
-        
-        const { username, password } = req.body;
+    login: (req, res, next) => {
+        //const { username, password } = req.body;
 
-        try {
-            // Perform the actual authentication
-            passport.authenticate("local", (err, user, info) => {
+        // Check if validation is ok
+        /*const err = validationResult(req);
+        const errList = [];
+        if (!err.isEmpty()) {
+            errList.push(...err.errors.map(e => e.msg));
+            return res.status(400).json({ errors: errList });
+        }*/
+
+        // Perform the actual authentication
+        passport.authenticate("local", (err, user, info) => {
+            if (err) {
+                return res.status(err.status).json({ errors: [err.msg] });
+            }
+
+            if (!user) {
+                return res.status(401).json(info);
+            }
+
+            req.login(user, err => {
                 if (err) {
-                    return res.status(err.status).json({ errors: [err.msg] });
+                    return next(err);
                 }
 
-                if (!user) {
-                    return res.status(401).json(info);
-                }
-
-                req.login(user, err => {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    // Send user information
-                    return res.json(req.user);
-                });
-
+                // Send user information
+                return res.json(req.user);
             });
 
+        })(req, res, next);
+    },
 
-            /*if (!username || !password) {
-                res.status(400).json({ error: "Missing username or password" });
-            } else if (username !== "username" || password !== "password") {
-                res.status(401).json({ error: "Wrong username or password" });
-            } else {
-                res.status(200).json({ token: "token" });
-            }*/
+    /**
+     * Fetch the current user
+     * @param {*} req 
+     * @param {*} res 
+     */
+    currentUser: async (req, res) => {
+        try {
+            const user = await getUserById(req.user.student_id);
+            return res.json(user);
         } catch (err) {
-            console.error("[BACKEND-SERVER] Cannot login user", err);
-            res.status(500).json({ error: "Internal server error has occurred" });
+            res.status(500).json({ errors: ["Database error"] });
         }
     },
 
     /**
-     * Authenticate and login
-     */
-    /*login_2: (
-        "/api/session",
-        body("username", "Must be entered a valid email!").isEmail(),
-        body("password", "Password can not be empty!").isString().notEmpty(),
-        (req, res, next) => {
-            // Check if validation is ok
-            const err = validationResult(req);
-            const errList = [];
-            if (!err.isEmpty()) {
-                errList.push(...err.errors.map(e => e.msg));
-                return res.status(400).json({ errors: errList });
-            }
-
-            // Perform the actual authentication
-            passport.authenticate("local", (err, user, info) => {
-                if (err) {
-                    return res.status(err.status).json({ errors: [err.msg] });
-                }
-
-                if (!user) {
-                    return res.status(401).json(info);
-                }
-
-                req.login(user, err => {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    // Send user information
-                    return res.json(req.user);
-                });
-
-            })(req, res, next);
-        }
-    ),
-
-    /**
      * Logout
      */
-    /*logout: ("/api/session", isLoggedIn, (req, res) => {
-      req.logout(() => res.end());
-    })*/
-
-
-
-
-
-
-
-
+    logout: (req, res) => {
+        req.logout(() => res.end());
+    },
 
     /**
      * Helper function to initialize passport authentication with the LocalStrategy
      * 
      * @param app express app
      */
-    inializeAuthentication: (app, db) => {
-        passport.use(new LocalStrategy((email, password, done) => {
-            console.log("email: " + email);
+    inializeAuthentication: (app) => {
+        passport.use(new LocalStrategy((username, password, done) => {
+            console.log("email: " + username);
             console.log("password: " + password);
 
-            db.authUser(email, password)
+            authUser(username, password)
                 .then(user => {
-                    if (user) done(null, user);
-                    else done({ status: 401, msg: 'Incorrect email and/or password!' }, false);
+                    if (user) {
+                        console.log("successful");
+                        done(null, user);
+                    }
+                    else {
+                        console.log("error");
+                        done({ status: 401, msg: 'Incorrect email and/or password!' }, false);
+                    }
                 })
-                .catch(() => done({ status: 500, msg: 'Database error' }, false));
+                .catch(() => {
+                    return done({ status: 500, msg: 'Database error' }, false);
+                });
         }));
 
         // Serialization and deserialization of the user to and from a cookie
@@ -138,9 +109,9 @@ module.exports = {
         passport.deserializeUser((id, done) => {
             console.log("deserializzazione: " + id);
 
-            /*db.getUserById(id)
+            getUserById(id)
                 .then(user => done(null, user))
-                .catch(e => done(e, null));*/
+                .catch(e => done(e, null));
         })
 
         // Initialize express-session
