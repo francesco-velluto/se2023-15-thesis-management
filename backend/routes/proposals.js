@@ -25,5 +25,7 @@ const proposalsController = require('../controllers/proposals');
  */
 router.get('/', proposalsController.getAllProposals);
 
+router.get('/searchfields', proposalsController.getProposalsFieldsAndTypes);
+
 module.exports = router;
 
