@@ -94,7 +94,7 @@ ALTER TABLE public.degree OWNER TO postgres;
 --
 
 CREATE TABLE public.student (
-    student_id VARCHAR(10) PRIMARY KEY,
+    id VARCHAR(10) PRIMARY KEY,
     surname VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     gender CHAR(1),
@@ -104,7 +104,7 @@ CREATE TABLE public.student (
     enrollment_year INT
 );
 
-INSERT INTO public.student (student_id, surname, name, gender, nationality, email, cod_degree, enrollment_year) VALUES
+INSERT INTO public.student (id, surname, name, gender, nationality, email, cod_degree, enrollment_year) VALUES
   ('S001', 'Smith', 'John', 'M', 'USA', 'john.smith@example.com', 'BSC001', 2021),
   ('S002', 'Johnson', 'Emily', 'F', 'Canada', 'emily.johnson@example.com', 'BSC001', 2022),
   ('S003', 'Lee', 'David', 'M', 'Australia', 'david.lee@example.com', 'MSC001', 2020),
@@ -128,7 +128,7 @@ ALTER TABLE ONLY public.student
 --
 
 CREATE TABLE public.teacher (
-    teacher_id VARCHAR(10) PRIMARY KEY,
+    id VARCHAR(10) PRIMARY KEY,
     surname VARCHAR(50) NOT NULL,
     name VARCHAR(50) NOT NULL,
     email VARCHAR(255) NOT NULL,
@@ -136,7 +136,7 @@ CREATE TABLE public.teacher (
     cod_department VARCHAR(10)
 );
 
-INSERT INTO public.teacher (teacher_id, surname, name, email, cod_group, cod_department) VALUES
+INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department) VALUES
   ('T001', 'Anderson', 'Sarah', 'sarah.anderson@example.com', 'G001', 'D001'),
   ('T002', 'Wilson', 'Michael', 'michael.wilson@example.com', 'G002', 'D002'),
   ('T003', 'Gomez', 'Ana', 'ana.gomez@example.com', 'G001', 'D001'),
@@ -187,11 +187,11 @@ ALTER TABLE public.career OWNER TO postgres;
 
 CREATE TABLE public.follows (
     id SERIAL PRIMARY KEY,
-    student_id VARCHAR(10) NOT NULL,
+    id VARCHAR(10) NOT NULL,
     cod_degree VARCHAR(10)
 );
 
-INSERT INTO public.follows (student_id, cod_degree) VALUES
+INSERT INTO public.follows (id, cod_degree) VALUES
   ('S001', 'BSC001'),
   ('S002', 'BSC001'),
   ('S003', 'MSC001'),
@@ -207,7 +207,7 @@ INSERT INTO public.follows (student_id, cod_degree) VALUES
 ALTER TABLE public.follows OWNER TO postgres;
 
 ALTER TABLE ONLY public.follows
-    ADD CONSTRAINT follows_fk_student FOREIGN KEY (student_id) REFERENCES public.student(student_id);
+    ADD CONSTRAINT follows_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
 
 ALTER TABLE ONLY public.follows
     ADD CONSTRAINT follows_fk_degree FOREIGN KEY (cod_degree) REFERENCES public.degree(cod_degree);
@@ -220,10 +220,10 @@ ALTER TABLE ONLY public.follows
 CREATE TABLE public.passed (
     id SERIAL PRIMARY KEY,
     career_id VARCHAR(10),
-    student_id VARCHAR(10)
+    id VARCHAR(10)
     );
 
-INSERT INTO public.passed (career_id, student_id) VALUES
+INSERT INTO public.passed (career_id, id) VALUES
   ('C001', 'S001'),
   ('C002', 'S001'),
   ('C001', 'S002'),
@@ -238,7 +238,7 @@ INSERT INTO public.passed (career_id, student_id) VALUES
 ALTER TABLE public.passed OWNER TO postgres;
 
 ALTER TABLE ONLY public.passed
-    ADD CONSTRAINT passed_fk_student FOREIGN KEY (student_id) REFERENCES public.student(student_id);
+    ADD CONSTRAINT passed_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
 
 ALTER TABLE ONLY public.passed
     ADD CONSTRAINT passed_fk_career FOREIGN KEY (career_id) REFERENCES public.career(id);
@@ -278,7 +278,7 @@ INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type,
 ALTER TABLE public.proposals OWNER TO postgres;
 
 ALTER TABLE ONLY public.proposals
-    ADD CONSTRAINT proposals_fk_teacher FOREIGN KEY (supervisor_id) REFERENCES public.teacher(teacher_id);
+    ADD CONSTRAINT proposals_fk_teacher FOREIGN KEY (supervisor_id) REFERENCES public.teacher(id);
 
 --
 -- Name: Applications; Type: TABLE; Schema: public; Owner: postgres
@@ -287,12 +287,12 @@ ALTER TABLE ONLY public.proposals
 CREATE TABLE public.applications (
     application_id SERIAL PRIMARY KEY,
     proposal_id VARCHAR(10) NOT NULL,
-    student_id VARCHAR(10) NOT NULL,
+    id VARCHAR(10) NOT NULL,
     status VARCHAR(255) NOT NULL, 
     application_date DATE
 );
 
-INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
+INSERT INTO public.applications (proposal_id, id, status, application_date) VALUES
   ('P001', 'S001', 'Pending', '2023-11-01'),
   ('P002', 'S002', 'Accepted', '2023-10-15'),
   ('P003', 'S003', 'Pending', '2023-11-05'),
@@ -307,7 +307,7 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
 ALTER TABLE public.applications OWNER TO postgres;
 
 ALTER TABLE ONLY public.applications
-    ADD CONSTRAINT applications_fk_student FOREIGN KEY (student_id) REFERENCES public.student(student_id);
+    ADD CONSTRAINT applications_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
 
 ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_fk_proposals FOREIGN KEY (proposal_id) REFERENCES public.proposals(proposal_id);
