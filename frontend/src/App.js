@@ -24,7 +24,10 @@ function Main() {
 
     useEffect(() => {
         fetchCurrentUser()                        // reload current session, it gets the user information from the server
-            .then(user => setLoggedUser(user))
+            .then(user => { 
+                console.log("fetching");
+                setLoggedUser(user);
+            })
             .catch(err => console.log(err));
     }, []);
     return (

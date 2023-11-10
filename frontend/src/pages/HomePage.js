@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 
 function HomePage() {
-    const { loggedUser } = useContext(LoggedUserContext);
+    const { loggedUser, handleLogout } = useContext(LoggedUserContext);
 
     return (
         <Container className="home-page">
@@ -24,13 +24,13 @@ function HomePage() {
                             <li>cod degree: {loggedUser.cod_degree} </li>
                             <li>enrollment year: {loggedUser.enrollment_year} </li>
                         </ul>
-                        <Button>Logout</Button>
+                        <Button onClick={handleLogout}>Logout</Button>
                     </>
                 }
             </Row>
             <Row className="mt-4">
                 {!loggedUser &&
-                    <Button as={Link} to={"/login"}>Login</Button>
+                    <Button as={Link} to={"/login"} >Login</Button>
                 }
             </Row>
         </Container>

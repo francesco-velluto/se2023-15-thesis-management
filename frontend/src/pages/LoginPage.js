@@ -15,6 +15,7 @@ function LoginPage() {
             handleLogin(username, password);
             console.log("login effettuato con successo");
         } catch (err) {
+            console.log("errore");
             console.log(err);
         }
 

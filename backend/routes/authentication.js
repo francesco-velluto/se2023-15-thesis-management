@@ -35,5 +35,16 @@ router.post('/login', authenticationController.login);
  */
 router.get('/current/user', authenticationController.currentUser);
 
+/**
+ * DELETE /api/authentication/logout
+ *
+ * @params none
+ * @body none
+ * @returns none
+ *
+ * @see authenticationController.login
+ */
+router.delete('/logout', authenticationController.logout);
+
 
 module.exports = router;

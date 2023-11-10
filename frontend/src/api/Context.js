@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { login } from "../api/AuthenticationAPI";
+import { login, logout } from "../api/AuthenticationAPI";
 import { createContext, useState } from "react";
 
 export const LoggedUserContext = createContext();       // context for logged user
@@ -48,7 +48,7 @@ export const LoggedUserProvider = ({ children }) => {
      * Perform the logout
      */
     const handleLogout = () => {
-        /*logout()
+        logout()
             .then(() => {
                 console.log("logout con successo");
                 //handleErrors(undefined);    // clean all errors
@@ -61,7 +61,7 @@ export const LoggedUserProvider = ({ children }) => {
             }).finally(() => {
                 setLoggedUser(null);        // delete the state for the logged user
                 navigate('/');
-            });*/
+            });
     };
 
     return (

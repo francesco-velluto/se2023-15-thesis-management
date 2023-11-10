@@ -59,11 +59,9 @@ module.exports = {
      */
     currentUser: async (req, res) => {
         try {
-            const user = await getUserById(req.user);
-            console.log(user);
-            res.json(user);
+            const user = await getUserById(req.user.student_id);
+            return res.json(user);
         } catch (err) {
-            console.log("errore");
             res.status(500).json({ errors: ["Database error"] });
         }
     },
@@ -71,9 +69,9 @@ module.exports = {
     /**
      * Logout
      */
-    /*logout: ("/api/session", isLoggedIn, (req, res) => {
-      req.logout(() => res.end());
-    })*/
+    logout: (req, res) => {
+        req.logout(() => res.end());
+    },
 
     /**
      * Helper function to initialize passport authentication with the LocalStrategy
