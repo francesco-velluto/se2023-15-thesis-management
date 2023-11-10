@@ -10,6 +10,7 @@ const router = express.Router();
 
 const authentication = require('./authentication');
 const proposals = require('./proposals');
+const applications = require('./applications');
 
 /**
  * Authentication routes
@@ -28,5 +29,14 @@ router.use('/authentication', authentication);
  * Route /api/proposals
  */
 router.use('/proposals', proposals);
+
+/**
+ * Applications routes
+ * All the routes for the applications resources
+ * @see applications.js
+ *
+ * Route /api/applications
+ */
+router.use('/applications', applications);
 
 module.exports = router;
