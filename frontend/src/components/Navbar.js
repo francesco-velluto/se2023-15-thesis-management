@@ -9,7 +9,7 @@ function NavbarContainer() {
     return (
         <>
         
-        <Navbar expand="lg" className='px-3 navbar-dark d-flex justify-content-between' style={{"background-color": "#e68b00"}} >
+        <Navbar expand="lg" className='px-3 navbar-dark d-flex justify-content-between' style={{backgroundColor: "#e68b00"}} >
             <Link
                 onClick={() => {
                     navigate("/");

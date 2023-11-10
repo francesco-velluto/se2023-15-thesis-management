@@ -21,7 +21,7 @@ function TitleBar() {
     return (
         <>
 
-        <div className='container-fluid py-2' style={{"background-color": "#2d90ba", color: 'whitesmoke', fontSize: "20px"}}>
+        <div className='container-fluid py-2' style={{backgroundColor: "#2d90ba", color: 'whitesmoke', fontSize: "20px"}}>
             {title}
         </div>
         

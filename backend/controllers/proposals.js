@@ -33,20 +33,6 @@ module.exports = {
             console.error("[BACKEND-SERVER] Cannot get proposals", err);
             res.status(500).json({ error: "Internal server error has occurred" });
         }
-    },
-
-    getProposalsFieldsAndTypes: async (req, res) => {
-
-        try {
-
-            const fields = await getProposalsFieldsAndTypes();
-
-            console.log(fields);
-            
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({error: error});
-        }
-
     }
+    
 }

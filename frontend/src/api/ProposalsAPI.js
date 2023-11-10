@@ -24,23 +24,5 @@ module.exports = {
             method: 'GET',
             headers: APIConfig.API_REQUEST_HEADERS
         });
-    },
-
-    /**
-     * Get proposals fields attribute to be displayed in the search form
-     *
-     * GET /api/proposals/searchfields
-     *
-     * @params: none
-     * @body: none
-     * @returns: { fields: [ string, string, ... ] }
-     * @error: 500 Internal Server Error - if something went wrong
-     */
-
-    getProposalsSearchFields: async () => {
-        return fetch(ProposalsAPIURL + "/searchfields", {
-            method: 'GET',
-            headers: APIConfig.API_REQUEST_HEADERS
-        });
     }
 }

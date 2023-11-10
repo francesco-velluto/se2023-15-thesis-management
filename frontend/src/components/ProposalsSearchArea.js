@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
+
 function ProposalsSearchArea(props) {
 
-    const [searchFields, setSearchFields] = useState();
-
-    useEffect(() => {
-
-    }, [])
+    const [searchFields, setSearchFields] = useState([]);
+    const [usedFilters, setUsedFilters] = useState([]);
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -23,8 +21,13 @@ function ProposalsSearchArea(props) {
                 <div className='m-2'>Filter by:</div>
                 <Form.Select aria-label="Default select example" value={props.searchData.field} onChange={(event) => {props.setSearchData((sd) => ({...sd, field: event.target.value}))}} className='m-2' style={{maxWidth: "25%"}}>
                     <option value="">Field</option>
-                    <option value="title">Title</option>
-                    <option value="supervisor">Supervisor</option>
+                    {
+                        searchFields.filter((f) => (!usedFilters.includes(f) || f.data_type === "ARRAY")).map((f) => {
+                            return <option value={f.column_name}>{
+                                
+                            }</option>
+                        })
+                    }
                 </Form.Select>
 
                 <Form.Control
