@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
+const authenticationController = require('../controllers/authentication');
 const applicationsController = require('../controllers/applications');
 
 /**
@@ -20,6 +21,6 @@ const applicationsController = require('../controllers/applications');
  * @error 404 Not Found - if the student_id is not found
  * @error 500 Internal Server Error - if something went wrong
  */
-router.get('/:student_id', applicationsController.getAllApplicationsByStudentId);
+router.get('/:student_id', authenticationController.isLoggedIn, applicationsController.getAllApplicationsByStudentId);
 
 module.exports = router;

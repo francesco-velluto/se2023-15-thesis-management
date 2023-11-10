@@ -14,9 +14,7 @@ const db = require("./service/db");
 const api = require('./routes/api');
 
 console.info('[BACKEND-SERVER] Allowing CORS requests from http://localhost:' + process.env.FRONTEND_PORT);
-console.info('[BACKEND-SERVER] Allowing CORS requests from http://localhost:' + process.env.FRONTEND_PORT);
 const corsOptions = {
-    origin: [`http://localhost:${process.env.FRONTEND_PORT}`],
     origin: [`http://localhost:${process.env.FRONTEND_PORT}`],
     credentials: true
 }
@@ -44,6 +42,3 @@ db.connect()
         console.error('[BACKEND-SERVER] Error connecting to database', err.stack)
         process.exit(1);
     });
-
-
-// TODO : testing db connection
