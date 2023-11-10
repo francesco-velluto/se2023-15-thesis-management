@@ -5,7 +5,7 @@ import TitleBar from "../components/TitleBar";
 
 function ProposalsPage() {
 
-    const [searchData, setSearchData] = useState({field: "", value: ""});
+    const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
 
     return (
         <>

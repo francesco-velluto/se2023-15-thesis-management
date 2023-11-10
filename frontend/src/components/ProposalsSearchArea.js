@@ -4,8 +4,8 @@ import { Form, Button } from 'react-bootstrap';
 
 function ProposalsSearchArea(props) {
 
-    const [searchFields, setSearchFields] = useState([]);
-    const [usedFilters, setUsedFilters] = useState([]);
+    const [searchField, setSearchField] = useState("");
+    const [searchValue, setSearchValue] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -19,15 +19,8 @@ function ProposalsSearchArea(props) {
                 
             <Form onSubmit={handleSubmit} className="w-50 d-flex flex-row justify-content-between">
                 <div className='m-2'>Filter by:</div>
-                <Form.Select aria-label="Default select example" value={props.searchData.field} onChange={(event) => {props.setSearchData((sd) => ({...sd, field: event.target.value}))}} className='m-2' style={{maxWidth: "25%"}}>
+                <Form.Select aria-label="Default select example" value={searchField} onChange={(event) => {setSearchField((sd) => (event.target.value))}} className='m-2' style={{maxWidth: "25%"}}>
                     <option value="">Field</option>
-                    {
-                        searchFields.filter((f) => (!usedFilters.includes(f) || f.data_type === "ARRAY")).map((f) => {
-                            return <option value={f.column_name}>{
-                                
-                            }</option>
-                        })
-                    }
                 </Form.Select>
 
                 <Form.Control
@@ -35,8 +28,8 @@ function ProposalsSearchArea(props) {
                     id="inputValue"
                     aria-describedby="insert-value-form"
                     placeholder="Value"
-                    value={props.searchData.value}
-                    onChange={(event) => {props.setSearchData((sd) => ({...sd, value: event.target.value}))}}
+                    value={searchValue}
+                    onChange={(event) => {setSearchValue((sd) => (event.target.value))}}
                     className='m-2'
                     style={{maxWidth: "25%"}}
                 />
