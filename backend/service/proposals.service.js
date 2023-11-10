@@ -13,7 +13,7 @@ const rowToProposal = (row) => {
     row.groups,
     row.description,
     row.required_knowledge,
-    row.notes,
+    row.notes || "",
     row.expiration_date,
     row.level,
     row.cds_programmes
@@ -45,7 +45,7 @@ exports.insertProposal = async (proposal) => {
         proposal.groups,
         proposal.description,
         proposal.required_knowledge,
-        proposal.notes,
+        proposal.notes || "",
         proposal.expiration_date,
         proposal.level,
         proposal.cds_programmes,

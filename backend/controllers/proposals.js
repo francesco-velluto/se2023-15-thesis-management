@@ -40,7 +40,6 @@ module.exports = {
 
   insertProposal: async (req, res) => {
     // TO-DO: check auth
-    // TO-DO: validation on req.body fields
     try {
       const maxIdNum = await getMaxProposalIdNumber();
       const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);

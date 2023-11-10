@@ -53,7 +53,7 @@ router.post(
   check("groups").isArray({ min: 1 }).custom(isArrayOfStrings), // can the groups array be empty ??
   check("description").isString(), // or .optional().isString() if it can be empty
   check("required_knowledge").isString().notEmpty(),
-  check("notes").isString(), // or .optional().isString() if it can be empty
+  check("notes").optional().isString(),
   check("expiration_date")
     .isDate()
     .isISO8601({ strict: true })
