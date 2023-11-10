@@ -1,15 +1,23 @@
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { login } from "../api/AuthenticationAPI";
+import { LoggedUserContext } from "../api/Context";
 
 function LoginPage() {
-    const [email, setEmail] = useState('david.lee@example.com');
+    const [username, setUsername] = useState('david.lee@example.com');
     const [password, setPassword] = useState('S003');
 
-    const handleLogin = async () => {
-        await login(email, password)
-            .then()
-            .catch();
+    const { handleLogin } = useContext(LoggedUserContext);    // context for logged user  
+
+    const handleSubmitLogin = (e) => {
+        e.preventDefault();
+
+        try {
+            handleLogin(username, password);
+            console.log("login effettuato con successo");
+        } catch (err) {
+            console.log(err);
+        }
+
     }
 
     return (
@@ -20,15 +28,15 @@ function LoginPage() {
                         <h2 className="my-4 text-center"><strong>Sign In</strong></h2>
                     </Row>
                     <Row>
-                        <Form.Group className="mt-3" controlId="email">
-                            <Form.Label>Email</Form.Label>
+                        <Form.Group className="mt-3" controlId="username">
+                            <Form.Label>Username</Form.Label>
                             <Form.Control
                                 type="email"
                                 placeholder="Enter your email"
                                 style={{ background: '#f0f0f0' }}
-                                value={email}
+                                value={username}
                                 onChange={e => (
-                                    setEmail(e.target.value)
+                                    setUsername(e.target.value)
                                 )}
                             />
                         </Form.Group>
@@ -48,7 +56,7 @@ function LoginPage() {
                     </Row>
                     <Row className="mt-4 d-flex justify-content-center">
                         <Col xs={6}>
-                            <Button variant="primary" type="submit" className="w-100" onClick={handleLogin}>
+                            <Button variant="primary" type="submit" className="w-100" onClick={handleSubmitLogin}>
                                 Login
                             </Button>
                         </Col>

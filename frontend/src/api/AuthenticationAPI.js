@@ -21,20 +21,55 @@ module.exports = {
      * @error: 500 Internal Server Error - if something went wrong
      */
     login: async (username, password) => {
-        fetch(AuthenticationAPIURL + '/login', {
+        const response = await fetch(AuthenticationAPIURL + '/login', {
             method: 'POST',
             headers: APIConfig.API_REQUEST_HEADERS,
-            body: JSON.stringify({ username, password })
-        }).then(async response => {
+            body: JSON.stringify({ username, password }),
+            credentials: 'include'
+        });
+
+        try {
             let data = await response.json();
 
             if (response.ok) {
                 console.log("dati restituiti: " + data);
             } else {
                 console.error("errore: " + data.error);
+                throw data.error;
             }
-        }).catch(error => {
+
+            return data;
+        } catch (error) {
             console.error("error in fetch login: " + error);
+            throw error;
+        };
+    },
+
+    /**
+     * Fetch the current user
+     */
+    fetchCurrentUser: async () => {
+        const response = await fetch(AuthenticationAPIURL + '/current/user', {
+            method: 'GET',
+            headers: APIConfig.API_REQUEST_HEADERS,
+            body: undefined,
+            credentials: 'include'
         });
+
+        try {
+            let data = await response.json();
+
+            if (response.ok) {
+                console.log("dati restituiti: " + data);
+            } else {
+                console.error("errore: " + data.error);
+                throw data.error;
+            }
+
+            return data;
+        } catch (error) {
+            console.error("error in fetch login: " + error);
+            throw error;
+        };
     }
 }

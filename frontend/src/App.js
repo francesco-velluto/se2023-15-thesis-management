@@ -1,22 +1,40 @@
-import { Outlet, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Col, Container, Row } from "react-bootstrap";
+import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
+import { useContext, useEffect } from "react";
+import { fetchCurrentUser } from "./api/AuthenticationAPI";
 
 function App() {
     return (
-        <>
-            <Routes>
-                <Route path='/' element={<PageLayout />} >
-                    <Route index path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                </Route>
-                <Route path='*' element={<NotFoundPage />} />
-            </Routes>
-        </>
+        <BrowserRouter>
+            <LoggedUserProvider>
+                <Main />
+            </LoggedUserProvider>
+        </BrowserRouter>
+    );
+}
+
+function Main() {
+    const { setLoggedUser } = useContext(LoggedUserContext);    // context for logged user  
+
+    useEffect(() => {
+        fetchCurrentUser()                        // reload current session, it gets the user information from the server
+            .then(user => setLoggedUser(user))
+            .catch(err => console.log(err));
+    }, []);
+    return (
+        <Routes>
+            <Route path='/' element={<PageLayout />} >
+                <Route index path='/' element={<HomePage />} />
+                <Route path='/login' element={<LoginPage />} />
+            </Route>
+            <Route path='*' element={<NotFoundPage />} />
+        </Routes>
     );
 }
 
