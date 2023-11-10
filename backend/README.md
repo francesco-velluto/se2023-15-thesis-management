@@ -70,3 +70,79 @@ GET `/api/proposals`
     - ...
 - Errors:
   - `ERROR 500` Response Body: `{"error": "Internal Server Error"}`
+
+**POST** `/api/proposals`
+- Insert a new thesis proposal
+- Authentication: required
+- Authorization: only a professor can access this endpoint
+- Request Query Parameters: _none_
+- Request Body:
+
+  | Field name | Type | Required* | Description |
+  | ----------- | ----------- | ----------- | ----------- |
+  | `title` | _string_ | Yes | Title of the proposal |
+  | `supervisor_id` | _string_ | Yes | Identifier of the supervisor of the proposal |
+  | `keywords` | _[string]_ | Yes | Keywords related to the proposal |
+  | `type` | _string_ | Yes | Type of thesis (e.g. research, experimental...) |
+  | `groups` | _[string]_ | No | List of research groups related to the thesis proposal |
+  | `description` | _string_ | Yes | Description of the activities of the thesis |
+  | `required_knowledge` | _string_ | Yes | Description of the knowledge required for the thesis |
+  | `notes` | _string_ | No | Additional notes by the professor |
+  | `expiration_date` | _string_ | Yes | Date in ISO 8601 format YYYY-MM-DD |
+  | `level` | _string_ | Yes | Level of the thesis (e.g. Bachelor, Master) |
+  | `cds_programmes` | _[string]_ | Yes | Programmes related to the thesis |
+
+  \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
+
+- `SUCCESS 201` Response Body:
+  - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal.\
+    - `id` | string: ID of the proposal
+    - ...
+
+- Errors:
+  - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
+  - `ERROR 401` Response Body: `{ "error": "Not authorized" }`
+  - `ERROR 422` Response Body: `{ "error": <message that specifies the validation error> }`
+  - `ERROR 500` Response Body: `{"error": "Internal Server Error" }`
+
+**GET** `/api/teachers`
+- Retrieve the list of teachers
+- Authentication: required
+- Authorization: both students and professors can access this endpoint
+- Request Query Parameters: _none_
+- Request Body: _none_
+
+- `SUCCESS 200` Response Body:
+  - `teachers`: array of objects with the following fields
+
+    | Field name | Type | Description |
+    | ----------- | ----------- | ----------- |
+    | `id` | _string_ | Id of the teacher |
+    | `name` | _string_ | Name of the teacher |
+    | `surname` | _string_ | Surname of the teacher |
+    | `email` | _string_ | Email of the teacher |
+    | `cod_group` | _string_ | Code of the group that the teacher belongs to |
+    | `cod_department` | _string_ | Code of the department that the teacher belongs to |
+
+- Errors:
+  - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
+  - `ERROR 500` Response Body: `{"error": "Internal Server Error" }`
+
+**GET** `/api/degrees`
+- Retrieve the list of programmes
+- Authentication: required
+- Authorization: both students and professors can access this endpoint
+- Request Query Parameters: _none_
+- Request Body: _none_
+
+- `SUCCESS 200` Response Body:
+  - `degrees`: array of objects with the following fields
+
+    | Field name | Type | Description |
+    | ----------- | ----------- | ----------- |
+    | `cod_degree` | _string_ | Id code of the degree |
+    | `title_degree` | _string_ | Title of the degree |
+
+- Errors:
+  - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
+  - `ERROR 500` Response Body: `{"error": "Internal Server Error" }`
