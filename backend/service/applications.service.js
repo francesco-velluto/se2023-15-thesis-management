@@ -16,7 +16,7 @@ module.exports = {
                     return db.query('SELECT T.thesis_id, T.title, T.description, a.application_date, a.status FROM applications a JOIN thesis T ON a.thesis_id = T.thesis_id WHERE a.student_id = $1;', [student_id]);
                 })
                 .then((rows) => {
-                    resolve({ status: 200, data: rows });
+                    resolve({ status: 200, data: rows.rows });
                 })
                 .catch((err) => {
                     console.error('[BACKEND-SERVER] Error in getAllApplicationsByStudentId', err);
