@@ -1,29 +1,30 @@
 import { useContext, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { LoggedUserContext } from "../api/Context";
 
 function LoginPage() {
     const [username, setUsername] = useState('david.lee@example.com');
     const [password, setPassword] = useState('S003');
 
-    const { handleLogin } = useContext(LoggedUserContext);    // context for logged user  
+    const { handleLogin, errors, setErrors } = useContext(LoggedUserContext);    // context for logged user  
 
     const handleSubmitLogin = (e) => {
         e.preventDefault();
-
-        try {
-            handleLogin(username, password);
-            console.log("login effettuato con successo");
-        } catch (err) {
-            console.log("errore");
-            console.log(err);
-        }
-
+        handleLogin(username, password);
     }
 
     return (
         <Container fluid className="login-page">
             <Col xs={12} md={6} lg={4} className="login-section">
+                {errors?.map((error, index) => (
+                    <Alert variant='danger'
+                        dismissible={true}
+                        onClose={() => setErrors(undefined)}
+                        sx={{ marginBottom: '1.5rem' }}
+                        key={index}>
+                        {error}
+                    </Alert>
+                ))}
                 <Form>
                     <Row>
                         <h2 className="my-4 text-center"><strong>Sign In</strong></h2>

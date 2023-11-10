@@ -59,7 +59,9 @@ module.exports = {
      */
     currentUser: async (req, res) => {
         try {
-            const user = await getUserById(req.user.student_id);
+            console.log(req.user);
+
+            const user = await getUserById(req?.user?.id);
             return res.json(user);
         } catch (err) {
             res.status(500).json({ errors: ["Database error"] });
@@ -103,7 +105,7 @@ module.exports = {
         passport.serializeUser((user, done) => {
             console.log("serializzazione: " + user);
 
-            done(null, user.student_id);
+            done(null, user.id);
         })
 
         passport.deserializeUser((id, done) => {

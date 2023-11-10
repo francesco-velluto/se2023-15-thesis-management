@@ -40,13 +40,15 @@ const APICall = async (url, method = "GET", body = undefined, expectResponse = t
         }
         else errors = (await response.json()).errors;
     } catch (errs) {
-        console.log(errs);
         const err = ["Failed to contact the server"];
         throw err;
     }
 
-    if (errors && errors.length !== 0)
+    if (errors && errors.length !== 0){
+        console.log("errore gestito");
+        errors = ["errore 1", "errore, 2", "errore 3"];
         throw errors;
+    }
 };
 
 /**
