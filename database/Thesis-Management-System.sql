@@ -142,10 +142,10 @@ ALTER TABLE public.degree OWNER TO postgres;
 --
 
 CREATE TABLE public.follows (
-    id character varying(10) NOT NULL,
-    cod_degree character varying(10)
+    fid SERIAL PRIMARY KEY,
+    id VARCHAR(10) NOT NULL,
+    cod_degree VARCHAR(10)
 );
-
 
 ALTER TABLE public.follows OWNER TO postgres;
 
@@ -155,9 +155,10 @@ ALTER TABLE public.follows OWNER TO postgres;
 --
 
 CREATE TABLE public.passed (
-    career_id character varying(10) NOT NULL,
-    id character varying(10) NOT NULL
-);
+    pid SERIAL PRIMARY KEY,
+    career_id VARCHAR(10),
+    id VARCHAR(10)
+    );
 
 
 ALTER TABLE public.passed OWNER TO postgres;
