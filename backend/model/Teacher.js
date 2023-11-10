@@ -4,14 +4,14 @@
  * Teacher model
  */
 module.exports = function Teacher(
-  teacher_id = '',
+  id = '',
   surname = '',
   name = '',
   email = '',
   cod_group = '',
   cod_department = ''
 ) {
-  this.teacher_id = teacher_id;
+  this.id = id;
   this.surname = surname;
   this.name = name;
   this.email = email;

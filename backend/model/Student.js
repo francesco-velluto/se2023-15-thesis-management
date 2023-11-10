@@ -4,7 +4,7 @@
  * Student model
  */
 module.exports = function Student(
-  student_id = '',
+  id = '',
   surname = '',
   name = '',
   gender = '',
@@ -13,7 +13,7 @@ module.exports = function Student(
   cod_degree = '',
   enrollment_year = 0
 ) {
-  this.student_id = student_id;
+  this.id = id;
   this.surname = surname;
   this.name = name;
   this.gender = gender;
