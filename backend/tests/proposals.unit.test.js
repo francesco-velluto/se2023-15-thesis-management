@@ -9,7 +9,7 @@ beforeAll(() => {
     jest.clearAllMocks();
 });
 
-describe.skip("Get all proposals Unit Tests", () => {
+describe.skip("T1 - Get all proposals Unit Tests", () => {
     test("ERROR 401 | Unauthorized", () => {
         // TODO - this is an example, change it if needed
         const req = {};
@@ -64,8 +64,8 @@ describe.skip("Get all proposals Unit Tests", () => {
     });
 });
 
-describe("Get all proposals Unit Tests", () => {
-    test.skip("T1.1 - ERROR 401 | Unauthorized", () => {
+describe("T2 - Insert proposals unit tests", () => {
+    test.skip("T2.1 - ERROR 401 | Unauthorized", () => {
         const req = {};
         const res = {
             status: jest.fn(() => res),
@@ -78,7 +78,7 @@ describe("Get all proposals Unit Tests", () => {
         expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" });
     });
 
-    test.only("T1.2 - SUCCESS | New proposal inserted", async () => {
+    test.only("T2.2 - SUCCESS | New proposal inserted", async () => {
         const mockProposalReq = {
             title: "Test title",
             supervisor_id: "T002",
@@ -111,5 +111,37 @@ describe("Get all proposals Unit Tests", () => {
 
         expect(res.status).toHaveBeenCalledWith(201);
         expect(res.json).toHaveBeenCalledWith({ proposal: mockProposalRes });
+    });
+
+    test.skip("T2.2 - ERROR 422 | Empty title field", async () => {
+        const mockProposalReq = {
+            title: "",
+            supervisor_id: "T002",
+            keywords: ["k1", "k2"],
+            type: "Master",
+            groups: ["Group A", "Group B"],
+            description: "Test description",
+            required_knowledge: "Node.js, PostgreSQL, React.js",
+            notes: "test notes",
+            expiration_date: "2024-06-30",
+            level: "Undergraduate",
+            cds_programmes: ["CD008"] 
+        };
+        
+        const req = {
+            body: mockProposalReq
+        };
+
+        const res = {
+            status: jest.fn(() => res),
+            json: jest.fn()
+        };
+
+        await proposalsController.insertProposal(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(422);
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        expect(res.json).toHaveBeenCalledWith({});
     });
 });
