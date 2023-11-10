@@ -30,15 +30,18 @@ authentication.inializeAuthentication(app);     // it should be set before the r
 
 app.use('/api', api);
 
+console.info('[BACKEND-SERVER] Connecting to Postgres database at ' + process.env.DB_HOST + ':5432 using username: ' + process.env.DB_USER);
+db.connect()
+    .then(() =>  {
+        console.info('[BACKEND-SERVER] Database connection established')
+        app.listen(process.env.BACKEND_SERVER_PORT, () => {
+            console.info('[BACKEND-SERVER] Server started and listening on port ' + process.env.BACKEND_SERVER_PORT);
+        });        
+    })
+    .catch(err => {
+        console.error('[BACKEND-SERVER] Error connecting to database', err.stack)
+        process.exit(1);
+    });
 
-// TODO: testing the authentication service
-//const { authUser } = require('./service/authentication');
-//authUser("david.lee@example.com", "S003");
-//authUser("chen.li@example.com", "T004");
-
-
-app.listen(process.env.BACKEND_SERVER_PORT, () => {
-    console.info('[BACKEND-SERVER] Server started and listening on port ' + process.env.BACKEND_SERVER_PORT);
-});
 
 // TODO : testing db connection
