@@ -1,4 +1,5 @@
 "use strict";
+
 const request = require("supertest");
 const proposalsController = require("../controllers/proposals");
 const {
@@ -355,7 +356,6 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
-    const mockProposalRes = {...mockProposalReq, proposal_id: "P011"}
     getMaxProposalIdNumber.mockResolvedValue(10);
 
     insertProposal.mockImplementation(() => {

@@ -4,11 +4,10 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const proposalsController = require("../controllers/proposals");
+const { isLoggedIn } = require("../controllers/authentication");
 
-/* const isProfessor = (req, res, next) => {
-  if (!req.authenticated())
-    return res.status(401).json({ error: "Not authenticated" });
-  if (req.user.role !== "professor")
+/* const isTeacher = (req, res, next) => {
+  if (req.user.role !== "teacher")
     return res.status(401).json({ error: "Not authorized" });
   next();
 } */
@@ -54,7 +53,8 @@ router.get("/", proposalsController.getAllProposals);
 
 router.post(
   "/",
-  // isProfessor,
+  isLoggedIn,
+  // isTeacher,
   check("title").isString().notEmpty(),
   check("supervisor_id").isString().notEmpty(),
   check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings), // can the keywords array be empty ??

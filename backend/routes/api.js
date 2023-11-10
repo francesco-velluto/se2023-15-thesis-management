@@ -12,6 +12,7 @@ const authentication = require("./authentication");
 const proposals = require("./proposals");
 const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
+const { isLoggedIn } = require("../controllers/authentication");
 
 /**
  * Authentication routes
@@ -32,8 +33,8 @@ router.use("/authentication", authentication);
 router.use("/proposals", proposals);
 
 // TO-DO: maybe move them to another file ??
-router.get("/teachers", getTeachers);
+router.get("/teachers", isLoggedIn, getTeachers);
 
-router.get("/degrees", getDegrees);
+router.get("/degrees", isLoggedIn, getDegrees);
 
 module.exports = router;

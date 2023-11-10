@@ -12,7 +12,7 @@ exports.getTeachers = async () => {
     return teachers.rows.map(
       (row) =>
         new Teacher(
-          row.teacher_id,
+          row.id,
           row.surname,
           row.name,
           row.email,
