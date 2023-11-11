@@ -90,7 +90,7 @@ GET `/api/proposals`
   | `notes` | _string_ | No | Additional notes by the professor |
   | `expiration_date` | _string_ | Yes | Date in ISO 8601 format YYYY-MM-DD |
   | `level` | _string_ | Yes | Level of the thesis (e.g. Bachelor, Master) |
-  | `cds_programmes` | _string[]_ | Yes | Programmes related to the thesis |
+  | `programmes` | _string[]_ | Yes | Programmes related to the thesis |
 
   \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
 

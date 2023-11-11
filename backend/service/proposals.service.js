@@ -16,7 +16,7 @@ const rowToProposal = (row) => {
     row.notes || "",
     row.expiration_date,
     row.level,
-    row.cds_programmes
+    row.programmes
   );
 };
 
@@ -33,7 +33,7 @@ exports.insertProposal = async (proposal) => {
       `INSERT INTO proposals 
         (proposal_id, title, supervisor_id, keywords, type,
         groups, description, required_knowledge, notes,
-        expiration_date, level, cds_programmes)
+        expiration_date, level, programmes)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         RETURNING *;`,
       [
@@ -48,7 +48,7 @@ exports.insertProposal = async (proposal) => {
         proposal.notes || "",
         proposal.expiration_date,
         proposal.level,
-        proposal.cds_programmes,
+        proposal.programmes,
       ]
     );
     return rowToProposal(result.rows[0]);

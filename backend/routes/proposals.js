@@ -60,7 +60,7 @@ router.get("/", proposalsController.getAllProposals);
  *  notes : string,
  *  expiration_date : string,
  *  level : string,
- *  cds_programmes : string[],
+ *  programmes : string[],
  * }
  * @returns { proposal: { id: number, title: string, ... } }
  * @error 401 Unauthorized - if the user is not logged in
@@ -86,7 +86,7 @@ router.post(
     .isISO8601({ strict: true })
     .isLength({ min: 10, max: 10 }), // only YYYY-MM-DD
   check("level").isString().notEmpty(),
-  check("cds_programmes").isArray({ min: 1 }).custom(isArrayOfStrings),
+  check("programmes").isArray({ min: 1 }).custom(isArrayOfStrings),
   validate,
   proposalsController.insertProposal
 );

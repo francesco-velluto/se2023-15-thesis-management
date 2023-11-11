@@ -148,7 +148,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "some notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -189,7 +189,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "test notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -225,7 +225,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: undefined,
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -266,7 +266,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -307,7 +307,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "notes",
       expiration_date: undefined,
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -343,7 +343,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "notes",
       expiration_date: "20-10-2023",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -379,7 +379,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "notes",
       expiration_date: "2023-02-29",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -415,7 +415,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -451,7 +451,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "test notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -487,7 +487,7 @@ describe("T2 - Insert proposals unit tests", () => {
       notes: "notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
-      cds_programmes: ["CD008"],
+      programmes: ["CD008"],
     };
 
     getMaxProposalIdNumber.mockResolvedValue(10);

@@ -53,7 +53,7 @@ module.exports = {
    *  notes : string,
    *  expiration_date : string,
    *  level : string,
-   *  cds_programmes : string[],
+   *  programmes : string[],
    * }
    * @returns { proposal: { id: number, title: string, ... } }
    * @error 500 Internal Server Error - if something went wrong
