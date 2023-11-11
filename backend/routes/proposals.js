@@ -4,13 +4,7 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const proposalsController = require("../controllers/proposals");
-const { isLoggedIn } = require("../controllers/authentication");
-
-/* const isTeacher = (req, res, next) => {
-  if (req.user.role !== "teacher")
-    return res.status(401).json({ error: "Not authorized" });
-  next();
-} */
+const { isLoggedIn, isTeacher } = require("../controllers/authentication");
 
 // This function is used to format express-validator errors as strings
 const errorFormatter = ({ location, msg, path, value, nestedErrors }) => {
@@ -52,33 +46,33 @@ const isArrayOfStrings = (array) => {
 router.get("/", proposalsController.getAllProposals);
 
 /**
-   * POST /api/proposals
-   *
-   * @params none
-   * @body { 
-   *  title : string,
-   *  supervisor_id : string,
-   *  keywords : string[],
-   *  type : string,
-   *  groups : string[],
-   *  description : string,
-   *  required_knowledge : string,
-   *  notes : string,
-   *  expiration_date : string,
-   *  level : string,
-   *  cds_programmes : string[],
-   * }
-   * @returns { proposal: { id: number, title: string, ... } }
-   * @error 401 Unauthorized - if the user is not logged in
-   * @error 422 Invalid body - invalid fields in request body
-   * @error 500 Internal Server Error - if something went wrong
-   * 
-   * Refer to the official documentation for more details
-   */
+ * POST /api/proposals
+ *
+ * @params none
+ * @body {
+ *  title : string,
+ *  supervisor_id : string,
+ *  keywords : string[],
+ *  type : string,
+ *  groups : string[],
+ *  description : string,
+ *  required_knowledge : string,
+ *  notes : string,
+ *  expiration_date : string,
+ *  level : string,
+ *  cds_programmes : string[],
+ * }
+ * @returns { proposal: { id: number, title: string, ... } }
+ * @error 401 Unauthorized - if the user is not logged in
+ * @error 422 Invalid body - invalid fields in request body
+ * @error 500 Internal Server Error - if something went wrong
+ *
+ * Refer to the official documentation for more details
+ */
 router.post(
   "/",
   isLoggedIn,
-  // isTeacher,
+  isTeacher,
   check("title").isString().notEmpty(),
   check("supervisor_id").isString().notEmpty(),
   check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings), // can the keywords array be empty ??

@@ -5,13 +5,13 @@ const { getDegrees } = require("../service/degrees.service");
 module.exports = {
   /**
    * Get the list of all degrees
-   * 
+   *
    * @param {Object} req HTTP Request Object
    * @param {Object} res HTTP Response Object
-   * response body contains an array of teachers
-   * 
+   * response body contains an array of degrees
+   *
    * @error 500 - Internal Server Error
-   * 
+   *
    * See official documentation for more details
    */
   getDegrees: async (req, res) => {
