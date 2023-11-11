@@ -4,16 +4,13 @@ import ProposalsSearchArea from "../components/ProposalsSearchArea";
 import TitleBar from "../components/TitleBar";
 
 function ProposalsPage() {
-
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
 
     return (
         <>
-        
-        <NavbarContainer/>
-        <TitleBar/>
-        <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
-        
+            <NavbarContainer/>
+            <TitleBar title={"Browse Proposals"}/>
+            <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
         </>
     );
 }

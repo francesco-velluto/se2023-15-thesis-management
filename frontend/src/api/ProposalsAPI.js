@@ -22,7 +22,27 @@ module.exports = {
     getAllProposals: async () => {
         return fetch(ProposalsAPIURL, {
             method: 'GET',
-            headers: APIConfig.API_REQUEST_HEADERS
+            headers: APIConfig.API_REQUEST_HEADERS,
+            credentials: 'include'
+        });
+    },
+
+    /**
+     * Get a proposal by id
+     *
+     * GET /api/proposals/:id
+     *
+     * @params: id
+     * @body: none
+     * @returns: { supervsisor_name: string, supervisor_surname: string, proposal_id: number, title: string, description: string, ... }
+     * @error: 404 Not Found - if the proposal does not exist
+     * @error: 500 Internal Server Error - if something went wrong
+     */
+    getProposalById: async (proposal_id) => {
+        return fetch(ProposalsAPIURL + '/' + proposal_id, {
+            method: 'GET',
+            headers: APIConfig.API_REQUEST_HEADERS,
+            credentials: 'include'
         });
     }
 }

@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProposalsPage from "./pages/ProposalsPage";
+import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -38,10 +39,11 @@ function Main() {
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
             </Route>
+            <Route path="/proposals" element={<PageLayout />}>
+                <Route index element={<ProposalsPage />} />
+                <Route path=":proposal_id" element={<ProposalDetailsPage />} />
+            </Route>
             <Route path='*' element={<NotFoundPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/proposals" element={<ProposalsPage />} />
         </Routes>
     );
 }
@@ -55,7 +57,7 @@ function PageLayout() {
             <Row>
                 <footer>
                     <Col className="pr-3" xs={1}>
-                        <img src="logo.svg" alt="logo" />
+                        <img src="/logo.svg" alt="logo" />
                     </Col>
                     <Col xs={11}>
                         <span className="text-secondary">
