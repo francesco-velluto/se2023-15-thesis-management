@@ -51,6 +51,30 @@ const isArrayOfStrings = (array) => {
  */
 router.get("/", proposalsController.getAllProposals);
 
+/**
+   * POST /api/proposals
+   *
+   * @params none
+   * @body { 
+   *  title : string,
+   *  supervisor_id : string,
+   *  keywords : string[],
+   *  type : string,
+   *  groups : string[],
+   *  description : string,
+   *  required_knowledge : string,
+   *  notes : string,
+   *  expiration_date : string,
+   *  level : string,
+   *  cds_programmes : string[],
+   * }
+   * @returns { proposal: { id: number, title: string, ... } }
+   * @error 401 Unauthorized - if the user is not logged in
+   * @error 422 Invalid body - invalid fields in request body
+   * @error 500 Internal Server Error - if something went wrong
+   * 
+   * Refer to the official documentation for more details
+   */
 router.post(
   "/",
   isLoggedIn,

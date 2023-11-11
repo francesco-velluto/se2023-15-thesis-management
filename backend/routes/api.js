@@ -32,9 +32,36 @@ router.use("/authentication", authentication);
  */
 router.use("/proposals", proposals);
 
-// TO-DO: maybe move them to another file ??
+/**
+ * GET /api/teachers
+ * 
+ * Retrieve the list of all teachers.
+ * Authentication: Required
+ *
+ * @param {Object} res HTTP Response Object
+ * response body contains an array of teachers
+ * 
+ * @error 401 - Not Authenticated
+ * @error 500 - Internal Server Error
+ *
+ * See official documentation for more details
+ */
 router.get("/teachers", isLoggedIn, getTeachers);
 
+/**
+ * GET /api/degrees
+ * 
+ * Retrieve the list of all degrees.
+ * Authentication: Required
+ *
+ * @param {Object} res HTTP Response Object
+ * response body contains an array of degrees
+ * 
+ * @error 401 - Not Authenticated
+ * @error 500 - Internal Server Error
+ *
+ * See official documentation for more details
+ */
 router.get("/degrees", isLoggedIn, getDegrees);
 
 module.exports = router;

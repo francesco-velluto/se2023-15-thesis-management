@@ -38,8 +38,29 @@ module.exports = {
     }
   },
 
+  /**
+   * Insert a new proposal
+   *
+   * @params none
+   * @body { 
+   *  title : string,
+   *  supervisor_id : string,
+   *  keywords : string[],
+   *  type : string,
+   *  groups : string[],
+   *  description : string,
+   *  required_knowledge : string,
+   *  notes : string,
+   *  expiration_date : string,
+   *  level : string,
+   *  cds_programmes : string[],
+   * }
+   * @returns { proposal: { id: number, title: string, ... } }
+   * @error 500 Internal Server Error - if something went wrong
+   * 
+   * Refer to the official documentation for more details
+   */
   insertProposal: async (req, res) => {
-    // TO-DO: check auth
     try {
       const maxIdNum = await getMaxProposalIdNumber();
       const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);

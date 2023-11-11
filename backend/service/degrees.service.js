@@ -4,7 +4,11 @@ const db = require("./db");
 const Degree = require("../model/Degree");
 
 /**
- * Get all degrees from the database
+ * Get the list of all degrees from the database
+ *
+ * @returns {Degree[]} Array of Degree objects
+ *
+ * @throws {Error} - If there was some error in the database.
  */
 exports.getDegrees = async () => {
   try {
