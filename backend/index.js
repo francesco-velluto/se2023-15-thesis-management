@@ -42,6 +42,3 @@ db.connect()
         console.error('[BACKEND-SERVER] Error connecting to database', err.stack)
         process.exit(1);
     });
-
-
-// TODO : testing db connection

@@ -4,6 +4,7 @@ const express = require('express');
 const router = express.Router();
 
 const authenticationController = require('../controllers/authentication');
+const { body } = require('express-validator');
 
 /**
  * Authentication API routes
@@ -22,7 +23,10 @@ const authenticationController = require('../controllers/authentication');
  *
  * @see authenticationController.login
  */
-router.post('/login', authenticationController.login);
+router.post('/login',
+    body("username", "Must be entered a valid email!").isEmail(),
+    body("password", "Password can not be empty!").isString().notEmpty(),
+    authenticationController.login);
 
 /**
  * GET /api/authentication/current/user
@@ -33,7 +37,7 @@ router.post('/login', authenticationController.login);
  *
  * @see authenticationController.login
  */
-router.get('/current/user', authenticationController.currentUser);
+router.get('/current/user', authenticationController.isLoggedIn, authenticationController.currentUser);
 
 /**
  * DELETE /api/authentication/logout
@@ -44,7 +48,7 @@ router.get('/current/user', authenticationController.currentUser);
  *
  * @see authenticationController.login
  */
-router.delete('/logout', authenticationController.logout);
+router.delete('/logout', authenticationController.isLoggedIn, authenticationController.logout);
 
 
 module.exports = router;
