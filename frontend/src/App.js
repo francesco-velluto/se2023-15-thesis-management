@@ -8,6 +8,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
 import { useContext, useEffect } from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
+import ApplicationList from "./pages/ApplicationList";
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function Main() {
             <Route path='/' element={<PageLayout />} >
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
+                <Route path='/applications' element={<ApplicationList />} />
             </Route>
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
@@ -47,7 +49,8 @@ function PageLayout() {
                 <Outlet />
             </Row>
             <Row>
-                <footer>
+                {/*
+                    <footer>
                     <Col className="pr-3" xs={1}>
                         <img src="logo.svg" alt="logo" />
                     </Col>
@@ -56,7 +59,8 @@ function PageLayout() {
                             &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
                         </span>
                     </Col>
-                </footer>
+                    </footer>*/
+                }
             </Row>
         </Container>
     );

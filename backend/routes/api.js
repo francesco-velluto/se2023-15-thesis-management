@@ -64,4 +64,13 @@ router.get("/teachers", isLoggedIn, getTeachers);
  */
 router.get("/degrees", isLoggedIn, getDegrees);
 
+/**
+ * Applications routes
+ * All the routes for the applications resources
+ * @see applications.js
+ *
+ * Route /api/applications
+ */
+router.use('/applications', applications);
+
 module.exports = router;
