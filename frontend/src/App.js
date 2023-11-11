@@ -8,6 +8,7 @@ import { Col, Container, Row } from "react-bootstrap";
 import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
 import { useContext, useEffect } from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
+import ApplicationList from "./pages/ApplicationList";
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function Main() {
             <Route path='/' element={<PageLayout />} >
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
+                <Route path='/applications' element={<ApplicationList />} />
             </Route>
             <Route path='*' element={<NotFoundPage />} />
         </Routes>

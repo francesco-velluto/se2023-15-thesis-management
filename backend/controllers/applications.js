@@ -1,5 +1,6 @@
 "use strict";
 
+const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 
 module.exports = {
@@ -28,7 +29,19 @@ module.exports = {
                 res.status(result.status).json(result.data);
             })
             .catch((err) => {
-                res.status(err.status).json({error: err.data});
+                res.status(err.status).json({ error: err.data });
+            });
+    },
+
+
+    // TODO: commento
+    getAllApplicationsByTeacherId: (req, res) => {
+        applicationsService.getAllApplicationsByTeacherId(req.user)
+            .then((result) => {
+                res.status(result.status).json(result.data);
+            })
+            .catch((err) => {
+                res.status(err.status).json({ error: err.data });
             });
     }
 };
