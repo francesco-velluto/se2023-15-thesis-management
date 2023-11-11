@@ -56,6 +56,7 @@ function HomePage() {
                             {loggedUser.enrollment_year && <li>enrollment year: {loggedUser.enrollment_year} </li>}
                         </ul>
                         <Button onClick={handleLogout}>Logout</Button>
+                        <Button className="mt-4" as={Link} to="/applications">My Thesis Proposal with Applications</Button>
                     </>
                 }
             </Row>

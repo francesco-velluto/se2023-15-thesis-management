@@ -1,10 +1,20 @@
-:root {
+html,
+body,
+#root {
+    height: auto;
+    min-height: 100vh;
+    margin: 0;
+}
+
+#root {
     background-color: #DBECFF;
+    width: 100%;
 }
 
 body {
     margin: 0;
     display: flex;
+    flex-direction: column;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
         sans-serif;
@@ -22,13 +32,10 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .login-section {
+    margin-top: 10rem;
     background-color: white;
     padding: 15px 45px 45px 45px;
     border-radius: 10px;
@@ -38,19 +45,50 @@ body {
     min-height: 100vh;
 }
 
-footer {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.browse-application {
+    background-color: #DBECFF;
     padding: 20px;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.browse-application h2 {
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100rem;
+    max-width: 90vw;
     border-radius: 10px;
-    margin: 0 auto;
-    max-width: 90%;
+    font-weight: bold;
+}
+
+.browse-application .accordion-item {
+    margin: 15px;
+    width: 100rem;
+    max-width: 90vw;
+}
+
+.browse-application .accordion-item .accordion-button {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+}
+
+.browse-application .accordion-body .card {
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.browse-application .accordion-body .card-body {
+    margin: 0;
+}
+
+footer {
+    padding: 1.5rem;
+    text-align: center;
+    border-radius: 2rem 2rem 0rem 0rem;
 }
 
 img {
