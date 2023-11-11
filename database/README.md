@@ -8,7 +8,7 @@ The goal is to implement Thesis Management System for PoliTO. The primary entiti
 The "Proposals" entity list thesis projects, proposed by teachers.
 "Applications" entity tracks student applications for thesis proposals. A student can applied to as many proposal as he wants. A proposal can be applied by 0 or many students.
 
-![Screenshot 2023-11-11 at 17.13.02.png](Thesis%20Management%20System%2071fe75a1c78b4db4892cd898f11a21fe/Screenshot_2023-11-11_at_17.13.02.png)
+![Diagram](db-diagram.png)
 
 In this design 4 tables can NOT be modified :
 
