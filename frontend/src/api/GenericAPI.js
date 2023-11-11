@@ -34,8 +34,9 @@ export const APICall = async (url, method = "GET", body = undefined, expectRespo
                 let data = JSON.parse(text);
                 return await data;
             }
+        } else {
+            errors = (await response.json()).errors;
         }
-        else errors = (await response.json()).errors;
     } catch (errs) {
         const err = ["Failed to contact the server"];
         throw err;

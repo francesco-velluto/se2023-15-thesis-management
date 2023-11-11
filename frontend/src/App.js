@@ -49,7 +49,8 @@ function PageLayout() {
                 <Outlet />
             </Row>
             <Row>
-                <footer>
+                {/*
+                    <footer>
                     <Col className="pr-3" xs={1}>
                         <img src="logo.svg" alt="logo" />
                     </Col>
@@ -58,7 +59,8 @@ function PageLayout() {
                             &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
                         </span>
                     </Col>
-                </footer>
+                    </footer>*/
+                }
             </Row>
         </Container>
     );

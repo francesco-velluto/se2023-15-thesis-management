@@ -34,14 +34,50 @@ module.exports = {
     },
 
 
-    // TODO: commento
+    /**
+     * Get all applications of a teacher by their id
+     *
+     * @params: none
+     * @body: none
+     * @returns: {
+     *   proposal_id: number,
+     *   title: string,
+     *   type: string,
+     *   description: string,
+     *   expiration_date: date,
+     *   level: string,
+     *   applications: [
+     *     {
+     *       application_id: number,
+     *       status: string,
+     *       application_date: date,
+     *       student_id: number,
+     *       surname: string,
+     *       name: string,
+     *       email: string,
+     *       enrollment_year: number,
+     *       cod_degree: string
+     *     }
+     *   ]
+     * }
+     * @error 401 Unauthorized - if teacher_id is not the same as the authenticated user
+     * @error 404 Not Found - if the teacher_id is not found or no applications are found for their thesis proposals
+     * @error 500 Internal Server Error - if something went wrong during the process
+     *
+     * The access to this is restricted to authenticated users only.
+     * Check if the user is authenticated is done by the middleware isLoggedIn.
+     */
     getAllApplicationsByTeacherId: (req, res) => {
-        applicationsService.getAllApplicationsByTeacherId(req.user)
+        if (!req.user instanceof Teacher) {
+            return res.status(401).json({ errors: ['Must be a teacher to make this request!'] });
+        }
+
+        applicationsService.getAllApplicationsByTeacherId(req.user.id)
             .then((result) => {
                 res.status(result.status).json(result.data);
             })
             .catch((err) => {
-                res.status(err.status).json({ error: err.data });
+                res.status(err.status).json({ errors: [err.data] });
             });
     }
 };
