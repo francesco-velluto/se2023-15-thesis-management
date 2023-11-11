@@ -254,15 +254,15 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.6 - SUCCESS 201 | Undefined groups field", (done) => {
+  test("T2.6 - SUCCESS 201 | Undefined required knowledge field", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: undefined,
+      groups: ["Group A"],
       description: "Test description",
-      required_knowledge: "Node.js, PostgreSQL, React.js",
+      required_knowledge: undefined,
       notes: "notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
@@ -439,7 +439,43 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.11 - ERROR 500 | Database error", (done) => {
+  test("T2.11 - ERROR 422 | Empty groups array", (done) => {
+    const mockProposalReq = {
+      title: "test",
+      supervisor_id: "T002",
+      keywords: ["k1", "k2"],
+      type: "Master",
+      groups: [],
+      description: "Test description",
+      required_knowledge: "Node.js, PostgreSQL, React.js",
+      notes: "test notes",
+      expiration_date: "2024-06-30",
+      level: "Undergraduate",
+      cds_programmes: ["CD008"],
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.12 - ERROR 500 | Database error", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
