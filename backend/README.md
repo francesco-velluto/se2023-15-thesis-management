@@ -84,9 +84,9 @@ GET `/api/proposals`
   | `supervisor_id` | _string_ | Yes | Identifier of the supervisor of the proposal |
   | `keywords` | _string[]_ | Yes | Keywords related to the proposal |
   | `type` | _string_ | Yes | Type of thesis (e.g. research, experimental...) |
-  | `groups` | _string[]_ | No | List of research groups related to the thesis proposal |
+  | `groups` | _string[]_ | Yes | List of research groups related to the thesis proposal |
   | `description` | _string_ | Yes | Description of the activities of the thesis |
-  | `required_knowledge` | _string_ | Yes | Description of the knowledge required for the thesis |
+  | `required_knowledge` | _string_ | No | Description of the knowledge required for the thesis |
   | `notes` | _string_ | No | Additional notes by the professor |
   | `expiration_date` | _string_ | Yes | Date in ISO 8601 format YYYY-MM-DD |
   | `level` | _string_ | Yes | Level of the thesis (e.g. Bachelor, Master) |
