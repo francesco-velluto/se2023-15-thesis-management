@@ -1,7 +1,7 @@
 "use strict";
 
 const request = require("supertest");
-const proposalsController = require("../controllers/proposals");
+const { isLoggedIn, isTeacher } = require("../controllers/authentication");
 const {
   getMaxProposalIdNumber,
   insertProposal,
@@ -9,25 +9,28 @@ const {
 const app = require("../app");
 
 jest.mock("../service/proposals.service");
+jest.mock("../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
-  jest.spyOn(console, 'log').mockImplementation(() => {});
-  jest.spyOn(console, 'info').mockImplementation(() => {});
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 beforeEach(() => {
   //jest.clearAllMocks();
-    getMaxProposalIdNumber.mockClear();
-    insertProposal.mockClear();
+  getMaxProposalIdNumber.mockClear();
+  insertProposal.mockClear();
+  isLoggedIn.mockClear();
+  isTeacher.mockClear();
 });
 
 afterAll(() => {
-    jest.restoreAllMocks();
-})
+  jest.restoreAllMocks();
+});
 
-/* describe.skip("T1 - Get all proposals Unit Tests", () => {
+/* describe("T1 - Get all proposals Unit Tests", () => {
   test("ERROR 401 | Unauthorized", () => {
     // TODO - this is an example, change it if needed
     const req = {};
@@ -87,55 +90,94 @@ afterAll(() => {
 }); */
 
 describe("T2 - Insert proposals unit tests", () => {
-  test.skip("T2.1 - ERROR 401 | Unauthorized", async () => {
-    const req = {};
-    const res = {
-      status: jest.fn(() => res),
-      json: jest.fn(),
-    };
+  test("T2.1 - ERROR 401 | Not authenticated", (done) => {
+    const mockProposalReq = {};
 
-    await proposalsController.insertProposal(req, res);
+    isLoggedIn.mockImplementation((req, res, next) => {
+      return res.status(401).json({ error: "Not authenticated" });
+    });
 
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" });
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body).toEqual({ error: "Not authenticated" });
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).not.toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
   });
 
-  test("T2.2 - SUCCESS 201 | New proposal inserted", async () => {
+  test("T2.2 - ERROR 401 | Not authorized", (done) => {
+    const mockProposalReq = {};
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      return res.status(401).json({ error: "Not authorized" });
+    });
+
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body).toEqual({ error: "Not authorized" });
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(insertProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.3 - SUCCESS 201 | New proposal inserted", (done) => {
     const mockProposalReq = {
-      title: "Test title",
+      title: "test proposal",
       supervisor_id: "T002",
       keywords: ["k1", "k2"],
       type: "Master",
       groups: ["Group A", "Group B"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
-      notes: "test notes",
+      notes: "some notes",
       expiration_date: "2024-06-30",
       level: "Undergraduate",
       cds_programmes: ["CD008"],
     };
 
-    const req = {
-      body: mockProposalReq,
-    };
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
 
-    const res = {
-      status: jest.fn(() => res),
-      json: jest.fn(),
-    };
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
 
+    const mockProposalRes = { ...mockProposalReq, proposal_id: "P011" };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
-    const mockProposalRes = { proposal_id: 11, ...mockProposalReq };
     insertProposal.mockResolvedValue(mockProposalRes);
 
-    await proposalsController.insertProposal(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(201);
-    expect(res.json).toHaveBeenCalledWith({ proposal: mockProposalRes });
+    request(app)
+      .post("/api/proposals")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(201);
+        expect(res.body).toEqual({ proposal: mockProposalRes });
+        expect(getMaxProposalIdNumber).toHaveBeenCalled();
+        expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
+        done();
+      })
+      .catch((err) => done(err));
   });
 
-  test("T2.2 - ERROR 422 | Empty title field", (done) => {
+  test("T2.4 - ERROR 422 | Empty title field", (done) => {
     const mockProposalReq = {
       title: "",
       supervisor_id: "T002",
@@ -150,6 +192,14 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
     request(app)
       .post("/api/proposals")
       .send(mockProposalReq)
@@ -163,7 +213,7 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.3 - SUCCESS 201 | Undefined notes field", (done) => {
+  test("T2.5 - SUCCESS 201 | Undefined notes field", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -178,7 +228,15 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
-    const mockProposalRes = {...mockProposalReq, proposal_id: "P011"}
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    const mockProposalRes = { ...mockProposalReq, proposal_id: "P011" };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
     insertProposal.mockResolvedValue(mockProposalRes);
@@ -190,13 +248,13 @@ describe("T2 - Insert proposals unit tests", () => {
         expect(res.status).toBe(201);
         expect(res.body).toEqual({ proposal: mockProposalRes });
         expect(getMaxProposalIdNumber).toHaveBeenCalled();
-        expect(insertProposal).toHaveBeenCalledWith({...mockProposalRes});
+        expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
         done();
       })
       .catch((err) => done(err));
   });
 
-  test("T2.4 - SUCCESS 201 | Undefined groups field", (done) => {
+  test("T2.6 - SUCCESS 201 | Undefined groups field", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -211,7 +269,15 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
-    const mockProposalRes = {...mockProposalReq, proposal_id: "P011"}
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    const mockProposalRes = { ...mockProposalReq, proposal_id: "P011" };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
     insertProposal.mockResolvedValue(mockProposalRes);
@@ -223,13 +289,13 @@ describe("T2 - Insert proposals unit tests", () => {
         expect(res.status).toBe(201);
         expect(res.body).toEqual({ proposal: mockProposalRes });
         expect(getMaxProposalIdNumber).toHaveBeenCalled();
-        expect(insertProposal).toHaveBeenCalledWith({...mockProposalRes});
+        expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
         done();
       })
       .catch((err) => done(err));
   });
 
-  test("T2.5 - ERROR 422 | Missing date field", (done) => {
+  test("T2.7 - ERROR 422 | Missing date field", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -244,6 +310,14 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
     request(app)
       .post("/api/proposals")
       .send(mockProposalReq)
@@ -257,7 +331,7 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.6 - ERROR 422 | Invalid date format", (done) => {
+  test("T2.8 - ERROR 422 | Invalid date format", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -272,6 +346,14 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
     request(app)
       .post("/api/proposals")
       .send(mockProposalReq)
@@ -285,7 +367,7 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.7 - ERROR 422 | Invalid date", (done) => {
+  test("T2.9 - ERROR 422 | Invalid date", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -300,6 +382,14 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
     request(app)
       .post("/api/proposals")
       .send(mockProposalReq)
@@ -313,7 +403,7 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.8 - ERROR 422 | Array of strings contains some elements which are not strings", (done) => {
+  test("T2.10 - ERROR 422 | Array of strings contains some elements which are not strings", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -328,6 +418,14 @@ describe("T2 - Insert proposals unit tests", () => {
       cds_programmes: ["CD008"],
     };
 
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
     request(app)
       .post("/api/proposals")
       .send(mockProposalReq)
@@ -341,7 +439,7 @@ describe("T2 - Insert proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T2.9 - ERROR 500 | Database error", (done) => {
+  test("T2.11 - ERROR 500 | Database error", (done) => {
     const mockProposalReq = {
       title: "TEST",
       supervisor_id: "T002",
@@ -359,7 +457,15 @@ describe("T2 - Insert proposals unit tests", () => {
     getMaxProposalIdNumber.mockResolvedValue(10);
 
     insertProposal.mockImplementation(() => {
-        throw Error("some error");
+      throw Error("some error");
+    });
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
     });
 
     request(app)
