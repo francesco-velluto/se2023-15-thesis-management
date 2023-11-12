@@ -1,5 +1,6 @@
 "use strict";
 
+const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 
@@ -79,5 +80,20 @@ module.exports = {
             .catch((err) => {
                 res.status(err.status).json({ errors: [err.data] });
             });
+    },
+
+    insertNewApplication: (req,res) => {
+        if (!req.user instanceof Student) {
+            return res.status(401).json({ errors: ['Must be a student to make this request!'] });
+        }
+        applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
+            .then((result) =>{
+                res.status(result.status).json(result.data)
+            }
+            )
+            .catch((error) => {
+                res.status(error.status).json({errors: [err.data]})
+            }
+            )
     }
 };

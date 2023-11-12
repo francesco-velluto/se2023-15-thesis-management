@@ -32,5 +32,7 @@ router.get('/:student_id', authenticationController.isLoggedIn, applicationsCont
  */
 router.get('/', authenticationController.isLoggedIn, applicationsController.getAllApplicationsByTeacherId);
 
+router.post('/', authenticationController.isLoggedIn, applicationsController.insertNewApplication);
+
 
 module.exports = router;

@@ -30,7 +30,7 @@ authentication.inializeAuthentication(app);     // it should be set before the r
 
 app.use('/api', api);
 
-console.info('[BACKEND-SERVER] Connecting to Postgres database at ' + process.env.DB_HOST + ':5432 using username: ' + process.env.DB_USER);
+console.info('[BACKEND-SERVER] Connecting to Postgres database at ' + process.env.DB_HOST + ':5432');
 db.connect()
     .then(() =>  {
         console.info('[BACKEND-SERVER] Database connection established')
