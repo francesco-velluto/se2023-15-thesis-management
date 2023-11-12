@@ -23,4 +23,16 @@ const applicationsController = require('../controllers/applications');
  */
 router.get('/:student_id', authenticationController.isLoggedIn, applicationsController.getAllApplicationsByStudentId);
 
+/**
+ * GET /api/applications/
+ *
+ * @params none
+ * @body none
+ * @returns { [ { thesis_id: number, title: string, description: string, application_date: date, status: string } ] }
+ */
+router.get('/', authenticationController.isLoggedIn, applicationsController.getAllApplicationsByTeacherId);
+
+router.post('/', authenticationController.isLoggedIn, applicationsController.insertNewApplication);
+
+
 module.exports = router;

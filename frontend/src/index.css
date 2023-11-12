@@ -1,5 +1,16 @@
-:root {
+html,
+body,
+#root {
+    height: auto;
+    min-height: 100vh;
+    margin: 0;
+}
+
+#root {
     background-color: #DBECFF;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 body {
@@ -11,24 +22,15 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.page-layout {
-    display: flex;
-    flex-direction: column;
-    width: auto;
-}
-
 .login-page {
     background-color: #DBECFF;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .login-section {
+    margin-top: 10rem;
     background-color: white;
     padding: 15px 45px 45px 45px;
     border-radius: 10px;
@@ -38,26 +40,66 @@ body {
     min-height: 100vh;
 }
 
-footer {
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.browse-application {
+    background-color: #DBECFF;
     padding: 20px;
-    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.browse-application h2 {
+    background-color: #ffffff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100rem;
+    max-width: 90vw;
     border-radius: 10px;
-    margin: 0 auto;
-    max-width: 90%;
+    font-weight: bold;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
+.browse-application .accordion-item {
+    margin: 15px;
+    width: 100rem;
+    max-width: 90vw;
 }
 
-.text-secondary {
-    color: #888;
+.browse-application .accordion-item .accordion-button {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+}
+
+.browse-application .accordion-body .card {
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.browse-application .accordion-body .card-body {
+    margin: 0;
+}
+
+footer {
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: 2rem 2rem 0 0;
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+footer img {
+    width: 120px;
+    margin: auto;
+    display: flex;
+    justify-content: end;
+}
+
+.footer-text {
+    text-align: left;
+    color: #6c757d;
 }

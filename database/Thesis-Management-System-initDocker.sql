@@ -178,37 +178,6 @@ INSERT INTO public.career (id, cod_course, title_course, cfu, grade, date) VALUE
 
 ALTER TABLE public.career OWNER TO postgres;
 
---
--- Name: follows; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.follows (
-    fid SERIAL PRIMARY KEY,
-    id VARCHAR(10) NOT NULL,
-    cod_degree VARCHAR(10)
-);
-
-INSERT INTO public.follows (id, cod_degree) VALUES
-  ('S001', 'BSC001'),
-  ('S002', 'BSC001'),
-  ('S003', 'MSC001'),
-  ('S004', 'MSC001'),
-  ('S005', 'BSC002'),
-  ('S006', 'BSC002'),
-  ('S007', 'MSC002'),
-  ('S008', 'MSC002'),
-  ('S009', 'PHD001'),
-  ('S010', 'PHD001');
-
-
-ALTER TABLE public.follows OWNER TO postgres;
-
-ALTER TABLE ONLY public.follows
-    ADD CONSTRAINT follows_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
-
-ALTER TABLE ONLY public.follows
-    ADD CONSTRAINT follows_fk_degree FOREIGN KEY (cod_degree) REFERENCES public.degree(cod_degree);
-
 
 --
 -- Name: passed; Type: TABLE; Schema: public; Owner: postgres
@@ -216,8 +185,8 @@ ALTER TABLE ONLY public.follows
 
 CREATE TABLE public.passed (
     pid SERIAL PRIMARY KEY,
-    career_id VARCHAR(10),
-    id VARCHAR(10)
+    career_id VARCHAR(10) NOT NULL,
+    id VARCHAR(10) NOT NULL
     );
 
 INSERT INTO public.passed (career_id, id) VALUES
@@ -256,10 +225,10 @@ CREATE TABLE public.proposals (
     notes TEXT,
     expiration_date DATE,
     level VARCHAR(30),
-    cds_programmes TEXT[]
+    programmes TEXT[]
 );
 
-INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, cds_programmes) VALUES
+INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, programmes) VALUES
   ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Bachelor', ARRAY['Group A'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Undergraduate', ARRAY['CD001']),
   ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Master', ARRAY['Group B'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Graduate', ARRAY['CD002']),
   ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Master', ARRAY['Group A'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Graduate', ARRAY['CD003']),
@@ -286,7 +255,7 @@ CREATE TABLE public.applications (
     proposal_id VARCHAR(10) NOT NULL,
     id VARCHAR(10) NOT NULL,
     status VARCHAR(255) NOT NULL, 
-    application_date DATE
+    application_date DATE NOT NULL
 );
 
 INSERT INTO public.applications (proposal_id, id, status, application_date) VALUES
