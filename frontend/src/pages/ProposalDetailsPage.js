@@ -82,6 +82,18 @@ function ProposalDetailsPage() {
                                 <Col>
                                     <Card>
                                         <Card.Body>
+                                            <Card.Title>Proposal Programmes</Card.Title>
+                                            <Card.Text>
+                                                {proposal.programmes.map((programme) => <Badge className="mr-1">{programme.title_degree}</Badge>)}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Card>
+                                        <Card.Body>
                                             <Card.Title>Proposal Type</Card.Title>
                                             <Card.Text>{proposal.type}</Card.Text>
                                         </Card.Body>

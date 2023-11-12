@@ -16,7 +16,20 @@ module.exports = {
                         console.error(`Error in getProposalById - proposal_id: ${proposal_id} not found`);
                         reject({ status: 404, data: "Proposal not found" });
                     } else {
-                        resolve({status: 200, data: result.rows[0]});
+                        let proposal = result.rows[0];
+
+                        // get the names of each programme of the proposal
+                        // we cannot use the 'WHERE cod_degree IN $1' because it is not supported by the pg library
+                        // we will use a workaround with ANY
+                        db.query('SELECT * FROM degree WHERE cod_degree = ANY($1)', [proposal.programmes])
+                            .then(degrees_result => {
+                                let degrees = degrees_result.rows;
+                                proposal.programmes = degrees;
+                                resolve({ status: 200, data: proposal });
+                            }).catch(error => {
+                                console.log("Error in getProposalById - cannot get programmes: ", error);
+                                reject({ status: 500, data: "Internal Server Error" });
+                        });
                     }
                 })
                 .catch(error => {

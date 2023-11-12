@@ -233,16 +233,16 @@ CREATE TABLE public.proposals (
 );
 
 INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, programmes) VALUES
-  ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Bachelor', ARRAY['Group A'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Undergraduate', ARRAY['CD001']),
-  ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Master', ARRAY['Group B'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Graduate', ARRAY['CD002']),
-  ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Master', ARRAY['Group A'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Graduate', ARRAY['CD003']),
-  ('P004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Analysis'], 'Master', ARRAY['Group B'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Graduate', ARRAY['CD004']),
-  ('P005', 'Marketing Strategies', 'T005', ARRAY['Marketing', 'Strategies'], 'Bachelor', ARRAY['Group C'], 'A marketing strategies thesis description.', 'Marketing fundamentals', 'N/A', '2023-10-20', 'Undergraduate', ARRAY['CD005']),
-  ('P006', 'Robotics and Automation', 'T006', ARRAY['Robotics', 'Automation'], 'Master', ARRAY['Group A'], 'A robotics and automation thesis description.', 'Robotics knowledge', 'N/A', '2024-02-28', 'Graduate', ARRAY['CD006']),
-  ('P007', 'Climate Change Impact', 'T007', ARRAY['Climate Change', 'Impact'], 'Master', ARRAY['Group B'], 'A thesis on climate change impact analysis.', 'Environmental Science knowledge', 'N/A', '2024-03-15', 'Graduate', ARRAY['CD007']),
-  ('P008', 'Literary Analysis', 'T008', ARRAY['Literature', 'Analysis'], 'Bachelor', ARRAY['Group D'], 'A literary analysis thesis description.', 'Literary analysis skills', 'N/A', '2023-11-10', 'Undergraduate', ARRAY['CD008']),
-  ('P009', 'Financial Risk Management', 'T009', ARRAY['Financial', 'Risk Management'], 'Master', ARRAY['Group C'], 'A thesis on financial risk management.', 'Finance knowledge', 'N/A', '2024-04-10', 'Graduate', ARRAY['CD009']),
-  ('P010', 'Introduction to Machine Learning', 'T010', ARRAY['Machine Learning', 'AI'], 'Bachelor', ARRAY['Group A'], 'An introductory thesis on machine learning.', 'Basic AI knowledge', 'N/A', '2023-09-30', 'Undergraduate', ARRAY['CD001']);
+  ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Bachelor', ARRAY['Group A'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Undergraduate', ARRAY['BSC001']),
+  ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Master', ARRAY['Group B'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Graduate', ARRAY['MSC001', 'MSC002']),
+  ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Master', ARRAY['Group A'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Graduate', ARRAY['MSC001']),
+  ('P004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Analysis'], 'Master', ARRAY['Group B'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Graduate', ARRAY['MSC001']),
+  ('P005', 'Marketing Strategies', 'T005', ARRAY['Marketing', 'Strategies'], 'Bachelor', ARRAY['Group C'], 'A marketing strategies thesis description.', 'Marketing fundamentals', 'N/A', '2023-10-20', 'Undergraduate', ARRAY['BSC001']),
+  ('P006', 'Robotics and Automation', 'T006', ARRAY['Robotics', 'Automation'], 'Master', ARRAY['Group A'], 'A robotics and automation thesis description.', 'Robotics knowledge', 'N/A', '2024-02-28', 'Graduate', ARRAY['MSC003']),
+  ('P007', 'Climate Change Impact', 'T007', ARRAY['Climate Change', 'Impact'], 'Master', ARRAY['Group B'], 'A thesis on climate change impact analysis.', 'Environmental Science knowledge', 'N/A', '2024-03-15', 'Graduate', ARRAY['MSC002']),
+  ('P008', 'Literary Analysis', 'T008', ARRAY['Literature', 'Analysis'], 'Bachelor', ARRAY['Group D'], 'A literary analysis thesis description.', 'Literary analysis skills', 'N/A', '2023-11-10', 'Undergraduate', ARRAY['MSC001']),
+  ('P009', 'Financial Risk Management', 'T009', ARRAY['Financial', 'Risk Management'], 'Master', ARRAY['Group C'], 'A thesis on financial risk management.', 'Finance knowledge', 'N/A', '2024-04-10', 'Graduate', ARRAY['MSC002']),
+  ('P010', 'Introduction to Machine Learning', 'T010', ARRAY['Machine Learning', 'AI'], 'Bachelor', ARRAY['Group A'], 'An introductory thesis on machine learning.', 'Basic AI knowledge', 'N/A', '2023-09-30', 'Undergraduate', ARRAY['BSC001']);
 
 
 ALTER TABLE public.proposals OWNER TO postgres;
