@@ -7,6 +7,8 @@ function ProposalsPage() {
 
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
 
+    console.log(searchData);
+
     return (
         <>
         
