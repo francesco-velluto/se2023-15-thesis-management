@@ -2,12 +2,11 @@ import { useState } from "react";
 import NavbarContainer from "../components/Navbar";
 import ProposalsSearchArea from "../components/ProposalsSearchArea";
 import TitleBar from "../components/TitleBar";
+import ProposalsList from "../components/ProposalsList";
 
 function ProposalsPage() {
 
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
-
-    console.log(searchData);
 
     return (
         <>
@@ -15,6 +14,7 @@ function ProposalsPage() {
         <NavbarContainer/>
         <TitleBar/>
         <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
+        <ProposalsList searchData={searchData} />
         
         </>
     );

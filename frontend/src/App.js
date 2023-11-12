@@ -38,11 +38,12 @@ function Main() {
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
+                <Route path="/proposals" element={loggedUser ? <ProposalsPage /> : <UnAuthorizationPage />} />
             </Route>
             <Route path='*' element={<NotFoundPage />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/proposals" element={<ProposalsPage />} />
+            
         </Routes>
     );
 }

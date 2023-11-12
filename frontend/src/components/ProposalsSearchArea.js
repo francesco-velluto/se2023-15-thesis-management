@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Form, Button, Container } from 'react-bootstrap';
+import { Form, Button, Container, Col, Row } from 'react-bootstrap';
 
 const FIELDS = [    'Title',
                     'Supervisor',
@@ -27,8 +27,8 @@ function ProposalsSearchArea(props) {
         }
 
         props.setSearchData((sd) => {
-            sd.push({field: searchField, value: searchValue});
-            return sd;
+            const result = [...sd, {field: searchField, value: searchValue}]
+            return result;
         });
 
         setSearchField("");
@@ -43,13 +43,13 @@ function ProposalsSearchArea(props) {
         
         <div className=".container-fluid bg-light p-3 d-flex flex-column align-items-center" >
                 
-            <Form onSubmit={handleSubmit} className="w-50 d-flex flex-row justify-content-between">
+            <Form onSubmit={handleSubmit} className="w-50 mb-3 d-flex flex-row justify-content-between">
                 <div className='m-2'>Filter by:</div>
                 <Form.Select aria-label="Default select example" value={searchField} onChange={(event) => {setSearchField((sd) => (event.target.value))}} className='m-2' style={{maxWidth: "25%"}}>
                     <option value="">Field</option>
                     {
-                        FIELDS.filter((f) => (!props.searchData.find((el) => (el.field === f)))).map((f) => 
-                            <option value={f} >{f}</option>
+                        FIELDS.filter((f) => (!props.searchData.find((el) => (el.field === f)))).map((f, index) => 
+                            <option key={index} value={f} >{f}</option>
                         )
                     }
                 </Form.Select>
@@ -74,28 +74,49 @@ function ProposalsSearchArea(props) {
             </Form>
                  
             
-            <div className="d-flex flex-row">
-                {
-                    props.searchData.map((fltr) => {
-                        <FilterElement fltr={fltr} setSearchData={props.setSearchData}/>
-                    })
+            <Row className='w-75 d-flex flex-row justify-content-center'>
+            {
+                    props.searchData.map((fltr, index) => (
+                        <FilterElement key={index} fltr={fltr} setSearchData={props.setSearchData}/>
+                    ))
                 }
-            </div>
+            </Row>
+                
+           
         </div>
 
         </>
     );
 }
 
-function FilterElement(props){
-    return <>
-    <Container className='d-flex flex-row'>
-        Field: 
-        {props.fltr.field}
-        Value: 
-        {props.fltr.value}
-    </Container>
-    </>
-}
+function FilterElement(props) {
+    return (
+      <>
+        <Col xs lg="3">
+          <Container className='mx-3 my-1 border border-2 border-dark rounded position-relative'>
+            {props.fltr.field + " : " + ((props.fltr.value + "").length < 11 ? props.fltr.value : (props.fltr.value.slice(0, 10) + "..."))}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              fill="currentColor"
+              className="bi bi-x-circle position-absolute top-0 end-0"
+              style={{ margin: '3px', cursor: 'pointer' }}
+              viewBox="0 0 16 16"
+              onClick={() => {
+                props.setSearchData((sd) => {
+                    return sd.filter((elem) => (elem.field !== props.fltr.field))
+                })
+              }}
+            >
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+            </svg>
+          </Container>
+        </Col>
+      </>
+    );
+  }
+  
 
 export default ProposalsSearchArea;
