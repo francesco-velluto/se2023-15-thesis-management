@@ -37,6 +37,7 @@ function Main() {
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={<ApplicationList />} />
+                <Route path='/newProposal' element = {<NewProposalPage />} />
             </Route>
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
