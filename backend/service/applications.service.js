@@ -1,5 +1,6 @@
 "use strict";
 
+const Application = require("../model/Application");
 const Teacher = require("../model/Teacher");
 const db = require("./db");
 
@@ -60,5 +61,32 @@ module.exports = {
                 reject({ status: 500, data: 'Internal server error' });
             }
         });
+    },
+
+    insertNewApplication: async(proposal_id, student_id) => {
+        const status = 'Pending'
+        const application_date = new Date().toISOString()
+        const query = `INSERT INTO applications (proposal_id, id, status, application_date)`+ 
+                        `VALUES ('${proposal_id}', '${student_id}', '${status}', '${application_date}');`;
+        try {
+            const studentCheck = await db.query(`SELECT * FROM student WHERE id = ${student_id}`);
+            const proposalCheck = await db.query(`SELECT * FROM proposals WHERE proposal_id = ${proposal_id}`);
+        
+            if (studentCheck.length === 0) {
+              throw new Error(`Student with id ${student_id} not found.`);
+            }
+        
+            if (proposalCheck.length === 0) {
+              throw new Error(`Proposal with id ${proposal_id} not found.`);
+            }
+
+            console.log(query)
+            const res = await db.query(query)
+            return res[0]
+        }
+        catch {
+            console.error('[BACKEND-SERVER] Error in insertNewApplication:', error);
+        }
+
     }
 }
