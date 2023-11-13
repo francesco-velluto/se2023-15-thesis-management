@@ -4,7 +4,7 @@ import TitleBar from "../components/TitleBar";
 
 import {useNavigate, useParams} from "react-router-dom";
 import { getProposalById } from "../api/ProposalsAPI";
-import {Alert, Badge, Button, Card, CardBody, Col, Container, Row} from "react-bootstrap";
+import {Alert, Badge, Button, Card, Col, Container, Row} from "react-bootstrap";
 
 import "../ProposalDetails.css";
 

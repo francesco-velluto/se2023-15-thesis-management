@@ -37,7 +37,7 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={<HomePage />} />
+                <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
             </Route>
