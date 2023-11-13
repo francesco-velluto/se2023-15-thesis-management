@@ -14,7 +14,6 @@ const applications = require("./applications");
 const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
 const { isLoggedIn } = require("../controllers/authentication");
-const applications = require("../controllers/applications");
 
 /**
  * Authentication routes
@@ -73,6 +72,6 @@ router.get("/degrees", isLoggedIn, getDegrees);
  *
  * Route /api/applications
  */
-//router.use('/applications', applications);
+router.use('/applications', applications);
 
 module.exports = router;

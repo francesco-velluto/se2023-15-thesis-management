@@ -33,8 +33,6 @@ function ProposalsSearchArea(props) {
 
         setSearchField("");
         setSearchValue("");
-
-        //TODO: aggiornamento lista proposals
         
     }
 

@@ -11,9 +11,6 @@ function ProposalsList(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    console.log("DB proposals: ", proposals);
-    console.log("filtered: ", filteredProposals);
-
 
     useEffect(() => {
         async function loadProposals(){
@@ -21,16 +18,19 @@ function ProposalsList(props) {
             setIsLoading(true);
 
             getAllProposals().then(async res => {
-                let db_proposals = await res.json();
+                if(!res.ok){
+                    setErrorMessage(res.statusText);
+                    setIsLoading(false);
+                    return
+                }
+                let db_proposals = (await res.json()).proposals;
 
-                if(db_proposals.status == 200){
-                    setProposals(db_proposals);
-                    setFilteredProposals(db_proposals);
-                }
-                else{
-                    console.log(db_proposals);
-                    setErrorMessage(db_proposals.errors[0])
-                }
+               
+                console.log("db_prop: ",db_proposals)
+
+                
+                setProposals(db_proposals);
+                setFilteredProposals(db_proposals);
                 setIsLoading(false);
             }).catch((err) => {
                 setErrorMessage(err.message);
@@ -46,6 +46,19 @@ function ProposalsList(props) {
         loadProposals();
 
     }, [])
+
+
+    useEffect(() => {
+
+        setFilteredProposals(() => {
+            let result = [...proposals];
+            for(const fltr of props.searchData){
+                result = result.filter((elem) => (elem[fltr.field] == fltr.value));
+            }
+            return result;
+        })
+
+    }, [props.searchData.length])
     
 
     return (

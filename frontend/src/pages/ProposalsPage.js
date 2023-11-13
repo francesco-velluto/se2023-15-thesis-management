@@ -6,6 +6,7 @@ import ProposalsList from "../components/ProposalsList";
 
 function ProposalsPage() {
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
+    
 
     return (
         <>
