@@ -103,3 +103,23 @@ footer img {
     text-align: left;
     color: #6c757d;
 }
+
+@media (max-width: 767px) {
+    footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    footer img {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .footer-text {
+        display: flex;
+        text-align: center;
+        align-items: center;
+    }
+}
