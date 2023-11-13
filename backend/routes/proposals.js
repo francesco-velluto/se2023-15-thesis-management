@@ -5,7 +5,7 @@ const router = express.Router();
 
 const authenticationController = require('../controllers/authentication');
 const proposalsController = require('../controllers/proposals');
-const authenticationController = require('../controllers/authentication');
+
 
 /**
  * Proposals API routes
@@ -19,11 +19,12 @@ const authenticationController = require('../controllers/authentication');
  *
  * @params none
  * @body none
- * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_id: string, ... } ] }
+ * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string, 
+ *                              supervisor_surname: string, ... } ] }
  * @error 401 Unauthorized - if the user is not logged in
  * @error 500 Internal Server Error - if something went wrong
  *
- * @see proposalsController.getProposals
+ * @see proposalsController.getAllProposals
  */
 router.get('/',authenticationController.isLoggedIn, proposalsController.getAllProposals);
 
