@@ -1,11 +1,19 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { LoggedUserContext } from "../api/Context";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import AuthenticationAPI from "../api/AuthenticationAPI";
 
 function HomePage() {
     const { loggedUser, handleLogout } = useContext(LoggedUserContext);
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        //TODO: If user logged in, go to proposals list, otherwise go to login page
+        //navigate("/proposals");
+    }, []);
 
     return (
         <Container className="home-page">
@@ -35,7 +43,7 @@ function HomePage() {
             </Row>
             <Row className="mt-4">
                 {!loggedUser &&
-                    <Button as={Link} to={"/login"} >Login</Button>
+                    <Button as={Link} to={"/login"}>Login</Button>
                 }
             </Row>
             <Row>

@@ -3,6 +3,7 @@
 const express = require('express');
 const router = express.Router();
 
+const authenticationController = require('../controllers/authentication');
 const proposalsController = require('../controllers/proposals');
 const authenticationController = require('../controllers/authentication');
 
@@ -25,6 +26,18 @@ const authenticationController = require('../controllers/authentication');
  * @see proposalsController.getProposals
  */
 router.get('/',authenticationController.isLoggedIn, proposalsController.getAllProposals);
+
+/**
+ * GET /api/proposals/:proposal_id
+ *
+ * @params proposal_id
+ * @body none
+ * @returns { supervisor_name: string, supervisor_surname: string, proposal_id: number, title: string, description: string, ... }
+ * @error 401 Unauthorized - if the user is not logged in
+ * @error 404 Not Found - if the proposal_id is not found
+ * @error 500 Internal Server Error - if something went wrong
+ */
+router.get('/:proposal_id', authenticationController.isLoggedIn, proposalsController.getProposalById);
 
 module.exports = router;
 
