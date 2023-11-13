@@ -1,27 +1,31 @@
 "use strict";
 
 const request = require("supertest");
-const { isLoggedIn, isTeacher } = require("../controllers/authentication");
+const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
 const {
   getMaxProposalIdNumber,
   insertProposal,
+  getAllProposals
 } = require("../service/proposals.service");
 const app = require("../app");
 
 jest.mock("../service/proposals.service");
 jest.mock("../controllers/authentication");
 
+
+
 beforeAll(() => {
   jest.clearAllMocks();
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => { });
+  jest.spyOn(console, "info").mockImplementation(() => { });
+  jest.spyOn(console, "error").mockImplementation(() => { });
 });
 
 beforeEach(() => {
   //jest.clearAllMocks();
   getMaxProposalIdNumber.mockClear();
   insertProposal.mockClear();
+  getAllProposals.mockClear();
   isLoggedIn.mockClear();
   isTeacher.mockClear();
 });
@@ -30,64 +34,154 @@ afterAll(() => {
   jest.restoreAllMocks();
 });
 
-/* describe("T1 - Get all proposals Unit Tests", () => {
-  test("ERROR 401 | Unauthorized", () => {
-    // TODO - this is an example, change it if needed
-    const req = {};
-    const res = {
-      status: jest.fn(() => res),
-      json: jest.fn(),
-    };
+describe("T1 - Get all proposals Unit Tests", () => {
+  test("T1.1 ERROR 401 | Not authenticated", (done) => {
 
-    proposalsController.getAllProposals(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(401);
-    expect(res.json).toHaveBeenCalledWith({ error: "Unauthorized" });
-  });
-
-  test("ERROR 500 | Internal server error", () => {
-    // TODO - this is an example, change it if needed
-    const req = {};
-    const res = {
-      status: jest.fn(() => res),
-      json: jest.fn(),
-    };
-
-    proposalsController.getAllProposals(req, res);
-
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({
-      error: "Internal server error has occurred",
+    isLoggedIn.mockImplementation((req, res, next) => {
+      return res.status(401).json({ error: "Not authenticated" });
     });
+
+    request(app)
+      .get("/api/proposals")
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body).toEqual({ error: "Not authenticated" });
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).not.toHaveBeenCalled();
+        expect(getAllProposals).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+
+
   });
 
-  test("SUCCESS | Get all proposals", () => {
-    // TODO - this is an example, change it if needed
-    const req = {};
-    const res = {
-      status: jest.fn(() => res),
-      json: jest.fn(),
-    };
+  test("T1.2 ERROR 401 | Not authorized", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
 
-    proposalsController.getAllProposals(req, res);
+    isStudent.mockImplementation((req, res, next) => {
+      return res.status(401).json({ error: "Not authorized, must be a Student" })
+    });
 
-    expect(res.status).toHaveBeenCalledWith(200);
-    expect(res.json).toHaveBeenCalledWith({
-      proposals: [
+    request(app)
+      .get("/api/proposals")
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body).toEqual("Not authorized, must be a Student");
+        expect(getAllProposals).not.toHaveBeenCalled();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+  });
+
+
+  test("T1.3 ERROR 500 | Internal server error", (done) => {
+
+    const mockedStudentDegree = "MC001";
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    getAllProposals.mockImplementation((mockedStudentDegree) => {
+      throw Error("some error");
+    })
+
+    request(app)
+      .get("/api/proposals")
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body.error).not.toBeFalsy();
+        expect(getAllProposals).toHaveBeenCalled();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      });
+  });
+
+  test("T1.4 SUCCESS | Get all proposals", (done) => {
+
+    const mockedStudentDegree = "MC001";
+
+    const mockedProposalsList = 
+       [
         {
-          id: 1,
-          title: "Proposal 1",
-          description: "Description 1",
+          "proposal_id": "P002",
+          "title": "Machine Learning",
+          "supervisor_surname": "Wilson",
+          "supervisor_name": "Michael",
+          "keywords": [
+            "Machine Learning",
+            "AI"
+          ],
+          "type": "Master",
+          "groups": [
+            "Group B"
+          ],
+          "description": "A machine learning thesis description.",
+          "required_knowledge": "Python, TensorFlow",
+          "notes": "N/A",
+          "expiration_date": "2024-06-29T22:00:00.000Z",
+          "level": "Graduate",
+          "degrees": [
+            "Master of Science"
+          ]
         },
         {
-          id: 2,
-          title: "Proposal 2",
-          description: "Description 2",
-        },
-      ],
+          "proposal_id": "P003",
+          "title": "Artificial Intelligence",
+          "supervisor_surname": "Gomez",
+          "supervisor_name": "Ana",
+          "keywords": [
+            "AI",
+            "Machine Learning"
+          ],
+          "type": "Master",
+          "groups": [
+            "Group A"
+          ],
+          "description": "An AI research thesis description.",
+          "required_knowledge": "Python, TensorFlow",
+          "notes": "N/A",
+          "expiration_date": "2024-05-14T22:00:00.000Z",
+          "level": "Graduate",
+          "degrees": [
+            "Master of Science"
+          ]
+        }
+      ];
+    
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
     });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    getAllProposals.mockResolvedValue(mockedProposalsList);
+
+    request(app)
+      .get("/api/proposals")
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBeFalsy();
+        expect(getAllProposals).toHaveBeenCalled();
+        expect(getAllProposals).toEqual({proposals: mockedProposalsList});
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
   });
-}); */
+});
 
 describe("T2 - Insert proposals unit tests", () => {
   test("T2.1 - ERROR 401 | Not authenticated", (done) => {

@@ -186,6 +186,24 @@ module.exports = {
         if (!req.isAuthenticated() || !(req.user instanceof Teacher)) 
             return res.status(401).json({ errors: ["Not authorized"] });
         next();
+    },
+
+    /**
+     * Express middleware to check if the user is a student.
+     * Responds with a 401 Unauthorized if they're not.
+     *
+     * @function
+     * @name isStudent
+     * @memberof module:authenticationController
+     * @param {Object} req - Express request object
+     * @param {Object} res - Express response object
+     * @param {function} next - Express next middleware function
+     * @returns {undefined}
+     */
+    isStudent: (req, res, next) => {
+        if (!req.isAuthenticated() || !(req.user instanceof Student)) 
+            return res.status(401).json({ errors: ["Not authorized"] });
+        next();
     }
 
 }
