@@ -16,7 +16,7 @@ module.exports = {
      *
      * @params: none
      * @body: none
-     * @returns: { proposals: [ { id: number, title: string, description: string, author: string, creationDate: string, status: string, ... } ] }
+     * @returns: { proposals: [ { proposal_id: number, title: string, description: string, supervisor_surname: string, ... } ] }
      * @error: 500 Internal Server Error - if something went wrong
      */
     getAllProposals: async () => {
