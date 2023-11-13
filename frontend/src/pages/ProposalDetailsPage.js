@@ -1,11 +1,10 @@
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
-import {Navigate, useNavigate, useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { getProposalById } from "../api/ProposalsAPI";
 import {Alert, Badge, Button, Card, CardBody, Col, Container, Row} from "react-bootstrap";
-import {LoggedUserContext} from "../api/Context";
 
 import "../ProposalDetails.css";
 
@@ -13,8 +12,6 @@ function ProposalDetailsPage() {
     const navigate = useNavigate();
 
     const { proposal_id } = useParams();
-
-    const { loggedUser } = useContext(LoggedUserContext);    // context for logged user
 
     const [isLoading, setIsLoading] = useState(true);
     const [proposal, setProposal] = useState(null);
@@ -24,10 +21,16 @@ function ProposalDetailsPage() {
         setIsLoading(true);
 
         getProposalById(proposal_id)
-            .then(res => res.json())
-            .then(data => {
-                setProposal(data);
-                setIsLoading(false);
+            .then(async res => {
+                let data = await res.json()
+
+                if(res.status == 200) {
+                    setProposal(data);
+                } else {
+                    setErrorMessage(data.error)
+                }
+
+                setIsLoading(false)
             })
             .catch(err => {
                 setErrorMessage(err.message);
@@ -40,8 +43,21 @@ function ProposalDetailsPage() {
             <NavbarContainer/>
             <TitleBar title={"Proposal Details"}/>
             {
-                isLoading ? <Alert variant="info">Loading...</Alert> :
-                    errorMessage ? <Alert variant="danger">{errorMessage}</Alert> :
+                isLoading ? (<Alert variant="info">Loading...</Alert>) : (
+                    errorMessage ? (
+                        <Container>
+                            <Row>
+                                <Col>
+                                    <Alert variant="danger">{errorMessage}</Alert>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Button variant={"secondary"} onClick={() => navigate("/proposals")}>Back to Search Proposals</Button>
+                                </Col>
+                            </Row>
+                        </Container>
+                    ) : ( proposal &&
                         <Container fluid={true} className={"proposal-details-container"}>
                             <Row>
                                 <Col>
@@ -146,6 +162,8 @@ function ProposalDetailsPage() {
                                 </Col>
                             </Row>
                         </Container>
+                    )
+                )
             }
         </>
     );
