@@ -53,5 +53,44 @@ module.exports = {
             .catch((err) => {
                 return res.status(err.status).json({error: err.data});
             });
+    },
+    /**
+   * Insert a new proposal
+   *
+   * @params none
+   * @body { 
+   *  title : string,
+   *  supervisor_id : string,
+   *  keywords : string[],
+   *  type : string,
+   *  groups : string[],
+   *  description : string,
+   *  required_knowledge : string,
+   *  notes : string,
+   *  expiration_date : string,
+   *  level : string,
+   *  programmes : string[],
+   * }
+   * @returns { proposal: { id: number, title: string, ... } }
+   * @error 500 Internal Server Error - if something went wrong
+   * 
+   * Refer to the official documentation for more details
+   */
+  insertProposal: async (req, res) => {
+    try {
+      const maxIdNum = await getMaxProposalIdNumber();
+      const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);
+      const proposal = await insertProposal({
+        proposal_id: newId,
+        ...req.body,
+      });
+      res.status(201).json({ proposal });
+    } catch (err) {
+      console.error("[BACKEND-SERVER] Cannot insert new proposal", err);
+      res.status(500).json({ error: "Internal server error has occurred" });
     }
-}
+  }
+};
+  
+  
+

@@ -1,10 +1,10 @@
 
 ## test login
-POST http://localhost:3001/api/login HTTP/1.1
+POST http://localhost:8080/api/authentication/login HTTP/1.1
 content-type: application/json
 
 {
-    "email": "david.lee@example.com",
+    "username": "david.lee@example.com",
     "password": "S003"
 }
 ###
