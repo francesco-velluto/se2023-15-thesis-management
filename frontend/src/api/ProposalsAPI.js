@@ -20,22 +20,11 @@ module.exports = {
      * @error: 500 Internal Server Error - if something went wrong
      */
     getAllProposals: async () => {
-        fetch(ProposalsAPIURL, {
+        return fetch(ProposalsAPIURL, {
             method: 'GET',
             headers: APIConfig.API_REQUEST_HEADERS,
             credentials: 'include'
-        }).then(async res => {
-            let data = await res.json()
-
-            if(res.status < 400) {
-                return data;
-                
-            } else {
-                throw new Error("Error during proposal loading");
-            }
-        }).catch(() => {
-            throw new Error("Error during proposal loading");
-        });
+        })
     },
 
     /**

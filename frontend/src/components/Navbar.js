@@ -14,7 +14,7 @@ function NavbarContainer() {
                 onClick={() => {
                     navigate("/");
                 }}
-                style={{textDecoration: "none"}}
+                style={{textDecoration: "none", cursor:'pointer'}}
             >
                 <Navbar.Brand>
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-mortarboard-fill me-2" viewBox="0 0 16 16">
@@ -25,7 +25,7 @@ function NavbarContainer() {
                 </Navbar.Brand>
             </Link>
             
-            <Nav className="mr-auto" style={{color: 'whitesmoke'}}>
+            <Nav className="mr-auto" style={{color: 'whitesmoke', cursor: 'pointer'}}>
                 <svg onClick={() => {
                     navigate("/login");
                 }} xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" className="bi bi-person-fill" viewBox="0 0 16 16">

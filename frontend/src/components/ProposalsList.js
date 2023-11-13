@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { Alert, Col, Container, Row } from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 
@@ -20,11 +20,23 @@ function ProposalsList(props) {
 
             setIsLoading(true);
 
-            try{
-                const db_proposals = await getAllProposals()
-            } catch(err) {
-                setErrorMessage(err);
-            }
+            getAllProposals().then(async res => {
+                let db_proposals = await res.json();
+
+                if(db_proposals.status == 200){
+                    setProposals(db_proposals);
+                    setFilteredProposals(db_proposals);
+                }
+                else{
+                    console.log(db_proposals);
+                    setErrorMessage(db_proposals.errors[0])
+                }
+                setIsLoading(false);
+            }).catch((err) => {
+                setErrorMessage(err.message);
+                setIsLoading(false);
+            })
+
             
             setIsLoading(false);
            
@@ -34,18 +46,33 @@ function ProposalsList(props) {
         loadProposals();
 
     }, [])
-
     
 
     return (
         <>
         <Container className="bg-white rounded-bottom py-4">
-
         {
+            isLoading && 
+            <Row>
+                <Col>
+                    <Alert variant="danger">Loading...</Alert>
+                </Col>
+            </Row>
+        }
+
+        {   !errorMessage && 
             filteredProposals.map((fp, index) => (
                 <ProposalRow key={index} data={fp}/>
             ))
         }  
+        {
+            errorMessage && 
+            <Row>
+                <Col>
+                    <Alert variant="danger">{errorMessage}</Alert>
+                </Col>
+            </Row>
+        }
 
         </Container>    
         </>
