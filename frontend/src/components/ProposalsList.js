@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Col, Container, Row } from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
+import { format, isSameDay, parseISO, parse } from "date-fns"
 
 
 function ProposalsList(props) {
@@ -24,9 +25,6 @@ function ProposalsList(props) {
                     return
                 }
                 let db_proposals = (await res.json()).proposals;
-
-               
-                console.log("db_prop: ",db_proposals)
 
                 
                 setProposals(db_proposals);
@@ -53,7 +51,38 @@ function ProposalsList(props) {
         setFilteredProposals(() => {
             let result = [...proposals];
             for(const fltr of props.searchData){
-                result = result.filter((elem) => (elem[fltr.field] == fltr.value));
+
+                
+
+                if(['title',
+                'type',
+                'description',
+                'required_knowledge',
+                'notes',
+                'level'].includes(fltr.field)){
+                    
+                    result = result.filter((elem) => (elem[fltr.field].includes(fltr.value)));
+                   
+                }
+
+                if(fltr.field === 'supervisor'){
+                    result = result.filter((elem) => ((elem.supervisor_surname + " " + elem.supervisor_name).includes(fltr.value)))
+                }
+
+                if(['keywords', 'groups', 'degrees'].includes(fltr.field)){
+                    console.log(result);
+                    result = result.filter((elem) => (elem[fltr.field].some((str) => (str.includes(fltr.value)))))
+                }
+
+                if(fltr.field === 'expiration_date'){
+
+                    
+
+                    result = result.filter((elem) => {console.log(elem.expiration_date, parse(fltr.value, 'dd/MM/yyyy', new Date())); return isSameDay(parseISO(elem.expiration_date), parse(fltr.value, 'dd/MM/yyyy', new Date()))})
+
+                }
+
+                
             }
             return result;
         })
@@ -104,13 +133,13 @@ function ProposalRow(props){
             {props.data.title}
         </Col>
         <Col>
-            {props.data.supervisor_surname + props.data.supervisor_name}
+            {props.data.supervisor_surname + " " + props.data.supervisor_name}
         </Col>
         <Col>
             {props.data.type}
         </Col>
         <Col>
-            {props.data.expiration_date}
+            {format(parseISO(props.data.expiration_date), 'dd/MM/yyyy')}
         </Col>
     </Row>
     

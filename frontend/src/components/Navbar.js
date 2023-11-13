@@ -1,5 +1,5 @@
-import { Navbar, Nav, NavDropdown } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
+import { Navbar, Nav } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 
 
 function NavbarContainer() {
@@ -10,7 +10,7 @@ function NavbarContainer() {
         <>
         
         <Navbar expand="lg" className='px-3 navbar-dark d-flex justify-content-between' style={{backgroundColor: "#e68b00"}} >
-            <Link
+            <div
                 onClick={() => {
                     navigate("/");
                 }}
@@ -23,7 +23,7 @@ function NavbarContainer() {
                     </svg>
                     THESIS MANAGEMENT
                 </Navbar.Brand>
-            </Link>
+            </div>
             
             <Nav className="mr-auto" style={{color: 'whitesmoke', cursor: 'pointer'}}>
                 <svg onClick={() => {

@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Form, Button, Container, Col, Row } from 'react-bootstrap';
 
-const FIELDS = [    'Title',
-                    'Supervisor',
-                    'Keyword',
-                    'Type',
-                    'Group',
-                    'Description',
-                    'Required Knowledge',
-                    'Notes',
-                    'Expiration Date',
-                    'Level',
-                    'CDS / Programme'];
+const FIELDS = [{title: 'Title'},
+                {supervisor: 'Supervisor'},
+                {keywords:    'Keyword'},
+                {type:     'Type'},
+                {groups:     'Group'},
+                {description:    'Description'},
+                {required_knowledge:    'Required Knowledge'},
+                {notes:    'Notes'},
+                {expiration_date:    'Expiration Date'},
+                {level:    'Level'},
+                {degrees:    'CDS / Programme'}];
 
 
 function ProposalsSearchArea(props) {
@@ -46,9 +46,12 @@ function ProposalsSearchArea(props) {
                 <Form.Select aria-label="Default select example" value={searchField} onChange={(event) => {setSearchField((sd) => (event.target.value))}} className='m-2' style={{maxWidth: "25%"}}>
                     <option value="">Field</option>
                     {
-                        FIELDS.filter((f) => (!props.searchData.find((el) => (el.field === f)))).map((f, index) => 
-                            <option key={index} value={f} >{f}</option>
-                        )
+                        FIELDS.flatMap(obj => Object.entries(obj)).filter((key) => !props.searchData.find(el => el.field === key)).map(([key, value], index) => (
+                          <option key={index} value={key}>
+                            {value}
+                          </option>
+                        ))
+                      
                     }
                 </Form.Select>
 
@@ -88,18 +91,34 @@ function ProposalsSearchArea(props) {
 }
 
 function FilterElement(props) {
+
+    const [userfriendly_field, setUserfriendly_field] = useState("");
+
+    useEffect(() => {
+        for (const elem of FIELDS) {
+            const key = Object.keys(elem)[0];
+          
+            if (key === props.fltr.field) {
+                setUserfriendly_field(elem[key]);
+              break;
+            }
+          }
+    }, [])
+    
+
     return (
       <>
         <Col xs lg="3">
           <Container className='mx-3 my-1 border border-2 border-dark rounded position-relative'>
-            {props.fltr.field + " : " + ((props.fltr.value + "").length < 11 ? props.fltr.value : (props.fltr.value.slice(0, 10) + "..."))}
+            <strong>{userfriendly_field}</strong> : {((props.fltr.value + "").length < 11 ? props.fltr.value : (props.fltr.value.slice(0, 10) + "..."))}
+    
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
               fill="currentColor"
               className="bi bi-x-circle position-absolute top-0 end-0"
-              style={{ margin: '3px', cursor: 'pointer' }}
+              style={{ margin: '4px', cursor: 'pointer' }}
               viewBox="0 0 16 16"
               onClick={() => {
                 props.setSearchData((sd) => {
