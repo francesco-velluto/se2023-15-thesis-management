@@ -38,6 +38,8 @@ function HomePage() {
                         </Card>
                         <Button className="mt-3" onClick={handleLogout}>Logout</Button>
                         <Button className="mt-4" as={Link} to="/applications">My Thesis Proposal with Applications</Button>
+                        <Button className="mt-4" as={Link} to="/proposals">All proposals</Button>
+
                     </>
                 }
             </Row>

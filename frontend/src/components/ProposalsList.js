@@ -1,20 +1,33 @@
 import { useEffect, useState } from "react";
 import { Col, Container, Row } from "react-bootstrap";
+import { getAllProposals } from "../api/ProposalsAPI";
+import { useNavigate } from "react-router-dom";
 
 
 function ProposalsList(props) {
 
     const [proposals, setProposals] = useState([]);
     const [filteredProposals, setFilteredProposals] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
+    console.log("DB proposals: ", proposals);
+    console.log("filtered: ", filteredProposals);
 
 
     useEffect(() => {
         async function loadProposals(){
 
-            const db_proposals = [{title: "Title 1", supervisor: "Giacomo Rossi", type: "type 1", expiration_date: "12/05/2023"}, {title: "Title 2", supervisor: "Giacomo Rossi", type: "type 2", expiration_date: "12/05/2023"}, {title: "Title 3", supervisor: "Giacomo Rossi", type: "type 3", expiration_date: "12/05/2023"}, {title: "Title 4", supervisor: "Giacomo Rossi", type: "type 4", expiration_date: "12/05/2023"}, ] //TODO get from API
+            setIsLoading(true);
 
-            setProposals(db_proposals);
-            setFilteredProposals(db_proposals);
+            try{
+                const db_proposals = await getAllProposals()
+            } catch(err) {
+                setErrorMessage(err);
+            }
+            
+            setIsLoading(false);
+           
 
         }
 
@@ -42,14 +55,16 @@ function ProposalsList(props) {
 
 function ProposalRow(props){
 
+    const navigate = useNavigate();
+
     return <>
     
-    <Row className='my-1 mx-2 border border-2 rounded border-dark bg-light' style={{cursor: 'pointer'}} onClick={() => {}} >
+    <Row className='my-1 mx-2 border border-2 rounded border-dark bg-light' style={{cursor: 'pointer'}} onClick={() => {navigate('/proposals/' + props.data.proposal_id[-1])}} >
         <Col>
             {props.data.title}
         </Col>
         <Col>
-            {props.data.supervisor}
+            {props.data.supervisor_surname + props.data.supervisor_name}
         </Col>
         <Col>
             {props.data.type}
