@@ -71,7 +71,7 @@ module.exports = {
     /**
     * Get all proposals from the system
     */
-    getAllProposals: async () => {
+    getAllProposals: async (cod_degree) => {
 
         return new Promise((resolve, reject) => {
             db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
@@ -81,6 +81,7 @@ module.exports = {
                 "JOIN teacher t ON p.supervisor_id = t.id " +
                 "JOIN unnest(p.programmes) AS prog ON true " +
                 "JOIN degree d ON prog = d.cod_degree " +
+                "WHERE cod_degree = '" + cod_degree + "' " +
                 "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
                 "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " + 
                 "ORDER BY p.proposal_id")

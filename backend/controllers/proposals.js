@@ -21,9 +21,9 @@ module.exports = {
             return res.status(401).json({ errors: ['Must be a student to make this request!'] });
         }
 
-        proposalsService.getAllProposals()
+        proposalsService.getAllProposals(req.user.cod_degree)
             .then((result) => {
-                res.status(result.status).json(result.data);
+                res.status(result.status).json({proposals: result.data});
             })
             .catch((err) => {
                 res.status(err.status).json({ error: err.data });
