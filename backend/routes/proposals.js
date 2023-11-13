@@ -3,11 +3,11 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
-const proposalsController = require("../controllers/proposals");
 const { isLoggedIn, isTeacher } = require("../controllers/authentication");
 
 const authenticationController = require('../controllers/authentication');
 const proposalsController = require('../controllers/proposals');
+
 // This function is used to format express-validator errors as strings
 const errorFormatter = ({ location, msg, path, value, nestedErrors }) => {
   return `${location}[${path}]: ${msg}`;

@@ -4,7 +4,7 @@
   "description": "Backend server for the Thesis Management Project",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent",
     "start": "node index.js",
     "dev": "nodemon index.js",
     "coverage": "jest --coverage"
