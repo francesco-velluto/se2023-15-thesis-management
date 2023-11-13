@@ -1,6 +1,7 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import NewProposalPage from "./pages/NewProposalPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -37,6 +38,7 @@ function Main() {
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
+                <Route path='/proposals/insert' element={<NewProposalPage /> } />
             </Route>
             <Route path='*' element={<NotFoundPage />} />
         </Routes>

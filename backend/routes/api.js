@@ -10,6 +10,8 @@ const router = express.Router();
 
 const authentication = require("./authentication");
 const proposals = require("./proposals");
+const applications = require('./applications');
+
 const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
 const { isLoggedIn } = require("../controllers/authentication");
