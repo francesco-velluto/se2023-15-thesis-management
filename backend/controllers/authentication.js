@@ -7,6 +7,7 @@ const LocalStrategy = require('passport-local').Strategy;
 const { validationResult } = require('express-validator');
 const { authUser, getUserById } = require('../service/authentication');
 const CryptoJS = require('crypto-js');
+const Teacher = require('../model/Teacher');
 
 
 module.exports = {
@@ -167,6 +168,24 @@ module.exports = {
     isLoggedIn: (req, res, next) => {
         if (req.isAuthenticated()) return next();
         return res.status(401).json({ errors: ['Must be authenticated to make this request!'] });
+    },
+
+    /**
+     * Express middleware to check if the user is a teacher.
+     * Responds with a 401 Unauthorized if they're not.
+     *
+     * @function
+     * @name isTeacher
+     * @memberof module:authenticationController
+     * @param {Object} req - Express request object
+     * @param {Object} res - Express response object
+     * @param {function} next - Express next middleware function
+     * @returns {undefined}
+     */
+    isTeacher: (req, res, next) => {
+        if (!req.isAuthenticated() || !(req.user instanceof Teacher)) 
+            return res.status(401).json({ errors: ["Not authorized"] });
+        next();
     }
 
 }
