@@ -26,7 +26,7 @@ In this design 4 tables can NOT be modified :
 - Teacher: [**id** (PK), **surname**, **name**, **email**, cod_group, **cod_department**]
 - Career: [**id** (PK), **cod_course**, **title_course**, **cfu**, **grade**, **date**]
 - Passed: [**pid** (PK), *career_id*, *id* ]
-- Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **cds_programmes**]
+- Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **programmes**]
 - Applications: [**application_id** (PK), *proposal_id*, *id*, **status**, **application_date**]
 
 ## Tables details

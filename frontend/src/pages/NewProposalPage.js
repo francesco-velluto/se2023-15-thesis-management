@@ -9,9 +9,6 @@ import { useNavigate } from "react-router-dom";
 
 function NewProposalPage() {
 
-    
-
-
     return (
         <>
             <MyNavbar />
@@ -351,7 +348,7 @@ function LevelField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Level</Form.Label>
-            <Form.Control type="text" placeholder=" Insert level" />
+            <Form.Control type="text" placeholder=" Insert level" onChange={handleChange}/>
         </Form.Group>
     );
 }

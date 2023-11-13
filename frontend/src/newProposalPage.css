@@ -40,7 +40,7 @@ body {
     flex-direction: column;
     font-size: 1.3rem;
     flex-shrink: 0;
-    width: 20rem;
+    max-width: 20rem;
     
     
 }
@@ -51,8 +51,6 @@ body {
     flex-shrink:0;
     justify-content: center;
     padding: 1rem;
-
-   
 }
 .bar-title {
     font-size:2.5rem;
@@ -132,6 +130,7 @@ body {
 
 /* Media query per rendere la navbar responsive */
 @media (max-width: 768px) {
+
     .navbar {
         flex-direction: row;
         align-items: flex-start;
@@ -157,3 +156,4 @@ body {
 
     
 }
+
