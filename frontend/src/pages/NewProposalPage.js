@@ -14,7 +14,7 @@ function NewProposalPage() {
     return (
         <>
             <NavbarContainer />
-            <TitleBar />
+            <TitleBar title="New proposal"/>
             <FormProposal />
         </>
     )
