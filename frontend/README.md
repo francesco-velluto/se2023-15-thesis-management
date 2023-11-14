@@ -51,3 +51,9 @@ The home page is in `src/pages/HomePage.js`.
 ### LoginPage
 
 The login page is in `src/pages/LoginPage.js`.
+
+### ProposalDetailsPage
+
+The proposal details page is in `src/pages/ProposalDetailsPage.js`.
+
+The route is accessible at `/proposals/:proposalId`.

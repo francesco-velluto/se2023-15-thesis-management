@@ -3,6 +3,8 @@ import { Accordion, Alert, Card, Container, Row, Spinner } from "react-bootstrap
 import { getAllApplicationsByTeacher } from '../api/ApplicationsAPI';
 import { format } from 'date-fns';
 import MyNavbar from './Navbar';
+import NavbarContainer from '../components/Navbar';
+import TitleBar from '../components/TitleBar';
 
 function ApplicationList() {
     const [applications, setApplications] = useState([]);
@@ -26,15 +28,17 @@ function ApplicationList() {
 
     }, []);
 
-    return (
-        <Container className='browse-application'>
-            <Row xs={12} style={{ 'width': '100rem', 'maxWidth': '90vw' }}>
+    return (<>
+        {/* <Container className='browse-application'> */}
+            <NavbarContainer/>
+            {/* <Row xs={12} style={{ 'width': '100rem', 'maxWidth': '90vw' }}>
                 <MyNavbar />
-            </Row>
+            </Row> */}
 
-            <Row className='mt-4'>
+            {/* <Row className='mt-4'>
                 <h2>Browse Applications</h2>
-            </Row>
+            </Row> */}
+            <TitleBar title={"Browse Applications"}/>
 
             <Row className='mt-2'>
                 {errors?.map((error, index) => (
@@ -55,7 +59,7 @@ function ApplicationList() {
                 ) : (
                     <>
                         <Accordion alwaysOpen>
-                            {applications &&
+                            {applications && applications?.length > 0 &&
                                 Object.keys(applications).map((key, index) => (
                                     <Accordion.Item key={index} eventKey={index.toString()}>
                                         <Accordion.Header>{applications[key][0].title}</Accordion.Header>
@@ -74,7 +78,7 @@ function ApplicationList() {
                                     </Accordion.Item>
                                 ))}
                         </Accordion>
-                        {(applications === undefined || applications?.length == 0) &&
+                        {(applications === undefined || applications?.length === 0) &&
                             <Card className='my-3 fs-5'>
                                 <Card.Body>
                                     No applications were found for your thesis proposals!
@@ -84,7 +88,8 @@ function ApplicationList() {
                     </>
                 )}
             </Row>
-        </Container>
+        {/* </Container> */}
+        </>
     );
 }
 

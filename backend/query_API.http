@@ -8,3 +8,10 @@ content-type: application/json
     "password": "S003"
 }
 ###
+
+## test getAllProposals
+GET http://localhost:8080/api/proposals HTTP/1.1
+###
+
+## test getDegrees
+GET http://localhost:8080/api/degrees HTTP/1.1

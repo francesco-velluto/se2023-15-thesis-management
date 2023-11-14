@@ -1,11 +1,12 @@
 import { useContext } from "react";
 import { LoggedUserContext } from "../api/Context";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-
 
 function HomePage() {
     const { loggedUser, handleLogout } = useContext(LoggedUserContext);
+
+    console.log("logged user: ", loggedUser);
 
     return (
         <Container className="home-page">
@@ -17,33 +18,159 @@ function HomePage() {
                     <>
                         <Card bg="light" className="rounded p-3">
                             <h2>Hi <strong>{loggedUser.name + " " + loggedUser.surname}</strong></h2>
+                            <Form>
+                                <Form.Group as={Row} className='mt-2'>
+                                    <Col xs={12} sm={2}>
+                                        <Form.Label column>
+                                            <strong>Id:</strong>
+                                        </Form.Label>
+                                    </Col>
+                                    <Col xs={12} sm={6}>
+                                        <Form.Control
+                                            type='text'
+                                            value={loggedUser.id}
+                                            readOnly
+                                        />
+                                    </Col>
+                                </Form.Group>
+                                <Form.Group as={Row} className='mt-2'>
+                                    <Col xs={12} sm={2}>
+                                        <Form.Label column>
+                                            <strong>Email:</strong>
+                                        </Form.Label>
+                                    </Col>
+                                    <Col xs={12} sm={6}>
+                                        <Form.Control
+                                            type='text'
+                                            value={loggedUser.email}
+                                            readOnly
+                                        />
+                                    </Col>
+                                </Form.Group>
+                                {loggedUser.cod_group &&
+                                    <Form.Group as={Row} className='mt-2'>
+                                        <Col xs={12} sm={2}>
+                                            <Form.Label column>
+                                                <strong>Group Code:</strong>
+                                            </Form.Label>
+                                        </Col>
+                                        <Col xs={12} sm={6}>
+                                            <Form.Control
+                                                type='text'
+                                                value={loggedUser.cod_group}
+                                                readOnly
+                                            />
+                                        </Col>
+                                    </Form.Group>}
+                                {loggedUser.cod_department &&
+                                    <Form.Group as={Row} className='mt-2'>
+                                        <Col xs={12} sm={2}>
+                                            <Form.Label column>
+                                                <strong>Code Department:</strong>
+                                            </Form.Label>
+                                        </Col>
+                                        <Col xs={12} sm={6}>
+                                            <Form.Control
+                                                type='text'
+                                                value={loggedUser.cod_department}
+                                                readOnly
+                                            />
+                                        </Col>
+                                    </Form.Group>}
+                                {loggedUser.gender &&
+                                    <Form.Group as={Row} className='mt-2'>
+                                        <Col xs={12} sm={2}>
+                                            <Form.Label column>
+                                                <strong>Gender:</strong>
+                                            </Form.Label>
+                                        </Col>
+                                        <Col xs={12} sm={6}>
+                                            <Form.Control
+                                                type='text'
+                                                value={loggedUser.gender}
+                                                readOnly
+                                            />
+                                        </Col>
+                                    </Form.Group>}
+                                {loggedUser.nationality &&
+                                    <Form.Group as={Row} className='mt-2'>
+                                        <Col xs={12} sm={2}>
+                                            <Form.Label column>
+                                                <strong>Nationality:</strong>
+                                            </Form.Label>
+                                        </Col>
+                                        <Col xs={12} sm={6}>
+                                            <Form.Control
+                                                type='text'
+                                                value={loggedUser.nationality}
+                                                readOnly
+                                            />
+                                        </Col>
+                                    </Form.Group>}
+                                {loggedUser.cod_degree &&
+                                    <Form.Group as={Row} className='mt-2'>
+                                        <Col xs={12} sm={2}>
+                                            <Form.Label column>
+                                                <strong>Code Degree:</strong>
+                                            </Form.Label>
+                                        </Col>
+                                        <Col xs={12} sm={6}>
+                                            <Form.Control
+                                                type='text'
+                                                value={loggedUser.cod_degree}
+                                                readOnly
+                                            />
+                                        </Col>
+                                    </Form.Group>}
+                                {loggedUser.enrollment_year &&
+                                    <Form.Group as={Row} className='mt-2'>
+                                        <Col xs={12} sm={2}>
+                                            <Form.Label column>
+                                                <strong>Enrollment Year:</strong>
+                                            </Form.Label>
+                                        </Col>
+                                        <Col xs={12} sm={6}>
+                                            <Form.Control
+                                                type='text'
+                                                value={loggedUser.enrollment_year}
+                                                readOnly
+                                            />
+                                        </Col>
+                                    </Form.Group>}
+                            </Form>
+
                             <ul style={{ marginLeft: '20px', fontSize: '20px' }}>
-                                <li>id: {loggedUser.id} </li>
-                                <li>email: {loggedUser.email} </li>
-                                {loggedUser.cod_group && <li>cod group: {loggedUser.cod_group} </li>}
-                                {loggedUser.cod_department && <li>cod department: {loggedUser.cod_department} </li>}
-                                {loggedUser.gender && <li>gender: {loggedUser.gender} </li>}
-                                {loggedUser.nationality && <li>nationality: {loggedUser.nationality} </li>}
-                                {loggedUser.cod_degree && <li>cod degree: {loggedUser.cod_degree} </li>}
-                                {loggedUser.enrollment_year && <li>enrollment year: {loggedUser.enrollment_year} </li>}
                             </ul>
                         </Card>
-                        <Button className="mt-3" onClick={handleLogout}>Logout</Button>
-                        <Button className="mt-4" as={Link} to="/applications">My Thesis Proposal with Applications</Button>
+                        <Card bg="light" className="rounded p-3 mt-3">
+                            <Row>
+                                {Object.keys(loggedUser).includes("cod_group") &&
+                                <Col>
+                                    <Button className="w-100" as={Link} to="/applications">My Thesis applications</Button>
+                                </Col>}
+                                {!Object.keys(loggedUser).includes("cod_group") &&
+                                <Col>
+                                    <Button className="w-100" as={Link} to="/proposals">Thesis proposals</Button>
+                                </Col>}
+                            </Row>
+                            
+                            
+                        </Card>
+                        <Button className="mt-3" variant="danger" onClick={handleLogout}>Logout</Button>
                     </>
                 }
             </Row>
             <Row className="mt-4">
                 {!loggedUser &&
-                    <Button as={Link} to={"/login"} >Login</Button>
+                    <Button as={Link} to={"/login"}>Login</Button>
                 }
             </Row>
             <Row>
                 <footer>
-                    <Col className="pr-3" xs={2}>
+                    <Col className="pr-3" xs={12} sm={2}>
                         <img src="logo.svg" alt="logo" />
                     </Col>
-                    <Col xs={10}>
+                    <Col xs={12} sm={10}>
                         <span className="text-secondary footer-text">
                             &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
                         </span>

@@ -2,6 +2,8 @@ import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import NewProposalPage from "./pages/NewProposalPage";
+import ProposalsPage from "./pages/ProposalsPage";
+import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -35,11 +37,16 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={<HomePage />} />
+                <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
+                <Route path="/proposals" element={<PageLayout />}>
+                    <Route index element={loggedUser ? <ProposalsPage /> : <UnAuthorizationPage/>} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
+                </Route>
                 <Route path='/proposals/insert' element={<NewProposalPage /> } />
             </Route>
+            
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
     );

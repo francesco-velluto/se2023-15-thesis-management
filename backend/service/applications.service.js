@@ -43,7 +43,7 @@ module.exports = {
                     "WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'", [id]);
 
                 if (rows.rows == 0) {
-                    reject({ status: 404, data: 'No applications were found for your thesis proposals!' });
+                    resolve({ status: 200, data: [] });
                 }
 
                 let applications = rows.rows.reduce((proposals, element) => {
