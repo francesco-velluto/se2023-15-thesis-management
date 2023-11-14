@@ -96,7 +96,7 @@ footer img {
     width: 120px;
     margin: auto;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .footer-text {

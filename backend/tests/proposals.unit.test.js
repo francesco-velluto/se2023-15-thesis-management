@@ -80,14 +80,13 @@ describe("T1 - Get all proposals Unit Tests", () => {
 
   test("T1.3 ERROR 500 | Internal server error", (done) => {
 
-    const mockedStudentDegree = "MC001";
-
     isLoggedIn.mockImplementation((req, res, next) => {
-        req.user.cod_degree = "MC001"
-        next(); // Authenticated
+      req.user.cod_degree = "MC001"
+      next(); // Authenticated
     });
 
     isStudent.mockImplementation((req, res, next) => {
+      console.log(req.user.cod_degree);
       next(); // Authorized
     });
 
@@ -104,62 +103,65 @@ describe("T1 - Get all proposals Unit Tests", () => {
   });
 
   test("T1.4 SUCCESS | Get all proposals", (done) => {
-    const mockedStudentDegree = "MC001";
+    const mockedStudentDegree = "MSC001";
 
     const mockedProposalsList =
-       [
+    {
+      proposals: [
         {
-          "proposal_id": "P002",
-          "title": "Machine Learning",
-          "supervisor_surname": "Wilson",
-          "supervisor_name": "Michael",
-          "keywords": [
+          proposal_id: "P002",
+          title: "Machine Learning",
+          supervisor_surname: "Wilson",
+          supervisor_name: "Michael",
+          keywords: [
             "Machine Learning",
             "AI"
           ],
-          "type": "Master",
-          "groups": [
+          type: "Master",
+          groups: [
             "Group B"
           ],
-          "description": "A machine learning thesis description.",
-          "required_knowledge": "Python, TensorFlow",
-          "notes": "N/A",
-          "expiration_date": "2024-06-29T22:00:00.000Z",
-          "level": "Graduate",
-          "degrees": [
+          description: "A machine learning thesis description.",
+          required_knowledge: "Python, TensorFlow",
+          notes: "N/A",
+          expiration_date: "2024-06-29T22:00:00.000Z",
+          level: "Graduate",
+          degrees: [
             "Master of Science"
           ]
         },
         {
-          "proposal_id": "P003",
-          "title": "Artificial Intelligence",
-          "supervisor_surname": "Gomez",
-          "supervisor_name": "Ana",
-          "keywords": [
+          proposal_id: "P003",
+          title: "Artificial Intelligence",
+          supervisor_surname: "Gomez",
+          supervisor_name: "Ana",
+          keywords: [
             "AI",
             "Machine Learning"
           ],
-          "type": "Master",
-          "groups": [
+          type: "Master",
+          groups: [
             "Group A"
           ],
-          "description": "An AI research thesis description.",
-          "required_knowledge": "Python, TensorFlow",
-          "notes": "N/A",
-          "expiration_date": "2024-05-14T22:00:00.000Z",
-          "level": "Graduate",
-          "degrees": [
+          description: "An AI research thesis description.",
+          required_knowledge: "Python, TensorFlow",
+          notes: "N/A",
+          expiration_date: "2024-05-14T22:00:00.000Z",
+          level: "Graduate",
+          degrees: [
             "Master of Science"
           ]
         }
-      ];
+      ]
+    };
 
     isLoggedIn.mockImplementation((req, res, next) => {
-        req.user.cod_degree = mockedStudentDegree;
+      req.user.cod_degree = mockedStudentDegree;
       next(); // Authenticated
     });
 
     isStudent.mockImplementation((req, res, next) => {
+      req.user.cod_degree = mockedStudentDegree;
       next(); // Authorized
     });
 
@@ -168,12 +170,13 @@ describe("T1 - Get all proposals Unit Tests", () => {
     request(app)
       .get("/api/proposals")
       .then((res) => {
-        expect(res.status).toBe(200);
-        expect(res.body.error).toBeFalsy();
-        expect(getAllProposals).toHaveBeenCalled();
-        expect(getAllProposals).toEqual({proposals: mockedProposalsList});
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isStudent).toHaveBeenCalled();
+        expect(getAllProposals).toHaveBeenCalled();
+        expect(res.body).toEqual("sometihng");
+        expect(res.body.proposals).toEqual(mockedProposalsList);
+        expect(res.status).toBe(200);
+        expect(res.body.error).toBeFalsy();
         done();
       })
   });

@@ -15,3 +15,12 @@ GET http://localhost:8080/api/proposals HTTP/1.1
 
 ## test getDegrees
 GET http://localhost:8080/api/degrees HTTP/1.1
+###
+
+## test getTeachers
+GET http://localhost:8080/api/teachers HTTP/1.1
+###
+
+
+## test getProposalById
+GET http://localhost:8080/api/proposals/P001 HTTP/1.1
