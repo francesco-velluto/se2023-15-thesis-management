@@ -67,70 +67,63 @@ exports.getMaxProposalIdNumber = async () => {
 };
 
 
-module.exports = {
+exports.getAllProposals = async (cod_degree) => {
+    return new Promise((resolve, reject) => {
+        db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
+            "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
+            "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
+            "FROM proposals p " +
+            "JOIN teacher t ON p.supervisor_id = t.id " +
+            "JOIN unnest(p.programmes) AS prog ON true " +
+            "JOIN degree d ON prog = d.cod_degree " +
+            "WHERE cod_degree = '" + cod_degree + "' " +
+            "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
+            "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
+            "ORDER BY p.proposal_id")
+            .then((rows) => {
+                if (rows.lenght == 0) {
+                    console.error('[BACKEND-SERVER] Error in getAllProposals');
+                    reject({ status: 404, data: 'proposals not found' });
+                }
 
-    /**
-    * Get all proposals from the system
-    */
-    getAllProposals: async (cod_degree) => {
+                resolve({ status: 200, data: rows.rows });
 
-        return new Promise((resolve, reject) => {
-            db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
-                "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
-                "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
-                "FROM proposals p " +
-                "JOIN teacher t ON p.supervisor_id = t.id " +
-                "JOIN unnest(p.programmes) AS prog ON true " +
-                "JOIN degree d ON prog = d.cod_degree " +
-                "WHERE cod_degree = '" + cod_degree + "' " +
-                "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
-                "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " + 
-                "ORDER BY p.proposal_id")
-                .then((rows) => {
-                    if (rows.lenght == 0) {
-                        console.error('[BACKEND-SERVER] Error in getAllProposals');
-                        reject({ status: 404, data: 'proposals not found' });
-                    }
-                    
-                    resolve({ status: 200, data: rows.rows });
-
-                }).catch((err) => {
-                    console.error('[BACKEND-SERVER] Error in getAllProposals', err);
-                    reject({ status: 500, data: 'Internal server error' });
-                });
-        })
-    },
-
-    getProposalById: (proposal_id) => {
-        return new Promise((resolve, reject) => {
-            db.query('SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1', [proposal_id])
-                .then(result => {
-                    if (result.rows.length === 0) {
-                        console.error(`Error in getProposalById - proposal_id: ${proposal_id} not found`);
-                        reject({ status: 404, data: "Proposal not found" });
-                    } else {
-                        let proposal = result.rows[0];
-
-                        // get the names of each programme of the proposal
-                        // we cannot use the 'WHERE cod_degree IN $1' because it is not supported by the pg library
-                        // we will use a workaround with ANY
-                        db.query('SELECT * FROM degree WHERE cod_degree = ANY($1)', [proposal.programmes])
-                            .then(degrees_result => {
-                                let degrees = degrees_result.rows;
-                                proposal.programmes = degrees;
-                                resolve({ status: 200, data: proposal });
-                            }).catch(error => {
-                                console.log("Error in getProposalById - cannot get programmes: ", error);
-                                reject({ status: 500, data: "Internal Server Error" });
-                            });
-                    }
-                })
-                .catch(error => {
-                    console.log("Error in getProposalById: ", error);
-                    reject({ status: 500, data: "Internal Server Error" });
-                });
+            }).catch((err) => {
+            console.error('[BACKEND-SERVER] Error in getAllProposals', err);
+            reject({ status: 500, data: 'Internal server error' });
         });
-    }
+    })
+}
+
+exports.getProposalById = (proposal_id) => {
+    return new Promise((resolve, reject) => {
+        db.query('SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1', [proposal_id])
+            .then(result => {
+                if (result.rows.length === 0) {
+                    console.error(`Error in getProposalById - proposal_id: ${proposal_id} not found`);
+                    reject({ status: 404, data: "Proposal not found" });
+                } else {
+                    let proposal = result.rows[0];
+
+                    // get the names of each programme of the proposal
+                    // we cannot use the 'WHERE cod_degree IN $1' because it is not supported by the pg library
+                    // we will use a workaround with ANY
+                    db.query('SELECT * FROM degree WHERE cod_degree = ANY($1)', [proposal.programmes])
+                        .then(degrees_result => {
+                            let degrees = degrees_result.rows;
+                            proposal.programmes = degrees;
+                            resolve({ status: 200, data: proposal });
+                        }).catch(error => {
+                        console.log("Error in getProposalById - cannot get programmes: ", error);
+                        reject({ status: 500, data: "Internal Server Error" });
+                    });
+                }
+            })
+            .catch(error => {
+                console.log("Error in getProposalById: ", error);
+                reject({ status: 500, data: "Internal Server Error" });
+            });
+    });
 }
 
 

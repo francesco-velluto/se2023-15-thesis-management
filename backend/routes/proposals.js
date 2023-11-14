@@ -46,7 +46,7 @@ const isArrayOfStrings = (array) => {
  *
  * @see proposalsController.getAllProposals
  */
-router.get("/", authenticationController.isLoggedIn, proposalsController.getAllProposals);
+router.get("/", authenticationController.isLoggedIn, authenticationController.isStudent, proposalsController.getAllProposals);
 
 /**
  * POST /api/proposals

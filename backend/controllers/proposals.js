@@ -18,9 +18,10 @@ module.exports = {
      * @error 500 Internal Server Error - if something went wrong
      */
     getAllProposals: async (req, res) => {
+        /** ALREADY CHECKED IN AUTHENTICATION CONTROLLER with isStudent
        if (!req.user instanceof Student) {
             return res.status(401).json({ errors: ['Must be a student to make this request!'] });
-        }
+       }**/
 
         proposalsService.getAllProposals(req.user.cod_degree)
             .then((result) => {
