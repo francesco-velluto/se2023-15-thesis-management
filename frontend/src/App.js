@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
+import NewProposalPage from "./pages/NewProposalPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -39,6 +40,7 @@ function Main() {
                 <Route index path='/' element={<HomePage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
+                <Route path='/proposals/insert' element={<NewProposalPage /> } />
             </Route>
             <Route path="/proposals" element={<PageLayout />}>
                 <Route index element={<ProposalsPage />} />
