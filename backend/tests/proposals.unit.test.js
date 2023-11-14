@@ -3,17 +3,15 @@
 const request = require("supertest");
 const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
 const {
-  getMaxProposalIdNumber,
-  insertProposal,
-    getProposalById
-  getAllProposals
+    getMaxProposalIdNumber,
+    insertProposal,
+    getProposalById,
+    getAllProposals
 } = require("../service/proposals.service");
 const app = require("../app");
 
 jest.mock("../service/proposals.service");
 jest.mock("../controllers/authentication");
-
-
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -608,4 +606,81 @@ describe("T2 - Insert proposals unit tests", () => {
         })
         .catch((err) => done(err));
   });
+});
+
+describe("T3 - Get proposal by Id unit test", () => {
+    test("T3.1 - ERROR 401 | Not autenthicated", (done) => {
+        isLoggedIn.mockImplementation((req, res, next) => {
+            return res.status(401).json({ error: "Not authenticated" });
+        });
+
+        request(app)
+            .get("/api/proposals/P001")
+            .then((res) => {
+                expect(res.status).toBe(401);
+                expect(res.body).toEqual({ error: "Not authenticated" });
+                expect(isLoggedIn).toHaveBeenCalled();
+                expect(getProposalById).not.toHaveBeenCalled();
+                done();
+            })
+            .catch((err) => done(err));
+    });
+
+    test("T3.2 - ERROR 404 | Proposal not found", (done) => {
+        isLoggedIn.mockImplementation((req, res, next) => {
+            next(); // Authenticated
+        });
+
+        getProposalById.mockRejectedValue({ status: 404, data: "Proposal not found" });
+
+        request(app)
+            .get("/api/proposals/P001")
+            .then((res) => {
+                expect(res.status).toBe(404);
+                expect(res.body).toEqual({ error: "Proposal not found" });
+                expect(isLoggedIn).toHaveBeenCalled();
+                expect(getProposalById).toHaveBeenCalledWith("P001");
+                done();
+            })
+            .catch((err) => done(err));
+    });
+
+    test("T3.3 - SUCCESS 200 | Proposal found", (done) => {
+        isLoggedIn.mockImplementation((req, res, next) => {
+            next(); // Authenticated
+        });
+
+        const mockProposalRes = {
+            proposal_id: "P001",
+            title: "Test proposal",
+            supervisor_id: "T001",
+            keywords: ["k1", "k2"],
+            type: "Master",
+            groups: ["Group A", "Group B"],
+            description: "Test description",
+            required_knowledge: "Node.js, PostgreSQL, React.js",
+            notes: "some notes",
+            expiration_date: "2024-06-30",
+            level: "Undergraduate",
+            programmes: [
+                {
+                    cod_degree: "MSC001",
+                    name: "Master in Computer Science"
+                }
+            ],
+        };
+
+        getProposalById.mockResolvedValue({status: 200, data: mockProposalRes});
+
+        request(app)
+            .get("/api/proposals/P001")
+            .then((res) => {
+                expect(res.status).toBe(200);
+                expect(res.body).toEqual(mockProposalRes);
+                expect(isLoggedIn).toHaveBeenCalled();
+                expect(getProposalById).toHaveBeenCalledWith("P001");
+                done();
+            })
+            .catch((err) => done(err));
+    });
 });
