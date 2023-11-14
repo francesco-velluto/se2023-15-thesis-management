@@ -116,8 +116,8 @@ afterAll(async () => {
 });
 
 describe("End to end tests for Search proposals", () => {
-    let driver;
-    let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
+  let driver;
+  let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async () => {
     await driver.get(baseURL + "/login");
@@ -135,7 +135,10 @@ describe("End to end tests for Search proposals", () => {
     const submitButton = await driver.findElement(By.tagName("button"));
 
     // remove disabled property from button
-    await driver.executeScript("arguments[0].removeAttribute('disabled')", submitButton);
+    await driver.executeScript(
+      "arguments[0].removeAttribute('disabled')",
+      submitButton
+    );
 
     // click submit button with js
     await submitButton.click();
@@ -152,94 +155,101 @@ describe("End to end tests for Search proposals", () => {
     await driver.quit();
   });
 
-    test("Should show not authorized page if not logged in yet", async () => {
-        await driver.get(baseURL + "/proposals");
+  test("Should show not authorized page if not logged in yet", async () => {
+    await driver.get(baseURL + "/proposals");
 
-        await driver.sleep(1000);
+    await driver.sleep(1000);
 
-        let pageTitle = await driver.findElement(By.className("alert-danger")).getText();
-        expect(pageTitle).toEqual("Access Not Authorized");
-    });
+    let pageTitle = await driver
+      .findElement(By.className("alert-danger"))
+      .getText();
+    expect(pageTitle).toEqual("Access Not Authorized");
+  });
 
-    test("Should show proposals list", async () => {
-        await doLogin();
+  test("Should show proposals list", async () => {
+    await doLogin();
 
-        await driver.get(baseURL + "/proposals");
+    await driver.get(baseURL + "/proposals");
 
-        await driver.sleep(1000);
-        await driver.findElement(By.className("border-dark"));
-    });
+    await driver.sleep(1000);
+    await driver.findElement(By.className("border-dark"));
+  });
 
-    test("Should show proposals list filtered by title", async () => {
-        await doLogin();
+  test("Should show proposals list filtered by title", async () => {
+    await doLogin();
 
-        await driver.get(baseURL + "/proposals");
+    await driver.get(baseURL + "/proposals");
 
-        await driver.sleep(1000);
+    await driver.sleep(1000);
 
-        let select = await driver.findElement(By.className("form-select"));
+    let select = await driver.findElement(By.className("form-select"));
 
-        // select title
-        await driver.executeScript("arguments[0].value = 'title';", select);
+    // select title
+    await driver.executeScript("arguments[0].value = 'title';", select);
 
-        let typeField = await driver.findElement(By.id("inputValue"));
-        await typeField.clear();
-        await typeField.sendKeys("Web Development");
+    let typeField = await driver.findElement(By.id("inputValue"));
+    await typeField.clear();
+    await typeField.sendKeys("Web Development");
 
-        await driver.sleep(1000);
+    await driver.sleep(1000);
 
-        let srcButton = driver.findElement(By.className("btn-outline-secondary"));
-        await srcButton.click();
+    let srcButton = driver.findElement(By.className("btn-outline-secondary"));
+    await srcButton.click();
 
-        await driver.sleep(1000);
+    await driver.sleep(1000);
 
-        await driver.findElement(By.className("border-dark"));
-    }, 10000);
+    await driver.findElement(By.className("border-dark"));
+  }, 10000);
 });
 
 describe("End to end tests for Proposal details", () => {
-    let driver;
-    let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
+  let driver;
+  let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
-    const doLogin = async () => {
-      await driver.get(baseURL + "/login");
+  const doLogin = async () => {
+    await driver.get(baseURL + "/login");
 
-      // perform login
-      const usernameBox = await driver.findElement(By.id("username"));
-      usernameBox.clear();
-      usernameBox.sendKeys("sarah.anderson@example.com");
-      const passwordBox = await driver.findElement(By.id("password"));
-      passwordBox.clear();
-      passwordBox.sendKeys("T001");
+    // perform login
+    const usernameBox = await driver.findElement(By.id("username"));
+    usernameBox.clear();
+    usernameBox.sendKeys("sarah.anderson@example.com");
+    const passwordBox = await driver.findElement(By.id("password"));
+    passwordBox.clear();
+    passwordBox.sendKeys("T001");
 
-      await driver.sleep(1000);
+    await driver.sleep(1000);
 
-      const submitButton = await driver.findElement(By.tagName("button"));
+    const submitButton = await driver.findElement(By.tagName("button"));
 
-      // remove disabled property from button
-      await driver.executeScript("arguments[0].removeAttribute('disabled')", submitButton);
+    // remove disabled property from button
+    await driver.executeScript(
+      "arguments[0].removeAttribute('disabled')",
+      submitButton
+    );
 
-      // click submit button with js
-      await submitButton.click();
+    // click submit button with js
+    await submitButton.click();
 
-      await driver.sleep(1000);
-    };
+    await driver.sleep(1000);
+  };
 
-    beforeAll(async () => {
-      driver = await new Builder().forBrowser("chrome").build();
-      await restoreProposalsTable(); // should be already restored but to be sure...
-    });
+  beforeAll(async () => {
+    driver = await new Builder().forBrowser("chrome").build();
+    await restoreProposalsTable(); // should be already restored but to be sure...
+  });
 
-    afterAll(async () => {
-      await driver.quit();
-    });
+  afterAll(async () => {
+    await driver.quit();
+  });
 
   test("Should show not authorized page if not logged in yet", async () => {
     await driver.get(baseURL + "/proposals/P001");
 
     await driver.sleep(1000);
 
-    let pageTitle = await driver.findElement(By.className("alert-danger")).getText();
+    let pageTitle = await driver
+      .findElement(By.className("alert-danger"))
+      .getText();
     expect(pageTitle).toEqual("Access Not Authorized");
   });
 
@@ -249,19 +259,21 @@ describe("End to end tests for Proposal details", () => {
     await driver.get(baseURL + "/proposals/ABC0");
 
     await driver.sleep(1000);
-    let pageTitle = await driver.findElement(By.className("alert-danger")).getText();
+    let pageTitle = await driver
+      .findElement(By.className("alert-danger"))
+      .getText();
 
     expect(pageTitle).toEqual("Proposal not found");
   });
 
-    test("Should show Proposal details", async () => {
-        await doLogin();
+  test("Should show Proposal details", async () => {
+    await doLogin();
 
-        await driver.get(baseURL + "/proposals/P001");
+    await driver.get(baseURL + "/proposals/P001");
 
-        await driver.sleep(1000);
-        await driver.findElement(By.className("proposal-details-title"))
-    });
+    await driver.sleep(1000);
+    await driver.findElement(By.className("proposal-details-title"));
+  });
 });
 
 describe("Integration Tests for Insert Proposal", () => {
@@ -322,11 +334,14 @@ describe("End to End Tests for Insert Proposal", () => {
 
   const doLogin = async () => {
     await driver.get(baseURL + "/login");
+    await driver.sleep(500);
     // perform login
     const usernameBox = await driver.findElement(By.id("username"));
     usernameBox.sendKeys("sarah.anderson@example.com");
+
     const passwordBox = await driver.findElement(By.id("password"));
     passwordBox.sendKeys("T001");
+
     const submitButton = await driver.findElement(By.name("button"));
     await submitButton.click();
   };
@@ -335,20 +350,23 @@ describe("End to End Tests for Insert Proposal", () => {
     // Title
     await driver.findElement(By.id("title")).sendKeys(mockProposalReq.title);
 
+    await driver.sleep(500);
+
     // Supervisor
-    const selectSupervisor = await driver.findElement(
-      By.id("supervisor")
-    );
+    const selectSupervisor = await driver.findElement(By.id("supervisor"));
     selectSupervisor.selectByValue(mockProposalReq.supervisor_id);
+    await driver.sleep(500);
 
     // Keywords
     for (const keyword of mockProposalReq.keywords) {
       await driver.findElement(By.id("keyword")).sendKeys(keyword);
       await driver.findElement(By.id("add-keyword-btn")).click();
     }
+    await driver.sleep(500);
 
     // Type
     await driver.findElement(By.id("type")).sendKeys(mockProposalReq.type);
+    await driver.sleep(500);
 
     // Groups
     for (const group of mockProposalReq.groups) {
@@ -357,27 +375,33 @@ describe("End to End Tests for Insert Proposal", () => {
       selectGroup.selectByVisibleText(group);
       await driver.findElement(By.id("add-group-btn")).click();
     }
+    await driver.sleep(500);
 
     // Description
     await driver
       .findElement(By.id("description"))
       .sendKeys(mockProposalReq.description);
+    await driver.sleep(500);
 
     // Required knowledge
     await driver
       .findElement(By.id("required-knowledge"))
       .sendKeys(mockProposalReq.required_knowledge);
+    await driver.sleep(500);
 
     // Notes
     await driver.findElement(By.id("notes")).sendKeys(mockProposalReq.notes);
+    await driver.sleep(500);
 
     // Expiration date
     await driver
       .findElement(By.id("expiration-date"))
       .sendKeys(mockProposalReq.expiration_date);
+    await driver.sleep(500);
 
     // Level
     await driver.findElement(By.id("level")).sendKeys(mockProposalReq.level);
+    await driver.sleep(500);
 
     // Programmes
     for (const programme of mockProposalReq.programmes) {
@@ -385,6 +409,7 @@ describe("End to End Tests for Insert Proposal", () => {
       /* TO-DO: select programme from menu */
       await driver.findElement(By.id("add-programme-btn")).click();
     }
+    await driver.sleep(500);
   };
 
   beforeAll(async () => {
@@ -400,13 +425,24 @@ describe("End to End Tests for Insert Proposal", () => {
   // TO-DO: this test can be removed if no redirection is actually used
   test("T2.1 - Should show (or redirect to) not authorized page if not logged in yet", async () => {
     await driver.get(baseURL + "/proposals/new");
-    await driver.wait(until.urlMatches(new RegExp(baseURL + "/login")), 3000);
+
+    await driver.sleep(500);
+
+    const alert = await driver.findElement(By.className("alert"));
+
+    // Find the h3 element within the div
+    const h3Alert = await alert.findElement(By.css("h3"));
+
+    const textAlert = await h3Alert.getText();
+    expect(textAlert).toEqual("Access Not Authorized");
   });
 
   test("T2.2 - Should not post a new proposal if title is empty", async () => {
     await doLogin();
 
     await driver.get(baseURL + "/proposals/new");
+
+    await driver.sleep(500);
 
     // Fill all fields
     await fillProposalForm();
@@ -417,7 +453,7 @@ describe("End to End Tests for Insert Proposal", () => {
     // Click submit button
     await driver.findElement(By.id("add-proposal-btn")).click();
 
-    // expect some error alert to be shown or the button to be disabled
+    // TODO: expect some error alert to be shown or the button to be disabled
 
     // check that the database contains only the original tuples and not a new one
     const res = await mockDB.query("SELECT * FROM proposals");
@@ -429,17 +465,22 @@ describe("End to End Tests for Insert Proposal", () => {
 
     await driver.get(baseURL + "/proposals/new");
 
+    await driver.sleep(500);
+
     // Fill all the form fields
     await fillProposalForm();
 
     // Click submit button
     await driver.findElement(By.id("add-proposal-btn")).click();
 
-    // expect some error alert to be shown or the button to be disabled
+    await driver.sleep(500);
 
     // check that the database contains now a new tuple with the returned id
     const res = await mockDB.query("SELECT proposal_id FROM proposals");
     expect(res.rowCount).toBe(3);
     expect(res.rows.includes("P003")).toBeTrue();
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).toEqual(baseURL + "/proposals/P003");
   });
 });
