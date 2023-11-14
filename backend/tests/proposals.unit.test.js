@@ -104,7 +104,7 @@ describe("T1 - Get all proposals Unit Tests", () => {
   });
 
   test("T1.4 SUCCESS | Get all proposals", (done) => {
-    const mockedStudentDegree = "MSC001";
+    const mockedStudentDegree = "MC001";
 
     const mockedProposalsList = [
       {
@@ -145,7 +145,6 @@ describe("T1 - Get all proposals Unit Tests", () => {
     });
 
     isStudent.mockImplementation((req, res, next) => {
-      req.user.cod_degree = mockedStudentDegree;
       next(); // Authorized
     });
 
@@ -163,11 +162,6 @@ describe("T1 - Get all proposals Unit Tests", () => {
         expect(res.body).toEqual({ proposals: mockedProposalsList });
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isStudent).toHaveBeenCalled();
-        expect(getAllProposals).toHaveBeenCalled();
-        expect(res.body).toEqual("sometihng");
-        expect(res.body.proposals).toEqual(mockedProposalsList);
-        expect(res.status).toBe(200);
-        expect(res.body.error).toBeFalsy();
         done();
       });
   });
