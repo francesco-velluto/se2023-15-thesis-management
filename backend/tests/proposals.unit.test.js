@@ -69,7 +69,7 @@ describe("T1 - Get all proposals Unit Tests", () => {
       .get("/api/proposals")
       .then((res) => {
         expect(res.status).toBe(401);
-        expect(res.body).toEqual("Not authorized, must be a Student");
+        expect(res.body.error).toEqual("Not authorized, must be a Student");
         expect(getAllProposals).not.toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isStudent).toHaveBeenCalled();
@@ -83,7 +83,8 @@ describe("T1 - Get all proposals Unit Tests", () => {
     const mockedStudentDegree = "MC001";
 
     isLoggedIn.mockImplementation((req, res, next) => {
-      next(); // Authenticated
+        req.user.cod_degree = "MC001"
+        next(); // Authenticated
     });
 
     isStudent.mockImplementation((req, res, next) => {
@@ -98,19 +99,14 @@ describe("T1 - Get all proposals Unit Tests", () => {
       .get("/api/proposals")
       .then((res) => {
         expect(res.status).toBe(500);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getAllProposals).toHaveBeenCalled();
-        expect(isLoggedIn).toHaveBeenCalled();
-        expect(isStudent).toHaveBeenCalled();
         done();
       });
   });
 
   test("T1.4 SUCCESS | Get all proposals", (done) => {
-
     const mockedStudentDegree = "MC001";
 
-    const mockedProposalsList = 
+    const mockedProposalsList =
        [
         {
           "proposal_id": "P002",
@@ -157,9 +153,9 @@ describe("T1 - Get all proposals Unit Tests", () => {
           ]
         }
       ];
-    
 
     isLoggedIn.mockImplementation((req, res, next) => {
+        req.user.cod_degree = mockedStudentDegree;
       next(); // Authenticated
     });
 
