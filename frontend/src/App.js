@@ -4,7 +4,6 @@ import LoginPage from "./pages/LoginPage";
 import NewProposalPage from "./pages/NewProposalPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
-import NewProposalPage from "./pages/NewProposalPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
