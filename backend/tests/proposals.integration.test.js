@@ -115,6 +115,88 @@ afterAll(async () => {
   }
 });
 
+describe("End to end tests for Search proposals", () => {
+    let driver;
+    let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
+
+  const doLogin = async () => {
+    await driver.get(baseURL + "/login");
+
+    // perform login
+    const usernameBox = await driver.findElement(By.id("username"));
+    usernameBox.clear();
+    usernameBox.sendKeys("john.smith@example.com");
+    const passwordBox = await driver.findElement(By.id("password"));
+    passwordBox.clear();
+    passwordBox.sendKeys("S001");
+
+    await driver.sleep(1000);
+
+    const submitButton = await driver.findElement(By.tagName("button"));
+
+    // remove disabled property from button
+    await driver.executeScript("arguments[0].removeAttribute('disabled')", submitButton);
+
+    // click submit button with js
+    await submitButton.click();
+
+    await driver.sleep(1000);
+  };
+
+  beforeAll(async () => {
+    driver = await new Builder().forBrowser("chrome").build();
+    await restoreProposalsTable(); // should be already restored but to be sure...
+  });
+
+  afterAll(async () => {
+    await driver.quit();
+  });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        let pageTitle = await driver.findElement(By.className("alert-danger")).getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+    });
+
+    test("Should show proposals list", async () => {
+        await doLogin();
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+        await driver.findElement(By.className("border-dark"));
+    });
+
+    test("Should show proposals list filtered by title", async () => {
+        await doLogin();
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        let select = await driver.findElement(By.className("form-select"));
+
+        // select title
+        await driver.executeScript("arguments[0].value = 'title';", select);
+
+        let typeField = await driver.findElement(By.id("inputValue"));
+        await typeField.clear();
+        await typeField.sendKeys("Web Development");
+
+        await driver.sleep(1000);
+
+        let srcButton = driver.findElement(By.className("btn-outline-secondary"));
+        await srcButton.click();
+
+        await driver.sleep(1000);
+
+        await driver.findElement(By.className("border-dark"));
+    }, 10000);
+});
+
 describe("End to end tests for Proposal details", () => {
     let driver;
     let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
