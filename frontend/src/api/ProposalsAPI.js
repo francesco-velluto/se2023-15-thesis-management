@@ -1,6 +1,8 @@
 const APIConfig = require('./config.json');
 
 const ProposalsAPIURL = APIConfig.API_URL + '/proposals';
+const TeachersAPIURL = APIConfig.API_URL + '/teachers';
+const DegreesAPIURL = APIConfig.API_URL + '/degrees';
 
 /**
  * Interface for the Proposals API
@@ -44,5 +46,57 @@ module.exports = {
             headers: APIConfig.API_REQUEST_HEADERS,
             credentials: 'include'
         });
-    }
+    },
+
+    /**
+     * Insert a new proposal
+     * 
+     * POST /api/proposals
+     * 
+     * @params: none
+     * @body: {c}
+     */
+
+    insertNewProposal: async(newProposal) =>{
+        return fetch(ProposalsAPIURL, {
+            method: 'POST',
+            headers: APIConfig.API_REQUEST_HEADERS,
+            credentials: 'include',
+            body: JSON.stringify(newProposal)
+        });
+    },
+
+
+    /**
+     * Get all the teachers
+     * 
+     * GET /api/teachers
+     */
+    getAllTeachers: async() =>{
+        const response = await fetch(TeachersAPIURL, {
+            method: 'GET',
+            headers: APIConfig.API_REQUEST_HEADERS,
+            credentials: 'include'
+        });
+
+        if (response.ok){
+            let resObject = await response.json();
+            return resObject.teachers;
+        }
+    },
+
+    /**
+     * Get all the degrees
+     * 
+     * GET /api/degrees
+     */
+    getAllDegrees: async() =>{
+        return fetch(DegreesAPIURL, {
+            method: 'GET',
+            headers: APIConfig.API_REQUEST_HEADERS,
+            credentials: 'include'
+        })
+    },
+
+
 }

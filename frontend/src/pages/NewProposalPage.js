@@ -1,16 +1,20 @@
 import "../newProposalPage.css";
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { useState } from "react";
-import MyNavbar from "./Navbar.js";
+import { useState, useEffect } from "react";
+import dayjs from 'dayjs';
+import NavbarContainer from "../components/Navbar.js";
+import TitleBar from "../components/TitleBar.js";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import proposalsAPI from "../api/ProposalsAPI.js";
+import React from 'react';
 
 
 function NewProposalPage() {
     return (
         <>
-            <MyNavbar />
-            <Bar />
+            <NavbarContainer />
+            <TitleBar />
             <FormProposal />
         </>
     )
@@ -43,10 +47,52 @@ function FormProposal() {
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (supervisor && level && title && type && expDate && description && knowledge)
+        if(supervisor == "" | supervisor.trim() == ""){
+            setErrorMsg("Insert a valid Supervisor");
+        }
+
+        if(level == "" | level.trim() == ""){
+            setErrorMsg("Insert a valid level");
+        }
+
+        if(title == "" | title.trim() == ""){
+            setErrorMsg("Insert a valid title");
+        }
+
+        if(type == "" | type.trim() == ""){
+            setErrorMsg("Insert a valid type");
+        }
+
+        /*if(expDate == "" | dayjs.(expDate) <= dayjs().today() 1){
+            setErrorMsg("Insert a valid expiration date");
+        }*/
+
+        //check keywords, groups
+
+
+
+        if (supervisor && level && title && type && expDate && description && knowledge){
             // create new proposal function
-            navigate("/");
-        else
+            const newProposal = {
+                title: title,
+                level: level,
+                supervisor_id: supervisor,
+                keywords: keywords,
+                type: type,
+                groups: groups,
+                description: description,
+                required_knowledge: knowledge,
+                notes: notes,
+                expiration_date: expDate,
+                programmes: programmes
+            }
+            console.log(newProposal);
+
+            const res = await proposalsAPI.insertNewProposal(newProposal);
+            console.log(res);
+            /*const prop_id = res.proposal.id;
+            navigate("/proposals/" + prop_id);*/
+        }else
             setErrorMsg("Non si possono avere campi vuoti!");
     }
 
@@ -55,7 +101,7 @@ function FormProposal() {
             {errorMsg ? <Alert variant="danger" dismissible onClose={() => setErrorMsg("")}>{errorMsg}</Alert> : <></>}
             <Form className="form" onSubmit={handleSubmit}>
                 <div className="form-line">
-                    <SupervisorField mySupervisors={mySupervisors} />
+                    <SupervisorField mySupervisors={mySupervisors} setSupervisor={setSupervisor}/>
                     <LevelField setLevel={setLevel} />
                     <TitleField setTitle={setTitle} />
                     <TypeField setType={setType} />
@@ -103,7 +149,7 @@ function NotesField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Notes</Form.Label>
-            <Form.Control as="textarea" rows={4} placeholder="My notes..." onChange={handleChange} />
+            <Form.Control as="textarea" rows={4} placeholder="My notes..." onChange={handleChange} id="notes"/>
         </Form.Group>
     );
 }
@@ -117,7 +163,7 @@ function RequiredKnowledgeField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Required knowledge</Form.Label>
-            <Form.Control as="textarea" rows={4} placeholder="You are required to know..." onChange={handleChange} />
+            <Form.Control as="textarea" rows={4} placeholder="You are required to know..." onChange={handleChange} id="required-knowledge"/>
         </Form.Group>
     );
 }
@@ -133,7 +179,7 @@ function DescriptionField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Description</Form.Label>
-            <Form.Control as="textarea" rows={4} placeholder="My long description..." onChange={handleChange} />
+            <Form.Control id="description" as="textarea" rows={4} placeholder="My long description..." onChange={handleChange} />
         </Form.Group>
     );
 }
@@ -173,13 +219,8 @@ function GroupsField(props) {
         <Form.Group className="form-field ">
             <Form.Label>Groups</Form.Label>
             <div className="text-plus">
-                <Form.Select value={selected} onChange={handleChange}>
-                    <option>{errGroups ? errGroups : "Select the group"}</option>
-                    {myGroups.map((s, i) => (<option value={s} key={i}>{s}</option>)
-                    )}
-                </Form.Select>
-                <Button onClick={addGroup} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
-
+                <Form.Control id="group" value={selected} type="text" placeholder=" New group" onChange={handleChange} />
+                <Button id="add-group-btn" onClick={addGroup} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
             </div>
             {props.groups.map((s, i) => (
                 <ListElement key={i} value={s} setter={props.setGroups} />
@@ -224,12 +265,12 @@ function CoSupervisorsField(props) {
         <Form.Group className="form-field ">
             <Form.Label>Co-supervisors</Form.Label>
             <div className="text-plus">
-                <Form.Select value={selected} onChange={handleChange}>
+                <Form.Select value={selected} onChange={handleChange} id="" disabled>
                     <option>Select the co-supervisor</option>
                     {myCoSupervisors.map((s, i) => (<option value={s} key={i}>{s}</option>)
                     )}
                 </Form.Select>
-                <Button onClick={addCoSupervisor} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
+                <Button disabled onClick={addCoSupervisor} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
             </div>
             {props.coSupervisors.map((s, i) => (
                 <ListElement key={i} value={s} setter={props.setCoSupervisors} />
@@ -255,8 +296,8 @@ function ProgrammesField(props) {
         <Form.Group className="form-field ">
             <Form.Label>CdS / Programmes</Form.Label>
             <div className="text-plus">
-                <Form.Control value={selected} type="text" placeholder=" New programme" onChange={handleChange} />
-                <Button onClick={addProgramme} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
+                <Form.Control id="programme" value={selected} type="text" placeholder=" New programme" onChange={handleChange} />
+                <Button id="add-programme-btn" onClick={addProgramme} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
             </div>
             {props.programmes.map((s, i) => (
                 <ListElement key={i} value={s} setter={props.setProgrammes} />
@@ -283,8 +324,8 @@ function KeywordsField(props) {
         <Form.Group className="form-field ">
             <Form.Label>Keywords</Form.Label>
             <div className="text-plus">
-                <Form.Control type="text" placeholder=" New keyword" onChange={handleChange} />
-                <Button onClick={addKeyword} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
+                <Form.Control type="text" placeholder=" New keyword" onChange={handleChange} id="keyword"/>
+                <Button  id="add-keyword-btn" onClick={addKeyword} variant="secondary" className="mx-1 rounded-circle d-flex justify-content-center align-items-center">+</Button>
             </div>
             {props.keywords.map((s, i) => (
                 <ListElement key={i} value={s} setter={props.setKeywords} />
@@ -303,7 +344,7 @@ function ExpirationDateField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Expiration date</Form.Label>
-            <Form.Control type="date" onChange={handleChange} />
+            <Form.Control type="date" min={dayjs().format("YYYY-MM-DD")} onChange={handleChange} id="expiration-date"/>
 
         </Form.Group>
     );
@@ -318,7 +359,7 @@ function TypeField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Type</Form.Label>
-            <Form.Control type="text" placeholder=" New type" onChange={handleChange} />
+            <Form.Control id="type "type="text" placeholder=" New type" onChange={handleChange} />
         </Form.Group>
     );
 }
@@ -332,12 +373,14 @@ function TitleField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Title</Form.Label>
-            <Form.Control type="text" placeholder=" New title" onChange={handleChange} />
+            <Form.Control id="title" type="text" placeholder=" New title" onChange={handleChange} />
         </Form.Group>
     );
 }
 
 function LevelField(props) {
+
+    
 
     const handleChange = (event) => {
         props.setLevel(event.target.value);
@@ -346,7 +389,12 @@ function LevelField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Level</Form.Label>
-            <Form.Control type="text" placeholder=" Insert level" onChange={handleChange}/>
+            <Form.Select onChange={handleChange} id="level">
+                <option>Select the level</option>
+                <option value="Bachelor">Bachelor</option>
+                <option value="Master">Master</option>
+                
+            </Form.Select>
         </Form.Group>
     );
 }
@@ -356,10 +404,11 @@ function SupervisorField(props) {
     let [mySupervisors, setMySupervisors] = useState([]);
     let [errSuper, setErrSuper] = useState("");
 
-    /*const fetchSupervisors = async () =>{
+    const fetchSupervisors = async () =>{
         try{
-            const supervisorsList = await getSupervisors();
+            const supervisorsList = await proposalsAPI.getAllTeachers();
             setMySupervisors(supervisorsList);
+
         }catch(err){
             setErrSuper("Error on the fetch of supervisors.");
             setMySupervisors([]);
@@ -369,7 +418,7 @@ function SupervisorField(props) {
     useEffect(() =>{
         fetchSupervisors();
     }, []);
-    */
+    
 
 
     const handleChange = (event) => {
@@ -379,9 +428,9 @@ function SupervisorField(props) {
     return (
         <Form.Group className="form-field">
             <Form.Label>Supervisor</Form.Label>
-            <Form.Select onChange={handleChange}>
+            <Form.Select onChange={handleChange} id="supervisor">
                 <option>Select the supervisor</option>
-                {mySupervisors.map((s, i) => (<option value={s} key={i}>{s}</option>)
+                {mySupervisors.map((s, i) => (<option value={s.id} key={i}>{s.surname} {s.name}</option>)
                 )}
             </Form.Select>
         </Form.Group>

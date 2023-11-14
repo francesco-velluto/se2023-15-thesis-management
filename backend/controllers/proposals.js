@@ -6,6 +6,7 @@ const Student = require("../model/Student");
 const proposalsService = require("../service/proposals.service");
 const {proposal_id} = require("../model/Proposal");
 
+
 module.exports = {
     /**
      * Get all available proposals
@@ -78,9 +79,9 @@ module.exports = {
    */
   insertProposal: async (req, res) => {
     try {
-      const maxIdNum = await getMaxProposalIdNumber();
+      const maxIdNum = await proposalsService.getMaxProposalIdNumber();
       const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);
-      const proposal = await insertProposal({
+      const proposal = await proposalsService.insertProposal({
         proposal_id: newId,
         ...req.body,
       });
