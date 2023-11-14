@@ -13,8 +13,7 @@ function NewProposalPage() {
   return (
     <>
       <NavbarContainer />
-      <TitleBar />
-      <Bar />
+      <TitleBar title="Create a new proposal"/>
       <FormProposal />
     </>
   );
@@ -473,14 +472,6 @@ function SupervisorField(props) {
         ))}
       </Form.Select>
     </Form.Group>
-  );
-}
-
-function Bar() {
-  return (
-    <div className="bar">
-      <div className="bar-title">Create new thesis proposal</div>
-    </div>
   );
 }
 

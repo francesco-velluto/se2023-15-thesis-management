@@ -25,7 +25,9 @@ module.exports = {
 
         proposalsService.getAllProposals(req.user.cod_degree)
             .then((result) => {
+                
                 res.status(result.status).json({proposals: result.data});
+                
             })
             .catch((err) => {
                 res.status(err.status).json({ error: err.data });
