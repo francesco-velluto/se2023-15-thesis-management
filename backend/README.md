@@ -60,16 +60,28 @@ POST `/api/authentication/login`
 
 #### Get all proposals
 
-GET `/api/proposals`
+**GET** `/api/proposals`
+- Get all the thesis proposals related to the same degree of the student
+- Authentication: required
+- Authorization: only a student can see all the proposals related to his degree 
 - Request Query Parameters: _none_
 - Request Body: _none_
 - `SUCCESS 200` Response Body:
-  - `proposals`: Array of proposals. Each proposal has the following attributes:
-    - `id`: ID of the proposal
-    - `title`: Title of the proposal
-    - ...
+  - `proposals`: Array of proposals. Each proposal has  the following attributes:
+    - `proposal_id` : ID of the proposal
+    - `title` : Title of the proposal
+    - `supervisor_surname` : Surname of the supervisor
+    - `supervisor_name` : Name of the supervisor
+    - `keywords` : Array of keywords
+    - `type` : Type of the proposal (Bachelor or Master)
+    - `groups` : Array of groups of teachers of the proposal
+    - `description` : Description of the proposal
+    - `required_knowledge` : Required knowledge for the proposal
+    - `level` : Level of the proposal
+    - `degrees` : Array of degrees for the proposal
 - Errors:
   - `ERROR 500` Response Body: `{"error": "Internal Server Error"}`
+  - `ERROR 401` Response Body: `{"error": "Must be authenticated to make this request!"}`
 
 **POST** `/api/proposals`
 - Insert a new thesis proposal

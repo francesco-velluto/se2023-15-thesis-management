@@ -23,6 +23,7 @@ const rowToProposal = (row) => {
 
 
 exports.insertProposal = async (proposal) => {
+  console.log("SPERIAMO");
   try {
     const result = await db.query(
       `INSERT INTO proposals 

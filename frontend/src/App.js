@@ -43,8 +43,9 @@ function Main() {
                 <Route path="/proposals" element={<PageLayout />}>
                     <Route index element={loggedUser ? <ProposalsPage /> : <UnAuthorizationPage/>} />
                     <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
+                    <Route path="new" element={<NewProposalPage />} />
                 </Route>
-                <Route path='/proposals/insert' element={<NewProposalPage /> } />
+                
             </Route>
             
             <Route path='*' element={<NotFoundPage />} />

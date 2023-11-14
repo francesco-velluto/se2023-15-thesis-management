@@ -40,6 +40,47 @@ const fetchLogin = () => {
 };
 ```
 
+- ### getAllProposals
+    It is used to get all the proposals referred to the degree attended by the logged Student.
+
+    - Parameters: none
+    - Return value:
+
+        ```javascript
+        {proposals: [
+            {
+                proposal_id: "P002",
+                title: "Machine Learning",
+                supervisor_surname: "Wilson",
+                supervisor_name: "Michael",
+                keywords: [
+                    "Machine learning",
+                    "AI"
+                ],
+                type: "Master",
+                groups: [
+                    "Group B"
+                ],
+                description: "Proposal description",
+                required_knowledge: "Python, TensorFlow",
+                notes: "N/A",
+                expiration_date: "2024-06-29T22:00:00.000Z",
+                level: "Graduate",
+                degrees: [
+                    "Master of Science"
+                ]
+            },
+            {
+                ...
+            },...
+            ]
+        }
+        ```
+        It can also return an error in case of failure on backend side.
+
+
+
+
 ## Pages
 
 All pages are in the `src/pages` folder. The pages are placed in different files based on the resource they are related to.
