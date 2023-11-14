@@ -8,6 +8,7 @@ const { validationResult } = require('express-validator');
 const { authUser, getUserById } = require('../service/authentication');
 const CryptoJS = require('crypto-js');
 const Teacher = require('../model/Teacher');
+const Student = require('../model/Student');
 
 
 module.exports = {
