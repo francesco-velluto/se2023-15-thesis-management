@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import NewProposalPage from "./pages/NewProposalPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
+import NewProposalPage from "./pages/NewProposalPage";
 
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -44,6 +45,7 @@ function Main() {
                     <Route index element={loggedUser ? <ProposalsPage /> : <UnAuthorizationPage/>} />
                     <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
                 </Route>
+                <Route path='/proposals/insert' element={<NewProposalPage /> } />
             </Route>
             
             <Route path='*' element={<NotFoundPage />} />

@@ -5,6 +5,7 @@ const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authenticat
 const {
   getMaxProposalIdNumber,
   insertProposal,
+    getProposalById
   getAllProposals
 } = require("../service/proposals.service");
 const app = require("../app");
@@ -28,6 +29,7 @@ beforeEach(() => {
   getAllProposals.mockClear();
   isLoggedIn.mockClear();
   isTeacher.mockClear();
+  getProposalById.mockClear();
 });
 
 afterAll(() => {
@@ -188,17 +190,17 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(401);
-        expect(res.body).toEqual({ error: "Not authenticated" });
-        expect(isLoggedIn).toHaveBeenCalled();
-        expect(isTeacher).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toEqual({ error: "Not authenticated" });
+          expect(isLoggedIn).toHaveBeenCalled();
+          expect(isTeacher).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.2 - ERROR 401 | Not authorized", (done) => {
@@ -213,17 +215,17 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(401);
-        expect(res.body).toEqual({ error: "Not authorized" });
-        expect(isLoggedIn).toHaveBeenCalled();
-        expect(isTeacher).toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(401);
+          expect(res.body).toEqual({ error: "Not authorized" });
+          expect(isLoggedIn).toHaveBeenCalled();
+          expect(isTeacher).toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.3 - SUCCESS 201 | New proposal inserted", (done) => {
@@ -255,16 +257,16 @@ describe("T2 - Insert proposals unit tests", () => {
     insertProposal.mockResolvedValue(mockProposalRes);
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(201);
-        expect(res.body).toEqual({ proposal: mockProposalRes });
-        expect(getMaxProposalIdNumber).toHaveBeenCalled();
-        expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toEqual({ proposal: mockProposalRes });
+          expect(getMaxProposalIdNumber).toHaveBeenCalled();
+          expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.4 - ERROR 422 | Empty title field", (done) => {
@@ -291,16 +293,16 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(422);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(422);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.5 - SUCCESS 201 | Undefined notes field", (done) => {
@@ -332,16 +334,16 @@ describe("T2 - Insert proposals unit tests", () => {
     insertProposal.mockResolvedValue(mockProposalRes);
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(201);
-        expect(res.body).toEqual({ proposal: mockProposalRes });
-        expect(getMaxProposalIdNumber).toHaveBeenCalled();
-        expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toEqual({ proposal: mockProposalRes });
+          expect(getMaxProposalIdNumber).toHaveBeenCalled();
+          expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.6 - SUCCESS 201 | Undefined required knowledge field", (done) => {
@@ -373,16 +375,16 @@ describe("T2 - Insert proposals unit tests", () => {
     insertProposal.mockResolvedValue(mockProposalRes);
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(201);
-        expect(res.body).toEqual({ proposal: mockProposalRes });
-        expect(getMaxProposalIdNumber).toHaveBeenCalled();
-        expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(201);
+          expect(res.body).toEqual({ proposal: mockProposalRes });
+          expect(getMaxProposalIdNumber).toHaveBeenCalled();
+          expect(insertProposal).toHaveBeenCalledWith({ ...mockProposalRes });
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.7 - ERROR 422 | Missing date field", (done) => {
@@ -409,16 +411,16 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(422);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(422);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.8 - ERROR 422 | Invalid date format", (done) => {
@@ -445,16 +447,16 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(422);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(422);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.9 - ERROR 422 | Invalid date", (done) => {
@@ -481,16 +483,16 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(422);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(422);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.10 - ERROR 422 | Array of strings contains some elements which are not strings", (done) => {
@@ -517,16 +519,16 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(422);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(422);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.11 - ERROR 422 | Empty groups array", (done) => {
@@ -553,16 +555,16 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(422);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
-        expect(insertProposal).not.toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(422);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).not.toHaveBeenCalled();
+          expect(insertProposal).not.toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 
   test("T2.12 - ERROR 500 | Database error", (done) => {
@@ -595,15 +597,15 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     request(app)
-      .post("/api/proposals")
-      .send(mockProposalReq)
-      .then((res) => {
-        expect(res.status).toBe(500);
-        expect(res.body.error).not.toBeFalsy();
-        expect(getMaxProposalIdNumber).toHaveBeenCalled();
-        expect(insertProposal).toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
+        .post("/api/proposals")
+        .send(mockProposalReq)
+        .then((res) => {
+          expect(res.status).toBe(500);
+          expect(res.body.error).not.toBeFalsy();
+          expect(getMaxProposalIdNumber).toHaveBeenCalled();
+          expect(insertProposal).toHaveBeenCalled();
+          done();
+        })
+        .catch((err) => done(err));
   });
 });
