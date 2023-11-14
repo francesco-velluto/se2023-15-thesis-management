@@ -55,7 +55,7 @@ function ApplicationList() {
                 ) : (
                     <>
                         <Accordion alwaysOpen>
-                            {applications &&
+                            {applications && applications?.length > 0 &&
                                 Object.keys(applications).map((key, index) => (
                                     <Accordion.Item key={index} eventKey={index.toString()}>
                                         <Accordion.Header>{applications[key][0].title}</Accordion.Header>
@@ -74,7 +74,7 @@ function ApplicationList() {
                                     </Accordion.Item>
                                 ))}
                         </Accordion>
-                        {(applications === undefined || applications?.length == 0) &&
+                        {(applications === undefined || applications?.length === 0) &&
                             <Card className='my-3 fs-5'>
                                 <Card.Body>
                                     No applications were found for your thesis proposals!

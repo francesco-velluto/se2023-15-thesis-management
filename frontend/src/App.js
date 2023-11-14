@@ -37,14 +37,15 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={<HomePage />} />
+                <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
+                <Route path="/proposals" element={<PageLayout />}>
+                    <Route index element={<ProposalsPage />} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
+                </Route>
             </Route>
-            <Route path="/proposals" element={<PageLayout />}>
-                <Route index element={<ProposalsPage />} />
-                <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
-            </Route>
+            
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
     );

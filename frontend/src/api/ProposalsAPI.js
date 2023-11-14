@@ -24,7 +24,7 @@ module.exports = {
             method: 'GET',
             headers: APIConfig.API_REQUEST_HEADERS,
             credentials: 'include'
-        });
+        })
     },
 
     /**
