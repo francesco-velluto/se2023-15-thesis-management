@@ -41,7 +41,7 @@ function Main() {
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={loggedUser ? <ApplicationList /> : <UnAuthorizationPage />} />
                 <Route path="/proposals" element={<PageLayout />}>
-                    <Route index element={<ProposalsPage />} />
+                    <Route index element={loggedUser ? <ProposalsPage /> : <UnAuthorizationPage/>} />
                     <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>

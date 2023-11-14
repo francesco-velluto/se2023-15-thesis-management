@@ -6,6 +6,8 @@ import { Link } from "react-router-dom";
 function HomePage() {
     const { loggedUser, handleLogout } = useContext(LoggedUserContext);
 
+    console.log("logged user: ", loggedUser);
+
     return (
         <Container className="home-page">
             <Row className="mt-3">
@@ -140,10 +142,19 @@ function HomePage() {
                             <ul style={{ marginLeft: '20px', fontSize: '20px' }}>
                             </ul>
                         </Card>
-                        <Card bg="warning" className="rounded p-3 mt-3">
-                            <Button as={Link} to="/applications">My Thesis Proposal with Applications</Button>
-                            <Button className="mt-2" as={Link} to="/proposals">All thesis proposals</Button>
-                            <Button className="mt-2" variant="info" as={Link} to="/proposals/P001">Get Proposal with id P001</Button>
+                        <Card bg="light" className="rounded p-3 mt-3">
+                            <Row>
+                                {Object.keys(loggedUser).includes("cod_group") &&
+                                <Col>
+                                    <Button className="w-100" as={Link} to="/applications">My Thesis applications</Button>
+                                </Col>}
+                                {!Object.keys(loggedUser).includes("cod_group") &&
+                                <Col>
+                                    <Button className="w-100" as={Link} to="/proposals">Thesis proposals</Button>
+                                </Col>}
+                            </Row>
+                            
+                            
                         </Card>
                         <Button className="mt-3" variant="danger" onClick={handleLogout}>Logout</Button>
                     </>
