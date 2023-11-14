@@ -187,9 +187,9 @@ describe("End to End Tests for Insert Proposal", () => {
 
     // Supervisor
     const selectSupervisor = await driver.findElement(
-      By.id("select-supervisor")
+      By.id("supervisor")
     );
-    /* TO-DO: select supervisor id */
+    selectSupervisor.selectByValue(mockProposalReq.supervisor_id);
 
     // Keywords
     for (const keyword of mockProposalReq.keywords) {
@@ -204,6 +204,7 @@ describe("End to End Tests for Insert Proposal", () => {
     for (const group of mockProposalReq.groups) {
       const selectGroup = await driver.findElement(By.id("group"));
       /* TO-DO: select group from menu */
+      selectGroup.selectByVisibleText(group);
       await driver.findElement(By.id("add-group-btn")).click();
     }
 
@@ -238,6 +239,7 @@ describe("End to End Tests for Insert Proposal", () => {
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
+
     await restoreProposalsTable(); // should be already restored but to be sure...
   });
 
@@ -247,14 +249,14 @@ describe("End to End Tests for Insert Proposal", () => {
 
   // TO-DO: this test can be removed if no redirection is actually used
   test("T2.1 - Should show (or redirect to) not authorized page if not logged in yet", async () => {
-    await driver.get(baseURL + "/proposals/insert");
+    await driver.get(baseURL + "/proposals/new");
     await driver.wait(until.urlMatches(new RegExp(baseURL + "/login")), 3000);
   });
 
   test("T2.2 - Should not post a new proposal if title is empty", async () => {
     await doLogin();
 
-    await driver.get(baseURL + "/proposals/insert");
+    await driver.get(baseURL + "/proposals/new");
 
     // Fill all fields
     await fillProposalForm();
@@ -275,7 +277,7 @@ describe("End to End Tests for Insert Proposal", () => {
   test("T2.3 - Should insert a new proposal", async () => {
     await doLogin();
 
-    await driver.get(baseURL + "/proposals/insert");
+    await driver.get(baseURL + "/proposals/new");
 
     // Fill all the form fields
     await fillProposalForm();
