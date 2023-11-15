@@ -92,3 +92,9 @@ The home page is in `src/pages/HomePage.js`.
 ### LoginPage
 
 The login page is in `src/pages/LoginPage.js`.
+
+### ProposalsPage
+
+The proposals page is in `src/pages/ProposalsPage.js`.
+The proposal details page is in `src/pages/ProposalDetailsPage.js`.
+The new proposal page is in `src/pages/NewProposalPage.js`.
