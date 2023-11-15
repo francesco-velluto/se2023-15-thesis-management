@@ -28,17 +28,11 @@ function ApplicationList() {
 
     }, []);
 
-    return (<>
-        {/* <Container className='browse-application'> */}
-            <NavbarContainer/>
-            {/* <Row xs={12} style={{ 'width': '100rem', 'maxWidth': '90vw' }}>
-                <MyNavbar />
-            </Row> */}
+    return (
+        <Container>
+            <NavbarContainer />
 
-            {/* <Row className='mt-4'>
-                <h2>Browse Applications</h2>
-            </Row> */}
-            <TitleBar title={"Browse Applications"}/>
+            <TitleBar title={"Browse Applications"} />
 
             <Row className='mt-2'>
                 {errors?.map((error, index) => (
@@ -51,7 +45,7 @@ function ApplicationList() {
                 ))}
             </Row>
 
-            <Row>
+            <Row className='browse-application'>
                 {loading ? (
                     <Spinner animation="border" role="status">
                         <span className="visually-hidden">Loading...</span>
@@ -59,7 +53,7 @@ function ApplicationList() {
                 ) : (
                     <>
                         <Accordion alwaysOpen>
-                            {applications && applications?.length > 0 &&
+                            {applications && Object.keys(applications).length > 0 &&
                                 Object.keys(applications).map((key, index) => (
                                     <Accordion.Item key={index} eventKey={index.toString()}>
                                         <Accordion.Header>{applications[key][0].title}</Accordion.Header>
@@ -78,7 +72,7 @@ function ApplicationList() {
                                     </Accordion.Item>
                                 ))}
                         </Accordion>
-                        {(applications === undefined || applications?.length === 0) &&
+                        {(applications === undefined || Object.keys(applications).length === 0) &&
                             <Card className='my-3 fs-5'>
                                 <Card.Body>
                                     No applications were found for your thesis proposals!
@@ -88,8 +82,8 @@ function ApplicationList() {
                     </>
                 )}
             </Row>
-        {/* </Container> */}
-        </>
+            {/* </Container> */}
+        </Container>
     );
 }
 

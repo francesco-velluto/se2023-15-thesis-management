@@ -64,28 +64,29 @@ module.exports = {
     },
 
     insertNewApplication: async(proposal_id, student_id) => {
+     
         const status = 'Pending'
         const application_date = new Date().toISOString()
-        const query = `INSERT INTO applications (proposal_id, id, status, application_date)`+ 
-                        `VALUES ('${proposal_id}', '${student_id}', '${status}', '${application_date}');`;
+        const query = "INSERT INTO public.applications (proposal_id, id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
         try {
-            const studentCheck = await db.query(`SELECT * FROM student WHERE id = ${student_id}`);
-            const proposalCheck = await db.query(`SELECT * FROM proposals WHERE proposal_id = ${proposal_id}`);
-        
-            if (studentCheck.length === 0) {
-              throw new Error(`Student with id ${student_id} not found.`);
-            }
-        
-            if (proposalCheck.length === 0) {
-              throw new Error(`Proposal with id ${proposal_id} not found.`);
-            }
 
-            console.log(query)
-            const res = await db.query(query)
-            return res[0]
+            const studentCheck = await db.query('SELECT * FROM student WHERE id = $1', [student_id]);
+            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
+
+            if (studentCheck.length === 0 || proposalCheck.length === 0 ) {
+              throw new Error(`Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`);
+            }
+            else {
+                
+                const res = await db.query(query, [proposal_id, student_id, status, application_date])
+                return res
+
+            }
+            
         }
-        catch {
-            console.error('[BACKEND-SERVER] Error in insertNewApplication:', error);
+        catch (error) {
+            console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error);
+            throw error;
         }
 
     }
