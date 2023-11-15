@@ -13,15 +13,16 @@ export const LoggedUserProvider = ({ children }) => {
     const [errors, setErrors] = useState(undefined);                          // list of errors
 
     /**
-       * Perform the login
-       * 
-       * @param username username of the user
-       * @param password password of the user
-       */
+     * Perform the login
+     * 
+     * @param username username of the user
+     * @param password password of the user
+     */
     const handleLogin = async (username, password) => {
         try {
             const user = await login(username, password);
             setLoggedUser(user);
+            setErrors(undefined); // clear all errors when the login is successful
             navigate('/');
         } catch (err) {
             setErrors(err);
@@ -38,7 +39,7 @@ export const LoggedUserProvider = ({ children }) => {
             setErrors(err);
         }
         setLoggedUser(null);        // delete the state for the logged user
-        navigate('/');
+        navigate('/login');
     };
 
     return (
