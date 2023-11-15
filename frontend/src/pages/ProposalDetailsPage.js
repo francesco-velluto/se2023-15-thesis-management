@@ -5,6 +5,7 @@ import TitleBar from "../components/TitleBar";
 import {useNavigate, useParams} from "react-router-dom";
 import { getProposalById } from "../api/ProposalsAPI";
 import {Alert, Badge, Button, Card, Col, Container, Row} from "react-bootstrap";
+import ApplicationButton from './ApplicationButton';
 
 import "../ProposalDetails.css";
 
@@ -159,6 +160,9 @@ function ProposalDetailsPage() {
                                     <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
                                         navigate('/proposals')
                                     }}>Back to Search Proposal</Button>
+                                </Col>
+                                <Col>
+                                <ApplicationButton proposalID={proposal_id} />
                                 </Col>
                             </Row>
                         </Container>

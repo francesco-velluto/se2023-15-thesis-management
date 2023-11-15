@@ -1,0 +1,59 @@
+import React, { useState, useContext, useEffect } from 'react';
+import { insertNewApplication } from '../api/ApplicationsAPI';
+import { Button } from "react-bootstrap";
+import "../ProposalDetails.css";
+import { getAllApplicationsByStudent } from '../api/ApplicationsAPI';
+import { LoggedUserContext } from "../api/Context";
+
+const ApplicationButton = ({ proposalID }) => {
+  const [applied, setApplied] = useState(false);
+  const { loggedUser } = useContext(LoggedUserContext);
+
+  const getApplicationList = async () => {
+    try {
+      const Applist = await getAllApplicationsByStudent(loggedUser.id);
+      console.log(Applist);
+
+      if (Applist.length !== 0) {
+        for (let application of Applist) {
+          if (application.proposal_id === proposalID) {
+            setApplied(true);
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      console.error('[FRONTEND ERROR] getting application list', error);
+    }
+  };
+
+  useEffect(() => {
+    getApplicationList();
+  }, [loggedUser.id, proposalID]);
+
+  const handleButtonClick = async () => {
+    try {
+      const response = await insertNewApplication({ proposalID });
+      const data = await response.json();
+
+      if (response.length !== 0 ) {
+        setApplied(true);
+        console.log('Application submitted successfully:', data);
+        
+        getApplicationList();
+      } else {
+        console.error('[FRONTEND ERROR] Apply function', data.errors);
+      }
+    } catch (error) {
+      console.error('[FRONTEND ERROR] Apply function', error);
+    }
+  };
+
+  return (
+    <Button variant="secondary" onClick={handleButtonClick} disabled={applied}>
+      {applied ? 'Applied' : 'Apply'}
+    </Button>
+  );
+};
+
+export default ApplicationButton;
