@@ -101,6 +101,29 @@ function ProposalsList(props) {
                 </Col>
             </Row>
         }
+        {
+            !errorMessage && filteredProposals.length > 0 && <>
+            
+            <Row className='my-1 mx-2 p-2' >
+                <Col>
+                    <strong>Title</strong>
+                </Col>
+                <Col>
+                    <strong>Supervisor</strong>
+                </Col>
+                <Col>
+                    <strong>Type</strong>
+                </Col>
+                <Col>
+                    <strong>Expiration date</strong>
+                </Col>
+                <Col xs={12} md={2}>
+                    
+                </Col>
+            </Row>
+            
+            </>
+        }
 
         {   !errorMessage && filteredProposals.length > 0 ? 
             filteredProposals.map((fp, index) => (

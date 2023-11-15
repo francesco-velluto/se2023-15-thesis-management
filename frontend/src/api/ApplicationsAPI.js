@@ -1,6 +1,5 @@
 const { APICall } = require('./GenericAPI');
 const APIConfig = require('./config.json');
-
 const ApplicationsAPIURL = APIConfig.API_URL + '/applications';
 
 /**
@@ -20,5 +19,40 @@ module.exports = {
     getAllApplicationsByTeacher: async () => {
         return await APICall(ApplicationsAPIURL, 'GET');
     },
+
+    getAllApplicationsByStudent: async (id) => {
+        return await APICall(ApplicationsAPIURL + `/${id}`, 'GET');
+    },
+
+
+
+    insertNewApplication: async ({ proposalID }) => {
+        const postData = {
+            proposal_id: `${proposalID}`,
+        };
+    
+        try {
+            const response = await fetch(ApplicationsAPIURL, {
+                method: 'POST',
+                body: JSON.stringify(postData),
+                headers: {'Content-Type': 'application/json'},
+                credentials: "include"
+            });
+    
+            if (!response.ok) {
+                console.error('[FRONTEND ERROR] submitting application', response.statusText);
+                throw new Error(response.statusText);
+            }
+    
+            const data = await response.json();
+            console.log('Application submitted successfully:', data);
+            return data;
+        } catch (error) {
+            console.error('[FRONTEND ERROR]: in application button', error);
+            throw error;
+        }
+    },
+    
+    
 
 }

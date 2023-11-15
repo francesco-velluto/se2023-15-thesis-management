@@ -83,17 +83,17 @@ module.exports = {
     },
 
     insertNewApplication: (req,res) => {
-        if (!req.user instanceof Student) {
-            return res.status(401).json({ errors: ['Must be a student to make this request!'] });
-        }
-        applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
-            .then((result) =>{
-                res.status(result.status).json(result.data)
-            }
-            )
-            .catch((error) => {
-                res.status(error.status).json({errors: [err.data]})
-            }
-            )
+        if (req?.body &&  Object.keys(req.body).length !== 0) {
+            applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
+            .then((result) => {
+                res.status(200).json(result.data);
+            })
+            .catch((err) => {
+                res.status(err.status).json({ errors: [err.data] });
+            });
+
+        } else
+        return res.status(400).send("Parameters not found in insert new application controller");
+        
     }
 };

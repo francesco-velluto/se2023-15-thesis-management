@@ -21,4 +21,5 @@ module.exports = function Student(
   this.email = email;
   this.cod_degree = cod_degree;
   this.enrollment_year = enrollment_year;
+  this.role = 1;  // role 1 is for the student
 };
