@@ -6,8 +6,10 @@ import { Link } from "react-router-dom";
 function HomePage() {
     const { loggedUser, handleLogout } = useContext(LoggedUserContext);
 
-    return (
-        <Container className="home-page">
+    console.log("logged user: ", loggedUser);
+
+    return (<>
+        <Container fluid className="home-page">
             <Row className="mt-3">
                 <h1><strong>Thesis Management System</strong></h1>
             </Row>
@@ -140,10 +142,19 @@ function HomePage() {
                             <ul style={{ marginLeft: '20px', fontSize: '20px' }}>
                             </ul>
                         </Card>
-                        <Card bg="warning" className="rounded p-3 mt-3">
-                            <Button as={Link} to="/applications">My Thesis Proposal with Applications</Button>
-                            <Button className="mt-2" as={Link} to="/proposals">All thesis proposals</Button>
-                            <Button className="mt-2" variant="info" as={Link} to="/proposals/P001">Get Proposal with id P001</Button>
+                        <Card bg="light" className="rounded p-3 mt-3">
+                            <Row>
+                                {Object.keys(loggedUser).includes("cod_group") &&
+                                <Col>
+                                    <Button className="w-100" as={Link} to="/applications">My Thesis applications</Button>
+                                </Col>}
+                                {!Object.keys(loggedUser).includes("cod_group") &&
+                                <Col>
+                                    <Button className="w-100" as={Link} to="/proposals">Thesis proposals</Button>
+                                </Col>}
+                            </Row>
+                            
+                            
                         </Card>
                         <Button className="mt-3" variant="danger" onClick={handleLogout}>Logout</Button>
                     </>
@@ -154,19 +165,20 @@ function HomePage() {
                     <Button as={Link} to={"/login"}>Login</Button>
                 }
             </Row>
-            <Row>
-                <footer>
-                    <Col className="pr-3" xs={12} sm={2}>
-                        <img src="logo.svg" alt="logo" />
-                    </Col>
-                    <Col xs={12} sm={10}>
-                        <span className="text-secondary footer-text">
-                            &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
-                        </span>
-                    </Col>
-                </footer>
-            </Row>
+            
         </Container>
+        <Row className="w-100">
+            <footer>
+                <Col className="pr-3" xs={12} sm={2}>
+                    <img src="logo.svg" alt="logo" />
+                </Col>
+                <Col xs={12} sm={10}>
+                    <span className="text-secondary footer-text">
+                        &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
+                    </span>
+                </Col>
+            </footer>
+        </Row></>
     );
 }
 

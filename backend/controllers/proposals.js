@@ -1,5 +1,10 @@
 "use strict";
 
+const {
+  insertProposal,
+  getMaxProposalIdNumber,
+} = require("../service/proposals.service");
+
 const Student = require("../model/Student");
 
 

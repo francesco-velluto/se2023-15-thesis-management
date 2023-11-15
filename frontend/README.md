@@ -96,5 +96,11 @@ The login page is in `src/pages/LoginPage.js`.
 ### ProposalsPage
 
 The proposals page is in `src/pages/ProposalsPage.js`.
+
+The route is accessible at `/proposals`.
+
+### ProposalDetailsPage
+
 The proposal details page is in `src/pages/ProposalDetailsPage.js`.
-The new proposal page is in `src/pages/NewProposalPage.js`.
+
+The route is accessible at `/proposals/:proposalId`.
