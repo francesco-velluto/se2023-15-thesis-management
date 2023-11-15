@@ -41,9 +41,9 @@ function Main() {
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <UnAuthorizationPage />} />
                 <Route path="/proposals" element={<PageLayout />}>
-                    <Route index element={loggedUser ? <ProposalsPage /> : <UnAuthorizationPage/>} />
-                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
-                    <Route path="new" element={<NewProposalPage />} />
+                    <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage/>} />
+                    <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
+                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <NewProposalPage /> : <UnAuthorizationPage />} />
                 </Route>
                 
             </Route>
