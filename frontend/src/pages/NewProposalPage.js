@@ -13,13 +13,12 @@ import { LoggedUserContext } from "../api/Context.js";
 
 function NewProposalPage() {
   return (
-    <><Container fluid>
+    <>
       <NavbarContainer />
       <TitleBar title="Create a new proposal" />
-      <Card>
-        <FormProposal />
-      </Card>
-    </Container>
+      <FormProposal />
+      
+    
 
     </>
   );
