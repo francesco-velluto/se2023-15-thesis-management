@@ -52,8 +52,6 @@ function ProposalsList(props) {
             let result = [...proposals];
             for(const fltr of props.searchData){
 
-                
-
                 if(['title',
                 'type',
                 'description',
@@ -61,24 +59,21 @@ function ProposalsList(props) {
                 'notes',
                 'level'].includes(fltr.field)){
                     
-                    result = result.filter((elem) => (elem[fltr.field].includes(fltr.value)));
+                    result = result.filter((elem) => ((elem[fltr.field]).toLowerCase().includes(fltr.value.toLowerCase())));
                    
                 }
 
                 if(fltr.field === 'supervisor'){
-                    result = result.filter((elem) => ((elem.supervisor_surname + " " + elem.supervisor_name).includes(fltr.value)))
+                    result = result.filter((elem) => ((elem.supervisor_surname + " " + elem.supervisor_name).toLowerCase().includes(fltr.value.toLowerCase())))
                 }
 
                 if(['keywords', 'groups', 'degrees'].includes(fltr.field)){
                     console.log(result);
-                    result = result.filter((elem) => (elem[fltr.field].some((str) => (str.includes(fltr.value)))))
+                    result = result.filter((elem) => ((elem[fltr.field]).map((s) => (s.toLowerCase())).some((str) => (str.includes(fltr.value.toLowerCase())))))
                 }
 
                 if(fltr.field === 'expiration_date'){
-
-                    
-
-                    result = result.filter((elem) => {console.log(elem.expiration_date, parse(fltr.value, 'dd/MM/yyyy', new Date())); return isSameDay(parseISO(elem.expiration_date), parse(fltr.value, 'dd/MM/yyyy', new Date()))})
+                    result = result.filter((elem) => {return isSameDay(parseISO(elem.expiration_date), parse(fltr.value, 'yyyy-MM-dd', new Date()))})
 
                 }
 
