@@ -13,7 +13,7 @@ function NewProposalPage() {
   return (
     <>
       <NavbarContainer />
-      <TitleBar title="Create a new proposal"/>
+      <TitleBar title="Create a new proposal" />
       <FormProposal />
     </>
   );
@@ -66,22 +66,21 @@ function FormProposal() {
       return;
     }
 
-    if(!expDate){
-        setErrorMsg("Insert a valid expiration date");
+    if (!expDate) {
+      setErrorMsg("Insert a valid expiration date");
     }
 
-    if(programmes.length === 0){
-        setErrorMsg("Insert at least 1 programme");
+    if (programmes.length === 0) {
+      setErrorMsg("Insert at least 1 programme");
     }
 
-    if(keywords.lenght === 0){
-        setErrorMsg("Insert at least 1 keyword");
+    if (keywords.lenght === 0) {
+      setErrorMsg("Insert at least 1 keyword");
     }
 
-    if(groups.lenght === 0){
-        setErrorMsg("Insert at least 1 group");
+    if (groups.lenght === 0) {
+      setErrorMsg("Insert at least 1 group");
     }
-
 
     const newProposal = {
       title: title,
@@ -156,6 +155,7 @@ function EndButtons() {
       <button
         type="submit"
         className="my-buttons p-3"
+        id="add-proposal-btn"
         style={{ backgroundColor: "#7DC1FF", color: "black" }}
       >
         Create proposal
@@ -309,7 +309,7 @@ function ProgrammesField(props) {
   };
 
   return (
-    <Form.Group className="form-field ">
+    <Form.Group className="form-field">
       <Form.Label>CdS / Programmes</Form.Label>
       <div className="text-plus">
         <Form.Control
@@ -350,12 +350,12 @@ function KeywordsField(props) {
   };
 
   return (
-    <Form.Group className="form-field ">
+    <Form.Group className="form-field">
       <Form.Label>Keywords</Form.Label>
       <div className="text-plus">
         <Form.Control
           type="text"
-          placeholder=" New keyword"
+          placeholder="New keyword"
           onChange={handleChange}
           id="keyword"
         />
@@ -404,9 +404,9 @@ function TypeField(props) {
       <Form.Label>Type</Form.Label>
       <Form.Control
         required
-        id="type "
+        id="type"
         type="text"
-        placeholder=" New type"
+        placeholder="New type"
         onChange={handleChange}
       />
     </Form.Group>
@@ -425,9 +425,8 @@ function TitleField(props) {
         required
         id="title"
         type="text"
-        placeholder=" New title"
+        placeholder="New title"
         onChange={handleChange}
-        
       />
     </Form.Group>
   );
@@ -441,11 +440,18 @@ function LevelField(props) {
   return (
     <Form.Group className="form-field">
       <Form.Label>Level</Form.Label>
-      <Form.Select required onChange={handleChange} id="level">
+      {/* <Form.Select required onChange={handleChange} id="level">
         <option>Select the level</option>
         <option value="Bachelor">Bachelor</option>
         <option value="Master">Master</option>
-      </Form.Select>
+      </Form.Select> */}
+      <Form.Control
+        required
+        type="text"
+        onChange={handleChange}
+        id="level"
+        placeholder="Thesis level"
+      ></Form.Control>
     </Form.Group>
   );
 }

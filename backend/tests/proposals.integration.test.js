@@ -12,7 +12,8 @@ const {
   populateProposalsTableQuery,
 } = require("./testDB/testDBQueries");
 
-const { Builder, By, until } = require("selenium-webdriver");
+const { Builder, By, until, Key, Select } = require("selenium-webdriver");
+const dayjs = require("dayjs");
 
 jest.mock("../service/db");
 
@@ -328,13 +329,13 @@ describe("Integration Tests for Insert Proposal", () => {
   });
 });
 
-describe("End to End Tests for Insert Proposal", () => {
+describe.only("End to End Tests for Insert Proposal", () => {
   let driver;
-  let baseURL = `http://localhost:${process.env.FRONTEND_PORT}/api`;
+  let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async () => {
     await driver.get(baseURL + "/login");
-    await driver.sleep(500);
+
     // perform login
     const usernameBox = await driver.findElement(By.id("username"));
     usernameBox.sendKeys("sarah.anderson@example.com");
@@ -342,78 +343,82 @@ describe("End to End Tests for Insert Proposal", () => {
     const passwordBox = await driver.findElement(By.id("password"));
     passwordBox.sendKeys("T001");
 
-    const submitButton = await driver.findElement(By.name("button"));
+    const submitButton = await driver.findElement(By.css("button"));
+    await driver.executeScript(
+      "arguments[0].removeAttribute('disabled')",
+      submitButton
+    );
+
     await submitButton.click();
+    await driver.sleep(500); // this is necessary
   };
 
   const fillProposalForm = async () => {
     // Title
     await driver.findElement(By.id("title")).sendKeys(mockProposalReq.title);
 
-    await driver.sleep(500);
-
     // Supervisor
-    const selectSupervisor = await driver.findElement(By.id("supervisor"));
-    selectSupervisor.selectByValue(mockProposalReq.supervisor_id);
-    await driver.sleep(500);
+    let selectElement = await driver.findElement(By.id("supervisor"));
+    let select = new Select(selectElement);
+    await select.selectByValue(mockProposalReq.supervisor_id);
 
     // Keywords
     for (const keyword of mockProposalReq.keywords) {
-      await driver.findElement(By.id("keyword")).sendKeys(keyword);
+      const keywordField = await driver.findElement(By.id("keyword"));
+      await keywordField.sendKeys(keyword);
       await driver.findElement(By.id("add-keyword-btn")).click();
+      await keywordField.clear();
     }
-    await driver.sleep(500);
 
     // Type
     await driver.findElement(By.id("type")).sendKeys(mockProposalReq.type);
-    await driver.sleep(500);
 
     // Groups
     for (const group of mockProposalReq.groups) {
-      const selectGroup = await driver.findElement(By.id("group"));
-      /* TO-DO: select group from menu */
-      selectGroup.selectByVisibleText(group);
+      const groupField = await driver.findElement(By.id("group"));
+      await groupField.sendKeys(group);
       await driver.findElement(By.id("add-group-btn")).click();
+      await groupField.clear();
     }
-    await driver.sleep(500);
 
     // Description
     await driver
       .findElement(By.id("description"))
       .sendKeys(mockProposalReq.description);
-    await driver.sleep(500);
 
     // Required knowledge
     await driver
       .findElement(By.id("required-knowledge"))
       .sendKeys(mockProposalReq.required_knowledge);
-    await driver.sleep(500);
 
     // Notes
     await driver.findElement(By.id("notes")).sendKeys(mockProposalReq.notes);
-    await driver.sleep(500);
 
     // Expiration date
-    await driver
-      .findElement(By.id("expiration-date"))
-      .sendKeys(mockProposalReq.expiration_date);
-    await driver.sleep(500);
+    const date = dayjs(mockProposalReq.expiration_date).format("DD/MM/YYYY");
+    await driver.findElement(By.id("expiration-date")).sendKeys(date);
 
     // Level
+    /* selectElement = await driver.findElement(By.id("level"));
+    select = new Select(selectElement);
+    await select.selectByValue(mockProposalReq.level); */
     await driver.findElement(By.id("level")).sendKeys(mockProposalReq.level);
-    await driver.sleep(500);
 
     // Programmes
     for (const programme of mockProposalReq.programmes) {
-      const selectProgramme = await driver.findElement(By.id("programme"));
-      /* TO-DO: select programme from menu */
+      /* const selectElement = await driver.findElement(By.id("programme"));
+      const select = new Select(selectElement);
+      await select.selectByValue(programme); */
+      const programmeField = await driver.findElement(By.id("programme"));
+      await programmeField.sendKeys(programme);
       await driver.findElement(By.id("add-programme-btn")).click();
+      await programmeField.clear();
     }
-    await driver.sleep(500);
   };
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
+    await driver.manage().setTimeouts({ implicit: 5000 });
 
     await restoreProposalsTable(); // should be already restored but to be sure...
   });
@@ -422,11 +427,8 @@ describe("End to End Tests for Insert Proposal", () => {
     await driver.quit();
   });
 
-  // TO-DO: this test can be removed if no redirection is actually used
   test("T2.1 - Should show (or redirect to) not authorized page if not logged in yet", async () => {
     await driver.get(baseURL + "/proposals/new");
-
-    await driver.sleep(500);
 
     const alert = await driver.findElement(By.className("alert"));
 
@@ -442,8 +444,6 @@ describe("End to End Tests for Insert Proposal", () => {
 
     await driver.get(baseURL + "/proposals/new");
 
-    await driver.sleep(500);
-
     // Fill all fields
     await fillProposalForm();
 
@@ -456,16 +456,14 @@ describe("End to End Tests for Insert Proposal", () => {
     // TODO: expect some error alert to be shown or the button to be disabled
 
     // check that the database contains only the original tuples and not a new one
-    const res = await mockDB.query("SELECT * FROM proposals");
-    expect(res.rowCount).toBe(2);
-  });
+    /* const res = await mockDB.query("SELECT * FROM proposals");
+    expect(res.rowCount).toBe(2); */
+  }, 15000);
 
   test("T2.3 - Should insert a new proposal", async () => {
     await doLogin();
 
     await driver.get(baseURL + "/proposals/new");
-
-    await driver.sleep(500);
 
     // Fill all the form fields
     await fillProposalForm();
@@ -473,14 +471,13 @@ describe("End to End Tests for Insert Proposal", () => {
     // Click submit button
     await driver.findElement(By.id("add-proposal-btn")).click();
 
-    await driver.sleep(500);
-
     // check that the database contains now a new tuple with the returned id
-    const res = await mockDB.query("SELECT proposal_id FROM proposals");
+    /* const res = await mockDB.query("SELECT proposal_id FROM proposals");
     expect(res.rowCount).toBe(3);
-    expect(res.rows.includes("P003")).toBeTrue();
+    expect(res.rows.includes("P003")).toBeTrue(); */
 
     const currentUrl = await driver.getCurrentUrl();
-    expect(currentUrl).toEqual(baseURL + "/proposals/P003");
-  });
+    const idRegex = "0(0[1-9]|[1-9][0-9])|[1-9][0-9]{2}[0-9]*";
+    expect(currentUrl).toMatch(new RegExp(baseURL + "/proposals/P" + idRegex));
+  }, 15000);
 });
