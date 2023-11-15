@@ -55,7 +55,7 @@ function Main() {
 
 function PageLayout() {
     return (
-        <Container>
+        <Container fluid>
             <Row>
                 <Outlet />
             </Row>

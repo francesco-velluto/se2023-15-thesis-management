@@ -72,9 +72,12 @@ module.exports = {
 
             const studentCheck = await db.query('SELECT * FROM student WHERE id = $1', [student_id]);
             const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
+            const applicationCheck = await db.query('SELECT * FROM applications WHERE proposal_id = $1 AND id = $2', [proposal_id, student_id]);
 
-            if (studentCheck.length === 0 || proposalCheck.length === 0 ) {
+            if (studentCheck.rows.length === 0 || proposalCheck.rows.length === 0 ) {
               throw new Error(`Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`);
+            } else if (applicationCheck.rows.length !== 0) {
+                throw new Error(`Student with id ${student_id} has already applied to proposal with id ${proposal_id}.`);
             }
             else {
                 
@@ -85,7 +88,7 @@ module.exports = {
             
         }
         catch (error) {
-            console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error);
+            console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error.message);
             throw error;
         }
 

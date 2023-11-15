@@ -43,10 +43,11 @@ module.exports = {
                 console.error('[FRONTEND ERROR] submitting application', response.statusText);
                 throw new Error(response.statusText);
             }
-    
-            const data = await response.json();
-            console.log('Application submitted successfully:', data);
-            return data;
+
+            // This API returns nothing so response.json() fails
+            //const data = await response.json();
+            //console.log('Application submitted successfully:', data);
+            return "ok";
         } catch (error) {
             console.error('[FRONTEND ERROR]: in application button', error);
             throw error;

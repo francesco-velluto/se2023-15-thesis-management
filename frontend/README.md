@@ -78,43 +78,7 @@ const fetchLogin = () => {
         ```
         It can also return an error in case of failure on backend side.
 
-- ### getProposalById
-    It is used to get a proposal specifying his Id.
-    
-    - Parameters: proposal_id
-    - Return value:
 
-        ```javascript
-        {
-            supervisor_name: "Sarah",
-            supervisor_surname: "Anderson",
-            proposal_id: "P001",
-            title: "Web Development",
-            supervisor_id: "T001",
-            keywords: [
-                "Web",
-                "Development"
-            ],
-            type: "Bachelor",
-            groups: [
-                "Group A"
-            ],
-            description: "A web development project description.",
-            required_knowledge: "HTML, CSS, JavaScript",
-            notes: "No special notes.",
-            expiration_date: "2023-12-30T23:00:00.000Z",
-            level: "Undergraduate",
-            programmes: [
-                {
-                cod_degree: "BSC001",
-                title_degree: "Bachelor of Science"
-                }
-            ]
-       }
-        ```
-        It can also return an error in case of failure on backend side.
-
-- ### insert
 
 
 ## Pages
@@ -128,6 +92,12 @@ The home page is in `src/pages/HomePage.js`.
 ### LoginPage
 
 The login page is in `src/pages/LoginPage.js`.
+
+### ProposalsPage
+
+The proposals page is in `src/pages/ProposalsPage.js`.
+
+The route is accessible at `/proposals`.
 
 ### ProposalDetailsPage
 

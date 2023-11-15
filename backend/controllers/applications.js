@@ -83,13 +83,13 @@ module.exports = {
     },
 
     insertNewApplication: (req,res) => {
-        if (req?.body &&  Object.keys(req.body).length !== 0) {
+        if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
             .then((result) => {
                 res.status(200).json(result.data);
             })
             .catch((err) => {
-                res.status(err.status).json({ errors: [err.data] });
+                res.status(500).json({ errors: [err.message] });
             });
 
         } else
