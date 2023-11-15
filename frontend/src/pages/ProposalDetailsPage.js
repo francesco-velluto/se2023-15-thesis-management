@@ -25,7 +25,7 @@ function ProposalDetailsPage() {
             .then(async res => {
                 let data = await res.json()
 
-                if(res.status == 200) {
+                if(res.status === 200) {
                     setProposal(data);
                 } else {
                     setErrorMessage(data.error)
@@ -37,7 +37,7 @@ function ProposalDetailsPage() {
                 setErrorMessage(err.message);
                 setIsLoading(false);
             });
-    }, []);
+    }, [proposal_id]);
 
     return (
         <>

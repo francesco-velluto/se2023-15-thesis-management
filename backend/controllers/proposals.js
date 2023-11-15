@@ -1,10 +1,16 @@
 "use strict";
 
+const {
+  insertProposal,
+  getMaxProposalIdNumber,
+} = require("../service/proposals.service");
+
 const Student = require("../model/Student");
 
 
 const proposalsService = require("../service/proposals.service");
 const {proposal_id} = require("../model/Proposal");
+
 
 module.exports = {
     /**
@@ -17,13 +23,16 @@ module.exports = {
      * @error 500 Internal Server Error - if something went wrong
      */
     getAllProposals: async (req, res) => {
+        /** ALREADY CHECKED IN AUTHENTICATION CONTROLLER with isStudent
        if (!req.user instanceof Student) {
             return res.status(401).json({ errors: ['Must be a student to make this request!'] });
-        }
+       }**/
 
         proposalsService.getAllProposals(req.user.cod_degree)
             .then((result) => {
+                
                 res.status(result.status).json({proposals: result.data});
+                
             })
             .catch((err) => {
                 res.status(err.status).json({ error: err.data });
@@ -78,9 +87,9 @@ module.exports = {
    */
   insertProposal: async (req, res) => {
     try {
-      const maxIdNum = await getMaxProposalIdNumber();
+      const maxIdNum = await proposalsService.getMaxProposalIdNumber();
       const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);
-      const proposal = await insertProposal({
+      const proposal = await proposalsService.insertProposal({
         proposal_id: newId,
         ...req.body,
       });

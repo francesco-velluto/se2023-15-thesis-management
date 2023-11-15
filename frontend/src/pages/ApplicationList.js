@@ -3,6 +3,8 @@ import { Accordion, Alert, Card, Container, Row, Spinner } from "react-bootstrap
 import { getAllApplicationsByTeacher } from '../api/ApplicationsAPI';
 import { format } from 'date-fns';
 import MyNavbar from './Navbar';
+import NavbarContainer from '../components/Navbar';
+import TitleBar from '../components/TitleBar';
 
 function ApplicationList() {
     const [applications, setApplications] = useState([]);
@@ -26,15 +28,17 @@ function ApplicationList() {
 
     }, []);
 
-    return (
-        <Container className='browse-application'>
-            <Row xs={12} style={{ 'width': '100rem', 'maxWidth': '90vw' }}>
+    return (<>
+        {/* <Container className='browse-application'> */}
+            <NavbarContainer/>
+            {/* <Row xs={12} style={{ 'width': '100rem', 'maxWidth': '90vw' }}>
                 <MyNavbar />
-            </Row>
+            </Row> */}
 
-            <Row className='mt-4'>
+            {/* <Row className='mt-4'>
                 <h2>Browse Applications</h2>
-            </Row>
+            </Row> */}
+            <TitleBar title={"Browse Applications"}/>
 
             <Row className='mt-2'>
                 {errors?.map((error, index) => (
@@ -84,7 +88,8 @@ function ApplicationList() {
                     </>
                 )}
             </Row>
-        </Container>
+        {/* </Container> */}
+        </>
     );
 }
 

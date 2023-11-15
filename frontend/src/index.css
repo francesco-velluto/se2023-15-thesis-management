@@ -37,7 +37,7 @@ body {
 }
 
 .home-page {
-    min-height: 100vh;
+    min-height: 88.9vh;
 }
 
 .browse-application {
@@ -87,7 +87,7 @@ footer {
     margin-top: 2rem;
     display: flex;
     align-items: center;
-    position: absolute;
+    position: relative;
     bottom: 0;
     left: 0;
 }
@@ -96,7 +96,7 @@ footer img {
     width: 120px;
     margin: auto;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
 }
 
 .footer-text {
