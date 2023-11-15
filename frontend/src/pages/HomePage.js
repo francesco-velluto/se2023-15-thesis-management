@@ -143,14 +143,21 @@ function HomePage() {
                             </Card>
                             <Card bg="light" className="rounded p-3 mt-3">
                                 <Row>
-                                    {Object.keys(loggedUser).includes("cod_group") &&
+                                    {loggedUser.role === 0 &&
                                         <Col>
                                             <Button className="w-100" as={Link} to="/applications">My Thesis Applications</Button>
                                         </Col>}
-                                    {!Object.keys(loggedUser).includes("cod_group") &&
+                                    {
+                                        loggedUser.role === 0 &&
+                                        <Col>
+                                            <Button className="w-100" as={Link} to="/proposals/new">Add a new proposal</Button>
+                                        </Col>
+                                    }
+                                    {loggedUser.role === 1 &&
                                         <Col>
                                             <Button className="w-100" as={Link} to="/proposals">Thesis proposals</Button>
                                         </Col>}
+                                    
                                 </Row>
 
 
