@@ -25,9 +25,10 @@ function NewProposalPage() {
   );
 }
 
+
 function FormProposal() {
   const [title, setTitle] = useState("");
-  const [supervisor, setSupervisor] = useState("");
+  //const [supervisor, setSupervisor] = useState("");
   const [level, setLevel] = useState("");
   const [type, setType] = useState("");
   const [expDate, setExpDate] = useState("");
@@ -39,6 +40,9 @@ function FormProposal() {
   const [knowledge, setKnowledge] = useState("");
   const [notes, setNotes] = useState("");
 
+  const {loggedUser} = useContext(LoggedUserContext);
+  
+
   // const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -47,15 +51,17 @@ function FormProposal() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    debugger;
+
     if (title?.trim() === "") {
       setErrorMsg("Insert a valid title");
       return;
     }
 
-    if (supervisor?.trim() === "") {
+    /*if (supervisor?.trim() === "") {
       setErrorMsg("Insert a valid Supervisor");
       return;
-    }
+    }*/
 
     if (level?.trim() === "") {
       setErrorMsg("Insert a valid level");
@@ -74,25 +80,29 @@ function FormProposal() {
 
     if (!expDate) {
       setErrorMsg("Insert a valid expiration date");
+      return;
     }
 
     if (programmes.length === 0) {
       setErrorMsg("Insert at least 1 programme");
+      return;
     }
 
     if (keywords.lenght === 0) {
       setErrorMsg("Insert at least 1 keyword");
+      return;
     }
 
     if (groups.lenght === 0) {
       setErrorMsg("Insert at least 1 group");
+      return;
     }
 
 
     const newProposal = {
       title: title,
       level: level,
-      supervisor_id: supervisor,
+      supervisor_id: loggedUser.id,
       keywords: keywords,
       type: type,
       groups: groups,
@@ -105,7 +115,7 @@ function FormProposal() {
 
     try {
       const proposal = await proposalsAPI.insertNewProposal(newProposal);
-      navigate("/proposals/" + proposal.proposal_id);
+      navigate("/");
     } catch (err) {
       setErrorMsg(err.message);
     }
@@ -125,7 +135,7 @@ function FormProposal() {
         </div>
         <div className="form-line">
           <SupervisorField
-            setSupervisor={setSupervisor}
+            /*setSupervisor={setSupervisor}*/
             setErrorMsg={setErrorMsg}
           />
           <LevelField setLevel={setLevel} />
@@ -247,7 +257,7 @@ function GroupsField(props) {
     if (selected) {
       setSelected("");
       props.setGroups((oldList) => {
-        if (!oldList.include(v))
+        if (!oldList.includes(v))
           return [v, ...oldList];
         return oldList;
       });
@@ -265,6 +275,7 @@ function GroupsField(props) {
           type="text"
           placeholder="New group"
           onChange={handleChange}
+          
         />
         <Button
           id="add-group-btn"
@@ -319,7 +330,7 @@ function ProgrammesField(props) {
     if (selected) {
       setSelected("");
       props.setProgrammes((oldList) => {
-        if (!oldList.include(v))
+        if (!oldList.includes(v))
           return [selected, ...oldList];
         return oldList;
       });
@@ -336,6 +347,7 @@ function ProgrammesField(props) {
           type="text"
           placeholder="New programme"
           onChange={handleChange}
+          
         />
         <Button
           id="add-programme-btn"
@@ -478,9 +490,9 @@ function LevelField(props) {
 function SupervisorField(props) {
 
   const { loggedUser } = useContext(LoggedUserContext);
-  let [supervisors, setSupervisors] = useState([]);
+  //let [supervisors, setSupervisors] = useState([]);
 
-  const fetchSupervisors = async () => {
+  /*const fetchSupervisors = async () => {
     try {
       const teachersList = await proposalsAPI.getAllTeachers();
       setSupervisors(teachersList);
@@ -497,7 +509,7 @@ function SupervisorField(props) {
 
   const handleChange = (event) => {
     props.setSupervisor(event.target.value);
-  };
+  };*/
 
   return (
     <Form.Group className="form-field">
