@@ -42,7 +42,6 @@ body {
 
 .browse-application {
     background-color: #DBECFF;
-    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,7 +52,6 @@ body {
     padding: 10px;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 100rem;
     max-width: 90vw;
     border-radius: 10px;
     font-weight: bold;
@@ -61,8 +59,7 @@ body {
 
 .browse-application .accordion-item {
     margin: 15px;
-    width: 100rem;
-    max-width: 90vw;
+    max-width: 100%;
 }
 
 .browse-application .accordion-item .accordion-button {

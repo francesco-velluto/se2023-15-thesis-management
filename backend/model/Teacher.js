@@ -17,4 +17,5 @@ module.exports = function Teacher(
   this.email = email;
   this.cod_group = cod_group;
   this.cod_department = cod_department;
+  this.role = 0;  // role 0 is for the teacher
 };
