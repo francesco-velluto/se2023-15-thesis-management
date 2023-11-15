@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Form, Button, Container, Col, Row } from 'react-bootstrap';
+import { Form, Button, Container, Col, Row, Alert } from 'react-bootstrap';
 
 const FIELDS = [{title: 'Title'},
                 {supervisor: 'Supervisor'},
@@ -19,12 +19,19 @@ function ProposalsSearchArea(props) {
     const [searchField, setSearchField] = useState("");
     const [searchValue, setSearchValue] = useState("");
 
+    const [error, setError] = useState(false);
+
     useEffect(() => {
       setSearchValue("");
     }, [searchField])
 
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        if(searchField === "" || searchValue === ""){
+          setError(true);
+          return
+        }
 
         if(searchField === "" || !searchValue){
             return;
@@ -37,15 +44,23 @@ function ProposalsSearchArea(props) {
 
         setSearchField("");
         setSearchValue("");
+        setError(false);
         
     }
-console.log(searchValue);
+
     return (
         <>
 
 <div className="container-fluid bg-light p-3 d-flex flex-column align-items-center">
 
-<Form onSubmit={handleSubmit} className="mb-3" style={{width: "50vw"}}>
+{ error &&
+  <Alert variant={"danger"}>
+    Wrong filtering parameters! Retry!
+  </Alert>
+}
+  
+
+<Form onSubmit={handleSubmit} className="mb-3" style={{width: "50vw"}} validated={false} >
   <Row className="align-items-end">
     <Col xs={12} md={2}>
       <div className='m-2'>Filter by:</div>
@@ -54,7 +69,7 @@ console.log(searchValue);
       <Form.Select
         aria-label="Default select example"
         value={searchField}
-        onChange={(event) => { setSearchField((sd) => (event.target.value)) }}
+        onChange={(event) => { setSearchField((sd) => (event.target.value)); setError(false) }}
         style={{ maxWidth: "100%" }}>
         <option value="">Field</option>
         {
@@ -75,7 +90,7 @@ console.log(searchValue);
           aria-describedby="insert-value-form"
           placeholder="Date"
           value={searchValue}
-          onChange={(event) => { setSearchValue((sd) => (event.target.value)) }}
+          onChange={(event) => { setSearchValue((sd) => (event.target.value)); setError(false) }}
           style={{ maxWidth: "100%" }}
         /> 
         :
@@ -85,7 +100,7 @@ console.log(searchValue);
           aria-describedby="insert-value-form"
           placeholder="Value"
           value={searchValue}
-          onChange={(event) => { setSearchValue((sd) => (event.target.value)) }}
+          onChange={(event) => { setSearchValue((sd) => (event.target.value)); setError(false) }}
           style={{ maxWidth: "100%" }}
         />
       }

@@ -242,8 +242,22 @@ INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type,
   ('P007', 'Climate Change Impact', 'T007', ARRAY['Climate Change', 'Impact'], 'Experimental', ARRAY['Group B'], 'A thesis on climate change impact analysis.', 'Environmental Science knowledge', 'N/A', '2024-03-15', 'Master', ARRAY['MSC002']),
   ('P008', 'Literary Analysis', 'T008', ARRAY['Literature', 'Analysis'], 'Theoretical', ARRAY['Group D'], 'A literary analysis thesis description.', 'Literary analysis skills', 'N/A', '2023-11-10', 'Master', ARRAY['MSC001']),
   ('P009', 'Financial Risk Management', 'T009', ARRAY['Financial', 'Risk Management'], 'Theoretical', ARRAY['Group C'], 'A thesis on financial risk management.', 'Finance knowledge', 'N/A', '2024-04-10', 'Master', ARRAY['MSC002']),
-  ('P010', 'Introduction to Machine Learning', 'T010', ARRAY['Machine Learning', 'AI'], 'Research', ARRAY['Group A'], 'An introductory thesis on machine learning.', 'Basic AI knowledge', 'N/A', '2023-09-30', 'Bachelor', ARRAY['BSC001']);
-
+  ('P010', 'Introduction to Machine Learning', 'T010', ARRAY['Machine Learning', 'AI'], 'Research', ARRAY['Group A'], 'An introductory thesis on machine learning.', 'Basic AI knowledge', 'N/A', '2023-09-30', 'Bachelor', ARRAY['BSC001']
+  ('P011', 'Software Engineering', 'T001', ARRAY['Software Engineering', 'Development'], 'Theoretical', ARRAY['Group A'], 'A software engineering project description.', 'Java, Python, Git', 'N/A', '2023-08-25', 'Bachelor', ARRAY['BSC001']),
+  ('P012', 'Data Analysis', 'T002', ARRAY['Data Analysis', 'Statistics'], 'Research', ARRAY['Group B'], 'A data analysis thesis description.', 'R, Python, Statistics', 'N/A', '2024-01-15', 'Master', ARRAY['MSC001', 'MSC002']),
+  ('P013', 'Human-Computer Interaction', 'T003', ARRAY['HCI', 'User Experience'], 'Experimental', ARRAY['Group A'], 'A thesis on human-computer interaction.', 'UI/UX design, Psychology', 'N/A', '2023-12-10', 'Master', ARRAY['MSC001']),
+  ('P014', 'Supply Chain Management', 'T001', ARRAY['Supply Chain', 'Management'], 'Theoretical', ARRAY['Group C'], 'A thesis on supply chain management.', 'Logistics, Operations', 'N/A', '2024-03-05', 'Master', ARRAY['MSC001']),
+  ('P015', 'Mobile App Development', 'T002', ARRAY['Mobile App', 'Development'], 'Research', ARRAY['Group A'], 'A mobile app development project description.', 'Swift, Kotlin, React Native', 'N/A', '2024-02-20', 'Bachelor', ARRAY['BSC001']),
+  ('P016', 'Neural Networks', 'T003', ARRAY['Neural Networks', 'Deep Learning'], 'Research', ARRAY['Group B'], 'A thesis on neural networks and deep learning.', 'Python, TensorFlow, Keras', 'N/A', '2023-11-25', 'Master', ARRAY['BSC001']),
+  ('P017', 'Digital Marketing', 'T001', ARRAY['Digital Marketing', 'Social Media'], 'Theoretical', ARRAY['Group C'], 'A thesis on digital marketing strategies.', 'Marketing, Social Media', 'N/A', '2024-04-30', 'Master', ARRAY['BSC001']),
+  ('P018', 'Cybersecurity', 'T002', ARRAY['Cybersecurity', 'Network Security'], 'Research', ARRAY['Group A'], 'A thesis on cybersecurity and network security.', 'Cybersecurity, Encryption', 'N/A', '2023-10-15', 'Master', ARRAY['BSC001']),
+  ('P019', 'Bioinformatics', 'T003', ARRAY['Bioinformatics', 'Computational Biology'], 'Research', ARRAY['Group B'], 'A bioinformatics research thesis description.', 'Python, Biology, Genetics', 'N/A', '2024-05-20', 'Master', ARRAY['BSC001']),
+  ('P020', 'Project Management', 'T001', ARRAY['Project Management', 'Agile'], 'Theoretical', ARRAY['Group D'], 'A thesis on project management methodologies.', 'Agile, Scrum', 'N/A', '2023-09-15', 'Master', ARRAY['BSC001']),
+  ('P021', 'Database Design', 'T002', ARRAY['Database Design', 'SQL'], 'Theoretical', ARRAY['Group A'], 'A thesis on database design and SQL.', 'Database Management, SQL', 'N/A', '2024-06-15', 'Master', ARRAY['BSC001']),
+  ('P022', 'Renewable Energy', 'T003', ARRAY['Renewable Energy', 'Sustainability'], 'Research', ARRAY['Group B'], 'A thesis on renewable energy and sustainability.', 'Environmental Science, Renewable Energy', 'N/A', '2024-02-10', 'Master', ARRAY['BSC001']),
+  ('P023', 'E-commerce Strategies', 'T001', ARRAY['E-commerce', 'Strategies'], 'Theoretical', ARRAY['Group C'], 'A thesis on e-commerce strategies and online business.', 'E-commerce, Marketing', 'N/A', '2023-11-05', 'Master', ARRAY['BSC001']),
+  ('P024', 'Natural Language Processing', 'T002', ARRAY['NLP', 'Language Processing'], 'Research', ARRAY['Group A'], 'A thesis on natural language processing and language analysis.', 'Python, NLP', 'N/A', '2024-03-20', 'Master', ARRAY['BSC001']),
+  ('P025', 'Global Marketing Trends', 'T003', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['Group D'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2023-10-30', 'Master', ARRAY['BSC001']);
 
 ALTER TABLE public.proposals OWNER TO postgres;
 
