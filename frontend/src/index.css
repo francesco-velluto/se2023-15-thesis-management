@@ -14,6 +14,7 @@ body,
 }
 
 body {
+    height: 100%;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -34,10 +35,17 @@ body {
     background-color: white;
     padding: 15px 45px 45px 45px;
     border-radius: 10px;
+    max-width: 500px;
 }
 
 .home-page {
-    min-height: 88.9vh;
+    min-height: 89.8vh;
+    /* min-height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* position: relative; */
+    /* padding-bottom: 200px; */
 }
 
 .browse-application {
@@ -84,9 +92,11 @@ footer {
     margin-top: 2rem;
     display: flex;
     align-items: center;
-    position: relative;
+    /* position: absolute;
     bottom: 0;
     left: 0;
+    right: 0; */
+    max-height: 200px;
 }
 
 footer img {
@@ -119,4 +129,8 @@ footer img {
         text-align: center;
         align-items: center;
     }
+}
+
+.home-page-content {
+    max-width: 1024px;
 }
