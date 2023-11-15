@@ -12,10 +12,7 @@ function ProposalsPage() {
 
 
     return (
-
         <>
-        <Container>
-        
         <NavbarContainer/>
         <TitleBar title={"Browse Proposals"}/>
 
@@ -32,7 +29,6 @@ function ProposalsPage() {
             <ProposalsList searchData={searchData} />
             </>
         }
-        </Container>
         </>
     );
 }

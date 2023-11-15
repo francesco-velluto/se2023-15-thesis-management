@@ -14,10 +14,10 @@ function HomePage() {
             <b>Thesis Management System</b>
           </h1>
         </Row>
-        <Row className="home-page-content m-4 p-3">
+        <Row className="home-page-content p-3">
           {loggedUser && (
             <>
-              <Card bg="light" className="rounded p-4 ps-5">
+              <Card bg="light" className="rounded p-4">
                 <h2>
                   Hi <b>{loggedUser.name + " " + loggedUser.surname}</b>
                 </h2>
@@ -162,30 +162,36 @@ function HomePage() {
                 <Row>
                   {loggedUser.role === 0 && (
                     <Col>
-                      <Button className="w-100" as={Link} to="/applications">
+                      <Button className="w-100 my-3" as={Link} to="/applications">
                         My Thesis Applications
                       </Button>
                     </Col>
                   )}
                   {loggedUser.role === 0 && (
                     <Col>
-                      <Button className="w-100" as={Link} to="/proposals/new">
+                      <Button className="w-100 my-3" as={Link} to="/proposals/new">
                         Add a new proposal
                       </Button>
                     </Col>
                   )}
                   {loggedUser.role === 1 && (
                     <Col>
-                      <Button className="w-100" as={Link} to="/proposals">
+                      <Button className="w-100 my-3" as={Link} to="/proposals">
                         Thesis proposals
                       </Button>
                     </Col>
                   )}
                 </Row>
               </Card>
-              <Button className="mt-3" variant="danger" onClick={handleLogout}>
-                Logout
-              </Button>
+              <div className="d-flex justify-content-center">
+                <Button
+                  className="mt-3 px-5"
+                  variant="danger"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
             </>
           )}
         </Row>

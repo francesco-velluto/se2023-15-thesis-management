@@ -134,3 +134,10 @@ footer img {
 .home-page-content {
     max-width: 1024px;
 }
+
+@media (min-width: 768px) {
+    .proposal-details-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
