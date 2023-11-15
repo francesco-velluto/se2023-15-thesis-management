@@ -8,8 +8,8 @@ function HomePage() {
 
     console.log("logged user: ", loggedUser);
 
-    return (
-        <Container className="home-page">
+    return (<>
+        <Container fluid className="home-page">
             <Row className="mt-3">
                 <h1><strong>Thesis Management System</strong></h1>
             </Row>
@@ -165,19 +165,20 @@ function HomePage() {
                     <Button as={Link} to={"/login"}>Login</Button>
                 }
             </Row>
-            <Row>
-                <footer>
-                    <Col className="pr-3" xs={12} sm={2}>
-                        <img src="logo.svg" alt="logo" />
-                    </Col>
-                    <Col xs={12} sm={10}>
-                        <span className="text-secondary footer-text">
-                            &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
-                        </span>
-                    </Col>
-                </footer>
-            </Row>
+            
         </Container>
+        <Row className="w-100">
+            <footer>
+                <Col className="pr-3" xs={12} sm={2}>
+                    <img src="logo.svg" alt="logo" />
+                </Col>
+                <Col xs={12} sm={10}>
+                    <span className="text-secondary footer-text">
+                        &copy; {new Date().getFullYear()} All rights reserved. Developed by Group 15 of the Politecnico of Turin.
+                    </span>
+                </Col>
+            </footer>
+        </Row></>
     );
 }
 

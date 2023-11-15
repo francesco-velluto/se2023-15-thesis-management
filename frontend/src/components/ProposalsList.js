@@ -133,7 +133,7 @@ function ProposalRow(props){
 
     return <>
     
-    <Row className='my-1 mx-2 border border-2 rounded border-dark bg-light' >
+    <Row className='my-1 mx-2 border border-2 rounded border-dark bg-light p-2' >
         <Col>
             {props.data.title}
         </Col>
@@ -146,8 +146,8 @@ function ProposalRow(props){
         <Col>
             {format(parseISO(props.data.expiration_date), 'dd/MM/yyyy')}
         </Col>
-        <Col className="col-2" style={{ marginTop: '-2px', cursor:'pointer' }} onClick={() => {navigate('/proposals/' + props.data.proposal_id)}}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-text me-1" viewBox="0 0 16 16">
+        <Col xs={12} md={2} className="d-flex flex-row justify-content-center" style={{ marginTop: '-2px', cursor:'pointer' }} onClick={() => {navigate('/proposals/' + props.data.proposal_id)}}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-text me-1" viewBox="0 0 16 16" style={{marginTop: "6px"}}>
                 <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
                 <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
                 <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
