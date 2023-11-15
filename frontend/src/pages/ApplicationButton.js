@@ -34,15 +34,14 @@ const ApplicationButton = ({ proposalID }) => {
   const handleButtonClick = async () => {
     try {
       const response = await insertNewApplication({ proposalID });
-      const data = await response.json();
 
       if (response.length !== 0 ) {
         setApplied(true);
-        console.log('Application submitted successfully:', data);
         
         getApplicationList();
       } else {
-        console.error('[FRONTEND ERROR] Apply function', data.errors);
+        let data = await response.json();
+        console.error('[FRONTEND ERROR] Apply function', data.errors[0]);
       }
     } catch (error) {
       console.error('[FRONTEND ERROR] Apply function', error);
@@ -50,7 +49,7 @@ const ApplicationButton = ({ proposalID }) => {
   };
 
   return (
-    <Button variant="secondary" onClick={handleButtonClick} disabled={applied}>
+    <Button id={"apply-button"} variant="secondary" onClick={handleButtonClick} disabled={applied} style={{marginLeft: "auto"}}>
       {applied ? 'Applied' : 'Apply'}
     </Button>
   );

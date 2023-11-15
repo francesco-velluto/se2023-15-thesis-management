@@ -161,8 +161,8 @@ function ProposalDetailsPage() {
                                         navigate('/proposals')
                                     }}>Back to Search Proposal</Button>
                                 </Col>
-                                <Col>
-                                <ApplicationButton proposalID={proposal_id} />
+                                <Col className={"d-flex flex-row-revers"}>
+                                    <ApplicationButton proposalID={proposal_id} />
                                 </Col>
                             </Row>
                         </Container>

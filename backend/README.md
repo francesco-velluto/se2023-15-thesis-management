@@ -174,3 +174,18 @@ GET `/api/proposals`
 - Errors:
   - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
   - `ERROR 500` Response Body: `{"error": "Internal Server Error" }`
+
+**POST** `/api/applications`
+- Insert a new application
+- Authentication: required
+- Authorization: only a student can access this endpoint
+- Request Query Parameters: _none_
+- Request Body:
+
+  | Field name | Type | Required* | Description |
+  | ----------- | ----------- | ----------- | ----------- |
+  | `proposal_id` | _string_ | Yes | ID of the proposal |
+
+- `SUCCESS 200`
+- Errors:
+ - `ERROR 500` Response Body: `{"error": "Student/Proposal not found or already applied" }`
