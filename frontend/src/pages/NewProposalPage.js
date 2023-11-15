@@ -1,20 +1,26 @@
 import "../newProposalPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import dayjs from "dayjs";
 import NavbarContainer from "../components/Navbar.js";
 import TitleBar from "../components/TitleBar.js";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Card, Container } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
+import { LoggedUserContext } from "../api/Context.js";
+
 
 function NewProposalPage() {
   return (
-    <>
+    <><Container fluid>
       <NavbarContainer />
-      <TitleBar title="Create a new proposal"/>
-      <FormProposal />
+      <TitleBar title="Create a new proposal" />
+      <Card>
+        <FormProposal />
+      </Card>
+    </Container>
+
     </>
   );
 }
@@ -66,20 +72,20 @@ function FormProposal() {
       return;
     }
 
-    if(!expDate){
-        setErrorMsg("Insert a valid expiration date");
+    if (!expDate) {
+      setErrorMsg("Insert a valid expiration date");
     }
 
-    if(programmes.length === 0){
-        setErrorMsg("Insert at least 1 programme");
+    if (programmes.length === 0) {
+      setErrorMsg("Insert at least 1 programme");
     }
 
-    if(keywords.lenght === 0){
-        setErrorMsg("Insert at least 1 keyword");
+    if (keywords.lenght === 0) {
+      setErrorMsg("Insert at least 1 keyword");
     }
 
-    if(groups.lenght === 0){
-        setErrorMsg("Insert at least 1 group");
+    if (groups.lenght === 0) {
+      setErrorMsg("Insert at least 1 group");
     }
 
 
@@ -237,10 +243,16 @@ function GroupsField(props) {
   };
 
   const addGroup = () => {
-    if (selected)
+    const v = selected;
+    if (selected) {
+      setSelected("");
       props.setGroups((oldList) => {
-        return [selected, ...oldList];
+        if (!oldList.include(v))
+          return [v, ...oldList];
+        return oldList;
       });
+
+    }
   };
 
   return (
@@ -284,6 +296,7 @@ function CoSupervisorsField(props) {
         />
         <Button
           id="add-cosupervisor-btn"
+          disabled
           variant="secondary"
           className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
         >
@@ -302,10 +315,15 @@ function ProgrammesField(props) {
   };
 
   const addProgramme = () => {
-    if (selected)
+    const v = selected;
+    if (selected) {
+      setSelected("");
       props.setProgrammes((oldList) => {
-        return [selected, ...oldList];
+        if (!oldList.include(v))
+          return [selected, ...oldList];
+        return oldList;
       });
+    }
   };
 
   return (
@@ -343,10 +361,16 @@ function KeywordsField(props) {
   };
 
   const addKeyword = () => {
-    if (selected)
+    const v = selected;
+    if (selected) {
+      setSelected("");
       props.setKeywords((oldList) => {
-        return [selected, ...oldList];
+        if (!oldList.includes(v)) {
+          return [v, ...oldList];
+        }
+        return oldList;
       });
+    }
   };
 
   return (
@@ -358,6 +382,7 @@ function KeywordsField(props) {
           placeholder=" New keyword"
           onChange={handleChange}
           id="keyword"
+          value={selected}
         />
         <Button
           id="add-keyword-btn"
@@ -427,7 +452,7 @@ function TitleField(props) {
         type="text"
         placeholder=" New title"
         onChange={handleChange}
-        
+
       />
     </Form.Group>
   );
@@ -451,6 +476,8 @@ function LevelField(props) {
 }
 
 function SupervisorField(props) {
+
+  const { loggedUser } = useContext(LoggedUserContext);
   let [supervisors, setSupervisors] = useState([]);
 
   const fetchSupervisors = async () => {
@@ -475,14 +502,8 @@ function SupervisorField(props) {
   return (
     <Form.Group className="form-field">
       <Form.Label>Supervisor</Form.Label>
-      <Form.Select required onChange={handleChange} id="supervisor">
-        <option>Select the supervisor</option>
-        {supervisors.map((s, i) => (
-          <option value={s.id} key={i}>
-            {s.surname} {s.name}
-          </option>
-        ))}
-      </Form.Select>
+      <Form.Control required type="text" disabled id="supervisor" value={loggedUser.surname + " " + loggedUser.name} />
+
     </Form.Group>
   );
 }
