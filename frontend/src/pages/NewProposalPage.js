@@ -66,11 +66,22 @@ function FormProposal() {
       return;
     }
 
-    /*if(expDate == "" | dayjs.(expDate) <= dayjs().today() 1){
-            setErrorMsg("Insert a valid expiration date");
-        }*/
+    if(!expDate){
+        setErrorMsg("Insert a valid expiration date");
+    }
 
-    //check keywords, groups
+    if(programmes.length === 0){
+        setErrorMsg("Insert at least 1 programme");
+    }
+
+    if(keywords.lenght === 0){
+        setErrorMsg("Insert at least 1 keyword");
+    }
+
+    if(groups.lenght === 0){
+        setErrorMsg("Insert at least 1 group");
+    }
+
 
     const newProposal = {
       title: title,
@@ -416,6 +427,7 @@ function TitleField(props) {
         type="text"
         placeholder=" New title"
         onChange={handleChange}
+        
       />
     </Form.Group>
   );

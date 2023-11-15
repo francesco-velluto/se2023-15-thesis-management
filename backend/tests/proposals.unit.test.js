@@ -1,7 +1,11 @@
 "use strict";
 
 const request = require("supertest");
-const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
+const {
+  isLoggedIn,
+  isTeacher,
+  isStudent,
+} = require("../controllers/authentication");
 const {
     getMaxProposalIdNumber,
     insertProposal,
@@ -36,7 +40,6 @@ afterAll(() => {
 
 describe("T1 - Get all proposals Unit Tests", () => {
   test("T1.1 ERROR 401 | Not authenticated", (done) => {
-
     isLoggedIn.mockImplementation((req, res, next) => {
       return res.status(401).json({ error: "Not authenticated" });
     });
@@ -52,8 +55,6 @@ describe("T1 - Get all proposals Unit Tests", () => {
         done();
       })
       .catch((err) => done(err));
-
-
   });
 
   test("T1.2 ERROR 401 | Not authorized", (done) => {
@@ -62,7 +63,9 @@ describe("T1 - Get all proposals Unit Tests", () => {
     });
 
     isStudent.mockImplementation((req, res, next) => {
-      return res.status(401).json({ error: "Not authorized, must be a Student" })
+      return res
+        .status(401)
+        .json({ error: "Not authorized, must be a Student" });
     });
 
     request(app)
@@ -74,14 +77,14 @@ describe("T1 - Get all proposals Unit Tests", () => {
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isStudent).toHaveBeenCalled();
         done();
-      })
+      });
   });
 
-
   test("T1.3 ERROR 500 | Internal server error", (done) => {
+    const mockedStudentDegree = "MC001";
 
     isLoggedIn.mockImplementation((req, res, next) => {
-      req.user.cod_degree = "MC001"
+      req.user.cod_degree = "MC001";
       next(); // Authenticated
     });
 
@@ -92,7 +95,7 @@ describe("T1 - Get all proposals Unit Tests", () => {
 
     getAllProposals.mockImplementation((mockedStudentDegree) => {
       throw Error("some error");
-    })
+    });
 
     request(app)
       .get("/api/proposals")
@@ -103,82 +106,66 @@ describe("T1 - Get all proposals Unit Tests", () => {
   });
 
   test("T1.4 SUCCESS | Get all proposals", (done) => {
-    const mockedStudentDegree = "MSC001";
+    const mockedStudentDegree = "MC001";
 
-    const mockedProposalsList =
-    {
-      proposals: [
-        {
-          proposal_id: "P002",
-          title: "Machine Learning",
-          supervisor_surname: "Wilson",
-          supervisor_name: "Michael",
-          keywords: [
-            "Machine Learning",
-            "AI"
-          ],
-          type: "Master",
-          groups: [
-            "Group B"
-          ],
-          description: "A machine learning thesis description.",
-          required_knowledge: "Python, TensorFlow",
-          notes: "N/A",
-          expiration_date: "2024-06-29T22:00:00.000Z",
-          level: "Graduate",
-          degrees: [
-            "Master of Science"
-          ]
-        },
-        {
-          proposal_id: "P003",
-          title: "Artificial Intelligence",
-          supervisor_surname: "Gomez",
-          supervisor_name: "Ana",
-          keywords: [
-            "AI",
-            "Machine Learning"
-          ],
-          type: "Master",
-          groups: [
-            "Group A"
-          ],
-          description: "An AI research thesis description.",
-          required_knowledge: "Python, TensorFlow",
-          notes: "N/A",
-          expiration_date: "2024-05-14T22:00:00.000Z",
-          level: "Graduate",
-          degrees: [
-            "Master of Science"
-          ]
-        }
-      ]
-    };
+    const mockedProposalsList = [
+      {
+        proposal_id: "P002",
+        title: "Machine Learning",
+        supervisor_surname: "Wilson",
+        supervisor_name: "Michael",
+        keywords: ["Machine Learning", "AI"],
+        type: "Master",
+        groups: ["Group B"],
+        description: "A machine learning thesis description.",
+        required_knowledge: "Python, TensorFlow",
+        notes: "N/A",
+        expiration_date: "2024-06-29T22:00:00.000Z",
+        level: "Graduate",
+        degrees: ["Master of Science"],
+      },
+      {
+        proposal_id: "P003",
+        title: "Artificial Intelligence",
+        supervisor_surname: "Gomez",
+        supervisor_name: "Ana",
+        keywords: ["AI", "Machine Learning"],
+        type: "Master",
+        groups: ["Group A"],
+        description: "An AI research thesis description.",
+        required_knowledge: "Python, TensorFlow",
+        notes: "N/A",
+        expiration_date: "2024-05-14T22:00:00.000Z",
+        level: "Graduate",
+        degrees: ["Master of Science"],
+      },
+    ];
 
     isLoggedIn.mockImplementation((req, res, next) => {
-      req.user.cod_degree = mockedStudentDegree;
+      req.user = { cod_degree: mockedStudentDegree };
       next(); // Authenticated
     });
 
     isStudent.mockImplementation((req, res, next) => {
-      req.user.cod_degree = mockedStudentDegree;
       next(); // Authorized
     });
 
-    getAllProposals.mockResolvedValue(mockedProposalsList);
+    getAllProposals.mockResolvedValue({
+      data: mockedProposalsList,
+      status: 200,
+    });
 
     request(app)
       .get("/api/proposals")
       .then((res) => {
-        expect(isLoggedIn).toHaveBeenCalled();
-        expect(isStudent).toHaveBeenCalled();
-        expect(getAllProposals).toHaveBeenCalled();
-        expect(res.body).toEqual("sometihng");
-        expect(res.body.proposals).toEqual(mockedProposalsList);
         expect(res.status).toBe(200);
         expect(res.body.error).toBeFalsy();
+        expect(getAllProposals).toHaveBeenCalled();
+        expect(res.body).toEqual({ proposals: mockedProposalsList });
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
         done();
-      })
+      });
   });
 });
 
