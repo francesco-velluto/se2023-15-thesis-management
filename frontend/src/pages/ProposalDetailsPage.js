@@ -162,7 +162,7 @@ function ProposalDetailsPage() {
                                     }}>Back to Search Proposal</Button>
                                 </Col>
                                 <Col>
-                                <ApplicationButton proposalID={proposal_id} />
+                                <ApplicationButton proposalID={proposal_id}/>
                                 </Col>
                             </Row>
                         </Container>

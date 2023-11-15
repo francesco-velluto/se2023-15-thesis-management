@@ -88,7 +88,7 @@ function FormProposal() {
 
     try {
       const proposal = await proposalsAPI.insertNewProposal(newProposal);
-      navigate("/proposals/" + proposal.proposal_id);
+      navigate("/proposals/");
     } catch (err) {
       setErrorMsg(err.message);
     }
