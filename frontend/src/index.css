@@ -60,7 +60,6 @@ body {
     padding: 10px;
     border: 1px solid #ccc;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 90vw;
     border-radius: 10px;
     font-weight: bold;
 }

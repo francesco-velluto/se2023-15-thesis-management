@@ -170,14 +170,14 @@ function HomePage() {
                   {loggedUser.role === 0 && (
                     <Col>
                       <Button className="w-100 my-3" as={Link} to="/proposals/new">
-                        Add a new proposal
+                        Add a New Proposal
                       </Button>
                     </Col>
                   )}
                   {loggedUser.role === 1 && (
                     <Col>
                       <Button className="w-100 my-3" as={Link} to="/proposals">
-                        Thesis proposals
+                        Thesis Proposals
                       </Button>
                     </Col>
                   )}
