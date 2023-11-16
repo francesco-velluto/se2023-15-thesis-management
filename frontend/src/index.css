@@ -141,3 +141,16 @@ footer img {
         padding-right: 3rem;
     }
 }
+
+.filterCardContainer {
+    display: inline-block;
+    width: 75%; 
+    overflow: hidden; 
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+    margin-left: 3px;
+}
+
+
+
+
