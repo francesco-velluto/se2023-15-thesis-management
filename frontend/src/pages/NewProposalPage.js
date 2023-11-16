@@ -171,6 +171,7 @@ function EndButtons() {
       <button
         type="submit"
         className="my-buttons p-3"
+        id="add-proposal-btn"
         style={{ backgroundColor: "#7DC1FF", color: "black" }}
       >
         Create proposal
@@ -337,7 +338,7 @@ function ProgrammesField(props) {
   };
 
   return (
-    <Form.Group className="form-field ">
+    <Form.Group className="form-field">
       <Form.Label>CdS / Programmes</Form.Label>
       <div className="text-plus">
         <Form.Control
@@ -385,12 +386,12 @@ function KeywordsField(props) {
   };
 
   return (
-    <Form.Group className="form-field ">
+    <Form.Group className="form-field">
       <Form.Label>Keywords</Form.Label>
       <div className="text-plus">
         <Form.Control
           type="text"
-          placeholder=" New keyword"
+          placeholder="New keyword"
           onChange={handleChange}
           id="keyword"
           value={selected}
@@ -440,9 +441,9 @@ function TypeField(props) {
       <Form.Label>Type</Form.Label>
       <Form.Control
         required
-        id="type "
+        id="type"
         type="text"
-        placeholder=" New type"
+        placeholder="New type"
         onChange={handleChange}
       />
     </Form.Group>
@@ -461,7 +462,7 @@ function TitleField(props) {
         required
         id="title"
         type="text"
-        placeholder=" New title"
+        placeholder="New title"
         onChange={handleChange}
 
       />

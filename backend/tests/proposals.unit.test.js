@@ -89,7 +89,6 @@ describe("T1 - Get all proposals Unit Tests", () => {
     });
 
     isStudent.mockImplementation((req, res, next) => {
-      console.log(req.user.cod_degree);
       next(); // Authorized
     });
 

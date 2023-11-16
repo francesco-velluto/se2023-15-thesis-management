@@ -4,7 +4,7 @@ import ProposalsSearchArea from "../components/ProposalsSearchArea";
 import TitleBar from "../components/TitleBar";
 import ProposalsList from "../components/ProposalsList";
 import { LoggedUserContext } from "../api/Context";
-import { Alert, Container } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 function ProposalsPage() {
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
@@ -12,10 +12,7 @@ function ProposalsPage() {
 
 
     return (
-
         <>
-        <Container>
-        
         <NavbarContainer/>
         <TitleBar title={"Browse Proposals"}/>
 
@@ -32,7 +29,6 @@ function ProposalsPage() {
             <ProposalsList searchData={searchData} />
             </>
         }
-        </Container>
         </>
     );
 }

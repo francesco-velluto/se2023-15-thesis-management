@@ -12,7 +12,6 @@ const ApplicationButton = ({ proposalID }) => {
   const getApplicationList = async () => {
     try {
       const Applist = await getAllApplicationsByStudent(loggedUser.id);
-      console.log(Applist);
 
       if (Applist.length !== 0) {
         for (let application of Applist) {

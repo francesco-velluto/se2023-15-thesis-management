@@ -40,7 +40,7 @@ function Main() {
                 <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <UnAuthorizationPage />} />
-                <Route path="/proposals" element={<PageLayout />}>
+                <Route path="/proposals">
                     <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage/>} />
                     <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <NewProposalPage /> : <UnAuthorizationPage />} />
@@ -55,11 +55,11 @@ function Main() {
 
 function PageLayout() {
     return (
-        <Container fluid>
-            <Row>
+        <Row className="page-content w-100 m-0">
+            {/* <Row> */}
                 <Outlet />
-            </Row>
-        </Container>
+            {/* </Row> */}
+        </Row>
     );
 }
 

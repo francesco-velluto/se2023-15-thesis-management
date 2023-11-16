@@ -1,85 +1,119 @@
 "use strict";
 
-const authenticationController = require("../controllers/authentication");
+const request = require("supertest");
+const app = require("../app");
+
+const { getUserById, authUser } = require("../service/authentication");
+const Teacher = require("../model/Teacher");
+
+jest.mock("../service/authentication");
 
 beforeAll(() => {
-    jest.clearAllMocks();
+  jest.clearAllMocks();
+  jest.spyOn(console, "log").mockImplementation(() => { });
+  jest.spyOn(console, "info").mockImplementation(() => { });
+  jest.spyOn(console, "error").mockImplementation(() => { });
+});
+
+beforeEach(() => {
+  //jest.clearAllMocks();
+  getUserById.mockClear();
+  authUser.mockClear();
 });
 
 describe("Authentication Unit Tests", () => {
-    test("ERROR 400 | Missing username or password", () => {
-        // TODO - this is an example, change it if needed
-        const req = {
-            body: {}
-        };
-        const res = {
-            status: jest.fn(() => res),
-            json: jest.fn()
-        };
+  test("ERROR 400 | Missing username", async () => {
+    const mockCredentials = { username: "", password: "asd" };
 
-        authenticationController.login(req, res);
+    const res = await request(app)
+      .post("/api/authentication/login")
+      .send(mockCredentials);
 
-        expect(res.status).toHaveBeenCalledWith(400);
-        expect(res.json).toHaveBeenCalledWith({ error: "Missing username or password" });
+    expect(res.status).toBe(400);
+    expect(res.body.errors).not.toBeFalsy();
+  });
+
+  test("ERROR 400 | Invalid email", async () => {
+    const mockCredentials = { username: "notanemail", password: "asd" };
+
+    const res = await request(app)
+      .post("/api/authentication/login")
+      .send(mockCredentials);
+
+    expect(res.status).toBe(400);
+    expect(res.body.errors).not.toBeFalsy();
+  });
+
+  test("ERROR 400 | Missing password", async () => {
+    const mockCredentials = {
+      username: "valid.email@example.com",
+      password: "",
+    };
+
+    const res = await request(app)
+      .post("/api/authentication/login")
+      .send(mockCredentials);
+
+    expect(res.status).toBe(400);
+    expect(res.body.errors).not.toBeFalsy();
+  });
+
+  test("ERROR 401 | Wrong username or password", async () => {
+    authUser.mockResolvedValue(undefined);
+
+    const mockCredentials = {
+      username: "valid.email@example.com",
+      password: "wrongpassword",
+    };
+
+    const res = await request(app)
+      .post("/api/authentication/login")
+      .send(mockCredentials);
+
+    expect(res.status).toBe(401);
+    expect(res.body.errors).not.toBeFalsy();
+  });
+
+  test("ERROR 500 | Internal server error", async () => {
+    authUser.mockImplementation(async (username, password) => {
+      throw new Error("error");
     });
 
-    test("ERROR 401 | Wrong username or password", () => {
-        // TODO - this is an example, change it if needed
-        const req = {
-            body: {
-                username: "username",
-                password: "wrong-password"
-            }
-        };
+    const mockCredentials = {
+      username: "valid.email@example.com",
+      password: "password",
+    };
 
-        const res = {
-            status: jest.fn(() => res),
-            json: jest.fn()
-        }
+    const res = await request(app)
+      .post("/api/authentication/login")
+      .send(mockCredentials);
 
-        authenticationController.login(req, res);
+    expect(res.status).toBe(500);
+    expect(res.body.errors).not.toBeFalsy();
+  });
 
-        expect(res.status).toHaveBeenCalledWith(401);
-        expect(res.json).toHaveBeenCalledWith({ error: "Wrong username or password" });
-    });
+  test("SUCCESS | Login", async () => {
+    const user = new Teacher(
+      "T001",
+      "Smith",
+      "John",
+      "john.smith@example.com",
+      "G001",
+      "D001"
+    );
+    authUser.mockResolvedValue(user);
 
-    test("ERROR 500 | Internal server error", () => {
-        // TODO - this is an example, change it if needed
-        const req = {
-            body: {
-                username: "username",
-                password: "password"
-            }
-        };
+    const mockCredentials = {
+      username: "john.smith@example.com",
+      password: "T001",
+    };
 
-        const res = {
-            status: jest.fn(() => res),
-            json: jest.fn()
-        }
+    const res = await request(app)
+      .post("/api/authentication/login")
+      .send(mockCredentials);
 
-        authenticationController.login(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(500);
-        expect(res.json).toHaveBeenCalledWith({ error: "Internal server error has occurred" });
-    });
-
-    test("SUCCESS | Login", () => {
-        // TODO - this is an example, change it if needed
-        const req = {
-            body: {
-                username: "username",
-                password: "password"
-            }
-        };
-
-        const res = {
-            status: jest.fn(() => res),
-            json: jest.fn()
-        }
-
-        authenticationController.login(req, res);
-
-        expect(res.status).toHaveBeenCalledWith(200);
-        expect(res.json).toHaveBeenCalledWith({ token: "token" });
-    });
+    expect(res.status).toBe(200);
+    expect(res.body.errors).toBeFalsy();
+    expect(res.body).toEqual(user);
+  });
 });
