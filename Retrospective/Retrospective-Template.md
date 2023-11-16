@@ -48,14 +48,17 @@ sections:
 
 - **Unit Testing:**
   - **Total hours estimated:** 7h 45m (this comprises the stories we didn't do)
+  - **Total hours estimated:** 4h 30m (only stories done)
   - **Total hours spent:** 5h 5m (only stories done)
   - **Nr of automated unit test cases:** 41
   - **Coverage (if available):** 62.78%
 - **E2E testing:**
   - **Total hours estimated:** 11h 45m (this comprises the stories we didn't do)
+  - **Total hours estimated:** 8h (only stories done)
   - **Total hours spent:** 5h 5m (only stories done)
 - **Code review:**
   - **Total hours estimated:** 4h 15m (this comprises the stories we didn't do)
+  - **Total hours estimated:** 2h 15m (only stories done)
   - **Total hours spent:** 1h 45m (only stories done)
 
 ## ASSESSMENT
