@@ -39,7 +39,7 @@ const mockProposalReq = {
   notes: "These are the notes...",
   expiration_date: "2024-06-30",
   level: "Master",
-  programmes: ["CD008"],
+  programmes: ["BSC001"],
 };
 
 const setupConnection = async () => {
@@ -347,16 +347,16 @@ describe("End to End Tests for Insert Proposal", () => {
     await driver.findElement(By.id("title")).sendKeys(mockProposalReq.title);
 
     // Supervisor
-    let selectElement = await driver.findElement(By.id("supervisor"));
+/*     let selectElement = await driver.findElement(By.id("supervisor"));
     let select = new Select(selectElement);
     await select.selectByValue(mockProposalReq.supervisor_id);
-
+ */
     // Keywords
     for (const keyword of mockProposalReq.keywords) {
       const keywordField = await driver.findElement(By.id("keyword"));
       await keywordField.sendKeys(keyword);
       await driver.findElement(By.id("add-keyword-btn")).click();
-      await keywordField.clear();
+      // await keywordField.clear();
     }
 
     // Type
@@ -388,20 +388,20 @@ describe("End to End Tests for Insert Proposal", () => {
     await driver.findElement(By.id("expiration-date")).sendKeys(date);
 
     // Level
-    selectElement = await driver.findElement(By.id("level"));
-    select = new Select(selectElement);
+    let selectElement = await driver.findElement(By.id("level"));
+    let select = new Select(selectElement);
     await select.selectByValue(mockProposalReq.level);
     // await driver.findElement(By.id("level")).sendKeys(mockProposalReq.level);
 
     // Programmes
     for (const programme of mockProposalReq.programmes) {
-      /* const selectElement = await driver.findElement(By.id("programme"));
+      const selectElement = await driver.findElement(By.id("programme"));
       const select = new Select(selectElement);
-      await select.selectByValue(programme); */
-      const programmeField = await driver.findElement(By.id("programme"));
-      await programmeField.sendKeys(programme);
+      await select.selectByValue(programme);
+      /* const programmeField = await driver.findElement(By.id("programme"));
+      await programmeField.sendKeys(programme); */
       await driver.findElement(By.id("add-programme-btn")).click();
-      await programmeField.clear();
+      // await programmeField.clear();
     }
     await driver.sleep(500);
   };
@@ -455,6 +455,7 @@ describe("End to End Tests for Insert Proposal", () => {
     // Fill all the form fields
     await fillProposalForm();
 
+    await driver.sleep(1000);
     // Click submit button
     await driver.findElement(By.id("add-proposal-btn")).click();
 
