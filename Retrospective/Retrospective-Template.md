@@ -1,4 +1,4 @@
-TEMPLATE FOR RETROSPECTIVE (Team ##)
+TEMPLATE FOR RETROSPECTIVE (Team 15)
 =====================================
 
 The retrospective should include _at least_ the following
@@ -8,51 +8,55 @@ sections:
 - [quality measures](#quality-measures)
 - [general assessment](#assessment)
 
-## PROCESS MEASURES 
+## PROCESS MEASURES
 
 ### Macro statistics
 
-- Number of stories committed vs. done 
-- Total points committed vs. done 
-- Nr of hours planned vs. spent (as a team)
+- **Number of stories committed vs. done:**
+  we committed to do 7 stories and we did 3 stories, in order of business priority
+  - Insert proposal
+  - Search proposals
+  - Apply for proposals
 
-**Remember**a story is done ONLY if it fits the Definition of Done:
- 
-- Unit Tests passing
-- Code review completed
-- Code present on VCS
-- End-to-End tests performed
+- **Total points committed vs. done:**
+  we committed to do 26 points and we have done 15 points
 
-> Please refine your DoD if required (you cannot remove items!) 
+- **Nr of hours planned vs. spent (as a team):**
+  we planned to spend 95h 50m hours (around 16 hours for each one of the 6 team members)
+  and we spent 110h 20m
 
 ### Detailed statistics
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-| _#0_   |         |       |            |              |
-| n      |         |        |            |              |
-   
+| _#0_   |   28    |        |    61h 15m     |   76h 05m    |
+| _#1_   |    7    |   5    |   11h 15m  |   14h 55m    |
+| _#2_   |    7    |   8    |   9h 15m  |  15h 45m     |
+| _#3_   |    7    |   2    |    3h 20m  |   5h 35m     |
 
-> place technical tasks corresponding to story `#0` and leave out story points (not applicable in this case)
+- **Hours per task average, standard deviation (estimate and actual):**
+  - Average Estimate: 1h 46m
+  - Average Actual: 2h 17m
+  - Standard Deviation Estimate: 1h 30m
+  - Standard Deviation Actual: 1h 53m
 
-- Hours per task average, standard deviation (estimate and actual)
-- Total task estimation error ratio: sum of total hours estimation / sum of total hours spent - 1
+- **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
+  - 0.24
 
-  
-## QUALITY MEASURES 
 
-- Unit Testing:
-  - Total hours estimated
-  - Total hours spent
-  - Nr of automated unit test cases 
-  - Coverage (if available)
-- E2E testing:
-  - Total hours estimated
-  - Total hours spent
-- Code review 
-  - Total hours estimated 
-  - Total hours spent
-  
+## QUALITY MEASURES
+
+- **Unit Testing:**
+  - **Total hours estimated:** 7h 45m (this comprises the stories we didn't do)
+  - **Total hours spent:** 5h 5m (only stories done)
+  - **Nr of automated unit test cases:** 41
+  - **Coverage (if available):** 62.78%
+- **E2E testing:**
+  - **Total hours estimated:** 11h 45m (this comprises the stories we didn't do)
+  - **Total hours spent:** 5h 5m (only stories done)
+- **Code review:**
+  - **Total hours estimated:** 4h 15m (this comprises the stories we didn't do)
+  - **Total hours spent:** 1h 45m (only stories done)
 
 ## ASSESSMENT
 
