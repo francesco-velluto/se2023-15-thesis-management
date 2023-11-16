@@ -88,8 +88,8 @@ module.exports = {
             
         }
         catch (error) {
-            console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error.message);
-            throw error;
+            console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error);
+            return error;
         }
 
     }
