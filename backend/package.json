@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest",
+    "test": "jest tests/*.unit.test.js",
     "coverage": "jest --coverage",
     "unit": "jest tests/*.unit.test.js",
     "integration": "jest tests/*.integration.test.js"

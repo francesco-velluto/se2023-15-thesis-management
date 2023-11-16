@@ -108,8 +108,8 @@ The route is accessible at `/proposals/:proposalId`.
 ## Users Credentials
 
 - user with the role of student
-    - email: `david.lee@example.com` 
-    - password: `S003`
+    - email: `john.smith@example.com` 
+    - password: `S001`
 - user with the role of teacher
     - email: `michael.wilson@example.com` 
     - password: `T002`
