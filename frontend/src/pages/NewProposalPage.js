@@ -50,7 +50,7 @@ function FormProposal() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    debugger;
+    
 
     if (title?.trim() === "") {
       setErrorMsg("Insert a valid title");
@@ -87,16 +87,21 @@ function FormProposal() {
       return;
     }
 
-    if (keywords.lenght === 0) {
+    if (keywords.length === 0) {
       setErrorMsg("Insert at least 1 keyword");
       return;
     }
 
-    if (groups.lenght === 0) {
+    if (groups.length === 0) {
       setErrorMsg("Insert at least 1 group");
       return;
     }
 
+    // check if the level and the programmes are compatibles
+    if((level == "Bachelor" && programmes.some(p => p.charAt(0) != "B")) || (level == "Master" && programmes.some(p => p.charAt(0) != "M" && p.charAt(0) != "D"))){
+      setErrorMsg("Insert programmes compatibles with the selected level!");
+      return;
+    }
 
     const newProposal = {
       title: title,
@@ -319,7 +324,25 @@ function CoSupervisorsField(props) {
 }
 
 function ProgrammesField(props) {
+
   let [selected, setSelected] = useState("");
+  const [myProgrammes, setMyProgrammes] = useState([]);
+
+  const fetchProgrammes = async () => {
+    try {
+      const degreesList = await proposalsAPI.getAllDegrees();
+      setMyProgrammes(degreesList);
+    } catch (err) {
+      props.setErrorMsg("Error on the fetch of supervisors.");
+      setMyProgrammes([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchProgrammes();
+    //eslint-disable-next-line
+  }, []);
+
 
   const handleChange = (event) => {
     setSelected(event.target.value);
@@ -329,6 +352,8 @@ function ProgrammesField(props) {
     const v = selected;
     if (selected) {
       setSelected("");
+      let option = document.getElementById("programme");
+      option.value= "";
       props.setProgrammes((oldList) => {
         if (!oldList.includes(v))
           return [selected, ...oldList];
@@ -341,14 +366,14 @@ function ProgrammesField(props) {
     <Form.Group className="form-field">
       <Form.Label>CdS / Programmes</Form.Label>
       <div className="text-plus">
-        <Form.Control
+        <Form.Select
           id="programme"
-          value={selected}
-          type="text"
-          placeholder="New programme"
           onChange={handleChange}
           
-        />
+        >
+          <option value="" disabled selected>Select programme</option>
+          {myProgrammes.map((p,i) => <option key={i} value={p.cod_degree}>{p.title_degree}</option>)}
+        </Form.Select>
         <Button
           id="add-programme-btn"
           onClick={addProgramme}
@@ -479,7 +504,7 @@ function LevelField(props) {
     <Form.Group className="form-field">
       <Form.Label>Level</Form.Label>
       <Form.Select required onChange={handleChange} id="level">
-        <option>Select the level</option>
+        <option value="" disabled selected>Select the level</option>
         <option value="Bachelor">Bachelor</option>
         <option value="Master">Master</option>
       </Form.Select>
