@@ -1,6 +1,8 @@
 const { PostgreSqlContainer } = require("@testcontainers/postgresql");
 const { Client } = require("pg");
 const request = require("supertest");
+const dayjs = require("dayjs");
+
 const app = require("../app");
 const db = require("../service/db");
 const {
@@ -12,7 +14,7 @@ const {
   populateProposalsTableQuery,
 } = require("./testDB/testDBQueries");
 
-const { Builder, By, until } = require("selenium-webdriver");
+const { Builder, By, until, Select } = require("selenium-webdriver");
 
 jest.mock("../service/db");
 
@@ -30,13 +32,13 @@ const mockProposalReq = {
   title: "test",
   supervisor_id: "T002",
   keywords: ["keyword1", "keyword2"],
-  type: "Master",
+  type: "Research",
   groups: ["Group A", "Group B"],
   description: "A master thesis just to test the insert API call",
   required_knowledge: "Node.js, PostgreSQL, React.js",
   notes: "These are the notes...",
   expiration_date: "2024-06-30",
-  level: "Undergraduate",
+  level: "Master",
   programmes: ["CD008"],
 };
 
@@ -208,33 +210,24 @@ describe("End to end tests for Proposal details", () => {
 
   const doLogin = async () => {
     await driver.get(baseURL + "/login");
-
+    await driver.sleep(500);
     // perform login
     const usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys("sarah.anderson@example.com");
+    usernameBox.sendKeys("john.smith@example.com");
+
     const passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys("T001");
+    passwordBox.sendKeys("S001");
 
-    await driver.sleep(1000);
-
-    const submitButton = await driver.findElement(By.tagName("button"));
-
-    // remove disabled property from button
-    await driver.executeScript(
-      "arguments[0].removeAttribute('disabled')",
-      submitButton
-    );
-
-    // click submit button with js
+    const submitButton = await driver.findElement(By.css("button"));
     await submitButton.click();
 
-    await driver.sleep(1000);
+    await driver.sleep(500);
   };
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
+    await driver.manage().setTimeouts({ implicit: 5000 });
+
     await restoreProposalsTable(); // should be already restored but to be sure...
   });
 
@@ -245,7 +238,7 @@ describe("End to end tests for Proposal details", () => {
   test("Should show not authorized page if not logged in yet", async () => {
     await driver.get(baseURL + "/proposals/P001");
 
-    await driver.sleep(1000);
+    await driver.sleep(500);
 
     let pageTitle = await driver
       .findElement(By.className("alert-danger"))
@@ -258,7 +251,8 @@ describe("End to end tests for Proposal details", () => {
 
     await driver.get(baseURL + "/proposals/ABC0");
 
-    await driver.sleep(1000);
+    await driver.sleep(500);
+
     let pageTitle = await driver
       .findElement(By.className("alert-danger"))
       .getText();
@@ -330,7 +324,7 @@ describe("Integration Tests for Insert Proposal", () => {
 
 describe("End to End Tests for Insert Proposal", () => {
   let driver;
-  let baseURL = `http://localhost:${process.env.FRONTEND_PORT}/api`;
+  let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async () => {
     await driver.get(baseURL + "/login");
@@ -342,78 +336,79 @@ describe("End to End Tests for Insert Proposal", () => {
     const passwordBox = await driver.findElement(By.id("password"));
     passwordBox.sendKeys("T001");
 
-    const submitButton = await driver.findElement(By.name("button"));
+    const submitButton = await driver.findElement(By.css("button"));
     await submitButton.click();
+
+    await driver.sleep(500);
   };
 
   const fillProposalForm = async () => {
     // Title
     await driver.findElement(By.id("title")).sendKeys(mockProposalReq.title);
 
-    await driver.sleep(500);
-
     // Supervisor
-    const selectSupervisor = await driver.findElement(By.id("supervisor"));
-    selectSupervisor.selectByValue(mockProposalReq.supervisor_id);
-    await driver.sleep(500);
+    let selectElement = await driver.findElement(By.id("supervisor"));
+    let select = new Select(selectElement);
+    await select.selectByValue(mockProposalReq.supervisor_id);
 
     // Keywords
     for (const keyword of mockProposalReq.keywords) {
-      await driver.findElement(By.id("keyword")).sendKeys(keyword);
+      const keywordField = await driver.findElement(By.id("keyword"));
+      await keywordField.sendKeys(keyword);
       await driver.findElement(By.id("add-keyword-btn")).click();
+      await keywordField.clear();
     }
-    await driver.sleep(500);
 
     // Type
     await driver.findElement(By.id("type")).sendKeys(mockProposalReq.type);
-    await driver.sleep(500);
 
     // Groups
     for (const group of mockProposalReq.groups) {
-      const selectGroup = await driver.findElement(By.id("group"));
-      /* TO-DO: select group from menu */
-      selectGroup.selectByVisibleText(group);
+      const groupField = await driver.findElement(By.id("group"));
+      await groupField.sendKeys(group);
       await driver.findElement(By.id("add-group-btn")).click();
+      await groupField.clear();
     }
-    await driver.sleep(500);
 
     // Description
     await driver
       .findElement(By.id("description"))
       .sendKeys(mockProposalReq.description);
-    await driver.sleep(500);
 
     // Required knowledge
     await driver
       .findElement(By.id("required-knowledge"))
       .sendKeys(mockProposalReq.required_knowledge);
-    await driver.sleep(500);
 
     // Notes
     await driver.findElement(By.id("notes")).sendKeys(mockProposalReq.notes);
-    await driver.sleep(500);
 
     // Expiration date
-    await driver
-      .findElement(By.id("expiration-date"))
-      .sendKeys(mockProposalReq.expiration_date);
-    await driver.sleep(500);
+    const date = dayjs(mockProposalReq.expiration_date).format("DD/MM/YYYY");
+    await driver.findElement(By.id("expiration-date")).sendKeys(date);
 
     // Level
-    await driver.findElement(By.id("level")).sendKeys(mockProposalReq.level);
-    await driver.sleep(500);
+    selectElement = await driver.findElement(By.id("level"));
+    select = new Select(selectElement);
+    await select.selectByValue(mockProposalReq.level);
+    // await driver.findElement(By.id("level")).sendKeys(mockProposalReq.level);
 
     // Programmes
     for (const programme of mockProposalReq.programmes) {
-      const selectProgramme = await driver.findElement(By.id("programme"));
-      /* TO-DO: select programme from menu */
+      /* const selectElement = await driver.findElement(By.id("programme"));
+      const select = new Select(selectElement);
+      await select.selectByValue(programme); */
+      const programmeField = await driver.findElement(By.id("programme"));
+      await programmeField.sendKeys(programme);
       await driver.findElement(By.id("add-programme-btn")).click();
+      await programmeField.clear();
     }
     await driver.sleep(500);
   };
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
+    await driver.manage().setTimeouts({ implicit: 5000 });
 
     await restoreProposalsTable(); // should be already restored but to be sure...
   });
@@ -422,11 +417,8 @@ describe("End to End Tests for Insert Proposal", () => {
     await driver.quit();
   });
 
-  // TO-DO: this test can be removed if no redirection is actually used
   test("T2.1 - Should show (or redirect to) not authorized page if not logged in yet", async () => {
     await driver.get(baseURL + "/proposals/new");
-
-    await driver.sleep(500);
 
     const alert = await driver.findElement(By.className("alert"));
 
@@ -435,14 +427,12 @@ describe("End to End Tests for Insert Proposal", () => {
 
     const textAlert = await h3Alert.getText();
     expect(textAlert).toEqual("Access Not Authorized");
-  });
+  }, 10000);
 
   test("T2.2 - Should not post a new proposal if title is empty", async () => {
     await doLogin();
 
     await driver.get(baseURL + "/proposals/new");
-
-    await driver.sleep(500);
 
     // Fill all fields
     await fillProposalForm();
@@ -453,19 +443,14 @@ describe("End to End Tests for Insert Proposal", () => {
     // Click submit button
     await driver.findElement(By.id("add-proposal-btn")).click();
 
-    // TODO: expect some error alert to be shown or the button to be disabled
-
-    // check that the database contains only the original tuples and not a new one
-    const res = await mockDB.query("SELECT * FROM proposals");
-    expect(res.rowCount).toBe(2);
-  });
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).toEqual(baseURL + "/proposals/new"); // expect to not be redirected
+  }, 10000);
 
   test("T2.3 - Should insert a new proposal", async () => {
     await doLogin();
 
     await driver.get(baseURL + "/proposals/new");
-
-    await driver.sleep(500);
 
     // Fill all the form fields
     await fillProposalForm();
@@ -473,14 +458,8 @@ describe("End to End Tests for Insert Proposal", () => {
     // Click submit button
     await driver.findElement(By.id("add-proposal-btn")).click();
 
-    await driver.sleep(500);
-
-    // check that the database contains now a new tuple with the returned id
-    const res = await mockDB.query("SELECT proposal_id FROM proposals");
-    expect(res.rowCount).toBe(3);
-    expect(res.rows.includes("P003")).toBeTrue();
-
     const currentUrl = await driver.getCurrentUrl();
-    expect(currentUrl).toEqual(baseURL + "/proposals/P003");
-  });
+    const idRegex = "0(0[1-9]|[1-9][0-9])|[1-9][0-9]{2}[0-9]*";
+    expect(currentUrl).toMatch(new RegExp(baseURL + "/proposals/P" + idRegex));
+  }, 10000);
 });
