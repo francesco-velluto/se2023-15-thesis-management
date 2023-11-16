@@ -68,7 +68,6 @@ function ProposalsList(props) {
                 }
 
                 if(['keywords', 'groups', 'degrees'].includes(fltr.field)){
-                    console.log(result);
                     result = result.filter((elem) => ((elem[fltr.field]).map((s) => (s.toLowerCase())).some((str) => (str.includes(fltr.value.toLowerCase())))))
                 }
 
