@@ -89,7 +89,7 @@ sections:
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
   - We need a better time estimation and we will achieve it by estimating the time for task after having assigned them to people, in order to match his/her experiences and skills.
-  - Keep the frontend coherent in style from the beginning, we can achieve it by leaving.
+  - Keep the frontend coherent in style from the beginning, we can achieve it by assigning the designs tasks always at the same person.
 
 - One thing you are proud of as a Team!!
   - We are very flexible in term of swapping tasks in case someone needs help.
