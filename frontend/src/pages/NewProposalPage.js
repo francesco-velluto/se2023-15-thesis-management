@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
 import { LoggedUserContext } from "../api/Context.js";
+import { VirtualClockContext } from "../components/VirtualClockContext.js";
 
 
 function NewProposalPage() {
@@ -439,6 +440,7 @@ function KeywordsField(props) {
 }
 
 function ExpirationDateField(props) {
+  const { currentDate } = useContext(VirtualClockContext);
   const handleChange = (event) => {
     props.setExpDate(event.target.value);
   };
@@ -449,7 +451,8 @@ function ExpirationDateField(props) {
       <Form.Control
         required
         type="date"
-        min={dayjs().format("YYYY-MM-DD")}
+        // min={dayjs().format("YYYY-MM-DD")}
+        min={currentDate} // ! REMOVED THIS AND UNCOMMENT PREVIOUS LINE IN PRODUCTION
         onChange={handleChange}
         id="expiration-date"
       />
