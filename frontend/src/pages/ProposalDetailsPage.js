@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
@@ -8,6 +8,7 @@ import {Alert, Badge, Button, Card, Col, Container, Row} from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
 import "../ProposalDetails.css";
+import { VirtualClockContext } from "../components/VirtualClockContext";
 
 function ProposalDetailsPage() {
     const navigate = useNavigate();
@@ -17,6 +18,8 @@ function ProposalDetailsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [proposal, setProposal] = useState(null);
     const [errorMessage, setErrorMessage] = useState(null);
+
+    const { currentDate } = useContext(VirtualClockContext);
 
     useEffect(() => {
         setIsLoading(true);
@@ -72,7 +75,10 @@ function ProposalDetailsPage() {
                             </Row>
                             <Row>
                                 <Col className={"proposal-details-expiration"}>
-                                    <Badge bg={"danger"}>Expires {new Date(proposal.expiration_date).toLocaleDateString("it-IT")}</Badge>
+                                    {currentDate > proposal.expiration_date ? 
+                                        <Badge bg={"danger"}>Expired on {new Date(proposal.expiration_date).toLocaleDateString("it-IT")}</Badge> :
+                                        <Badge bg={"primary"}>Expires {new Date(proposal.expiration_date).toLocaleDateString("it-IT")}</Badge>
+                                    }
                                 </Col>
                             </Row>
                             <Row>
@@ -162,7 +168,8 @@ function ProposalDetailsPage() {
                                     }}>Back to Search Proposal</Button>
                                 </Col>
                                 <Col className={"d-flex flex-row-revers"}>
-                                    <ApplicationButton proposalID={proposal_id} />
+                                    <ApplicationButton proposalID={proposal_id} 
+                                        expirationDate={proposal.expiration_date} />
                                 </Col>
                             </Row>
                         </Container>

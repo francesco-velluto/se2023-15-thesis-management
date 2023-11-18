@@ -4,11 +4,12 @@ import { useState, useEffect, useContext } from "react";
 import dayjs from "dayjs";
 import NavbarContainer from "../components/Navbar.js";
 import TitleBar from "../components/TitleBar.js";
-import { Form, Button, Alert, Card, Container } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
 import { LoggedUserContext } from "../api/Context.js";
+import { VirtualClockContext } from "../components/VirtualClockContext.js";
 
 
 function NewProposalPage() {
@@ -98,7 +99,8 @@ function FormProposal() {
     }
 
     // check if the level and the programmes are compatibles
-    if((level == "Bachelor" && programmes.some(p => p.charAt(0) != "B")) || (level == "Master" && programmes.some(p => p.charAt(0) != "M" && p.charAt(0) != "D"))){
+    if((level === "Bachelor" && programmes.some(p => p.charAt(0) !== "B")) 
+      || (level === "Master" && programmes.some(p => p.charAt(0) !== "M" && p.charAt(0) !== "D"))){
       setErrorMsg("Insert programmes compatibles with the selected level!");
       return;
     }
@@ -438,6 +440,7 @@ function KeywordsField(props) {
 }
 
 function ExpirationDateField(props) {
+  const { currentDate } = useContext(VirtualClockContext);
   const handleChange = (event) => {
     props.setExpDate(event.target.value);
   };
@@ -448,7 +451,8 @@ function ExpirationDateField(props) {
       <Form.Control
         required
         type="date"
-        min={dayjs().format("YYYY-MM-DD")}
+        // min={dayjs().format("YYYY-MM-DD")}
+        min={currentDate} // ! REMOVED THIS AND UNCOMMENT PREVIOUS LINE IN PRODUCTION
         onChange={handleChange}
         id="expiration-date"
       />
