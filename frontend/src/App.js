@@ -12,12 +12,15 @@ import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
 import { useContext, useEffect } from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
 import ApplicationList from "./pages/ApplicationList";
+import { VirtualClockProvider } from "./components/VirtualClockContext";
 
 function App() {
     return (
         <BrowserRouter>
             <LoggedUserProvider>
-                <Main />
+                <VirtualClockProvider>
+                    <Main />
+                </VirtualClockProvider>
             </LoggedUserProvider>
         </BrowserRouter>
     );
@@ -45,7 +48,6 @@ function Main() {
                     <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <NewProposalPage /> : <UnAuthorizationPage />} />
                 </Route>
-                
             </Route>
             
             <Route path='*' element={<NotFoundPage />} />

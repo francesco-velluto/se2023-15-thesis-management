@@ -1,11 +1,12 @@
-import { Navbar, Nav, Button, Col } from 'react-bootstrap';
+import { Navbar, Nav, Button, Col, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../api/Context';
+import { VirtualClockContext } from './VirtualClockContext';
 import { useContext } from 'react';
-
 
 function NavbarContainer() {
     const navigate = useNavigate();
+    const { currentDate, setCurrentDate } = useContext(VirtualClockContext);
     const { handleLogout } = useContext(LoggedUserContext);
 
     return (
@@ -19,6 +20,10 @@ function NavbarContainer() {
                     THESIS MANAGEMENT
                 </Navbar.Brand>
 
+                <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>
+                    <Form.Control type="date" value={currentDate} 
+                        onChange={(ev) => setCurrentDate(ev.target.value)} />
+                </Nav>
                 <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>
                     <Col className='me-3'>
                         <Button variant="danger" onClick={handleLogout}>Logout</Button>
