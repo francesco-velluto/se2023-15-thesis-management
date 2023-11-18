@@ -15,9 +15,7 @@ const FIELDS = [
     {groups: 'Group'},
     {description: 'Description'},
     {required_knowledge: 'Required Knowledge'},
-    {notes: 'Notes'},
-    {level: 'Level'},
-    {degrees: 'CDS / Programme'}
+    {notes: 'Notes'}
 ];
 
 
@@ -205,7 +203,13 @@ function ProposalsSearchArea(props) {
 
         let value = searchValue;
         if (searchField !== "description" && searchField !== "notes") {
-            value = typeaheadValue[0];
+            // check if typeaheadValue[0] is not a string
+            // this means user entered a new value not in the hints
+            if (typeof typeaheadValue[0] === 'string' || typeaheadValue[0] instanceof String) {
+                value = typeaheadValue[0];
+            } else {
+                value = typeaheadValue[0].label;
+            }
         }
 
         props.setSearchData((sd) => {
@@ -217,7 +221,6 @@ function ProposalsSearchArea(props) {
         setSearchValue("");
         setTypeaheadValue([]);
         setError(false);
-
     }
 
     return (
@@ -296,6 +299,8 @@ function ProposalsSearchArea(props) {
                                                 /> :
                                                 <Typeahead
                                                     options={currentPossibleValues}
+                                                    allowNew={true}
+                                                    newSelectionPrefix={"Includes: "}
                                                     id="inputValue"
                                                     aria-describedby="insert-value-form"
                                                     placeholder="Value"
