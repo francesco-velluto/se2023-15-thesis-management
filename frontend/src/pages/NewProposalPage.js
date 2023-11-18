@@ -4,7 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import dayjs from "dayjs";
 import NavbarContainer from "../components/Navbar.js";
 import TitleBar from "../components/TitleBar.js";
-import { Form, Button, Alert, Card, Container } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
@@ -98,7 +98,8 @@ function FormProposal() {
     }
 
     // check if the level and the programmes are compatibles
-    if((level == "Bachelor" && programmes.some(p => p.charAt(0) != "B")) || (level == "Master" && programmes.some(p => p.charAt(0) != "M" && p.charAt(0) != "D"))){
+    if((level === "Bachelor" && programmes.some(p => p.charAt(0) !== "B")) 
+      || (level === "Master" && programmes.some(p => p.charAt(0) !== "M" && p.charAt(0) !== "D"))){
       setErrorMsg("Insert programmes compatibles with the selected level!");
       return;
     }

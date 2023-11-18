@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Accordion, Alert, Card, Container, Row, Spinner } from "react-bootstrap";
 import { getAllApplicationsByTeacher } from '../api/ApplicationsAPI';
 import { format } from 'date-fns';
-import MyNavbar from './Navbar';
 import NavbarContainer from '../components/Navbar';
 import TitleBar from '../components/TitleBar';
 
