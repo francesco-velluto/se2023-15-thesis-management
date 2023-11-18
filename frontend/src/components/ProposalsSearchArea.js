@@ -4,6 +4,7 @@ import {getAllProposals} from "../api/ProposalsAPI";
 import {Typeahead} from 'react-bootstrap-typeahead';
 import {VirtualClockContext} from "./VirtualClockContext";
 import dayjs from "dayjs";
+import {isSameDay, parse, parseISO} from "date-fns";
 
 
 const FIELDS = [
@@ -51,6 +52,37 @@ function ProposalsSearchArea(props) {
                         const proposalExpiration = dayjs(proposal.expiration_date).format("YYYY-MM-DD");
                         return proposalExpiration >= currentDate;
                     });
+
+                    /**
+                     * Integrate the search hints with the filtered data
+                     * It is duplicate of the code in ProposalsSearchArea.js
+                     * which applies the filters to the full proposals data
+                     */
+                    for(const fltr of props.searchData){
+
+                        if(['title',
+                            'type',
+                            'description',
+                            'required_knowledge',
+                            'notes',
+                            'level'].includes(fltr.field)){
+
+                            data = data.filter((elem) => ((elem[fltr.field]).toLowerCase().includes(fltr.value.toLowerCase())));
+
+                        }
+
+                        if(fltr.field === 'supervisor'){
+                            data = data.filter((elem) => ((elem.supervisor_surname + " " + elem.supervisor_name).toLowerCase().includes(fltr.value.toLowerCase())))
+                        }
+
+                        if(['keywords', 'groups', 'degrees'].includes(fltr.field)){
+                            data = data.filter((elem) => ((elem[fltr.field]).map((s) => (s.toLowerCase())).some((str) => (str.includes(fltr.value.toLowerCase())))))
+                        }
+
+                        if(fltr.field === 'expiration_date'){
+                            data = data.filter((elem) => {return isSameDay(parseISO(elem.expiration_date), parse(fltr.value, 'yyyy-MM-dd', new Date()))})
+                        }
+                    }
 
                     let possibleValuesMap = [];
 
@@ -151,7 +183,7 @@ function ProposalsSearchArea(props) {
                 setIsLoading(false);
             });
 
-    }, [currentDate]);
+    }, [props.searchData.length, currentDate]);
 
     useEffect(() => {
         setSearchValue("");
