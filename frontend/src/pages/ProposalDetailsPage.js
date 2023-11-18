@@ -23,13 +23,19 @@ function ProposalDetailsPage() {
 
     useEffect(() => {
         setIsLoading(true);
-
+        setErrorMessage(null); // reset error message when component is re-rendered
+        
         getProposalById(proposal_id)
             .then(async res => {
                 let data = await res.json()
 
                 if(res.status === 200) {
-                    setProposal(data);
+                    if (data.expiration_date < currentDate) {
+                        setProposal(null); // don't expose any data in the component state
+                        setErrorMessage("Proposal expired!"); //? Change this to render a component ??
+                    } else {
+                        setProposal(data);
+                    }
                 } else {
                     setErrorMessage(data.error)
                 }
@@ -40,7 +46,7 @@ function ProposalDetailsPage() {
                 setErrorMessage(err.message);
                 setIsLoading(false);
             });
-    }, [proposal_id]);
+    }, [proposal_id, currentDate]);
 
     return (
         <>
@@ -75,10 +81,7 @@ function ProposalDetailsPage() {
                             </Row>
                             <Row>
                                 <Col className={"proposal-details-expiration"}>
-                                    {currentDate > proposal.expiration_date ? 
-                                        <Badge bg={"danger"}>Expired on {new Date(proposal.expiration_date).toLocaleDateString("it-IT")}</Badge> :
-                                        <Badge bg={"primary"}>Expires {new Date(proposal.expiration_date).toLocaleDateString("it-IT")}</Badge>
-                                    }
+                                    <Badge bg={"danger"}>Expires on {new Date(proposal.expiration_date).toLocaleDateString("it-IT")}</Badge>
                                 </Col>
                             </Row>
                             <Row>
@@ -168,8 +171,7 @@ function ProposalDetailsPage() {
                                     }}>Back to Search Proposal</Button>
                                 </Col>
                                 <Col className={"d-flex flex-row-revers"}>
-                                    <ApplicationButton proposalID={proposal_id} 
-                                        expirationDate={proposal.expiration_date} />
+                                    <ApplicationButton proposalID={proposal_id} />
                                 </Col>
                             </Row>
                         </Container>
