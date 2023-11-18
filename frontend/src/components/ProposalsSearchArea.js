@@ -1,8 +1,10 @@
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import {Form, Button, Col, Row, Alert, Container} from 'react-bootstrap';
 import {getAllProposals} from "../api/ProposalsAPI";
 import {Typeahead} from 'react-bootstrap-typeahead';
-import proposalsPage from "../pages/ProposalsPage";
+import {VirtualClockContext} from "./VirtualClockContext";
+import dayjs from "dayjs";
+
 
 const FIELDS = [
     {title: 'Title'},
@@ -19,6 +21,7 @@ const FIELDS = [
 
 
 function ProposalsSearchArea(props) {
+    const { currentDate } = useContext(VirtualClockContext);
 
     const [searchField, setSearchField] = useState("");
     const [searchValue, setSearchValue] = useState("");
@@ -40,6 +43,15 @@ function ProposalsSearchArea(props) {
                     setErrorMessage("There was an error in loading filters for searching, please try refreshing the page");
                 } else {
                     let data = (await res.json()).proposals;
+
+                    /**
+                     * DEV Enviroment - Filter the proposals suggestions applying the virtual clock date
+                     */
+                    data = data.filter((proposal) => {
+                        const proposalExpiration = dayjs(proposal.expiration_date).format("YYYY-MM-DD");
+                        return proposalExpiration >= currentDate;
+                    });
+
                     let possibleValuesMap = [];
 
                     // get all possible titles from proposals data
@@ -139,7 +151,7 @@ function ProposalsSearchArea(props) {
                 setIsLoading(false);
             });
 
-    }, []);
+    }, [currentDate]);
 
     useEffect(() => {
         setSearchValue("");
