@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../api/Context';
 import { VirtualClockContext } from './VirtualClockContext';
 import { useContext } from 'react';
+import dayjs from 'dayjs';
 
 function NavbarContainer() {
     const navigate = useNavigate();
@@ -21,7 +22,7 @@ function NavbarContainer() {
                 </Navbar.Brand>
 
                 <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>
-                    <Form.Control type="date" value={currentDate} 
+                    <Form.Control type="date" min={dayjs().format("YYYY-MM-DD")} value={currentDate} 
                         onChange={(ev) => setCurrentDate(ev.target.value)} />
                 </Nav>
                 <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>

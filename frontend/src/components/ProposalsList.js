@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Alert, Col, Container, Row } from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
-
+import { VirtualClockContext } from './VirtualClockContext';
 
 function ProposalsList(props) {
 
@@ -12,6 +12,23 @@ function ProposalsList(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
+    const { currentDate } = useContext(VirtualClockContext);
+    /**
+     * ! ONLY FOR DEV SIMULATIONS
+     * 
+     * Function to use an extra filter on the proposals list,
+     * to exclude those who are expired in the current date
+     * set by the virtual clock.
+     * 
+     * ! If the virtual clock in on:
+     * !    every time you call the setFilteredProposals, you should call this
+     * !    function right after that, so you apply an extra filter on the already filtered proposals.
+     */
+    const filterByVirtualClockDate = () => {
+        setFilteredProposals((oldFiltered) => {
+            return oldFiltered.filter((p) => p.expiration_date > currentDate);
+        });
+    }
 
     useEffect(() => {
         async function loadProposals(){
@@ -29,6 +46,7 @@ function ProposalsList(props) {
                 
                 setProposals(db_proposals);
                 setFilteredProposals(db_proposals);
+                filterByVirtualClockDate(db_proposals); // ! REMOVE IT IN PRODUCTION
                 setIsLoading(false);
             }).catch((err) => {
                 setErrorMessage(err.message);
@@ -79,9 +97,10 @@ function ProposalsList(props) {
                 
             }
             return result;
-        })
+        });
+        filterByVirtualClockDate(filteredProposals); // ! REMOVE IT IN PRODUCTION
 
-    }, [props.searchData.length])
+    }, [props.searchData.length, currentDate])
     
 
     return (
