@@ -4,12 +4,10 @@ import { Button } from "react-bootstrap";
 import "../ProposalDetails.css";
 import { getAllApplicationsByStudent } from '../api/ApplicationsAPI';
 import { LoggedUserContext } from "../api/Context";
-import { VirtualClockContext } from '../components/VirtualClockContext';
 
-const ApplicationButton = ({ proposalID, expirationDate }) => {
+const ApplicationButton = ({ proposalID }) => {
   const [applied, setApplied] = useState(false);
   const { loggedUser } = useContext(LoggedUserContext);
-  const { currentDate } = useContext(VirtualClockContext);
 
   const getApplicationList = async () => {
     try {
@@ -30,7 +28,7 @@ const ApplicationButton = ({ proposalID, expirationDate }) => {
 
   useEffect(() => {
     getApplicationList();
-  }, [loggedUser.id, proposalID, currentDate]);
+  }, [loggedUser.id, proposalID]);
 
   const handleButtonClick = async () => {
     try {
@@ -51,7 +49,7 @@ const ApplicationButton = ({ proposalID, expirationDate }) => {
 
   return (
     <Button id={"apply-button"} variant="secondary" onClick={handleButtonClick} 
-      disabled={applied || currentDate > expirationDate} 
+      disabled={applied} 
       style={{marginLeft: "auto"}}>
       {applied ? 'Applied' : 'Apply'}
     </Button>
