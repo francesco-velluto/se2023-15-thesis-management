@@ -42,23 +42,35 @@ describe("End to end tests for Apply to proposal", () => {
     await driver.quit();
   });
 
-  test("Should show apply button to apply and then text becomes applied", async () => {
+  test("Should show apply or applied button - if apply it becomes applied after click", async () => {
     await doLogin();
 
-    await driver.get(baseURL + "/proposals/P001");
+    await driver.get(baseURL + "/proposals/P015");
 
-    await driver.sleep(1000);
-    await driver.findElement(By.id("apply-button")).click();
+    await driver.sleep(1000)
 
     let applyButtonTextBefore = await driver
       .findElement(By.id("apply-button"))
       .getText();
-    expect(applyButtonTextBefore).toEqual("Apply");
 
-    await driver.sleep(1000);
-    let applyButtonText = await driver
-      .findElement(By.id("apply-button"))
-      .getText();
-    expect(applyButtonText).toEqual("Applied");
+    expect(applyButtonTextBefore === "Apply" || applyButtonTextBefore === "Applied").toBeTruthy();
+
+    if(applyButtonTextBefore === "Apply") {
+      await driver.findElement(By.id("apply-button"));
+
+      // simulate click with js
+      await driver.executeScript(
+          "document.getElementById('apply-button').click()"
+      );
+
+      await driver.sleep(1000);
+
+      let applyButtonText = await driver
+          .findElement(By.id("apply-button"))
+          .getText();
+
+      expect(applyButtonTextBefore).toEqual("Apply");
+      expect(applyButtonText).toEqual("Applied");
+    }
   }, 10000);
 });

@@ -110,8 +110,6 @@ describe('getAllApplicationsByTeacherId function', () => {
   });
   
 
-
-
 describe('insertNewApplication function', () => {
   it('should insert a new application', async () => {
     const proposalId = 1;

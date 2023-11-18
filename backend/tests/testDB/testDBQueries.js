@@ -42,4 +42,12 @@ module.exports = {
   populateStudentTableQuery: `INSERT INTO public.student (id, surname, name, gender, nationality, email, cod_degree, enrollment_year) VALUES
     ('S001', 'Smith', 'John', 'M', 'USA', 'john.smith@example.com', 'BSC001', 2021),
     ('S002', 'Johnson', 'Emily', 'F', 'Canada', 'emily.johnson@example.com', 'BSC001', 2022);`,
+
+  createApplicationsTableQuery: 'CREATE TABLE public.applications (\n' +
+      '    application_id SERIAL PRIMARY KEY,\n' +
+      '    proposal_id VARCHAR(10) NOT NULL,\n' +
+      '    id VARCHAR(10) NOT NULL,\n' +
+      '    status VARCHAR(255) NOT NULL, \n' +
+      '    application_date DATE NOT NULL\n' +
+      ')'
 };
