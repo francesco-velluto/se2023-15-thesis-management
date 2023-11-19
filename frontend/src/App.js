@@ -8,7 +8,7 @@ import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import "./index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Alert, Card, Col, Container, Row } from "react-bootstrap";
-import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
+import { LoggedUserContext, LoggedUserProvider } from "./context/AuthenticationContext";
 import { useContext, useEffect } from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
 import ApplicationList from "./pages/ApplicationList";
@@ -45,7 +45,7 @@ function Main() {
                 <Route path='/applications' element={(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <UnAuthorizationPage />} />
                 <Route path="/proposals">
                     <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage/>} />
-                    <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <NewProposalPage /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>

@@ -1,14 +1,13 @@
 import "../newProposalPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect, useContext } from "react";
-import dayjs from "dayjs";
 import NavbarContainer from "../components/Navbar.js";
 import TitleBar from "../components/TitleBar.js";
 import { Form, Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
-import { LoggedUserContext } from "../api/Context.js";
+import { LoggedUserContext } from "../context/AuthenticationContext";
 import { VirtualClockContext } from "../components/VirtualClockContext.js";
 
 
@@ -18,9 +17,6 @@ function NewProposalPage() {
       <NavbarContainer />
       <TitleBar title="Create a new proposal" />
       <FormProposal />
-      
-    
-
     </>
   );
 }
@@ -40,8 +36,8 @@ function FormProposal() {
   const [knowledge, setKnowledge] = useState("");
   const [notes, setNotes] = useState("");
 
-  const {loggedUser} = useContext(LoggedUserContext);
-  
+  const { loggedUser } = useContext(LoggedUserContext);
+
 
   // const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
@@ -51,7 +47,7 @@ function FormProposal() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    
+
 
     if (title?.trim() === "") {
       setErrorMsg("Insert a valid title");
@@ -99,8 +95,8 @@ function FormProposal() {
     }
 
     // check if the level and the programmes are compatibles
-    if((level === "Bachelor" && programmes.some(p => p.charAt(0) !== "B")) 
-      || (level === "Master" && programmes.some(p => p.charAt(0) !== "M" && p.charAt(0) !== "D"))){
+    if ((level === "Bachelor" && programmes.some(p => p.charAt(0) !== "B"))
+      || (level === "Master" && programmes.some(p => p.charAt(0) !== "M" && p.charAt(0) !== "D"))) {
       setErrorMsg("Insert programmes compatibles with the selected level!");
       return;
     }
@@ -120,7 +116,7 @@ function FormProposal() {
     };
 
     try {
-      const proposal = await proposalsAPI.insertNewProposal(newProposal);
+      await proposalsAPI.insertNewProposal(newProposal);
       navigate("/");
     } catch (err) {
       setErrorMsg(err.message);
@@ -282,7 +278,7 @@ function GroupsField(props) {
           type="text"
           placeholder="New group"
           onChange={handleChange}
-          
+
         />
         <Button
           id="add-group-btn"
@@ -355,7 +351,7 @@ function ProgrammesField(props) {
     if (selected) {
       setSelected("");
       let option = document.getElementById("programme");
-      option.value= "";
+      option.value = "";
       props.setProgrammes((oldList) => {
         if (!oldList.includes(v))
           return [selected, ...oldList];
@@ -371,10 +367,10 @@ function ProgrammesField(props) {
         <Form.Select
           id="programme"
           onChange={handleChange}
-          
+
         >
           <option value="" disabled selected>Select programme</option>
-          {myProgrammes.map((p,i) => <option key={i} value={p.cod_degree}>{p.title_degree}</option>)}
+          {myProgrammes.map((p, i) => <option key={i} value={p.cod_degree}>{p.title_degree}</option>)}
         </Form.Select>
         <Button
           id="add-programme-btn"

@@ -1,6 +1,6 @@
 import { Navbar, Nav, Button, Col, Form } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import { LoggedUserContext } from '../api/Context';
+import { LoggedUserContext } from '../context/AuthenticationContext';
 import { VirtualClockContext } from './VirtualClockContext';
 import { useContext } from 'react';
 import dayjs from 'dayjs';

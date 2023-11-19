@@ -3,7 +3,7 @@ import NavbarContainer from "../components/Navbar";
 import ProposalsSearchArea from "../components/ProposalsSearchArea";
 import TitleBar from "../components/TitleBar";
 import ProposalsList from "../components/ProposalsList";
-import { LoggedUserContext } from "../api/Context";
+import { LoggedUserContext } from "../context/AuthenticationContext";
 import { Alert } from "react-bootstrap";
 
 function ProposalsPage() {
