@@ -2,6 +2,7 @@
 
 const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
+const Application = require("../model/Application");
 const applicationsService = require("../service/applications.service");
 const proposalsService = require("../service/proposals.service");
 
@@ -101,21 +102,25 @@ module.exports = {
     acceptOrRejectApplication: async (req, res) => {
         let status = req.body.status;
         let proposal_id = req.body.proposal_id;
-        let student_id = req.user.id;
+        let student_id = req.body.student_id;
+        let teacher_id = req.user.id;
 
         try {
-            const applicationModified = await applicationsService.setApplicationStatusById(proposal_id, student_id, status);
+
+            const applicationModified = await applicationsService.setApplicationStatusById(proposal_id, student_id, status, teacher_id);
             if (!applicationModified instanceof Application)
                 res.status(400).json({ error: "Error in the parameters" });            
                 //if status === "Accepted" -> al the other applications for the same proposal become "Canceled"
                 //and the proposal become "Archived"
             if (status === "Accepted"){
-                const canceledApplications = await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id);
+                const canceledApplications = await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id);
                 if (!canceledApplications instanceof Number)
                     return res.status(400).json({error: "Error in cancelling the proposals not accepted."});
 
                 const archivedProposal = await proposalsService.setProposalArchived(proposal_id);
-                if (!(archivedProposal.proposal_id == proposal_id && archivedProposal.status))
+
+                console.log(archivedProposal);
+                if (!(archivedProposal.proposal_id == proposal_id && archivedProposal.status == 'Archived'))
                     return res.status(400).json({error: "Error in setting the proposal as archived"});
             }
 

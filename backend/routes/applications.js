@@ -38,12 +38,14 @@ router.post('/', authenticationController.isLoggedIn, applicationsController.ins
 /**
  * PUT /api/applications
  * 
- * @params non
- * @body {status: string, proposal_id: string}
+ * @params none
+ * @body {proposal_id: string, student_id: string, status: string}
  * 
  * @returns {Application}
  */
-router.put('/', authenticationController.isLoggedIn, applicationsController.acceptOrRejectApplication);
+router.put('/', authenticationController.isLoggedIn,
+ authenticationController.isTeacher,
+ applicationsController.acceptOrRejectApplication);
 
 
 module.exports = router;

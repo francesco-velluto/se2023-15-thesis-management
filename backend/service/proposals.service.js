@@ -134,8 +134,7 @@ exports.getProposalById = (proposal_id) => {
 exports.setProposalArchived = async (proposal_id) => {
 
   try {
-    let queryUpdate = "UPDATE proposals SET archived = true where proposal_id = $2 RETURNING *";
-
+    let queryUpdate = "UPDATE proposals SET status = 'Archived' where proposal_id = $1 RETURNING *";
 
     const archivedProposal = await db.query(queryUpdate, [proposal_id]);
     if (archivedProposal.rows.length === 0) {
@@ -145,7 +144,7 @@ exports.setProposalArchived = async (proposal_id) => {
 
     const res = {
       proposal_id: archivedProposal.rows[0].proposal_id,
-      archived: archivedProposal.rows[0].archived
+      status: archivedProposal.rows[0].status
     };
 
     return res;

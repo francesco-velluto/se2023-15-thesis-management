@@ -97,8 +97,9 @@ module.exports = {
     /**
      * 
      * 
-     * @param {number} application_id id of the application to accept/reject
-     * @param {number} student_id id of the student that made the application
+     * @param {string} proposal_id id of the proposal
+     * @param {string} student_id id of the student that made the application
+     * @param {string} teacher_id id of the teacher
      * @param {string} status new status; must be "Accepted" or "Rejected"
      * 
      * @returns {Application} with proposal_id, id (of the studend applied), status, application_date
@@ -106,16 +107,20 @@ module.exports = {
      * @throws {Error} if proposal not found or student not found or 
      */
 
-    setApplicationStatusById: async(proposal_id, student_id, status) => {
-        const query = "UPDATE applications SET status = $1 WHERE proposal_id = $2 AND student_id = $3 RETURNING *;";
+    setApplicationStatusById: async(proposal_id, student_id, status, teacher_id) => {
+        const query = "UPDATE applications SET status = $1 WHERE proposal_id = $2 AND id = $3 RETURNING *;";
 
         try{
-            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1;', [proposal_id]);
-            const studentCheck = await db.query('SELECT * FROM student WHERE id = $1;', [student_id])
+
+            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1 AND supervisor_id = $2;',
+             [proposal_id, teacher_id]);
+
+            const studentCheck = await db.query('SELECT * FROM student WHERE id = $1;', [student_id]);
+
             const statusCheck = status == "Accepted" || status == "Rejected";
 
             if(proposalCheck.rows.length === 0){
-                throw new Error(`Proposal with proposal_iod = ${proposal_id} not found`);
+                throw new Error(`Proposal with proposal_id = ${proposal_id} not found or not belonging to this teacher`);
             }else if(studentCheck.rows.length === 0){
                 throw new Error(`Student with id = ${student_id} not found`)
             }else if (!statusCheck){
@@ -148,14 +153,15 @@ module.exports = {
      * @throws {Error} if 
      */
 
-    setApplicationsStatusCanceledByProposalId: async(proposal_id) => {
+    setApplicationsStatusCanceledByProposalId: async(proposal_id, teacher_id) => {
         const query = "UPDATE applications SET status = 'Canceled' WHERE proposal_id = $1 AND status = 'Pending';";
 
         try{
-            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
-
+            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1 AND supervisor_id = $2;',
+                [proposal_id, teacher_id]);
+            
             if (proposalCheck.rows.length === 0){
-                throw new Error(`Proposal with proposal_id = ${application_id} not found`);
+                throw new Error(`Proposal with proposal_id = ${proposal_id} not found or not belonging to this teacher`);
             }else{
 
                 const deletedApplications = await db.query(query, [proposal_id]);
