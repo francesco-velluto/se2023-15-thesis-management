@@ -5,7 +5,7 @@ import NewProposalPage from "./pages/NewProposalPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 
-import "./index.css";
+import "./style/index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Alert, Card, Col, Container, Row } from "react-bootstrap";
 import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
