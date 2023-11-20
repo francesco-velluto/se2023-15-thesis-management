@@ -49,20 +49,23 @@ function ProposalDetailsPage({ mode }) {
         BACHELOR: "Bachelor",
         MASTER: "Master"
     }
-
+    const [newGroup, setNewGroup] = useState('');
+    const [newKeyword, setNewKeyword] = useState('');
+    
     // list of useful data
     const proposalLevelsList = [levelEnum.BACHELOR, levelEnum.MASTER];
     const [proposalDegreeList, setProposalDegreeList] = useState([]);
 
-    const [newGroup, setNewGroup] = useState('');
-    const [newKeyword, setNewKeyword] = useState('');
-
+    /**
+    * Filters programs based on the selected education level.
+    * @param {string} program - Object representing a study program.
+    * @returns {boolean} - Returns true if the program meets the filtering criteria, otherwise false.
+    */
     const handleFilterDegreeList = (program) => {
-        if (
-            (level === levelEnum.BACHELOR && program.title_degree.charAt(0) === "B") ||
-            (level === levelEnum.MASTER && (program.title_degree.charAt(0) === "M" ||
-                program.title_degree.charAt(0) === "D"))
-        ) {
+        if (level === levelEnum.BACHELOR && program[0].toUpperCase() === "B") {
+            return true;
+        }
+        if (level === levelEnum.MASTER && (program[0].toUpperCase() === "M" || program[0].toUpperCase() === "D")) {
             return true;
         }
         return false;
@@ -75,11 +78,6 @@ function ProposalDetailsPage({ mode }) {
             setErrorMessage("Please enter a valid title.");
             return;
         }
-
-        /*if (supervisor?.trim() === "") {
-            setErrorMessage("Please enter a valid supervisor.");
-            return;
-        }*/
 
         if (level?.trim() === "") {
             setErrorMessage("Please select a valid level.");
@@ -136,11 +134,9 @@ function ProposalDetailsPage({ mode }) {
             programmes: programmes,
         };
 
-        console.log(newProposal);
-
         try {
-            //await insertNewProposal(newProposal);
-            //navigate("/");
+            await insertNewProposal(newProposal);
+            navigate("/");
         } catch (err) {
             setErrorMessage(err.message);
         }
@@ -198,7 +194,7 @@ function ProposalDetailsPage({ mode }) {
             getAllDegrees()
                 .then(list => setProposalDegreeList(list))
                 .catch(err => {
-                    setErrorMessage("Error on the fetch of supervisors.");
+                    setErrorMessage(err);
                     setProposalDegreeList([]);
                 });
         }
@@ -256,7 +252,7 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Title>Keywords</Card.Title>
                                                 <div>
                                                     <Form.Group as={Row}>
-                                                        <Col xs={12} sm={11}>
+                                                        <Col xs={10}>
                                                             <Form.Control
                                                                 as={'input'}
                                                                 name='proposal-keywords'
@@ -268,7 +264,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 }}
                                                             />
                                                         </Col>
-                                                        <Col xs={12} sm={1}>
+                                                        <Col xs={2}>
                                                             <Button onClick={() => {
                                                                 if (!keywords.includes(newKeyword)) {
                                                                     setKeywords([...keywords, newKeyword]);
@@ -366,6 +362,14 @@ function ProposalDetailsPage({ mode }) {
                                         </Card.Body>
                                     </Card>
                                 </Col>
+                                {/*<Col>    here must be implemented the co-supervisor
+                                    <Card>
+                                        <Card.Body>
+                                            <Card.Title>Co-Supervisor</Card.Title>
+                                            <Card.Text>{supervisor}</Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                </Col>*/}
                             </Row>
                             <Row>
                                 <Col>
@@ -386,6 +390,7 @@ function ProposalDetailsPage({ mode }) {
                                                         }
                                                         <Form.Select
                                                             name='proposal-programmes'
+                                                            value={""}
                                                             onChange={(e) => {
                                                                 if (e.target.value?.trim()) {
                                                                     setProgrammes([...programmes, e.target.value]);
@@ -395,7 +400,7 @@ function ProposalDetailsPage({ mode }) {
                                                         >
                                                             <option value={""} disabled>Select a program</option>
                                                             {proposalDegreeList
-                                                                .filter(program => handleFilterDegreeList(program) && !programmes.includes(program.cod_degree))
+                                                                .filter(program => handleFilterDegreeList(program.title_degree) && !programmes.includes(program.cod_degree))
                                                                 .map((program, index) => (
                                                                     <option key={index} value={program.cod_degree}>{program.title_degree}</option>
                                                                 ))
@@ -460,8 +465,6 @@ function ProposalDetailsPage({ mode }) {
                                                 <Form.Group>
                                                     <Form.Select
                                                         name='proposal-level'
-                                                        aria-label='Enter the level'
-                                                        placeholder='Enter the level'
                                                         defaultValue={level}
                                                         onChange={(e) => {
                                                             setLevel(e.target.value);
