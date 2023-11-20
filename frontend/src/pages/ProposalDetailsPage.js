@@ -7,7 +7,7 @@ import { getProposalById } from "../api/ProposalsAPI";
 import {Alert, Badge, Button, Card, Col, Container, Row} from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
-import "../ProposalDetails.css";
+import "../style/ProposalDetails.css";
 import { VirtualClockContext } from "../components/VirtualClockContext";
 
 function ProposalDetailsPage() {

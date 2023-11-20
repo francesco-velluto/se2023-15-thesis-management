@@ -1,4 +1,4 @@
-import "../newProposalPage.css";
+import "../style/newProposalPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect, useContext } from "react";
 import dayjs from "dayjs";
@@ -10,7 +10,6 @@ import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
 import { LoggedUserContext } from "../api/Context.js";
 import { VirtualClockContext } from "../components/VirtualClockContext.js";
-
 
 function NewProposalPage() {
   return (

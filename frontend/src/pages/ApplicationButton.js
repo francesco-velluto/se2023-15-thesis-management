@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { insertNewApplication } from '../api/ApplicationsAPI';
 import { Button } from "react-bootstrap";
-import "../ProposalDetails.css";
+import "../style/ProposalDetails.css";
 import { getAllApplicationsByStudent } from '../api/ApplicationsAPI';
 import { LoggedUserContext } from "../api/Context";
 
