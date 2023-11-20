@@ -3,12 +3,12 @@ import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { getProposalById } from "../api/ProposalsAPI";
-import { Alert, Badge, Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { getAllDegrees, getProposalById } from "../api/ProposalsAPI";
+import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
-import "../ProposalDetails.css";
 import { VirtualClockContext } from "../components/VirtualClockContext";
+import { LoggedUserContext } from "../context/AuthenticationContext";
 
 /**
  * This page supports three modes:
@@ -30,6 +30,7 @@ function ProposalDetailsPage({ mode }) {
     const [errorMessage, setErrorMessage] = useState(null);
 
     const { currentDate } = useContext(VirtualClockContext);
+    const { loggedUser } = useContext(LoggedUserContext);
 
     const [title, setTitle] = useState("");
     const [supervisor, setSupervisor] = useState("");
@@ -44,6 +45,11 @@ function ProposalDetailsPage({ mode }) {
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
 
+    // list of useful data
+    const [proposalLevelsList, setProposalLevelsList] = useState(["Bachelor", "Master"]);
+    const [proposalDegreeList, setProposalDegreeList] = useState([]);
+
+    const [newGroup, setNewGroup] = useState('');
 
     useEffect(() => {
         if (mode === 0) {       // if it is in read mode
@@ -83,14 +89,23 @@ function ProposalDetailsPage({ mode }) {
                             setNotes(data.notes);
                         }
                     } else {
-                        setErrorMessage(data.error)
+                        setErrorMessage(data.error);
                     }
-
-                    setIsLoading(false)
+                    setIsLoading(false);
                 })
                 .catch(err => {
                     setErrorMessage(err.message);
                     setIsLoading(false);
+                });
+        } else if (mode === 2) {    // add mode
+            setIsLoading(false);
+            setSupervisor(loggedUser.name + " " + loggedUser.surname);
+            getAllDegrees()
+                .then(list => setProposalDegreeList(list))
+                .catch(err => {
+                    console.log(err);
+                    //props.setErrorMsg("Error on the fetch of supervisors.");
+                    setProposalDegreeList([]);
                 });
         }
     }, [proposal_id, currentDate]);
@@ -119,27 +134,84 @@ function ProposalDetailsPage({ mode }) {
                     ) : (
                         <Container fluid className={"proposal-details-container"}>
                             <Form>
-                                <Row>
+                                <Row className="my-3">
                                     <Col>
-                                        <h2 className={"proposal-details-title"}>{title}</h2>
+                                        {mode === 0 ?
+                                            <h2 className={"proposal-details-title"}>{title}</h2>
+                                            :
+                                            <Form.Group as={Row} className="m-0">
+                                                <Form.Label column xs={2}>
+                                                    <h3><strong>Title</strong></h3>
+                                                </Form.Label>
+                                                <Col xs={10} className="d-flex align-items-center">
+                                                    <Form.Control
+                                                        as={'textarea'}
+                                                        name='title'
+                                                        rows={1}
+                                                        aria-label='Enter the title'
+                                                        placeholder='Enter the title'
+                                                        value={title}
+                                                        onChange={(e) => {
+                                                            setTitle(e.target.value);
+                                                        }}
+                                                    />
+                                                </Col>
+                                            </Form.Group>
+                                        }
                                     </Col>
                                 </Row>
+                                {mode === 0 &&
+                                    <Row>
+                                        <Col className={"proposal-details-keyword"}>
+                                            {keywords.map((keyword) => <Badge bg={"secondary"} className="mr-1">{keyword}</Badge>)}
+                                        </Col>
+                                    </Row>
+                                }
                                 <Row>
-                                    <Col className={"proposal-details-keyword"}>
-                                        {keywords.map((keyword) => <Badge bg={"secondary"} className="mr-1">{keyword}</Badge>)}
-                                    </Col>
-                                </Row>
-                                <Row>
-                                    <Col className={"proposal-details-expiration"}>
-                                        <Badge bg={"danger"}>Expires on {new Date(expDate).toLocaleDateString("it-IT")}</Badge>
-                                    </Col>
+                                    {mode === 0 ?
+                                        <Col className={"proposal-details-expiration my-2"}>
+                                            <Badge bg={"danger"}>Expires on {new Date(expDate).toLocaleDateString("it-IT")}</Badge>
+                                        </Col>
+                                        :
+                                        <Col>
+                                            <Card>
+                                                <Card.Body>
+                                                    <Card.Title>Expiration Date</Card.Title>
+                                                    <Form.Group>
+                                                        <Form.Control
+                                                            id="expiration-date"
+                                                            type="date"
+                                                            min={currentDate}
+                                                            onChange={(e) => {
+                                                                setExpDate(e.target.value);
+                                                            }}
+                                                            required
+                                                        />
+                                                    </Form.Group>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>}
                                 </Row>
                                 <Row>
                                     <Col>
                                         <Card>
                                             <Card.Body>
                                                 <Card.Title>Description</Card.Title>
-                                                <Card.Text>{description}</Card.Text>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                        name='description'
+                                                        rows={mode === 0 ? 1 : 4}               // read mode
+                                                        aria-label='Enter the description'
+                                                        placeholder='Enter the description'
+                                                        value={description}
+                                                        onChange={(e) => {
+                                                            setDescription(e.target.value);
+                                                        }}
+                                                        readOnly={mode === 0}                   // read mode
+                                                        plaintext={mode === 0}                  // read mode
+                                                    />
+                                                </Form.Group>
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -159,9 +231,47 @@ function ProposalDetailsPage({ mode }) {
                                         <Card>
                                             <Card.Body>
                                                 <Card.Title>Proposal Programmes</Card.Title>
-                                                <Card.Text>
-                                                    {programmes.map((programme) => <Badge className="mr-1">{programme.title_degree}</Badge>)}
-                                                </Card.Text>
+                                                {mode === 0 ?
+                                                    <Card.Text>
+                                                        {programmes.map((programme) => <Badge className="mr-1">{programme.title_degree}</Badge>)}
+                                                    </Card.Text>
+                                                    :
+                                                    <div>
+                                                        <Form.Group>
+                                                            <Form.Select
+                                                                name='proposal-programmes'
+                                                                onChange={(e) => {
+                                                                    setProgrammes([...programmes, e.target.value]);
+                                                                }}
+                                                            >
+                                                                <option value={""} disabled selected>{"Choose the program"}</option>
+                                                                {
+                                                                    proposalDegreeList.map((program, index) => (
+                                                                        <option key={index} value={program.cod_degree}>{program.title_degree}</option>
+                                                                    ))
+                                                                }
+                                                            </Form.Select>
+                                                        </Form.Group>
+                                                        <ListGroup className="mt-2">
+                                                            {programmes.map((program, index) => (
+                                                                <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
+                                                                    {program}
+                                                                    <Button
+                                                                        variant="danger"
+                                                                        size="sm"
+                                                                        onClick={() => {
+                                                                            let updatedSelectedProgrammes = [...programmes];
+                                                                            updatedSelectedProgrammes.splice(index, 1);
+                                                                            setProgrammes(updatedSelectedProgrammes);
+                                                                        }}
+                                                                    >
+                                                                        Delete
+                                                                    </Button>
+                                                                </ListGroup.Item>
+                                                            ))}
+                                                        </ListGroup>
+                                                    </div>
+                                                }
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -171,7 +281,21 @@ function ProposalDetailsPage({ mode }) {
                                         <Card>
                                             <Card.Body>
                                                 <Card.Title>Proposal Type</Card.Title>
-                                                <Card.Text>{type}</Card.Text>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                        name='proposal-type'
+                                                        rows={1}
+                                                        aria-label='Enter the type'
+                                                        placeholder='Enter the type'
+                                                        value={type}
+                                                        onChange={(e) => {
+                                                            setType(e.target.value);
+                                                        }}
+                                                        readOnly={mode === 0}                   // read mode
+                                                        plaintext={mode === 0}                  // read mode
+                                                    />
+                                                </Form.Group>
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -179,7 +303,27 @@ function ProposalDetailsPage({ mode }) {
                                         <Card>
                                             <Card.Body>
                                                 <Card.Title>Proposal Level</Card.Title>
-                                                <Card.Text>{level}</Card.Text>
+                                                {mode === 0 ?
+                                                    <Card.Text>{level}</Card.Text>
+                                                    :
+                                                    <Form.Group>
+                                                        <Form.Select
+                                                            name='proposal-level'
+                                                            aria-label='Enter the level'
+                                                            placeholder='Enter the level'
+                                                            value={level}
+                                                            onChange={(e) => {
+                                                                setLevel(e.target.value);
+                                                            }}
+                                                        >
+                                                            <option value={""} disabled selected>{"Choose the level"}</option>
+                                                            {
+                                                                proposalLevelsList.map((level, index) => (
+                                                                    <option key={index} value={level}>{level}</option>
+                                                                ))
+                                                            }
+                                                        </Form.Select>
+                                                    </Form.Group>}
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -189,7 +333,21 @@ function ProposalDetailsPage({ mode }) {
                                         <Card>
                                             <Card.Body>
                                                 <Card.Title>Required Knowledge</Card.Title>
-                                                <Card.Text>{knowledge}</Card.Text>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                        name='required-knowledge'
+                                                        rows={mode === 0 ? 1 : 4}               // read mode
+                                                        aria-label='Enter the knowledge required'
+                                                        placeholder='Enter the knowledge required'
+                                                        value={knowledge}
+                                                        onChange={(e) => {
+                                                            setKnowledge(e.target.value);
+                                                        }}
+                                                        readOnly={mode === 0}                   // read mode
+                                                        plaintext={mode === 0}                  // read mode
+                                                    />
+                                                </Form.Group>
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -197,9 +355,54 @@ function ProposalDetailsPage({ mode }) {
                                         <Card>
                                             <Card.Body>
                                                 <Card.Title>Proposal Groups</Card.Title>
-                                                <Card.Text>
-                                                    {groups.map((group) => <Badge className="mr-1">{group}</Badge>)}
-                                                </Card.Text>
+                                                {mode === 0 ?
+                                                    <Card.Text>
+                                                        {groups.map((group) => <Badge className="mr-1">{group}</Badge>)}
+                                                    </Card.Text>
+                                                    :
+                                                    <div>
+                                                        <Form.Group as={Row}>
+                                                            <Col xs={12} sm={10}>
+                                                                <Form.Control
+                                                                    as={'input'}
+                                                                    name='proposal-groups'
+                                                                    aria-label='Enter group'
+                                                                    placeholder='Enter group'
+                                                                    value={newGroup}
+                                                                    onChange={(e) => {
+                                                                        setNewGroup(e.target.value);
+                                                                    }}
+                                                                />
+                                                            </Col>
+                                                            <Col xs={12} sm={2}>
+                                                                <Button onClick={() => {
+                                                                    setGroups([...groups, newGroup]);
+                                                                    setNewGroup('');
+                                                                }}>
+                                                                    Add
+                                                                </Button>
+                                                            </Col>
+                                                        </Form.Group>
+                                                        <ListGroup className="mt-2">
+                                                            {groups.map((group, index) => (
+                                                                <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
+                                                                    {group}
+                                                                    <Button
+                                                                        variant="danger"
+                                                                        size="sm"
+                                                                        onClick={() => {
+                                                                            let updated = [...groups];
+                                                                            updated.splice(index, 1);
+                                                                            setGroups(updated);
+                                                                        }}
+                                                                    >
+                                                                        Delete
+                                                                    </Button>
+                                                                </ListGroup.Item>
+                                                            ))}
+                                                        </ListGroup>
+                                                    </div>
+                                                }
                                             </Card.Body>
                                         </Card>
                                     </Col>
@@ -211,16 +414,17 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Title>Additional Notes</Card.Title>
                                                 <Form.Group>
                                                     <Form.Control
-                                                        type='text'
+                                                        as={mode === 0 ? 'input' : 'textarea'}  // read mode
                                                         name='additional-notes'
-                                                        aria-label='enter additional notes'
-                                                        placeholder='enter additional notes'
+                                                        rows={mode === 0 ? 1 : 4}               // read mode
+                                                        aria-label='Enter additional notes'
+                                                        placeholder='Enter additional notes'
                                                         value={notes}
                                                         onChange={(e) => {
                                                             setNotes(e.target.value);
                                                         }}
-                                                        readOnly={mode === 0 /* read mode */}
-                                                        plaintext={mode === 0 /* read mode */}
+                                                        readOnly={mode === 0}                   // read mode
+                                                        plaintext={mode === 0}                  // read mode
                                                     />
                                                 </Form.Group>
                                             </Card.Body>

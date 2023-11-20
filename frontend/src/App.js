@@ -47,6 +47,7 @@ function Main() {
                     <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage/>} />
                     <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <NewProposalPage /> : <UnAuthorizationPage />} />
+                    <Route path="new/testing" element={loggedUser ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
             
