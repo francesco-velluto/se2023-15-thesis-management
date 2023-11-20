@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./backend
+        working-directory: ./backend/
 
     strategy:
       matrix:
@@ -30,6 +30,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: './backend/package-lock.json'
     - name: Install Node.js dependencies
       run: npm install
     - name: Run unit tests
