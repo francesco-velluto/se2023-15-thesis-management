@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "test": "jest --silent",
     "coverage": "jest --coverage",
-    "unit": "jest tests/*.unit.test.js",
+    "unit": "jest tests/*.unit.test.js --silent",
     "integration": "jest tests/*.integration.test.js"
   },
   "author": "SE2 2023 Group 15",
