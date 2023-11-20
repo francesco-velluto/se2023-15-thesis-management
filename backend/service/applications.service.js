@@ -92,5 +92,78 @@ module.exports = {
             return error;
         }
 
+    },
+
+    /**
+     * 
+     * 
+     * @param {number} application_id id of the application to accept/reject
+     * @param {number} student_id id of the student that made the application
+     * @param {string} status new status; must be "Accepted" or "Rejected"
+     * 
+     * @returns {Application} with proposal_id, id (of the studend applied), status, application_date
+     * 
+     * @throws {Error} if proposal not found or student not found or 
+     */
+
+    setApplicationStatusById: async(proposal_id, student_id, status) => {
+        const query = "UPDATE applications SET status = $1 WHERE proposal_id = $2 AND student_id = $3 RETURNING *;";
+
+        try{
+            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1;', [proposal_id]);
+            const studentCheck = await db.query('SELECT * FROM student WHERE id = $1;', [student_id])
+            const statusCheck = status == "Accepted" || status == "Rejected";
+
+            if(proposalCheck.rows.length === 0){
+                throw new Error(`Proposal with proposal_iod = ${proposal_id} not found`);
+            }else if(studentCheck.rows.length === 0){
+                throw new Error(`Student with id = ${student_id} not found`)
+            }else if (!statusCheck){
+                throw new Error("Invalid status value.");
+            }else{
+
+                const updatedApplication = await db.query(query, [status, proposal_id, student_id]);
+                if (updatedApplication.rows.length === 0)
+                    throw new Error(`No application founded for propopsal with proposal_id: ${proposal_id} by student with id: ${student_id}`);
+                return new Application(
+                    updatedApplication.rows[0].proposal_id,
+                    updatedApplication.rows[0].id,
+                    updatedApplication.rows[0].status,
+                    updatedApplication.rows[0].application_date
+                )
+
+            }
+        }catch(error){
+            console.error('[BACKEND-SERVER] Error in setApplicationStatusById service: ', error);
+            return error;
+        }
+    },
+    /**
+     * Set the status of the applications of a certain proposal identified by its id as Canceled if they are Pending
+     * 
+     * @param {*} proposal_id 
+     * 
+     * @returns {number} Number of proposals modified
+     * 
+     * @throws {Error} if 
+     */
+
+    setApplicationsStatusCanceledByProposalId: async(proposal_id) => {
+        const query = "UPDATE applications SET status = 'Canceled' WHERE proposal_id = $1 AND status = 'Pending';";
+
+        try{
+            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
+
+            if (proposalCheck.rows.length === 0){
+                throw new Error(`Proposal with proposal_id = ${application_id} not found`);
+            }else{
+
+                const deletedApplications = await db.query(query, [proposal_id]);
+                return deletedApplications.rowCount
+            }
+        }catch(error){
+            console.error('[BACKEND-SERVER] Error in setApplicationStatusById service: ', error);
+            return error;
+        }
     }
 }

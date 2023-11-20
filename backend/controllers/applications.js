@@ -3,6 +3,7 @@
 const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
+const proposalsService = require("../service/proposals.service");
 
 module.exports = {
     /**
@@ -82,18 +83,49 @@ module.exports = {
             });
     },
 
-    insertNewApplication: (req,res) => {
+    insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
-            .then((result) => {
-                res.status(200).json(result.data);
-            })
-            .catch((err) => {
-                res.status(500).json({ errors: [err.message] });
-            });
+                .then((result) => {
+                    res.status(200).json(result.data);
+                })
+                .catch((err) => {
+                    res.status(500).json({ errors: [err.message] });
+                });
 
         } else
-        return res.status(400).send("Parameters not found in insert new application controller");
-        
+            return res.status(400).send("Parameters not found in insert new application controller");
+
+    },
+
+    acceptOrRejectApplication: async (req, res) => {
+        let status = req.body.status;
+        let proposal_id = req.body.proposal_id;
+        let student_id = req.user.id;
+
+        try {
+            const applicationModified = await applicationsService.setApplicationStatusById(proposal_id, student_id, status);
+            if (!applicationModified instanceof Application)
+                res.status(400).json({ error: "Error in the parameters" });            
+                //if status === "Accepted" -> al the other applications for the same proposal become "Canceled"
+                //and the proposal become "Archived"
+            if (status === "Accepted"){
+                const canceledApplications = await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id);
+                if (!canceledApplications instanceof Number)
+                    return res.status(400).json({error: "Error in cancelling the proposals not accepted."});
+
+                const archivedProposal = await proposalsService.setProposalArchived(proposal_id);
+                if (!(archivedProposal.proposal_id == proposal_id && archivedProposal.status))
+                    return res.status(400).json({error: "Error in setting the proposal as archived"});
+            }
+
+            return res.status(200).json({application: applicationModified});
+
+        } catch (err) {
+            console.error("[BACKEND-SERVER] Cannot insert set application's status", err)
+            res.status(500).json({ error: "Internal server error" })
+        }
+
+
     }
-};
+}

@@ -67,62 +67,94 @@ exports.getMaxProposalIdNumber = async () => {
 
 
 exports.getAllProposals = async (cod_degree) => {
-    return new Promise((resolve, reject) => {
-        db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
-            "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
-            "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
-            "FROM proposals p " +
-            "JOIN teacher t ON p.supervisor_id = t.id " +
-            "JOIN unnest(p.programmes) AS prog ON true " +
-            "JOIN degree d ON prog = d.cod_degree " +
-            "WHERE cod_degree = '" + cod_degree + "' AND p.expiration_date >= current_date " +
-            "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
-            "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
-            "ORDER BY p.proposal_id")
-            .then((rows) => {
-                if (rows.lenght == 0) {
-                    console.error('[BACKEND-SERVER] Error in getAllProposals');
-                    reject({ status: 404, data: 'proposals not found' });
-                }
+  return new Promise((resolve, reject) => {
+    db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
+      "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
+      "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
+      "FROM proposals p " +
+      "JOIN teacher t ON p.supervisor_id = t.id " +
+      "JOIN unnest(p.programmes) AS prog ON true " +
+      "JOIN degree d ON prog = d.cod_degree " +
+      "WHERE cod_degree = '" + cod_degree + "' AND p.expiration_date >= current_date " +
+      "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
+      "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
+      "ORDER BY p.proposal_id")
+      .then((rows) => {
+        if (rows.lenght == 0) {
+          console.error('[BACKEND-SERVER] Error in getAllProposals');
+          reject({ status: 404, data: 'proposals not found' });
+        }
 
-                resolve({ status: 200, data: rows.rows });
+        resolve({ status: 200, data: rows.rows });
 
-            }).catch((err) => {
-            console.error('[BACKEND-SERVER] Error in getAllProposals', err);
-            reject({ status: 500, data: 'Internal server error' });
-        });
-    })
+      }).catch((err) => {
+        console.error('[BACKEND-SERVER] Error in getAllProposals', err);
+        reject({ status: 500, data: 'Internal server error' });
+      });
+  })
 }
 
 exports.getProposalById = (proposal_id) => {
-    return new Promise((resolve, reject) => {
-        db.query('SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1', [proposal_id])
-            .then(result => {
-                if (result.rows.length === 0) {
-                    console.error(`Error in getProposalById - proposal_id: ${proposal_id} not found`);
-                    reject({ status: 404, data: "Proposal not found" });
-                } else {
-                    let proposal = result.rows[0];
+  return new Promise((resolve, reject) => {
+    db.query('SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1', [proposal_id])
+      .then(result => {
+        if (result.rows.length === 0) {
+          console.error(`Error in getProposalById - proposal_id: ${proposal_id} not found`);
+          reject({ status: 404, data: "Proposal not found" });
+        } else {
+          let proposal = result.rows[0];
 
-                    // get the names of each programme of the proposal
-                    // we cannot use the 'WHERE cod_degree IN $1' because it is not supported by the pg library
-                    // we will use a workaround with ANY
-                    db.query('SELECT * FROM degree WHERE cod_degree = ANY($1)', [proposal.programmes])
-                        .then(degrees_result => {
-                            let degrees = degrees_result.rows;
-                            proposal.programmes = degrees;
-                            resolve({ status: 200, data: proposal });
-                        }).catch(error => {
-                        console.log("Error in getProposalById - cannot get programmes: ", error);
-                        reject({ status: 500, data: "Internal Server Error" });
-                    });
-                }
-            })
-            .catch(error => {
-                console.log("Error in getProposalById: ", error);
-                reject({ status: 500, data: "Internal Server Error" });
+          // get the names of each programme of the proposal
+          // we cannot use the 'WHERE cod_degree IN $1' because it is not supported by the pg library
+          // we will use a workaround with ANY
+          db.query('SELECT * FROM degree WHERE cod_degree = ANY($1)', [proposal.programmes])
+            .then(degrees_result => {
+              let degrees = degrees_result.rows;
+              proposal.programmes = degrees;
+              resolve({ status: 200, data: proposal });
+            }).catch(error => {
+              console.log("Error in getProposalById - cannot get programmes: ", error);
+              reject({ status: 500, data: "Internal Server Error" });
             });
-    });
+        }
+      })
+      .catch(error => {
+        console.log("Error in getProposalById: ", error);
+        reject({ status: 500, data: "Internal Server Error" });
+      });
+  });
+}
+/**
+ * Set the proposal as archived
+ * 
+ * @param {number} proposal_id 
+ * 
+ * @returns {{proposal_id: string, archived: true}}
+ */
+exports.setProposalArchived = async (proposal_id) => {
+
+  try {
+    let queryUpdate = "UPDATE proposals SET archived = true where proposal_id = $2 RETURNING *";
+
+
+    const archivedProposal = await db.query(queryUpdate, [proposal_id]);
+    if (archivedProposal.rows.length === 0) {
+      console.error("Proposal not found");
+      throw new Error("Proposal to set archived not found");
+    }
+
+    const res = {
+      proposal_id: archivedProposal.rows[0].proposal_id,
+      archived: archivedProposal.rows[0].archived
+    };
+
+    return res;
+
+  } catch (error) {
+    console.log("Error in setProposalArchived: ", error);
+    throw error;
+  }
+
 }
 
 

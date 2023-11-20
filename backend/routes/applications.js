@@ -35,4 +35,15 @@ router.get('/', authenticationController.isLoggedIn, applicationsController.getA
 router.post('/', authenticationController.isLoggedIn, applicationsController.insertNewApplication);
 
 
+/**
+ * PUT /api/applications
+ * 
+ * @params non
+ * @body {status: string, proposal_id: string}
+ * 
+ * @returns {Application}
+ */
+router.put('/', authenticationController.isLoggedIn, applicationsController.acceptOrRejectApplication);
+
+
 module.exports = router;
