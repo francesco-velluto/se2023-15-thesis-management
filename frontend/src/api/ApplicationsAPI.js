@@ -1,5 +1,5 @@
 const { APICall } = require('./GenericAPI');
-const APIConfig = require('./config.json');
+const APIConfig = require('./api.config.js');
 const ApplicationsAPIURL = APIConfig.API_URL + '/applications';
 
 /**

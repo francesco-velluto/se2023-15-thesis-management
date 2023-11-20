@@ -1,4 +1,4 @@
-const APIConfig = require("./config.json");
+const APIConfig = require("./api.config.js");
 
 const ProposalsAPIURL = APIConfig.API_URL + "/proposals";
 const TeachersAPIURL = APIConfig.API_URL + "/teachers";

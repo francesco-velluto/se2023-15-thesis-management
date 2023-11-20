@@ -1,4 +1,4 @@
-const APIConfig = require('./config.json');
+const APIConfig = require('./api.config.js');
 
 /**
  * Generic API call
