@@ -22,19 +22,19 @@ const rowToProposal = (row) => {
 
 
 
-exports.insertProposal = async (proposal) => {
+exports.insertProposal = async (supervisor_id, proposal) => {
   try {
     const result = await db.query(
       `INSERT INTO proposals 
         (proposal_id, title, supervisor_id, keywords, type,
         groups, description, required_knowledge, notes,
-        expiration_date, level, programmes)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        expiration_date, level, programmes, status)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         RETURNING *;`,
       [
         proposal.proposal_id,
         proposal.title,
-        proposal.supervisor_id,
+        supervisor_id,
         proposal.keywords,
         proposal.type,
         proposal.groups || [],
@@ -44,6 +44,7 @@ exports.insertProposal = async (proposal) => {
         proposal.expiration_date,
         proposal.level,
         proposal.programmes,
+        'active'
       ]
     );
     return rowToProposal(result.rows[0]);

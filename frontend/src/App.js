@@ -1,18 +1,18 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import NewProposalPage from "./pages/NewProposalPage";
 import ProposalsPage from "./pages/ProposalsPage";
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 
-import "./style/index.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { Alert, Card, Col, Container, Row } from "react-bootstrap";
-import { LoggedUserContext, LoggedUserProvider } from "./api/Context";
+import { LoggedUserContext, LoggedUserProvider } from "./context/AuthenticationContext";
 import { useContext, useEffect } from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
 import ApplicationList from "./pages/ApplicationList";
 import { VirtualClockProvider } from "./components/VirtualClockContext";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./style/index.css";
 
 function App() {
     return (
@@ -44,12 +44,12 @@ function Main() {
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications' element={(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <UnAuthorizationPage />} />
                 <Route path="/proposals">
-                    <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage/>} />
-                    <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage /> : <UnAuthorizationPage />} />
-                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <NewProposalPage /> : <UnAuthorizationPage />} />
+                    <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
+                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
-            
+
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
     );
@@ -58,9 +58,7 @@ function Main() {
 function PageLayout() {
     return (
         <Row className="page-content w-100 m-0">
-            {/* <Row> */}
-                <Outlet />
-            {/* </Row> */}
+            <Outlet />
         </Row>
     );
 }

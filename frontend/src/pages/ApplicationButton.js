@@ -1,9 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { insertNewApplication } from '../api/ApplicationsAPI';
 import { Button } from "react-bootstrap";
-import "../style/ProposalDetails.css";
 import { getAllApplicationsByStudent } from '../api/ApplicationsAPI';
-import { LoggedUserContext } from "../api/Context";
+import { LoggedUserContext } from "../context/AuthenticationContext";
 
 const ApplicationButton = ({ proposalID }) => {
   const [applied, setApplied] = useState(false);

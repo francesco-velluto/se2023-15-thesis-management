@@ -84,6 +84,80 @@ body {
     margin: 0;
 }
 
+
+/* PROPOSAL PAGE DETAILS */
+.proposal-details-container {
+    background: #FFDEAD;
+    padding: 9px;
+}
+
+.proposal-details-container h2 {
+    font-weight: bold;
+}
+
+.proposal-details-container .card .card-title {
+    /* font-weight: bold; */
+    font-size: 14px;
+}
+
+.proposal-details-title {
+    text-align: center;
+}
+
+.proposal-details-container .row {
+    margin: 5px;
+}
+
+.proposal-details-keyword {
+    text-align: center;
+}
+
+.proposal-details-keyword .badge {
+    margin: 3px;
+    padding: 10px;
+    font-size: small;
+}
+
+.proposal-details-expiration {
+    text-align: center;
+}
+
+.proposal-details-expiration .badge {
+    margin: 3px;
+    font-size: 15px;
+}
+
+.text-plus {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.text-plus>* {
+    margin-right: 10px;
+}
+
+.text-plus> :last-child {
+    margin-right: 0;
+}
+
+/*************************/
+
+
+.home-page-content {
+    max-width: 1024px;
+}
+
+.filterCardContainer {
+    display: inline-block;
+    width: 75%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-left: 3px;
+}
+
 footer {
     padding: 1.5rem;
     background-color: #f8f9fa;
@@ -130,26 +204,9 @@ footer img {
     }
 }
 
-.home-page-content {
-    max-width: 1024px;
-}
-
 @media (min-width: 768px) {
     .proposal-details-container {
         padding-left: 3rem;
         padding-right: 3rem;
     }
 }
-
-.filterCardContainer {
-    display: inline-block;
-    width: 75%; 
-    overflow: hidden; 
-    white-space: nowrap; 
-    text-overflow: ellipsis;
-    margin-left: 3px;
-}
-
-
-
-
