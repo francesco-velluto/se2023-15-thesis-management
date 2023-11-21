@@ -8,27 +8,24 @@ import { Alert } from "react-bootstrap";
 
 function ProposalsPage() {
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
-    const {loggedUser} = useContext(LoggedUserContext);
-
+    const { loggedUser } = useContext(LoggedUserContext);
 
     return (
         <>
-        <NavbarContainer/>
-        <TitleBar title={"Browse Proposals"}/>
+            <NavbarContainer />
+            <TitleBar title={"Browse Proposals"} />
 
-        {
-            Object.keys(loggedUser).includes("cod_group") ?
-
-            <Alert variant="danger" className="mt-2">
-                You cannot take a look at thesis proposals
-            </Alert>
-
-            : 
-            <>  
-            <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
-            <ProposalsList searchData={searchData} />
-            </>
-        }
+            {
+                Object.keys(loggedUser).includes("cod_group") ?
+                    <Alert variant="danger" className="mt-2">
+                        You cannot take a look at thesis proposals
+                    </Alert>
+                    :
+                    <>
+                        <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
+                        <ProposalsList searchData={searchData} />
+                    </>
+            }
         </>
     );
 }
