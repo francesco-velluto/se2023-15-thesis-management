@@ -87,7 +87,7 @@ body {
 
 /* PROPOSAL PAGE DETAILS */
 .proposal-details-container {
-    background: #C9E2EA;
+    background: #FFDEAD;
     padding: 9px;
 }
 
@@ -96,7 +96,8 @@ body {
 }
 
 .proposal-details-container .card .card-title {
-    font-weight: bold;
+    /* font-weight: bold; */
+    font-size: 14px;
 }
 
 .proposal-details-title {
@@ -126,6 +127,21 @@ body {
     font-size: 15px;
 }
 
+.text-plus {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.text-plus>* {
+    margin-right: 10px;
+}
+
+.text-plus> :last-child {
+    margin-right: 0;
+}
+
 /*************************/
 
 
@@ -135,9 +151,9 @@ body {
 
 .filterCardContainer {
     display: inline-block;
-    width: 75%; 
-    overflow: hidden; 
-    white-space: nowrap; 
+    width: 75%;
+    overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
     margin-left: 3px;
 }
