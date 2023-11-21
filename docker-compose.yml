@@ -27,6 +27,7 @@ services:
       - backend
     environment:
       - FRONTEND_PORT=${FRONTEND_PORT}
+      - REACT_APP_API_PORT=${REACT_APP_API_PORT}
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     networks:

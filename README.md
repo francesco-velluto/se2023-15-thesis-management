@@ -10,7 +10,11 @@ FRONTEND_PORT=
 DB_PASSWORD=
 DB_USER=
 DB_HOST=
+REACT_APP_API_PORT=
 ```
+
+NOTE : The variable `REACT_APP_API_PORT` is used to set the port of the backend server in the frontend application.
+It must be the same value as `BACKEND_SERVER_PORT` variable.
 
 ## Starting using docker
 Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed.
