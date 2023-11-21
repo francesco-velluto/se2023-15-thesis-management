@@ -54,7 +54,6 @@ router.get("/", authenticationController.isLoggedIn, authenticationController.is
  * @params none
  * @body {
  *  title : string,
- *  supervisor_id : string,
  *  keywords : string[],
  *  type : string,
  *  groups : string[],
@@ -77,7 +76,6 @@ router.post(
   isLoggedIn,
   isTeacher,
   check("title").isString().notEmpty(),
-  check("supervisor_id").isString().notEmpty(),
   check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings), // can the keywords array be empty ??
   check("type").isString().notEmpty(),
   check("groups").isArray({ min: 1 }).custom(isArrayOfStrings),
