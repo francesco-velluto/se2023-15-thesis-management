@@ -3,11 +3,14 @@ import { LoggedUserContext } from "../context/AuthenticationContext";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+import NavbarContainer from "../components/Navbar";
+
 function HomePage() {
   const { loggedUser, handleLogout } = useContext(LoggedUserContext);
 
   return (
     <>
+    <NavbarContainer />
       <Container fluid className="home-page">
         <Row className="m-3 mt-5">
           <h1>
@@ -183,15 +186,6 @@ function HomePage() {
                   )}
                 </Row>
               </Card>
-              <div className="d-flex justify-content-center">
-                <Button
-                  className="mt-3 px-5"
-                  variant="danger"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </Button>
-              </div>
             </>
           )}
         </Row>
