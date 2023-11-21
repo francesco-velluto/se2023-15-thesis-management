@@ -296,26 +296,19 @@ function ProposalDetailsPage({ mode }) {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    {mode !== 0 &&
-                                        <Col>
-                                            <Card>
-                                                <Card.Body>
-                                                    <Card.Title>Expiration Date:</Card.Title>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            id="expiration-date"
-                                                            type="date"
-                                                            min={currentDate}
-                                                            onChange={(e) => {
-                                                                setExpDate(e.target.value);
-                                                            }}
-                                                            required
-                                                        />
-                                                    </Form.Group>
-                                                </Card.Body>
-                                            </Card>
-                                        </Col>
-                                    }
+                                    <Col xs={6}>
+                                        <Card>
+                                            <Card.Body>
+                                                <Card.Title>Co-Supervisor:</Card.Title>
+                                                <Form.Control
+                                                    id="supervisor"
+                                                    value={""}
+                                                    disabled
+                                                    required
+                                                />
+                                            </Card.Body>
+                                        </Card>
+                                    </Col>
                                 </Row>
                                 <Row>
                                     <Col>
@@ -490,19 +483,26 @@ function ProposalDetailsPage({ mode }) {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col>
-                                        <Card>
-                                            <Card.Body>
-                                                <Card.Title>Co-Supervisor:</Card.Title>
-                                                <Form.Control
-                                                    id="supervisor"
-                                                    value={""}
-                                                    disabled
-                                                    required
-                                                />
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
+                                {mode !== 0 &&
+                                        <Col>
+                                            <Card>
+                                                <Card.Body>
+                                                    <Card.Title>Expiration Date:</Card.Title>
+                                                    <Form.Group>
+                                                        <Form.Control
+                                                            id="expiration-date"
+                                                            type="date"
+                                                            min={currentDate}
+                                                            onChange={(e) => {
+                                                                setExpDate(e.target.value);
+                                                            }}
+                                                            required
+                                                        />
+                                                    </Form.Group>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    }
                                     {mode !== 0 &&
                                         <Col>
                                             <Card>
