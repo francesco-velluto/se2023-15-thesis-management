@@ -30,7 +30,7 @@ function NavbarContainer() {
                 <Navbar.Brand as={Link} to={"/"}>
                 <div>
                 <img src={Logo} alt="Logo" width="70" height="auto" className="bi bi-mortarboard-fill me-2"  />
-                <span  style={{ fontSize: '20px'}}> THESIS MANAGEMENT </span>
+                <span  style={{ fontSize: '20px', fontWeight: "bold"}}> THESIS MANAGEMENT </span>
                 </div>
                 </Navbar.Brand>
 

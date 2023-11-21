@@ -1,10 +1,9 @@
 import "../style/newProposalPage.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState, useEffect, useContext } from "react";
-import dayjs from "dayjs";
 import NavbarContainer from "../components/Navbar.js";
 import TitleBar from "../components/TitleBar.js";
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Row, Col, Container,Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import proposalsAPI from "../api/ProposalsAPI.js";
 import React from "react";
@@ -16,16 +15,14 @@ function NewProposalPage() {
     <>
       <NavbarContainer />
       <TitleBar title="Create a new proposal" />
-      <FormProposal />
-      
-    
-
+      <FormProposal/>
     </>
   );
 }
 
 
 function FormProposal() {
+
   const [title, setTitle] = useState("");
   //const [supervisor, setSupervisor] = useState("");
   const [level, setLevel] = useState("");
@@ -116,6 +113,7 @@ function FormProposal() {
       notes: notes,
       expiration_date: expDate,
       programmes: programmes,
+      status: 'Active'
     };
 
     try {
@@ -134,37 +132,43 @@ function FormProposal() {
         </Alert>
       )}
 
-      <Form className="form" onSubmit={handleSubmit}>
-        <div className="form-line">
-          <TitleField setTitle={setTitle} />
-        </div>
-        <div className="form-line">
-          <SupervisorField
-            /*setSupervisor={setSupervisor}*/
-            setErrorMsg={setErrorMsg}
-          />
-          <LevelField setLevel={setLevel} />
-          <TypeField setType={setType} />
-          <ExpirationDateField setExpDate={setExpDate} />
-        </div>
-        <div className="form-line">
-          <KeywordsField keywords={keywords} setKeywords={setKeywords} />
-          <ProgrammesField
-            programmes={programmes}
-            setProgrammes={setProgrammes}
-          />
-          <CoSupervisorsField /* setCoSupervisors={setCoSupervisors} */ />
-          <GroupsField groups={groups} setGroups={setGroups} />
-        </div>
-        <div className="form-line">
-          <DescriptionField setDescription={setDescription} />
-          <RequiredKnowledgeField setKnowledge={setKnowledge} />
-          <NotesField setNotes={setNotes} />
-        </div>
-        <div className="form-line">
-          <EndButtons handleSubmit={handleSubmit} />
-        </div>
-      </Form>
+      
+        <Form  style= {{backgroundColor: "#FFDEAD"}} onSubmit={handleSubmit} >
+          <Container >
+            <Row style={{margin: "7px"}} >
+              <TitleField setTitle={setTitle} />
+            </Row>
+            <Row style={{margin: "7px"}} >
+              <DescriptionField setDescription={setDescription} />
+            </Row>
+          </Container>
+          <Container >
+            <Row style={{margin: "7px"}} >
+                <SupervisorField setErrorMsg={setErrorMsg} />
+                <ExpirationDateField setExpDate={setExpDate} />
+            </Row>
+            <Row style={{margin: "7px"}}>
+              <LevelField  setLevel={setLevel}/>
+              <TypeField setType={setType} />
+            </Row>
+            <Row style={{margin: "7px"}}>
+              <ProgrammesField programmes={programmes} setProgrammes={setProgrammes}/>   
+              <GroupsField groups={groups} setGroups={setGroups} />
+            </Row>
+            <Row style={{margin: "7px"}}>
+              <CoSupervisorsField /* setCoSupervisors={setCoSupervisors} */ />
+              <KeywordsField keywords={keywords} setKeywords={setKeywords} />
+            </Row>
+            <Row style={{margin: "7px"}}>
+              <RequiredKnowledgeField setKnowledge={setKnowledge} />
+              <NotesField setNotes={setNotes} />
+            </Row>
+          </Container>
+          <Form.Group>
+            <EndButtons handleSubmit={handleSubmit} />
+          </Form.Group>
+        </Form>
+      
     </>
   );
 }
@@ -199,16 +203,21 @@ function NotesField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Notes</Form.Label>
-      <Form.Control
-        as="textarea"
-        rows={4}
-        placeholder="My notes..."
-        onChange={handleChange}
-        id="notes"
-      />
-    </Form.Group>
+<Col>
+    <Card>
+      <Card.Body >
+        <Card.Title style={{ fontSize: '14px'}}>Notes:</Card.Title>
+        <Form.Control
+          as="textarea"
+          rows={4}
+          placeholder="My notes..."
+          onChange={handleChange}
+          id="notes"
+          style={{ fontSize: '16px' }}
+        />
+      </Card.Body>
+    </Card>
+</Col>
   );
 }
 
@@ -218,16 +227,21 @@ function RequiredKnowledgeField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Required knowledge</Form.Label>
-      <Form.Control
-        as="textarea"
-        rows={4}
-        placeholder="You are required to know..."
-        onChange={handleChange}
-        id="required-knowledge"
-      />
-    </Form.Group>
+  <Col>
+    <Card>
+      <Card.Body >
+        <Card.Title style={{ fontSize: '14px'}}>Required knowledge:</Card.Title>
+        <Form.Control
+          as="textarea"
+          rows={4}
+          placeholder="You are required to know..."
+          onChange={handleChange}
+          id="required-knowledge"
+          style={{ fontSize: '16px' }}
+        />
+      </Card.Body>
+    </Card>
+  </Col>
   );
 }
 
@@ -237,17 +251,22 @@ function DescriptionField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Description</Form.Label>
-      <Form.Control
-        required
-        id="description"
-        as="textarea"
-        rows={4}
-        placeholder="My long description..."
-        onChange={handleChange}
-      />
-    </Form.Group>
+  <Col>
+    <Card>
+      <Card.Body >
+        <Card.Title style={{ fontSize: '14px'}}>Description:</Card.Title>
+        <Form.Control
+          required 
+          id="description"
+          as="textarea"
+          rows="7"
+          placeholder="Enter description"
+          onChange={handleChange}
+          style={{ fontSize: '16px'}}
+        />
+      </Card.Body>
+    </Card>
+  </Col>
   );
 }
 
@@ -272,16 +291,19 @@ function GroupsField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Groups</Form.Label>
-      <div className="text-plus">
+
+<Col>
+    <Card>
+      <Card.Body >
+        <Card.Title style={{ fontSize: '14px'}}>Groups:</Card.Title>
+        <div className="text-plus">
         <Form.Control
           id="group"
           value={selected}
           type="text"
-          placeholder="New group"
+          placeholder="Add group"
           onChange={handleChange}
-          
+          style={{ fontSize: '16px'  }}
         />
         <Button
           id="add-group-btn"
@@ -295,32 +317,40 @@ function GroupsField(props) {
       {props.groups.map((s, i) => (
         <ListElement key={i} value={s} setter={props.setGroups} />
       ))}
-    </Form.Group>
+      </Card.Body>
+    </Card>
+  </Col>
   );
 }
 
 function CoSupervisorsField(props) {
   // TODO: add co-supervisor user stories
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Co-supervisors</Form.Label>
-      <div className="text-plus">
+  <Col>
+    <Card>
+      <Card.Body >
+        <Card.Title style={{ fontSize: '14px'}}>Co-supervisors:</Card.Title>
+        <div className="text-plus">
         <Form.Control
           id="cosupervisor"
           type="text"
-          placeholder="New co-supervisor"
+          placeholder="Add co-supervisor"
           disabled
+          style={{ fontSize: '16px'}}
         />
         <Button
           id="add-cosupervisor-btn"
           disabled
           variant="secondary"
           className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
-        >
-          +
+          >
+            +
         </Button>
-      </div>
-    </Form.Group>
+        </div>
+      </Card.Body>
+    </Card>
+  </Col>
+    
   );
 }
 
@@ -364,33 +394,58 @@ function ProgrammesField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>CdS / Programmes</Form.Label>
-      <div className="text-plus">
-        <Form.Select
-          id="programme"
-          onChange={handleChange}
-          
-        >
-          <option value="" disabled selected>Select programme</option>
-          {myProgrammes.map((p,i) => <option key={i} value={p.cod_degree}>{p.title_degree}</option>)}
-        </Form.Select>
-        <Button
-          id="add-programme-btn"
-          onClick={addProgramme}
-          variant="secondary"
-          className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
-        >
-          +
-        </Button>
-      </div>
-      {props.programmes.map((s, i) => (
-        <ListElement key={i} value={s} setter={props.setProgrammes} />
-      ))}
-    </Form.Group>
+    <Col >
+      <Card>
+        <Card.Body>
+          <Card.Title style={{ fontSize: '14px' }} >CdS / Programmes:</Card.Title>
+          <div className="text-plus">
+            <Form.Control
+              as="select"
+              id="programme"
+              onChange={handleChange}
+              style={{ fontSize: '16px' }}
+            >
+              <option value="" disabled selected>Select programme</option>
+              {myProgrammes.map((p,i) => <option key={i} value={p.cod_degree}>{p.title_degree}</option>)}
+            </Form.Control>
+            <Button
+              id="add-programme-btn"
+              onClick={addProgramme}
+              variant="secondary"
+              className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
+              >
+              +
+            </Button>
+          </div>
+          {props.programmes.map((s, i) => (
+            <ListElement key={i} value={s} setter={props.setProgrammes} />
+          ))}
+        </Card.Body>
+      </Card>
+    </Col>
+     
+    
   );
 }
-
+{/* <Col xs={12} md={6}>
+<Form.Label>Co-supervisors</Form.Label>
+<div className="text-plus">
+  <Form.Control
+    id="cosupervisor"
+    type="text"
+    placeholder="New co-supervisor"
+    disabled
+  />
+  <Button
+    id="add-cosupervisor-btn"
+    disabled
+    variant="secondary"
+    className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
+  >
+    +
+  </Button>
+</div>
+</Col> */}
 function KeywordsField(props) {
   let [selected, setSelected] = useState("");
 
@@ -412,29 +467,34 @@ function KeywordsField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Keywords</Form.Label>
-      <div className="text-plus">
-        <Form.Control
-          type="text"
-          placeholder="New keyword"
-          onChange={handleChange}
-          id="keyword"
-          value={selected}
-        />
-        <Button
-          id="add-keyword-btn"
-          onClick={addKeyword}
-          variant="secondary"
-          className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
-        >
-          +
-        </Button>
-      </div>
-      {props.keywords.map((s, i) => (
-        <ListElement key={i} value={s} setter={props.setKeywords} />
-      ))}
-    </Form.Group>
+  <Col>
+    <Card>
+      <Card.Body >
+        <Card.Title style={{ fontSize: '14px'}}>Keywords:</Card.Title>
+        <div className="text-plus">
+          <Form.Control
+            type="text"
+            placeholder="New keyword"
+            onChange={handleChange}
+            id="keyword"
+            value={selected}
+            style={{ fontSize: '16px'}}
+          />
+          <Button
+            id="add-keyword-btn"
+            onClick={addKeyword}
+            variant="secondary"
+            className="mx-1 rounded-circle d-flex justify-content-center align-items-center"
+          >
+            +
+          </Button>
+        </div>
+        {props.keywords.map((s, i) => (
+          <ListElement key={i} value={s} setter={props.setKeywords} />
+        ))}
+      </Card.Body>
+    </Card>
+  </Col>
   );
 }
 
@@ -445,17 +505,22 @@ function ExpirationDateField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Expiration date</Form.Label>
-      <Form.Control
-        required
-        type="date"
-        // min={dayjs().format("YYYY-MM-DD")}
-        min={currentDate} // ! REMOVED THIS AND UNCOMMENT PREVIOUS LINE IN PRODUCTION
-        onChange={handleChange}
-        id="expiration-date"
-      />
-    </Form.Group>
+    <Col >
+    <Card>
+      <Card.Body >
+          <Card.Title style={{ fontSize: '14px'}}>Expiration date:</Card.Title>
+          <Form.Control
+              required
+              type="date"
+              // min={dayjs().format("YYYY-MM-DD")}
+              min={currentDate} // ! REMOVED THIS AND UNCOMMENT PREVIOUS LINE IN PRODUCTION
+              onChange={handleChange}
+              id="expiration-date"
+              style={{ fontSize: '16px' }}
+            />
+      </Card.Body>
+    </Card>
+  </Col>
   );
 }
 
@@ -465,16 +530,23 @@ function TypeField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Type</Form.Label>
-      <Form.Control
-        required
-        id="type"
-        type="text"
-        placeholder="New type"
-        onChange={handleChange}
-      />
-    </Form.Group>
+
+  <Col>
+    <Card>
+      <Card.Body >
+          <Card.Title style={{ fontSize: '14px'}}>Type:</Card.Title>
+          <Form.Control
+            required 
+            id="type"
+            type="text"
+            placeholder="Select a type"
+            onChange={handleChange}
+            style={{ fontSize: '16px'}}
+          />
+      </Card.Body>
+    </Card>
+  </Col>
+
   );
 }
 
@@ -484,17 +556,21 @@ function TitleField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Title</Form.Label>
-      <Form.Control
-        required
-        id="title"
-        type="text"
-        placeholder="New title"
-        onChange={handleChange}
-
-      />
-    </Form.Group>
+    <Col>
+    <Card>
+      <Card.Body >
+          <Card.Title style={{ fontSize: '14px'}}>Title:</Card.Title>
+          <Form.Control
+            required
+            id="title"
+            type="text"
+            placeholder="Enter title"
+            onChange={handleChange}
+            style={{ fontSize: '16px' }}
+          />
+      </Card.Body>
+    </Card>
+  </Col>
   );
 }
 
@@ -504,14 +580,24 @@ function LevelField(props) {
   };
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Level</Form.Label>
-      <Form.Select required onChange={handleChange} id="level">
-        <option value="" disabled selected>Select the level</option>
-        <option value="Bachelor">Bachelor</option>
-        <option value="Master">Master</option>
-      </Form.Select>
-    </Form.Group>
+    <Col >
+      <Card>
+        <Card.Body>
+          <Card.Title style={{ fontSize: '14px' }} >Level:</Card.Title>
+          <Form.Select 
+            required 
+            onChange={handleChange} 
+            id="level" 
+            style={{ fontSize: '16px'}}
+            >
+              <option value="" disabled selected>Select the level</option>
+              <option value="Bachelor">Bachelor</option>
+              <option value="Master">Master</option>
+            </Form.Select>
+        </Card.Body>
+      </Card>
+    </Col>
+
   );
 }
 
@@ -540,13 +626,23 @@ function SupervisorField(props) {
   };*/
 
   return (
-    <Form.Group className="form-field">
-      <Form.Label>Supervisor</Form.Label>
-      <Form.Control required type="text" disabled id="supervisor" value={loggedUser.surname + " " + loggedUser.name} />
-
-    </Form.Group>
+    <Col>
+      <Card>
+        <Card.Body>
+          <Card.Title style={{ fontSize: '14px' }} >Supervisor:</Card.Title>
+          <Form.Control disabled 
+          required 
+          id="supervisor"
+          placeholder={loggedUser.name + ' ' + loggedUser.surname}
+          value={loggedUser.name + ' ' + loggedUser.surname}
+          style={{ fontSize: '16px'}}
+          />
+        </Card.Body>
+      </Card>
+    </Col>
   );
 }
+
 
 function ListElement(props) {
   const removeElement = () => {
