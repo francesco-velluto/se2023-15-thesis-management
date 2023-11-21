@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { LoggedUserContext } from "../api/Context";
+import { LoggedUserContext } from "../context/AuthenticationContext";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 

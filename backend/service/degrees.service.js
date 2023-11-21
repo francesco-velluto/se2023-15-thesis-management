@@ -12,12 +12,9 @@ const Degree = require("../model/Degree");
  */
 exports.getDegrees = async () => {
   try {
-    const degrees = await db.query("SELECT * FROM degree");
-    return degrees.rows.map(
-      (row) => new Degree(row.cod_degree, row.title_degree)
-    );
+    const degrees = await db.query("SELECT cod_degree, title_degree FROM degree");
+    return degrees.rows.map((row) => new Degree(row.cod_degree, row.title_degree));
   } catch (err) {
-    console.log(err);
     throw err;
   }
 };

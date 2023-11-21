@@ -36,3 +36,6 @@ router.post('/', authenticationController.isLoggedIn, applicationsController.ins
 
 
 module.exports = router;
+
+
+

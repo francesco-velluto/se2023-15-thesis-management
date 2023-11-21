@@ -69,7 +69,7 @@ module.exports = {
      * Check if the user is authenticated is done by the middleware isLoggedIn.
      */
     getAllApplicationsByTeacherId: (req, res) => {
-        if (!req.user instanceof Teacher) {
+        if (!(req.user instanceof Teacher)) {
             return res.status(401).json({ errors: ['Must be a teacher to make this request!'] });
         }
 
