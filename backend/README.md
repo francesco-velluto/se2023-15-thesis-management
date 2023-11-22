@@ -12,7 +12,7 @@ This will install all the dependencies and start the server on port 8080.
 
 A configuration file is present in `src/config.json`. 
 Currently it contains the following configuration options:
-- `BACKEND_SERVER_PORT`: Port on which the backend server will run
+- `REACT_APP_BACKEND_SERVER_PORT`: Port on which the backend server will run
 
 ### Starting the server in development mode
 ```bash

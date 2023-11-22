@@ -8,6 +8,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE ${BACKEND_SERVER_PORT}
+EXPOSE ${REACT_APP_BACKEND_SERVER_PORT}
 
 CMD ["node", "index.js"]

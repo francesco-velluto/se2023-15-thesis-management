@@ -5,17 +5,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    image: francescovelluto/se2023-15-thesis-management-backend:latest
     depends_on:
       db:
         condition: service_healthy
     environment:
-      - BACKEND_SERVER_PORT=${BACKEND_SERVER_PORT}
+      - REACT_APP_BACKEND_SERVER_PORT=${REACT_APP_BACKEND_SERVER_PORT}
       - FRONTEND_PORT=${FRONTEND_PORT}
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
     ports:
-      - "${BACKEND_SERVER_PORT}:${BACKEND_SERVER_PORT}"
+      - "${REACT_APP_BACKEND_SERVER_PORT}:${REACT_APP_BACKEND_SERVER_PORT}"
     networks:
       - mynetwork
 
@@ -23,6 +24,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    image: francescovelluto/se2023-15-thesis-management-frontend:latest
     depends_on:
       - backend
     environment:

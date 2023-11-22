@@ -10,8 +10,8 @@ console.info('[BACKEND-SERVER] Connecting to Postgres database at ' + process.en
 db.connect()
     .then(() =>  {
         console.info('[BACKEND-SERVER] Database connection established')
-        app.listen(process.env.BACKEND_SERVER_PORT, () => {
-            console.info('[BACKEND-SERVER] Server started and listening on port ' + process.env.BACKEND_SERVER_PORT);
+        app.listen(process.env.REACT_APP_BACKEND_SERVER_PORT, () => {
+            console.info('[BACKEND-SERVER] Server started and listening on port ' + process.env.REACT_APP_BACKEND_SERVER_PORT);
         });
     })
     .catch(err => {
