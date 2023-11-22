@@ -98,7 +98,7 @@ module.exports = {
      * 
      * 
      * @param {string} proposal_id id of the proposal
-     * @param {string} student_id id of the student that made the application
+     * @param {number} application_id id of the application
      * @param {string} teacher_id id of the teacher
      * @param {string} status new status; must be "Accepted" or "Rejected"
      * 
@@ -107,39 +107,39 @@ module.exports = {
      * @throws {Error} if proposal not found or student not found or 
      */
 
-    setApplicationStatusById: async(proposal_id, student_id, status, teacher_id) => {
-        const query = "UPDATE applications SET status = $1 WHERE proposal_id = $2 AND id = $3 RETURNING *;";
+    setApplicationStatus: async(status, teacher_id, application_id) => {
+        const query = "UPDATE applications SET status = $1 WHERE application_id = $2 RETURNING *;";
 
         try{
 
-            const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1 AND supervisor_id = $2;',
-             [proposal_id, teacher_id]);
-
-            const studentCheck = await db.query('SELECT * FROM student WHERE id = $1;', [student_id]);
-
+            
+            const applicationCheck = await db.query('SELECT * FROM applications WHERE application_id = $1', [application_id]);
             const statusCheck = status == "Accepted" || status == "Rejected";
 
-            if(proposalCheck.rows.length === 0){
-                throw new Error(`Proposal with proposal_id = ${proposal_id} not found or not belonging to this teacher`);
-            }else if(studentCheck.rows.length === 0){
-                throw new Error(`Student with id = ${student_id} not found`)
-            }else if (!statusCheck){
+            if (!statusCheck){
                 throw new Error("Invalid status value.");
+            }else if(applicationCheck.rows.length === 0){
+                throw new Error("This application doesn't exist");
             }else{
 
-                const updatedApplication = await db.query(query, [status, proposal_id, student_id]);
+                const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1;', [applicationCheck.rows[0].proposal_id]);
+                console.log(proposalCheck);
+                if(proposalCheck.rows[0].supervisor_id != teacher_id)
+                    throw new Error("This application doesn't belong to the teacher");
+
+                const updatedApplication = await db.query(query, [status, application_id]);
                 if (updatedApplication.rows.length === 0)
-                    throw new Error(`No application founded for propopsal with proposal_id: ${proposal_id} by student with id: ${student_id}`);
+                    throw new Error(`No application founded with application_id: ${application_id}`);
                 return new Application(
                     updatedApplication.rows[0].proposal_id,
                     updatedApplication.rows[0].id,
                     updatedApplication.rows[0].status,
                     updatedApplication.rows[0].application_date
-                )
+                );
 
             }
         }catch(error){
-            console.error('[BACKEND-SERVER] Error in setApplicationStatusById service: ', error);
+            console.error('[BACKEND-SERVER] Error in setApplicationStatus service: ', error);
             return error;
         }
     },
@@ -168,7 +168,40 @@ module.exports = {
                 return deletedApplications.rowCount
             }
         }catch(error){
-            console.error('[BACKEND-SERVER] Error in setApplicationStatusById service: ', error);
+            console.error('[BACKEND-SERVER] Error in setApplicationStatusCanceledByProposalId service: ', error);
+            return error;
+        }
+    },
+
+    /**
+     * Get the application given its id
+     * 
+     * @param {string} proposal_id
+     * 
+     * @returns {Application}
+     * 
+     * @throws {Error} if application not found
+     */
+
+    getApplicationById: async(application_id) =>{
+        const query = "SELECT * FROM applications where application_id = $1";
+
+        try{
+            const row = await db.query(query, [application_id]);
+            if (row.rows.length === 0){
+                return new Error(`Application with application_id = ${application_id} not found`);
+            }
+            const application = row.rows[0];
+
+            return new Application(
+                application.proposal_id,
+                application.id,
+                application.status,
+                application.application_date
+            );
+
+        }catch(error){
+            console.error('[BACKEND-SERVER] Error in getApplicationById: ', error);
             return error;
         }
     }

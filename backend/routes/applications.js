@@ -39,13 +39,22 @@ router.post('/', authenticationController.isLoggedIn, applicationsController.ins
  * PUT /api/applications
  * 
  * @params none
- * @body {proposal_id: string, student_id: string, status: string}
+ * @body {application_id: string, status: string}
  * 
  * @returns {Application}
  */
 router.put('/', authenticationController.isLoggedIn,
  authenticationController.isTeacher,
  applicationsController.acceptOrRejectApplication);
+
+
+/**
+ * GET /api/applications/application/:application_id
+ * 
+ */
+router.get('/application/:application_id', authenticationController.isLoggedIn,
+    authenticationController.isTeacher,
+    applicationsController.getApplicationById);
 
 
 module.exports = router;

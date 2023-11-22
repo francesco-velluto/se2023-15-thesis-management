@@ -37,13 +37,18 @@ GET http://localhost:8080/api/proposals/P001 HTTP/1.1
 ###
 
 
-## test acceptOrRejectApplication
+## test ceptOrRejectApplication
 PUT http://localhost:8080/api/applications HTTP/1.1
 content-type: application/json
 
 {
-    "proposal_id": "P003",
-    "student_id": "S003",
-    "status": "Accepted"
+    "application_id": "3",
+    "status": "Rejected"
 } 
+###
+
+## test getApplicationByYd
+GET http://localhost:8080/api/applications/application/1 HTTP/1.1
+content-type: application/json
+
 ###

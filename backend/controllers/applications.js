@@ -100,37 +100,68 @@ module.exports = {
     },
 
     acceptOrRejectApplication: async (req, res) => {
-        let status = req.body.status;
-        let proposal_id = req.body.proposal_id;
-        let student_id = req.body.student_id;
-        let teacher_id = req.user.id;
 
-        try {
+        const status = req.body.status;
+        const application_id = req.body.application_id;
+        const teacher_id = req.user.id;
 
-            const applicationModified = await applicationsService.setApplicationStatusById(proposal_id, student_id, status, teacher_id);
-            if (!applicationModified instanceof Application)
-                res.status(400).json({ error: "Error in the parameters" });            
-                //if status === "Accepted" -> al the other applications for the same proposal become "Canceled"
-                //and the proposal become "Archived"
-            if (status === "Accepted"){
-                const canceledApplications = await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id);
-                if (!canceledApplications instanceof Number)
-                    return res.status(400).json({error: "Error in cancelling the proposals not accepted."});
+        /*try {*/
+            if (!(status == "Accepted" || status == "Rejected"))
+                return res.status(400).json({error: "Error in status parameter"});
 
-                const archivedProposal = await proposalsService.setProposalArchived(proposal_id);
-
-                console.log(archivedProposal);
-                if (!(archivedProposal.proposal_id == proposal_id && archivedProposal.status == 'Archived'))
-                    return res.status(400).json({error: "Error in setting the proposal as archived"});
+            if (!status || !application_id){
+                return res.status(400).json({error: "Parameters error!"});
             }
 
-            return res.status(200).json({application: applicationModified});
+            applicationsService.setApplicationStatus(status, teacher_id, application_id)
+            .then((applicationModified)=>{
+                if(applicationModified instanceof Error)
+                    return res.status(400).json({error: applicationModified.message});
 
-        } catch (err) {
-            console.error("[BACKEND-SERVER] Cannot insert set application's status", err)
-            res.status(500).json({ error: "Internal server error" })
+                // if status is Accepted, canceling the other pending applications and archive the proposal
+                if(status==="Accepted"){
+                    const proposal_id = application_modified.thesis_id;
+                    applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id)
+                    .then((canceledApplications) =>{
+                        proposalsService.setProposalArchived(proposal_id)
+                        .then((archivedProposal)=>{
+                            return res.status(200).json({application: applicationModified});
+                        })
+                        .catch((err)=>{
+                            return res.status(500).json({error: "Internal server error"});
+                        })
+                    })
+                    .catch((err)=>{
+                        return res.status(500).json({error: "Internal server error"});
+                    })
+                }
+                return res.status(200).json({application: applicationModified});
+            })
+            .catch((error) =>{
+                return res.status(500).json({error: "Internal server error"});
+            })
+            
+            
+          
+
+    },
+
+    getApplicationById: async (req, res) => {
+        const application_id = req.params.application_id;
+
+        try {
+            const application = await applicationsService.getApplicationById(application_id);
+
+            if (application instanceof Error) {
+                return res.status(404).json({ error: "Application not found" });
+            }
+
+            return res.status(200).json({ application });
+        }catch(err){
+            console.error("[BACKEND-SERVER] Cannot get the application", err);
+            res.status(500).json({error: "Internal server error"});
+
         }
-
-
+    
     }
 }
