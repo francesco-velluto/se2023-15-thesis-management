@@ -123,7 +123,6 @@ function ProposalDetailsPage({ mode }) {
         const newProposal = {
             title: title,
             level: level,
-            supervisor_id: loggedUser.id,
             keywords: keywords,
             type: type,
             groups: groups,
@@ -131,7 +130,7 @@ function ProposalDetailsPage({ mode }) {
             required_knowledge: knowledge,
             notes: notes,
             expiration_date: expDate,
-            programmes: programmes,
+            programmes: programmes
         };
 
         try {

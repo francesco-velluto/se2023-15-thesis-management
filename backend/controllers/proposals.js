@@ -89,7 +89,7 @@ module.exports = {
     try {
       const maxIdNum = await proposalsService.getMaxProposalIdNumber();
       const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);
-      const proposal = await proposalsService.insertProposal({
+      const proposal = await proposalsService.insertProposal(req.user.id, {
         proposal_id: newId,
         ...req.body,
       });
