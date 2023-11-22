@@ -20,7 +20,7 @@ function ApplicationDetails() {
     const [infoStudent, setInfoStudent] = useState({});
     const [infoApplication, setInfoApplication] = useState({});
 
-    useEffect(async () => {
+    /*useEffect(async () => {
         try {
             const application = await getApplicationById(application_id);
             setInfoApplication(application);
@@ -31,7 +31,7 @@ function ApplicationDetails() {
             setErrorMessage(error);
             setIsLoading(false);
         }
-    }, [])
+    }, [])*/
 
 
     return (
