@@ -1,5 +1,5 @@
 
-## test login
+## test login student
 POST http://localhost:8080/api/authentication/login HTTP/1.1
 content-type: application/json
 
