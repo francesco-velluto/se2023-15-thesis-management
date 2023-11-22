@@ -11,11 +11,16 @@ module.exports = {
             db.query('SELECT * FROM student WHERE id = $1;', [student_id])
                 .then((rows) => {
                     if (rows.count == 0) {
-                        console.error('[BACKEND-SERVER] Error in getAllApplicationsByStudentId Student with id ' + student_id + ' not found in table student');
+                        console.error('[BACKEND-SERVER] Error in getAllApplicationsByStudentId Student with id ' + 
+                            student_id + ' not found in table student');
                         reject({ status: 404, data: 'Student not found' });
                     }
 
-                    return db.query('SELECT p.proposal_id, p.title, p.description, a.application_date, a.status FROM applications a JOIN proposals p ON a.proposal_id = p.proposal_id WHERE a.id = $1;', [student_id]);
+                    return db.query('SELECT p.proposal_id, p.title, p.description, \
+                        a.application_date, a.status \
+                        FROM applications a \
+                        JOIN proposals p ON a.proposal_id = p.proposal_id \
+                        WHERE a.id = $1;', [student_id]);
                 })
                 .then((rows) => {
                     resolve({ status: 200, data: rows.rows });
@@ -31,31 +36,86 @@ module.exports = {
      * Retrieve all applications for thesis proposals supervised by a teacher
      *
      * @param {number} id - The id of the teacher making the request.
-     * @returns {Promise<{status: number, data: {proposal_id: number, title: string, type: string, description: string, expiration_date: Date, level: string, applications: {application_id: number, status: string, application_date: Date, student_id: number, surname: string, name: string, email: string, enrollment_year: number, cod_degree: string}[]}}>} - A promise that resolves to an object containing the HTTP status code and the retrieved data.
+     * @returns {Promise<
+     * {
+     *  status: number,
+     *  data: {
+     *      proposal_id: number,
+     *      title: string,
+     *      type: string,
+     *      description: string,
+     *      expiration_date: Date,
+     *      level: string,
+     *      applications: {
+     *          application_id: number,
+     *          status: string,
+     *          application_date: Date,
+     *          student_id: number,
+     *          surname: string,
+     *          name: string,
+     *          email: string,
+     *          enrollment_year: number,
+     *          cod_degree: string
+     *      }[]
+     *  }
+     * }>} - A promise that resolves to an object containing the HTTP status code and the retrieved data.
      * @throws {Promise<{status: number, data: string}>} - A promise that rejects with an object containing the HTTP status code and an error message.
      */
     getAllApplicationsByTeacherId: async (id) => {
         return new Promise(async (resolve, reject) => {
             try {
                 const rows = await db.query(
-                    "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, a.application_id, a.status as application_status, a.application_date, s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
-                    "FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.id " +
-                    "WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'", [id]);
+                    "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, \
+                        a.application_id, a.status as application_status, a.application_date, \
+                        s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree \
+                    FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.id \
+                    WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'",
+                    [id]);
 
                 if (rows.rows == 0) {
                     resolve({ status: 200, data: [] });
                 }
-
-                let applications = rows.rows.reduce((proposals, element) => {
+                
+                // each application is pushed into an array of applications related to the same thesis proposal
+                /* let applications = rows.rows.reduce((proposals, element) => {
                     const id = element.proposal_id;
                     if (!proposals[id]) {
                         proposals[id] = [];
                     }
                     proposals[id].push(element);
                     return proposals;
+                }, {}); */
+                let applications = rows.rows.reduce((proposals, applicationRow) => {
+                    const id = applicationRow.proposal_id;
+                    if (!proposals[id]) {
+                        proposals[id] = {
+                            proposal_id: id,
+                            title: applicationRow.title,
+                            type: applicationRow.type,
+                            description: applicationRow.description,
+                            expiration_date: applicationRow.expiration_date,
+                            level: applicationRow.level,
+                            applications: []
+                        }
+                    }
+
+                    const application = {
+                        application_id: applicationRow.application_id,
+                        status: applicationRow.application_status,
+                        application_date: applicationRow.application_date,
+                        student_id: applicationRow.student_id,
+                        surname: applicationRow.surname,
+                        name: applicationRow.name,
+                        email: applicationRow.email,
+                        enrollment_year: applicationRow.enrollment_year,
+                        cod_degree: applicationRow.cod_degree,
+                    }
+                    
+                    proposals[id].applications.push(application);
+                    return proposals;
                 }, {});
 
-                resolve({ status: 200, data: applications });
+                resolve({ status: 200, data: Object.values(applications) });
             } catch (err) {
                 console.error('[BACKEND-SERVER] Error in getAllApplicationsByTeacherId', err);
                 reject({ status: 500, data: 'Internal server error' });

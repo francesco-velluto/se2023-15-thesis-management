@@ -1,5 +1,5 @@
 
-## test login student
+## test login
 POST http://localhost:8080/api/authentication/login HTTP/1.1
 content-type: application/json
 
@@ -37,7 +37,7 @@ GET http://localhost:8080/api/proposals/P001 HTTP/1.1
 ###
 
 
-## test ceptOrRejectApplication
+## test acceptOrRejectApplication
 PUT http://localhost:8080/api/applications HTTP/1.1
 content-type: application/json
 
@@ -47,8 +47,11 @@ content-type: application/json
 } 
 ###
 
-## test getApplicationByYd
+## test getApplicationById
 GET http://localhost:8080/api/applications/application/1 HTTP/1.1
 content-type: application/json
+###
 
+## test getAllApplicationsByTeacher
+GET http://localhost:8080/api/applications HTTP/1.1
 ###
