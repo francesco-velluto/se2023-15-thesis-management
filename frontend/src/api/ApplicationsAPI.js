@@ -54,6 +54,19 @@ module.exports = {
         }
     },
 
+    /**
+     * Set the status of an application relative to a proposal of the teacher.
+     * The status can only be "Accepted" or "Rejected".
+     * If the application is accepted, by default the other applications to the same proposal are set with status "Canceled"
+     * and the relative proposal is archived.
+     * Returns the application modified
+     * 
+     * @param {string} applicationStatus 
+     * @param {number} application_id 
+     * 
+     * @returns {Application}
+     */
+
     acceptOrRejectApplication: async (applicationStatus, application_id) => {
         const putData = {
             application_id: `${application_id}`,
@@ -79,6 +92,13 @@ module.exports = {
             throw new Error(err);
         }
     },
+
+    /**
+     * Get the application given its id.
+     * 
+     * @param {number} application_id 
+     * @returns {Application}
+     */
 
     getApplicationById: async(application_id) =>{
         try{

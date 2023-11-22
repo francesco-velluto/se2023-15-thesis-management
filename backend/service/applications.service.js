@@ -146,7 +146,8 @@ module.exports = {
     /**
      * Set the status of the applications of a certain proposal identified by its id as Canceled if they are Pending
      * 
-     * @param {*} proposal_id 
+     * @param {string} proposal_id 
+     * @param {string} teacher_id
      * 
      * @returns {number} Number of proposals modified
      * 

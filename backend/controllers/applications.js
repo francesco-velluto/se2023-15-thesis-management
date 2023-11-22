@@ -99,6 +99,16 @@ module.exports = {
 
     },
 
+
+    /**
+     * Accept/Reject an application
+     * 
+     * @params none
+     * 
+     * @body {application_id: string, status: string}
+     * 
+     * @returns {Application} the application with the status modified
+     */
     acceptOrRejectApplication: async (req, res) => {
 
         const status = req.body.status;
@@ -146,6 +156,15 @@ module.exports = {
 
     },
 
+    /**
+     * Get the application given its id
+     * 
+     * @param {application_id} number id of the application 
+     * 
+     * @body none
+     * 
+     * @returns {Application} the application
+     */
     getApplicationById: async (req, res) => {
         const application_id = req.params.application_id;
 
