@@ -4,8 +4,8 @@ POST http://localhost:8080/api/authentication/login HTTP/1.1
 content-type: application/json
 
 {
-    "username": "david.lee@example.com",
-    "password": "S003"
+    "username": "michael.wilson@example.com",
+    "password": "T002"
 }
 ###
 
@@ -24,3 +24,8 @@ GET http://localhost:8080/api/teachers HTTP/1.1
 
 ## test getProposalById
 GET http://localhost:8080/api/proposals/P001 HTTP/1.1
+###
+
+
+## test getAllApplicationsByTeacher
+GET http://localhost:8080/api/applications HTTP/1.1

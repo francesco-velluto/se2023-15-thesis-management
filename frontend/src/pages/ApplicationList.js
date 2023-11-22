@@ -52,18 +52,18 @@ function ApplicationList() {
                     ) : (
                         <>
                             <Accordion alwaysOpen>
-                                {applications && Object.keys(applications).length > 0 &&
-                                    Object.keys(applications).map((key, index) => (
+                                {applications && applications.length > 0 &&
+                                    applications.map((proposal, index) => (
                                         <Accordion.Item key={index} eventKey={index.toString()}>
-                                            <Accordion.Header>{applications[key][0].title}</Accordion.Header>
+                                            <Accordion.Header>{proposal.title}</Accordion.Header>
                                             <Accordion.Body>
-                                                {applications[key].map((proposal, index) => (
+                                                {proposal.applications.map((application, index) => (
                                                     <Card key={index} className='my-3'>
                                                         <Card.Body>
                                                             <strong>
-                                                                {proposal.name} {proposal.surname}
+                                                                {application.name} {application.surname}
                                                             </strong>
-                                                            {' '} has applied for this thesis on {formattedDate(proposal.application_date)}
+                                                            {' '} has applied for this thesis on {formattedDate(application.application_date)}
                                                         </Card.Body>
                                                     </Card>
                                                 ))}
