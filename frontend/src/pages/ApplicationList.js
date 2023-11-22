@@ -70,7 +70,7 @@ function ApplicationList() {
                                                                     {' '} has applied for this thesis on {formattedDate(application.application_date)}
                                                                 </Col>
                                                                 <Col className="text-end">
-                                                                    <Button variant="secondary" className='text-end' onClick={()=>navigate(`/applications/${application.application_id}`)}>Show details</Button>
+                                                                    <Button variant="outline-secondary" className='text-end' onClick={()=>navigate(`/applications/${application.application_id}`)}>Show details</Button>
                                                                 </Col>
                                                             </Row>
 
