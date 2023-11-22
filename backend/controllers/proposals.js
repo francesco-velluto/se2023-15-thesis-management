@@ -69,7 +69,6 @@ module.exports = {
    * @params none
    * @body { 
    *  title : string,
-   *  supervisor_id : string,
    *  keywords : string[],
    *  type : string,
    *  groups : string[],
@@ -89,9 +88,10 @@ module.exports = {
     try {
       const maxIdNum = await proposalsService.getMaxProposalIdNumber();
       const newId = "P" + (maxIdNum + 1).toString().padStart(3, 0);
-      const proposal = await proposalsService.insertProposal(req.user.id, {
-        proposal_id: newId,
+      const proposal = await proposalsService.insertProposal({
         ...req.body,
+        proposal_id: newId,
+        supervisor_id: req.user.id
       });
       res.status(201).json({ proposal });
     } catch (err) {

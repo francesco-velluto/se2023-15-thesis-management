@@ -93,7 +93,6 @@ POST `/api/authentication/login`
   | Field name | Type | Required* | Description |
   | ----------- | ----------- | ----------- | ----------- |
   | `title` | _string_ | Yes | Title of the proposal |
-  | `supervisor_id` | _string_ | Yes | Identifier of the supervisor of the proposal |
   | `keywords` | _string[]_ | Yes | Keywords related to the proposal |
   | `type` | _string_ | Yes | Type of thesis (e.g. research, experimental...) |
   | `groups` | _string[]_ | Yes | List of research groups related to the thesis proposal |
@@ -107,8 +106,9 @@ POST `/api/authentication/login`
   \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
 
 - `SUCCESS 201` Response Body:
-  - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal.\
+  - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal and the supervisor_id field which represents the id of the teacher supervisor of the thesis.\
     - `id` | string: ID of the proposal
+    - `supervisor_id` | string: ID of the teacher supervisor
     - ...
 
 - Errors:
