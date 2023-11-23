@@ -618,7 +618,6 @@ function ProposalDetailsPage({ mode }) {
                                         }}>Back to Homepage</Button>
                                     }
                                     </Col>
-                                )}
                                 {mode !== 0 && (
                                     <Col>
                                         <Button style={{backgroundColor:"#6D5D6E", borderColor:"#6D5D6E"}}  onClick={() => {
