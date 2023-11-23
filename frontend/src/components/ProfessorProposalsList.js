@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Alert, Col, Container, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Row } from "react-bootstrap";
 import { getAllProfessorProposals, getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
@@ -10,6 +10,8 @@ function ProfessorProposalsList(props) {
     const [proposals, setProposals] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const navigate = useNavigate();
 
     const { currentDate } = useContext(VirtualClockContext);
     /**
@@ -117,8 +119,11 @@ function ProfessorProposalsList(props) {
                 <ProposalRow key={index} data={fp}/>
             )) : 
             <Row>
-                <Col className="d-flex flex-row justify-content-center">
-                    There are no available thesis proposals
+                <Col xs={12} className="d-flex flex-row justify-content-center">
+                    You didn't create any proposal yet
+                </Col>
+                <Col xs={12} className="d-flex flex-row justify-content-center mt-4">
+                    <Button variant="primary" onClick={() => {navigate('/proposals/new')}}>Create a new proposal</Button>
                 </Col>
             </Row>
         }  
