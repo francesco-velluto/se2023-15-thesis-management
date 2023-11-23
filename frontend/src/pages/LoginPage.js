@@ -18,7 +18,7 @@ function LoginPage() {
   };
 
   return (
-    <Container fluid className="login-page">
+    <Container  style={{backgroundColor:"#F4EEE0"}}fluid className="login-page">
       <Col /* xs={12} md={6} lg={4} */ className="login-section">
         <Form>
           <Row>
@@ -86,7 +86,7 @@ function LoginPage() {
           <Row className="mt-4 d-flex justify-content-center">
             <Col xs={6}>
               <Button
-                variant="primary"
+                style={{backgroundColor:"#6D5D6E", borderColor:"#6D5D6E"}}
                 type="submit"
                 className="w-100"
                 disabled={disableButtonSubmit}
