@@ -122,7 +122,7 @@ function ProfessorProposalsList(props) {
                 <Col xs={12} className="d-flex flex-row justify-content-center">
                     You didn't create any proposal yet
                 </Col>
-                <Col xs={12} className="d-flex flex-row justify-content-center mt-4">
+                <Col xs={12} className="d-flex flex-row justify-content-center my-4">
                     <Button variant="primary" onClick={() => {navigate('/proposals/new')}}>Create a new proposal</Button>
                 </Col>
             </Row>
