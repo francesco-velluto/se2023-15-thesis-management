@@ -95,6 +95,38 @@ exports.getAllProposals = async (cod_degree) => {
     })
 }
 
+exports.getAllProfessorProposals = async (prof_id) => {
+  return new Promise((resolve, reject) => {
+      db.query( "SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
+                "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
+                "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
+
+                "FROM proposals p " +
+                "JOIN teacher t ON p.supervisor_id = t.id " +
+                "JOIN unnest(p.programmes) AS prog ON true " +
+                "JOIN degree d ON prog = d.cod_degree " +
+
+                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date " +
+
+                "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
+                "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
+
+                "ORDER BY p.proposal_id", [prof_id])
+          .then((rows) => {
+              if (rows.lenght == 0) {
+                  console.error('[BACKEND-SERVER] Error in getAllProposals');
+                  reject({ status: 404, data: 'proposals not found' });
+              }
+
+              resolve({ status: 200, data: rows.rows });
+
+          }).catch((err) => {
+          console.error('[BACKEND-SERVER] Error in getAllProposals', err);
+          reject({ status: 500, data: 'Internal server error' });
+      });
+  })
+}
+
 exports.getProposalById = (proposal_id) => {
     return new Promise((resolve, reject) => {
         db.query('SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1', [proposal_id])

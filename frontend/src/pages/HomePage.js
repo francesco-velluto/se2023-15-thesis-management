@@ -172,6 +172,9 @@ function HomePage() {
                   )*/}
                   {loggedUser.role === 0 && (
                     <Col>
+                      <Button className="w-100 my-3" as={Link} to="/proposals">
+                        My Thesis Proposals
+                      </Button>
                       <Button className="w-100 my-3" as={Link} to="/proposals/new">
                         Add a New Proposal
                       </Button>

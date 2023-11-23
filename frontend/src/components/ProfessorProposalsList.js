@@ -1,14 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Alert, Col, Container, Row } from "react-bootstrap";
-import { getAllProposals } from "../api/ProposalsAPI";
+import { getAllProfessorProposals, getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
 import { VirtualClockContext } from './VirtualClockContext';
 
-function ProposalsList(props) {
+function ProfessorProposalsList(props) {
 
     const [proposals, setProposals] = useState([]);
-    const [filteredProposals, setFilteredProposals] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -21,12 +20,12 @@ function ProposalsList(props) {
      * set by the virtual clock.
      * 
      * ! If the virtual clock in on:
-     * !    every time you call the setFilteredProposals, you should call this
+     * !    every time you call the setProposals, you should call this
      * !    function right after that, so you apply an extra filter on the already filtered proposals.
      */
     const filterByVirtualClockDate = () => {
-        setFilteredProposals((oldFiltered) => {
-            return oldFiltered.filter((p) => p.expiration_date > currentDate);
+        setProposals((old) => {
+            return old.filter((p) => p.expiration_date > currentDate);
         });
     }
 
@@ -35,7 +34,7 @@ function ProposalsList(props) {
 
             setIsLoading(true);
 
-            getAllProposals().then(async res => {
+            getAllProfessorProposals().then(async res => {
                 if(!res.ok){
                     setErrorMessage(res.statusText);
                     setIsLoading(false);
@@ -45,7 +44,6 @@ function ProposalsList(props) {
 
                 
                 setProposals(db_proposals);
-                setFilteredProposals(db_proposals);
                 filterByVirtualClockDate(db_proposals); // ! REMOVE IT IN PRODUCTION
                 setIsLoading(false);
             }).catch((err) => {
@@ -64,43 +62,6 @@ function ProposalsList(props) {
     }, [])
 
 
-    useEffect(() => {
-
-        setFilteredProposals(() => {
-            let result = [...proposals];
-            for(const fltr of props.searchData){
-
-                if(['title',
-                'type',
-                'description',
-                'required_knowledge',
-                'notes',
-                'level'].includes(fltr.field)){
-                    
-                    result = result.filter((elem) => ((elem[fltr.field]).toLowerCase().includes(fltr.value.toLowerCase())));
-                   
-                }
-
-                if(fltr.field === 'supervisor'){
-                    result = result.filter((elem) => ((elem.supervisor_surname + " " + elem.supervisor_name).toLowerCase().includes(fltr.value.toLowerCase())))
-                }
-
-                if(['keywords', 'groups', 'degrees'].includes(fltr.field)){
-                    result = result.filter((elem) => ((elem[fltr.field]).map((s) => (s.toLowerCase())).some((str) => (str.includes(fltr.value.toLowerCase())))))
-                }
-
-                if(fltr.field === 'expiration_date'){
-                    result = result.filter((elem) => {return isSameDay(parseISO(elem.expiration_date), parse(fltr.value, 'yyyy-MM-dd', new Date()))})
-
-                }
-
-                
-            }
-            return result;
-        });
-        filterByVirtualClockDate(filteredProposals); // ! REMOVE IT IN PRODUCTION
-
-    }, [props.searchData.length, currentDate])
     
 
     return (
@@ -115,7 +76,7 @@ function ProposalsList(props) {
             </Row>
         }
         {
-            !errorMessage && filteredProposals.length > 0 && <>
+            !errorMessage && proposals.length > 0 && <>
             
             <Row className='mt-1 mb-4 mx-2 p-2' >
                 <Col xs={12} md={3} className="text-center text-md-start">
@@ -125,10 +86,11 @@ function ProposalsList(props) {
                     <strong>Title</strong>
                 </Col>
                 <Col xs={12} md={3} className="text-center text-md-start">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
-                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-            </svg>
-                    <strong>Supervisor</strong>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-mortarboard-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
+                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
+                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z"/>
+                    </svg>
+                    <strong>Level</strong>
                 </Col>
                 <Col xs={12} md={2} className="text-center text-md-start">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-tag-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
@@ -150,8 +112,8 @@ function ProposalsList(props) {
             </>
         }
 
-        {   !errorMessage && filteredProposals.length > 0 ? 
-            filteredProposals.map((fp, index) => (
+        {   !errorMessage && proposals.length > 0 ? 
+            proposals.map((fp, index) => (
                 <ProposalRow key={index} data={fp}/>
             )) : 
             <Row>
@@ -189,10 +151,11 @@ function ProposalRow(props){
             <span className="font-weight-bold font-weight-sm-normal">{props.data.title}</span>
         </Col>
         <Col xs={12} md={3} className="text-center text-md-start">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-person-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
-                <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-            </svg>
-            {props.data.supervisor_surname + " " + props.data.supervisor_name}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-mortarboard-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
+                        <path d="M8.211 2.047a.5.5 0 0 0-.422 0l-7.5 3.5a.5.5 0 0 0 .025.917l7.5 3a.5.5 0 0 0 .372 0L14 7.14V13a1 1 0 0 0-1 1v2h3v-2a1 1 0 0 0-1-1V6.739l.686-.275a.5.5 0 0 0 .025-.917l-7.5-3.5Z"/>
+                        <path d="M4.176 9.032a.5.5 0 0 0-.656.327l-.5 1.7a.5.5 0 0 0 .294.605l4.5 1.8a.5.5 0 0 0 .372 0l4.5-1.8a.5.5 0 0 0 .294-.605l-.5-1.7a.5.5 0 0 0-.656-.327L8 10.466z"/>
+                    </svg>
+            {props.data.level}
         </Col>
         <Col xs={12} md={2} className="text-center text-md-start">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-tag-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
@@ -220,4 +183,4 @@ function ProposalRow(props){
 
 }
 
-export default ProposalsList;
+export default ProfessorProposalsList;

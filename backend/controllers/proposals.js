@@ -98,7 +98,34 @@ module.exports = {
       console.error("[BACKEND-SERVER] Cannot insert new proposal", err);
       res.status(500).json({ error: "Internal server error has occurred" });
     }
-  }
+  },
+
+  /**
+     * Get all active proposals by a professor
+     *
+     * @params none
+     * @body none
+     * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_id: string, ... } ] }
+     * @error 401 Unauthorized - if the user isn't a Student
+     * @error 500 Internal Server Error - if something went wrong
+     */
+  getAllProfessorProposals: async (req, res) => {
+    /** ALREADY CHECKED IN AUTHENTICATION CONTROLLER with isTeacher
+   if (!req.user instanceof Teacher) {
+        return res.status(401).json({ errors: ['Must be a teacher to make this request!'] });
+   }**/
+
+    proposalsService.getAllProfessorProposals(req.user.id)
+        .then((result) => {
+            
+            res.status(result.status).json({proposals: result.data});
+            
+        })
+        .catch((err) => {
+            res.status(err.status).json({ error: err.data });
+        });
+
+}
 };
   
   
