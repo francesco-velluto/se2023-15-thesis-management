@@ -57,7 +57,7 @@ function Main() {
 
 function PageLayout() {
     return (
-        <Row className="page-content w-100 m-0">
+        <Row style={{backgroundColor:"#F4EEE0"}} className="page-content w-100 m-0">
             <Outlet />
         </Row>
     );
@@ -68,7 +68,7 @@ function PageLayout() {
  */
 function UnAuthorizationPage() {
     return (
-        <Container className="text-center" style={{ paddingTop: '5rem' }}>
+        <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -95,7 +95,7 @@ function UnAuthorizationPage() {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center" style={{ paddingTop: '5rem' }}>
+        <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">

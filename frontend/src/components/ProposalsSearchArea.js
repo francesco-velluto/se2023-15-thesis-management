@@ -225,7 +225,7 @@ function ProposalsSearchArea(props) {
 
     return (
         isLoading ?
-            <Container>
+            <Container >
                 <Row className="justify-content-md-center">
                     <Col md="auto">
                         <div className="spinner-border" role="status">
