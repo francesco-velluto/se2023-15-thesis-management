@@ -55,6 +55,8 @@ module.exports = {
     },
 
     /**
+     * PUT /api/applications/:id
+     * 
      * Set the status of an application relative to a proposal of the teacher.
      * The status can only be "Accepted" or "Rejected".
      * If the application is accepted, by default the other applications to the same proposal are set with status "Canceled"
@@ -93,6 +95,8 @@ module.exports = {
     },
 
     /**
+     * GET api/applications/application/:application_id
+     * 
      * Get the application given its id.
      * 
      * @param {number} application_id 

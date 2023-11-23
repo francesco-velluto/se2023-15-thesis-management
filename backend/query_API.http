@@ -54,3 +54,7 @@ content-type: application/json
 ## test getAllApplicationsByTeacher
 GET http://localhost:8080/api/applications HTTP/1.1
 ###
+
+## test getStudentById
+GET http://localhost:8080/api/students/S023
+###
