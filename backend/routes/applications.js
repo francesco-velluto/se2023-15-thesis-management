@@ -38,12 +38,12 @@ router.post('/', authenticationController.isLoggedIn, applicationsController.ins
 /**
  * PUT /api/applications
  * 
- * @params none
- * @body {application_id: string, status: string}
+ * @params application_id
+ * @body {status: string}
  * 
  * @returns {Application}
  */
-router.put('/', authenticationController.isLoggedIn,
+router.put('/:application_id', authenticationController.isLoggedIn,
  authenticationController.isTeacher,
  applicationsController.acceptOrRejectApplication);
 

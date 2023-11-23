@@ -62,27 +62,26 @@ module.exports = {
      * Returns the application modified
      * 
      * @param {string} applicationStatus 
-     * @param {number} application_id 
      * 
      * @returns {Application}
      */
 
     acceptOrRejectApplication: async (applicationStatus, application_id) => {
         const putData = {
-            application_id: `${application_id}`,
             status: `${applicationStatus}`
         }
 
         try {
-            const response = await fetch(ApplicationsAPIURL, {
+            const response = await fetch(ApplicationsAPIURL + `/${application_id}`, {
                 method: 'PUT',
                 body: JSON.stringify(putData),
-                headers: { 'Content-Type': 'application/json' },
+                headers: APIConfig.API_REQUEST_HEADERS,
                 credentials: "include"
             });
 
             if (response.ok) {
                 const resObject = await response.json();
+                console.log(resObject);
                 return resObject.application;
             } else {
                 const res = await response.json();

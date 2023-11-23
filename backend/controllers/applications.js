@@ -112,47 +112,45 @@ module.exports = {
     acceptOrRejectApplication: async (req, res) => {
 
         const status = req.body.status;
-        const application_id = req.body.application_id;
+        const application_id = req.params.application_id;
         const teacher_id = req.user.id;
 
+
         /*try {*/
-            if (!(status == "Accepted" || status == "Rejected"))
-                return res.status(400).json({error: "Error in status parameter"});
+        if (!(status == "Accepted" || status == "Rejected"))
+            return res.status(400).json({ error: "Error in status parameter" });
 
-            if (!status || !application_id){
-                return res.status(400).json({error: "Parameters error!"});
-            }
+        if (!status || !application_id) {
+            return res.status(400).json({ error: "Parameters error!" });
+        }
 
-            applicationsService.setApplicationStatus(status, teacher_id, application_id)
-            .then((applicationModified)=>{
-                if(applicationModified instanceof Error)
-                    return res.status(400).json({error: applicationModified.message});
+        applicationsService.setApplicationStatus(status, teacher_id, application_id)
+            .then((applicationModified) => {
+                if (applicationModified instanceof Error)
+                    return res.status(400).json({ error: applicationModified.message });
 
                 // if status is Accepted, canceling the other pending applications and archive the proposal
-                if(status==="Accepted"){
-                    const proposal_id = application_modified.thesis_id;
+                if (status === "Accepted") {
+                    const proposal_id = applicationModified.thesis_id;
                     applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id)
-                    .then((canceledApplications) =>{
-                        proposalsService.setProposalArchived(proposal_id)
-                        .then((archivedProposal)=>{
-                            return res.status(200).json({application: applicationModified});
+                        .then((canceledApplications) => {
+                            proposalsService.setProposalArchived(proposal_id)
+                                .then((archivedProposal) => {
+                                    return res.status(200).json({ application: applicationModified });
+                                });
+
                         })
-                        .catch((err)=>{
-                            return res.status(500).json({error: "Internal server error"});
-                        })
-                    })
-                    .catch((err)=>{
-                        return res.status(500).json({error: "Internal server error"});
-                    })
+                }else{
+                    return res.status(200).json({ application: applicationModified });
                 }
-                return res.status(200).json({application: applicationModified});
+                
             })
-            .catch((error) =>{
-                return res.status(500).json({error: "Internal server error"});
+            .catch((error) => {
+                return res.status(500).json({ error: "Internal server error" });
             })
-            
-            
-          
+
+
+
 
     },
 
@@ -176,11 +174,11 @@ module.exports = {
             }
 
             return res.status(200).json({ application });
-        }catch(err){
+        } catch (err) {
             console.error("[BACKEND-SERVER] Cannot get the application", err);
-            res.status(500).json({error: "Internal server error"});
+            return res.status(500).json({ error: "Internal server error" });
 
         }
-    
+
     }
 }

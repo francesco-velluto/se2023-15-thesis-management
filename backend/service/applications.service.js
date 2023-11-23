@@ -157,7 +157,6 @@ module.exports = {
     /**
      * 
      * 
-     * @param {string} proposal_id id of the proposal
      * @param {number} application_id id of the application
      * @param {string} teacher_id id of the teacher
      * @param {string} status new status; must be "Accepted" or "Rejected"
@@ -183,7 +182,7 @@ module.exports = {
             }else{
 
                 const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1;', [applicationCheck.rows[0].proposal_id]);
-                console.log(proposalCheck);
+                
                 if(proposalCheck.rows[0].supervisor_id != teacher_id)
                     throw new Error("This application doesn't belong to the teacher");
 

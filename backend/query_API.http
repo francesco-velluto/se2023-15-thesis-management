@@ -38,12 +38,11 @@ GET http://localhost:8080/api/proposals/P001 HTTP/1.1
 
 
 ## test acceptOrRejectApplication
-PUT http://localhost:8080/api/applications HTTP/1.1
+PUT http://localhost:8080/api/applications/3 HTTP/1.1
 content-type: application/json
 
 {
-    "application_id": "3",
-    "status": "Rejected"
+    "status": "Accepted"
 } 
 ###
 
