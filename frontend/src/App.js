@@ -1,7 +1,7 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import ProposalsPage from "./pages/ProposalsPage";
+
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import ApplicationDetails from "./pages/ApplicationDetailsPage";
 
@@ -14,6 +14,8 @@ import { VirtualClockProvider } from "./components/VirtualClockContext";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/index.css";
+import StudentProposalsPage from "./pages/StudentProposalsPage";
+import ProfessorProposalsPage from "./pages/ProfessorProposalsPage";
 
 function App() {
     return (
@@ -48,8 +50,8 @@ function Main() {
                     <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
-                    <Route index element={loggedUser && loggedUser.role === 1 ? <ProposalsPage /> : <UnAuthorizationPage />} />
-                    <Route path=":proposal_id" element={loggedUser && loggedUser.role === 1 ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
+                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage/>} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>

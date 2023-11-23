@@ -49,6 +49,20 @@ const isArrayOfStrings = (array) => {
 router.get("/", authenticationController.isLoggedIn, authenticationController.isStudent, proposalsController.getAllProposals);
 
 /**
+ * GET /api/proposals/professor/
+ *
+ * @params none
+ * @body none
+ * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string, 
+*                              supervisor_surname: string, ... } ] }
+* @error 401 Unauthorized - if the user is not logged in
+* @error 500 Internal Server Error - if something went wrong
+*
+* @see proposalsController.getAllProfessorProposals
+*/
+router.get("/professor", authenticationController.isLoggedIn, authenticationController.isTeacher, proposalsController.getAllProfessorProposals);
+
+/**
  * POST /api/proposals
  *
  * @params none
@@ -103,5 +117,7 @@ router.post(
  * @error 500 Internal Server Error - if something went wrong
  */
 router.get('/:proposal_id', authenticationController.isLoggedIn, proposalsController.getProposalById);
+
+
 
 module.exports = router;

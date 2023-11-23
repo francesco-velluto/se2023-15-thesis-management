@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
 import { VirtualClockContext } from './VirtualClockContext';
 
-function ProposalsList(props) {
+function StudentProposalsList(props) {
 
     const [proposals, setProposals] = useState([]);
     const [filteredProposals, setFilteredProposals] = useState([]);
@@ -220,4 +220,4 @@ function ProposalRow(props){
 
 }
 
-export default ProposalsList;
+export default StudentProposalsList;

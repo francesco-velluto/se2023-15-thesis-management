@@ -605,10 +605,16 @@ function ProposalDetailsPage({ mode }) {
                                 </Row>
 
                                 <Row>
-                                    <Col>
-                                        <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
+                                    <Col>{
+                                        mode === 0 && <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
                                             navigate('/proposals')
-                                        }}>Back to Search Proposal</Button>
+                                        }}>{loggedUser.role === 1 ? "Back to Search Proposal" : "Back to Browse Proposals"}</Button>
+                                    }
+                                    {
+                                        mode !== 0 && <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
+                                            navigate('/')
+                                        }}>Back to Homepage</Button>
+                                    }
                                     </Col>
                                     <Col className={"d-flex flex-row-revers"}>
                                         {mode === 0 && <ApplicationButton proposalID={proposal_id} />}
