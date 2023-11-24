@@ -46,7 +46,7 @@ function ProfessorProposalsList(props) {
 
                 
                 setProposals(db_proposals);
-                filterByVirtualClockDate(db_proposals); // ! REMOVE IT IN PRODUCTION
+                filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
                 setIsLoading(false);
             }).catch((err) => {
                 setErrorMessage(err.message);
