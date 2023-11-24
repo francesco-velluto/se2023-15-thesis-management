@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 import {Form, Button, Col, Row, Alert, Container} from 'react-bootstrap';
 import {getAllProposals} from "../api/ProposalsAPI";
 import {Typeahead} from 'react-bootstrap-typeahead';
-import {VirtualClockContext} from "./VirtualClockContext";
+import {VirtualClockContext} from "../context/VirtualClockContext";
 import dayjs from "dayjs";
 import {isSameDay, parse, parseISO} from "date-fns";
 

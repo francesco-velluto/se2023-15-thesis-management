@@ -7,7 +7,7 @@ import { getAllDegrees, getProposalById, insertNewProposal } from "../api/Propos
 import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
-import { VirtualClockContext } from "../components/VirtualClockContext";
+import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 
 /**
