@@ -166,7 +166,7 @@ function HomePage() {
               <Card bg="light" className="rounded p-4 mt-3">
                 <Row>
                   {/*loggedUser.role === 0 && (
-                    <Col> 
+                    <Col>
                       <Button className="w-100 my-3" as={Link} to="/applications">
                         My Thesis Applications
                       </Button>
@@ -186,6 +186,9 @@ function HomePage() {
                     <Col>
                       <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
                         Thesis Proposals
+                      </Button>
+                      <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
+                        My Applications
                       </Button>
                     </Col>
                   )}
