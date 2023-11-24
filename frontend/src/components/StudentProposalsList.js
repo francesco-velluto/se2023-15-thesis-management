@@ -46,7 +46,7 @@ function StudentProposalsList(props) {
                 
                 setProposals(db_proposals);
                 setFilteredProposals(db_proposals);
-                filterByVirtualClockDate(db_proposals); // ! REMOVE IT IN PRODUCTION
+                filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
                 setIsLoading(false);
             }).catch((err) => {
                 setErrorMessage(err.message);
@@ -98,13 +98,12 @@ function StudentProposalsList(props) {
             }
             return result;
         });
-        filterByVirtualClockDate(filteredProposals); // ! REMOVE IT IN PRODUCTION
+        filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
 
     }, [props.searchData.length, currentDate])
     
 
     return (
-        <>
         <Container className="bg-white rounded-bottom py-4">
         {
             isLoading && 
@@ -169,8 +168,7 @@ function StudentProposalsList(props) {
             </Row>
         }
 
-        </Container>    
-        </>
+        </Container>
     );
 }
 
@@ -179,7 +177,7 @@ function ProposalRow(props){
 
     const navigate = useNavigate();
 
-    return <>
+    return (
     <Card className='my-4 mx-2 border border-2 rounded border-dark bg-light p-3 my-md-1'>
     <Row  >
         <Col xs={12} md={3} className="text-center text-md-start">
@@ -216,7 +214,7 @@ function ProposalRow(props){
         </Col>
     </Row>
     </Card>
-    </>
+    );
 
 }
 
