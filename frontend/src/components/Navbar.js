@@ -26,7 +26,7 @@ function NavbarContainer() {
 
     return (
         <>
-            <Navbar expand="lg" className='px-3 navbar-dark d-flex justify-content-between' style={{ backgroundColor: "#e68b00" }} >
+            <Navbar expand="lg" className='px-3 navbar-dark d-flex justify-content-between' style={{ backgroundColor: "#393646" }} >
                 <Navbar.Brand as={Link} to={"/"}>
                 <div>
                 <img src={Logo} alt="Logo" width="70" height="auto" className="bi bi-mortarboard-fill me-2"  />
@@ -40,7 +40,7 @@ function NavbarContainer() {
                             <InputGroup>
                                 
                                 {!showFormControl && (
-                                    <Button onClick={handleButtonClick} style={{ backgroundColor: 'white', color: 'orange', borderColor: 'white', height: '50px', width: '50px' }}>
+                                    <Button onClick={handleButtonClick} style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '50px' }}>
                                         <FaCalendar /> 
                                     </Button>
                                 )}
@@ -50,7 +50,7 @@ function NavbarContainer() {
                                     min={dayjs().format("YYYY-MM-DD")}
                                     value={currentDate}
                                     onChange={(ev) => setCurrentDate(ev.target.value)}
-                                    style={{ backgroundColor: 'white', color: 'orange', borderColor: 'white', height: '50px', width:'115px', lineHeight: '37px'  }}
+                                    style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width:'115px', lineHeight: '37px'  }}
                                     />
                                 )}
                             </InputGroup>
@@ -60,7 +60,7 @@ function NavbarContainer() {
                             <Dropdown.Toggle
                                 variant="danger"
                                 id="dropdown-basic"
-                                style={{ backgroundColor: 'white', color: 'orange', height: '50px' }}
+                                style={{ backgroundColor: 'white', color: '#393646', height: '50px', borderColor: 'white' }}
                             >
                                 <svg
                                 onClick={() => navigate("/")}
@@ -75,8 +75,8 @@ function NavbarContainer() {
                                 </svg>
                                 {' ' + (loggedUser.name || 'Guest')}
                             </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={handleLogout}  style={{ backgroundColor: 'white', color: 'orange' }}>Logout</Dropdown.Item>
+                            <Dropdown.Menu style={{ minWidth: "120px" }}>
+                                <Dropdown.Item onClick={handleLogout} style={{ backgroundColor: 'white', color: '#393646', fontSize:"16px"}}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                             </Dropdown>
                         </Col>

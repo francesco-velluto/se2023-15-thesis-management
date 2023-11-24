@@ -115,8 +115,6 @@ module.exports = {
         const application_id = req.params.application_id;
         const teacher_id = req.user.id;
 
-
-        /*try {*/
         if (!(status == "Accepted" || status == "Rejected"))
             return res.status(400).json({ error: "Error in status parameter" });
 
@@ -124,7 +122,29 @@ module.exports = {
             return res.status(400).json({ error: "Parameters error!" });
         }
 
-        applicationsService.setApplicationStatus(status, teacher_id, application_id)
+        try{
+            const applicationModified = await applicationsService.setApplicationStatus(status, teacher_id, application_id);
+
+            if(applicationModified instanceof Error)
+                return res.status(400).json({error: applicationModified.message});
+
+            if(status === "Accepted"){
+                const proposal_id = applicationModified.thesis_id;
+                await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id);
+                await proposalsService.setProposalArchived(proposal_id);
+
+                return res.status(200).json({application: applicationModified});
+            }else{
+                return res.status(200).json({application: applicationModified});
+            }
+
+        }catch(error){
+            console.log(error);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+
+
+       /* applicationsService.setApplicationStatus(status, teacher_id, application_id)
             .then((applicationModified) => {
                 if (applicationModified instanceof Error)
                     return res.status(400).json({ error: applicationModified.message });
@@ -149,7 +169,7 @@ module.exports = {
                 return res.status(500).json({ error: "Internal server error" });
             })
 
-
+*/
 
 
     },

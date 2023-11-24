@@ -36,7 +36,7 @@ router.post('/', authenticationController.isLoggedIn, applicationsController.ins
 
 
 /**
- * PUT /api/applications
+ * PUT /api/applications/:application_id
  * 
  * @params application_id
  * @body {status: string}

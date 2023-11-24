@@ -205,7 +205,7 @@ function ProposalDetailsPage({ mode }) {
             <TitleBar title={"Proposal Details"} />
             {
                 isLoading ? (<Alert variant="info">Loading...</Alert>) : (
-                    <Container className={"proposal-details-container"} fluid>
+                    <Container style={{backgroundColor:"#F4EEE0"}}className={"proposal-details-container"} fluid>
                         <Form>
                             {errorMessage &&
                                 <Row>
@@ -219,7 +219,7 @@ function ProposalDetailsPage({ mode }) {
                                             <h2 className={"proposal-details-title"}>{title}</h2>
                                             :
                                             <Form.Group>
-                                                <Card>
+                                                <Card className="h-100">
                                                     <Card.Body>
                                                         <Card.Title>Title:</Card.Title>
                                                         <Form.Control
@@ -244,7 +244,7 @@ function ProposalDetailsPage({ mode }) {
                                     <>
                                         <Row>
                                             <Col className={"proposal-details-keyword"}>
-                                                {keywords.map((keyword) => <Badge bg={"secondary"} className="mr-1">{keyword}</Badge>)}
+                                                {keywords.map((keyword) => <Badge bg="" style={{backgroundColor:"#917FB3"}}>{keyword}</Badge>)}
                                             </Col>
                                         </Row>
                                         <Row>
@@ -256,7 +256,7 @@ function ProposalDetailsPage({ mode }) {
                                 )}
                                 <Row>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Description:</Card.Title>
                                                 <Form.Group>
@@ -283,7 +283,7 @@ function ProposalDetailsPage({ mode }) {
                             <Container>
                                 <Row>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Supervisor:</Card.Title>
                                                 <Form.Control
@@ -296,7 +296,7 @@ function ProposalDetailsPage({ mode }) {
                                         </Card>
                                     </Col>
                                     <Col xs={6}>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Co-Supervisor:</Card.Title>
                                                 <Form.Control
@@ -311,7 +311,7 @@ function ProposalDetailsPage({ mode }) {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Level:</Card.Title>
                                                 {mode === 0 ?
@@ -339,7 +339,7 @@ function ProposalDetailsPage({ mode }) {
                                         </Card>
                                     </Col>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Type:</Card.Title>
                                                 <Form.Group>
@@ -364,18 +364,18 @@ function ProposalDetailsPage({ mode }) {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>CdS / Programmes:</Card.Title>
                                                 {mode === 0 ?
                                                     <Card.Text>
-                                                        {programmes.map((programme) => <Badge className="mr-1">{programme.title_degree}</Badge>)}
+                                                        {programmes.map((programme) => <Badge bg="" style={{backgroundColor:"#917FB3", fontSize:"14px"}} >{programme.title_degree}</Badge>)}
                                                     </Card.Text>
                                                     :
                                                     <div>
                                                         <Form.Group>
                                                             {!level &&
-                                                                <div className="disabled-message">
+                                                                <div className="disabled-message" style={{fontSize:"14px", marginBottom: "10px"}}>
                                                                     Please select a proposal level before choosing a program.
                                                                 </div>
                                                             }
@@ -422,17 +422,17 @@ function ProposalDetailsPage({ mode }) {
                                         </Card>
                                     </Col>
                                     <Col>
-                                        <Card>
-                                            <Card.Body>
+                                        <Card className="h-100">
+                                            <Card.Body >
                                                 <Card.Title>Groups:</Card.Title>
                                                 {mode === 0 ?
                                                     <Card.Text>
-                                                        {groups.map((group) => <Badge className="mr-1">{group}</Badge>)}
+                                                        {groups.map((group) => <Badge bg="" style={{backgroundColor:"#917FB3", fontSize:"14px"}}>{group}</Badge>)}
                                                     </Card.Text>
                                                     :
-                                                    <Form.Group>
-                                                        <div className="text-plus">
-                                                            <Col xs={9}>
+                                                    <Form.Group className="h-100" style={{marginTop:"25px"}}>
+                                                        <div className="text-plus ">
+                                                            <Col xs={8}>
                                                                 <Form.Control
                                                                     as={'input'}
                                                                     name='proposal-groups'
@@ -444,8 +444,8 @@ function ProposalDetailsPage({ mode }) {
                                                                     }}
                                                                 />
                                                             </Col>
-                                                            <Col xs={3}>
-                                                                <Button onClick={() => {
+                                                            <Col >
+                                                                <Button style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} onClick={() => {
                                                                     if (!groups.includes(newGroup)) {
                                                                         setGroups([...groups, newGroup]);
                                                                         setNewGroup('');
@@ -462,6 +462,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                     {group}
                                                                     <Button
+                                                                        style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} 
                                                                         variant="danger"
                                                                         size="sm"
                                                                         onClick={() => {
@@ -484,7 +485,7 @@ function ProposalDetailsPage({ mode }) {
                                 <Row>
                                 {mode !== 0 &&
                                         <Col>
-                                            <Card>
+                                            <Card className="h-100">
                                                 <Card.Body>
                                                     <Card.Title>Expiration Date:</Card.Title>
                                                     <Form.Group>
@@ -504,12 +505,12 @@ function ProposalDetailsPage({ mode }) {
                                     }
                                     {mode !== 0 &&
                                         <Col>
-                                            <Card>
-                                                <Card.Body>
+                                            <Card className="h-100">
+                                                <Card.Body >
                                                     <Card.Title>Keywords</Card.Title>
                                                     <Form.Group>
                                                         <div className="text-plus">
-                                                            <Col xs={9}>
+                                                            <Col xs={8} >
                                                                 <Form.Control
                                                                     as={'input'}
                                                                     name='proposal-keywords'
@@ -521,8 +522,8 @@ function ProposalDetailsPage({ mode }) {
                                                                     }}
                                                                 />
                                                             </Col>
-                                                            <Col xs={3}>
-                                                                <Button onClick={() => {
+                                                            <Col >
+                                                                <Button style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} onClick={() => {
                                                                     if (!keywords.includes(newKeyword)) {
                                                                         setKeywords([...keywords, newKeyword]);
                                                                         setNewKeyword('');
@@ -540,6 +541,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                 {keyword}
                                                                 <Button
+                                                                    style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} 
                                                                     variant="danger"
                                                                     size="sm"
                                                                     onClick={() => {
@@ -559,7 +561,7 @@ function ProposalDetailsPage({ mode }) {
                                 </Row>
                                 <Row>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Required Knowledge:</Card.Title>
                                                 <Form.Group>
@@ -581,7 +583,7 @@ function ProposalDetailsPage({ mode }) {
                                         </Card>
                                     </Col>
                                     <Col>
-                                        <Card>
+                                        <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Notes:</Card.Title>
                                                 <Form.Group>
@@ -605,14 +607,27 @@ function ProposalDetailsPage({ mode }) {
                                 </Row>
 
                                 <Row>
-                                    <Col>
-                                        <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
+                                    <Col>{
+                                        mode === 0 && <Button style={{backgroundColor:"#6D5D6E", borderColor:"#6D5D6E"}} onClick={() => {
                                             navigate('/proposals')
-                                        }}>Back to Search Proposal</Button>
+                                        }}>{loggedUser.role === 1 ? "Back to Search Proposal" : "Back to Browse Proposals"}</Button>
+                                    }
+                                    {
+                                        mode !== 0 && <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
+                                            navigate('/')
+                                        }}>Back to Homepage</Button>
+                                    }
                                     </Col>
+                                {mode !== 0 && (
+                                    <Col>
+                                        <Button style={{backgroundColor:"#6D5D6E", borderColor:"#6D5D6E"}}  onClick={() => {
+                                            navigate('/')
+                                        }}>Return</Button>
+                                    </Col>
+                                )}
                                     <Col className={"d-flex flex-row-revers"}>
                                         {mode === 0 && <ApplicationButton proposalID={proposal_id} />}
-                                        {mode !== 0 && <Button onClick={handleCreateProposal}>Create Proposal</Button>}
+                                        {mode !== 0 && <Button style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} onClick={handleCreateProposal}>Create Proposal</Button>}
                                     </Col>
                                 </Row>
                             </Container>

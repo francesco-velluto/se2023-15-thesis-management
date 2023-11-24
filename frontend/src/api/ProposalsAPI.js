@@ -29,6 +29,24 @@ module.exports = {
   },
 
   /**
+   * Get all proposals
+   *
+   * GET /api/proposals
+   *
+   * @params: none
+   * @body: none
+   * @returns: { proposals: [ { proposal_id: number, title: string, description: string, supervisor_surname: string, ... } ] }
+   * @error: 500 Internal Server Error - if something went wrong
+   */
+  getAllProfessorProposals: async () => {
+    return fetch(ProposalsAPIURL + "/professor/", {
+      method: "GET",
+      headers: APIConfig.API_REQUEST_HEADERS,
+      credentials: "include",
+    });
+  },
+
+  /**
    * Get a proposal by id
    *
    * GET /api/proposals/:id

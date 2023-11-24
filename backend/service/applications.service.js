@@ -172,19 +172,16 @@ module.exports = {
         try{
 
             
-            const applicationCheck = await db.query('SELECT * FROM applications WHERE application_id = $1', [application_id]);
+            const applicationCheck = await db.query(
+                "select * from applications a join proposals p on a.proposal_id = p.proposal_id  where a.application_id = $1 and p.supervisor_id = $2;",
+                 [application_id, teacher_id]);
             const statusCheck = status == "Accepted" || status == "Rejected";
 
             if (!statusCheck){
                 throw new Error("Invalid status value.");
             }else if(applicationCheck.rows.length === 0){
-                throw new Error("This application doesn't exist");
+                throw new Error("This application doesn't exist or doesn't belong to the teacher");
             }else{
-
-                const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1;', [applicationCheck.rows[0].proposal_id]);
-                
-                if(proposalCheck.rows[0].supervisor_id != teacher_id)
-                    throw new Error("This application doesn't belong to the teacher");
 
                 const updatedApplication = await db.query(query, [status, application_id]);
                 if (updatedApplication.rows.length === 0)
