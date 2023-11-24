@@ -3,7 +3,7 @@ import { Alert, Card, Col, Container, Row } from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
-import { VirtualClockContext } from './VirtualClockContext';
+import { VirtualClockContext } from '../context/VirtualClockContext';
 
 function StudentProposalsList(props) {
 
