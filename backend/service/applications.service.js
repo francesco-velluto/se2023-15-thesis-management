@@ -161,7 +161,7 @@ module.exports = {
      * @param {string} teacher_id id of the teacher
      * @param {string} status new status; must be "Accepted" or "Rejected"
      * 
-     * @returns {Application} with proposal_id, id (of the studend applied), status, application_date
+     * @returns {Promise<{Application}>} with proposal_id, id (of the studend applied), status, application_date
      * 
      * @throws {Error} if proposal not found or student not found or 
      */

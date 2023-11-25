@@ -8,6 +8,11 @@ jest.mock("../service/db", () => ({
 
 beforeEach(() => {
   jest.resetAllMocks();
+  // comment these lines if you want to see console prints during tests
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  
 });
 
 describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
@@ -230,44 +235,32 @@ describe("UNIT-SERVICE: insertNewApplication", () => {
   });
 });
 
-describe.only("UNIT-SERVICE: setApplicationStatus", () => {
+describe("UNIT-SERVICE: setApplicationStatus", () => {
   it("should throw error if status field is invalid", async () => {
-    try {
-      await applicationService.setApplicationStatus("sdf", "T001", "A001");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toEqual("Invalid status value.");
-    }
+    expect(
+      applicationService.setApplicationStatus("sdf", "T001", "A001")
+    ).rejects.toThrow("Invalid status value.");
   });
 
   it("should throw error if application doesn't exist", async () => {
     db.query.mockResolvedValue({ rows: [] });
 
-    try {
-      await applicationService.setApplicationStatus("Accepted", "T001", "A001");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toEqual(
-        "This application doesn't exist or doesn't belong to the teacher"
-      );
-    }
+    expect(
+      applicationService.setApplicationStatus("Accepted", "T001", "A001")
+    ).rejects.toThrow("This application doesn't exist or doesn't belong to the teacher");
+
   });
 
   it("should throw error if application doesn't exist when trying to update the status", async () => {
     db.query.mockResolvedValueOnce({ rows: [{ application_id: "A001" }] });
     db.query.mockResolvedValueOnce({ rows: [] });
 
-    try {
-      await applicationService.setApplicationStatus("Accepted", "T001", "A001");
-    } catch (error) {
-      expect(error).toBeInstanceOf(Error);
-      expect(error.message).toEqual(
-        "No application found with application_id: A001"
-      );
-    }
+    expect(
+      applicationService.setApplicationStatus("Accepted", "T001", "A001")
+    ).rejects.toThrow("No application found with application_id: A001");
   });
 
-  it("should throw error if application doesn't exist when trying to update the status", async () => {
+  it("should set the new application status successfully", async () => {
     const mockApplication = new Application(
       "P001",
       "A001",
