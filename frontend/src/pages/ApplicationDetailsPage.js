@@ -31,7 +31,7 @@ function ApplicationDetails() {
     
                 if (application){
                     setInfoApplication(application);
-                    const responseProposal = await getProposalById(application.thesis_id);
+                    const responseProposal = await getProposalById(application.proposal_id);
                     if(responseProposal.ok){
                         const proposal = await responseProposal.json();
                         setInfoProposal(proposal);

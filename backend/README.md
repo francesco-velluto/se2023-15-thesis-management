@@ -227,7 +227,7 @@ The proposal is archived.
 
 - `Success 200`  Response body:
   - The application modified with the new status:
-    - `thesis_id`: id of the thesis
+    - `proposal_id`: id of the thesis
     - `id`: id of the student
     - `status`: status updated
     - `application_date`: date of the application
@@ -250,7 +250,7 @@ The proposal is archived.
 
 - `Success 200`  Response body:
   - The application:
-    - `thesis_id`: id of the thesis
+    - `proposal_id`: id of the thesis
     - `id`: id of the student
     - `status`: status updated
     - `application_date`: date of the application

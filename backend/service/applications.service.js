@@ -169,23 +169,21 @@ module.exports = {
     setApplicationStatus: async(status, teacher_id, application_id) => {
         const query = "UPDATE applications SET status = $1 WHERE application_id = $2 RETURNING *;";
 
-        try{
-
+        try {
+            const statusCheck = status == "Accepted" || status == "Rejected";
+            if (!statusCheck)
+                throw new Error("Invalid status value.");
             
             const applicationCheck = await db.query(
                 "select * from applications a join proposals p on a.proposal_id = p.proposal_id  where a.application_id = $1 and p.supervisor_id = $2;",
                  [application_id, teacher_id]);
-            const statusCheck = status == "Accepted" || status == "Rejected";
 
-            if (!statusCheck){
-                throw new Error("Invalid status value.");
-            }else if(applicationCheck.rows.length === 0){
+            if(applicationCheck.rows.length === 0){
                 throw new Error("This application doesn't exist or doesn't belong to the teacher");
-            }else{
-
+            } else {
                 const updatedApplication = await db.query(query, [status, application_id]);
                 if (updatedApplication.rows.length === 0)
-                    throw new Error(`No application founded with application_id: ${application_id}`);
+                    throw new Error(`No application found with application_id: ${application_id}`);
                 return new Application(
                     updatedApplication.rows[0].proposal_id,
                     updatedApplication.rows[0].id,
@@ -194,9 +192,9 @@ module.exports = {
                 );
 
             }
-        }catch(error){
+        } catch (error) {
             console.error('[BACKEND-SERVER] Error in setApplicationStatus service: ', error);
-            return error;
+            throw error;
         }
     },
     /**

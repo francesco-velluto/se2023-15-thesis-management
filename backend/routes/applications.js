@@ -18,7 +18,7 @@ const applicationsController = require("../controllers/applications");
  * @body none
  * @returns {
  *  {
- *    thesis_id: number,
+ *    proposal_id: number,
  *    title: string,
  *    description: string,
  *    application_date: date,
@@ -42,7 +42,7 @@ router.get(
  * @body none
  * @returns {
  *  {
- *    thesis_id: number,
+ *    proposal_id: number,
  *    title: string,
  *    description: string,
  *    application_date: date,

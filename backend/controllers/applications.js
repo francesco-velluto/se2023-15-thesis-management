@@ -122,56 +122,23 @@ module.exports = {
             return res.status(400).json({ error: "Parameters error!" });
         }
 
-        try{
+        try {
             const applicationModified = await applicationsService.setApplicationStatus(status, teacher_id, application_id);
 
             if(applicationModified instanceof Error)
                 return res.status(400).json({error: applicationModified.message});
 
             if(status === "Accepted"){
-                const proposal_id = applicationModified.thesis_id;
+                const proposal_id = applicationModified.proposal_id;
                 await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id);
                 await proposalsService.setProposalArchived(proposal_id);
-
-                return res.status(200).json({application: applicationModified});
-            }else{
-                return res.status(200).json({application: applicationModified});
             }
 
-        }catch(error){
+            return res.status(200).json({application: applicationModified});
+        } catch (error) {
             console.log(error);
             return res.status(500).json({ error: "Internal server error" });
         }
-
-
-       /* applicationsService.setApplicationStatus(status, teacher_id, application_id)
-            .then((applicationModified) => {
-                if (applicationModified instanceof Error)
-                    return res.status(400).json({ error: applicationModified.message });
-
-                // if status is Accepted, canceling the other pending applications and archive the proposal
-                if (status === "Accepted") {
-                    const proposal_id = applicationModified.thesis_id;
-                    applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id)
-                        .then((canceledApplications) => {
-                            proposalsService.setProposalArchived(proposal_id)
-                                .then((archivedProposal) => {
-                                    return res.status(200).json({ application: applicationModified });
-                                });
-
-                        })
-                }else{
-                    return res.status(200).json({ application: applicationModified });
-                }
-                
-            })
-            .catch((error) => {
-                return res.status(500).json({ error: "Internal server error" });
-            })
-
-*/
-
-
     },
 
     /**

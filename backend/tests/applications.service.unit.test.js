@@ -10,24 +10,24 @@ beforeEach(() => {
   jest.resetAllMocks();
 });
 
-describe("getAllApplicationsByStudentId function", () => {
+describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
   it("should return all applications for a student by its id", async () => {
     db.query.mockResolvedValue({
       rows: [
         {
-          thesis_id: "1",
+          proposal_id: "1",
           id: "s1",
           status: "Pending",
           application_date: "12-01-2023",
         },
         {
-          thesis_id: "2",
+          proposal_id: "2",
           id: "s2",
           status: "Pending",
           application_date: "12-01-2023",
         },
         {
-          thesis_id: "3",
+          proposal_id: "3",
           id: "s3",
           status: "Pending",
           application_date: "12-01-2023",
@@ -60,7 +60,7 @@ describe("getAllApplicationsByStudentId function", () => {
   });
 });
 
-describe("getAllApplicationsByTeacherId function", () => {
+describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   it("should return all applications for thesis proposals supervised by a teacher", async () => {
     teacherId = "teacher";
     db.query.mockResolvedValue({
@@ -172,7 +172,7 @@ describe("getAllApplicationsByTeacherId function", () => {
   });
 });
 
-describe("insertNewApplication function", () => {
+describe("UNIT-SERVICE: insertNewApplication", () => {
   it("should insert a new application", async () => {
     const proposalId = 1;
     const studentId = "s1";
@@ -229,3 +229,65 @@ describe("insertNewApplication function", () => {
     consoleErrorSpy.mockRestore();
   });
 });
+
+describe.only("UNIT-SERVICE: setApplicationStatus", () => {
+  it("should throw error if status field is invalid", async () => {
+    try {
+      await applicationService.setApplicationStatus("sdf", "T001", "A001");
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toEqual("Invalid status value.");
+    }
+  });
+
+  it("should throw error if application doesn't exist", async () => {
+    db.query.mockResolvedValue({ rows: [] });
+
+    try {
+      await applicationService.setApplicationStatus("Accepted", "T001", "A001");
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toEqual(
+        "This application doesn't exist or doesn't belong to the teacher"
+      );
+    }
+  });
+
+  it("should throw error if application doesn't exist when trying to update the status", async () => {
+    db.query.mockResolvedValueOnce({ rows: [{ application_id: "A001" }] });
+    db.query.mockResolvedValueOnce({ rows: [] });
+
+    try {
+      await applicationService.setApplicationStatus("Accepted", "T001", "A001");
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error.message).toEqual(
+        "No application found with application_id: A001"
+      );
+    }
+  });
+
+  it("should throw error if application doesn't exist when trying to update the status", async () => {
+    const mockApplication = new Application(
+      "P001",
+      "A001",
+      "Accepted",
+      "2023-11-23"
+    );
+
+    db.query.mockResolvedValueOnce({ rows: [{ application_id: "A001" }] });
+    db.query.mockResolvedValueOnce({ rows: [mockApplication] });
+
+    const res = await applicationService.setApplicationStatus(
+      "Accepted",
+      "T001",
+      "A001"
+    );
+
+    expect(res).toEqual(mockApplication);
+  });
+});
+
+describe("UNIT-SERVICE: setApplicationsStatusCanceledByProposalId", () => {});
+
+describe("UNIT-SERVICE: getApplicationById", () => {});
