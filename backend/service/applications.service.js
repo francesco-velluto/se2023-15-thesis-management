@@ -20,7 +20,7 @@ module.exports = {
                         a.application_date, a.status \
                         FROM applications a \
                         JOIN proposals p ON a.proposal_id = p.proposal_id \
-                        WHERE a.id = $1;', [student_id]);
+                        WHERE a.student_id = $1;', [student_id]);
                 })
                 .then((rows) => {
                     resolve({ status: 200, data: rows.rows });
@@ -65,11 +65,11 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             try {
                 const rows = await db.query(
-                    "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, \
-                        a.application_id, a.status as application_status, a.application_date, \
-                        s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree \
-                    FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.id \
-                    WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'",
+                    "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, " +
+                        "a.id as application_id, a.status as application_status, a.application_date, " +
+                        "s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
+                    "FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.student_id " +
+                    "WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'",
                     [id]);
 
                 if (rows.rows == 0) {
@@ -127,12 +127,12 @@ module.exports = {
      
         const status = 'Pending'
         const application_date = new Date().toISOString()
-        const query = "INSERT INTO public.applications (proposal_id, id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
+
         try {
 
             const studentCheck = await db.query('SELECT * FROM student WHERE id = $1', [student_id]);
             const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
-            const applicationCheck = await db.query('SELECT * FROM applications WHERE proposal_id = $1 AND id = $2', [proposal_id, student_id]);
+            const applicationCheck = await db.query('SELECT * FROM applications WHERE proposal_id = $1 AND student_id = $2', [proposal_id, student_id]);
 
             if (studentCheck.rows.length === 0 || proposalCheck.rows.length === 0 ) {
               throw new Error(`Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`);
@@ -140,9 +140,9 @@ module.exports = {
                 throw new Error(`Student with id ${student_id} has already applied to proposal with id ${proposal_id}.`);
             }
             else {
-                
+                const query = "INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
                 const res = await db.query(query, [proposal_id, student_id, status, application_date])
-                return res
+                return res;
 
             }
             

@@ -159,59 +159,32 @@ ALTER TABLE public.teacher OWNER TO postgres;
 --
 
 CREATE TABLE public.career (
-    id VARCHAR(10) PRIMARY KEY,
-    cod_course VARCHAR(10),
+    id VARCHAR(10) NOT NULL,
+    cod_course VARCHAR(10) NOT NULL,
     title_course VARCHAR(50) NOT NULL,
     cfu INT NOT NULL,
     grade INT NOT NULL,
-    date DATE NOT NULL
+    date DATE NOT NULL,
+    PRIMARY KEY (id, cod_course)
 );
 
 INSERT INTO public.career (id, cod_course, title_course, cfu, grade, date) VALUES
-  ('C001', 'CRS001', 'Computer Science 101', 5, 90, '2022-05-15'),
-  ('C002', 'CRS002', 'Mathematics Basics', 3, 85, '2022-06-20'),
-  ('C003', 'CRS003', 'Physics Fundamentals', 4, 88, '2022-07-10'),
-  ('C004', 'CRS004', 'History of Art', 3, 92, '2022-08-05'),
-  ('C005', 'CRS005', 'Introduction to Marketing', 4, 89, '2022-09-12'),
-  ('C006', 'CRS006', 'Advanced Robotics', 5, 91, '2022-10-18'),
-  ('C007', 'CRS007', 'Environmental Science', 4, 86, '2022-11-25'),
-  ('C008', 'CRS008', 'Literature Appreciation', 3, 93, '2022-12-30'),
-  ('C009', 'CRS009', 'Financial Management', 4, 87, '2023-01-15'),
-  ('C010', 'CRS010', 'Machine Learning for Beginners', 5, 94, '2023-02-20');
+  ('S001', 'CRS001', 'Computer Science 101', 6, 27, '2022-05-15'),
+  ('S001', 'CRS002', 'Mathematics Basics', 10, 30, '2022-06-20'),
+  ('S002', 'CRS003', 'Physics Fundamentals', 10, 18, '2022-07-10'),
+  ('S003', 'CRS004', 'History of Art', 6, 23, '2022-08-05'),
+  ('S002', 'CRS005', 'Introduction to Marketing', 6, 25, '2022-09-12'),
+  ('S001', 'CRS006', 'Advanced Robotics', 8, 21, '2022-10-18'),
+  ('S004', 'CRS007', 'Environmental Science', 6, 29, '2022-11-25'),
+  ('S003', 'CRS008', 'Literature Appreciation', 6, 26, '2022-12-30'),
+  ('S002', 'CRS009', 'Financial Management', 8, 19, '2023-01-15'),
+  ('S004', 'CRS010', 'Machine Learning for Beginners', 8, 21, '2023-02-20');
 
 
 ALTER TABLE public.career OWNER TO postgres;
 
-
---
--- Name: passed; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.passed (
-    pid SERIAL PRIMARY KEY,
-    career_id VARCHAR(10) NOT NULL,
-    id VARCHAR(10) NOT NULL
-    );
-
-INSERT INTO public.passed (career_id, id) VALUES
-  ('C001', 'S001'),
-  ('C002', 'S001'),
-  ('C001', 'S002'),
-  ('C003', 'S002'),
-  ('C004', 'S003'),
-  ('C005', 'S003'),
-  ('C006', 'S004'),
-  ('C007', 'S004'),
-  ('C008', 'S005'),
-  ('C009', 'S005');
-
-ALTER TABLE public.passed OWNER TO postgres;
-
 ALTER TABLE ONLY public.passed
-    ADD CONSTRAINT passed_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
-
-ALTER TABLE ONLY public.passed
-    ADD CONSTRAINT passed_fk_career FOREIGN KEY (career_id) REFERENCES public.career(id);
+  ADD CONSTRAINT career_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
 
 --
 -- Name: Proposals; Type: TABLE; Schema: public; Owner: postgres
@@ -270,14 +243,14 @@ ALTER TABLE ONLY public.proposals
 --
 
 CREATE TABLE public.applications (
-    application_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     proposal_id VARCHAR(10) NOT NULL,
-    id VARCHAR(10) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
     status VARCHAR(255) NOT NULL, 
     application_date DATE NOT NULL
 );
 
-INSERT INTO public.applications (proposal_id, id, status, application_date) VALUES
+INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
   ('P001', 'S001', 'Pending', '2023-11-01'),
   ('P002', 'S002', 'Accepted', '2023-10-15'),
   ('P003', 'S003', 'Pending', '2023-11-05'),
@@ -292,11 +265,10 @@ INSERT INTO public.applications (proposal_id, id, status, application_date) VALU
 ALTER TABLE public.applications OWNER TO postgres;
 
 ALTER TABLE ONLY public.applications
-    ADD CONSTRAINT applications_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
+    ADD CONSTRAINT applications_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
 
 ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_fk_proposals FOREIGN KEY (proposal_id) REFERENCES public.proposals(proposal_id);
-
 
 --
 -- PostgreSQL database dump complete

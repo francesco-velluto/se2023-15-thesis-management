@@ -317,9 +317,9 @@ ALTER TABLE ONLY public.proposals
 --
 
 CREATE TABLE public.applications (
-    application_id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     proposal_id VARCHAR(10) NOT NULL,
-    id VARCHAR(10) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
     status VARCHAR(255) NOT NULL, 
     application_date DATE NOT NULL
 );
@@ -339,7 +339,7 @@ INSERT INTO public.applications (proposal_id, id, status, application_date) VALU
 ALTER TABLE public.applications OWNER TO postgres;
 
 ALTER TABLE ONLY public.applications
-    ADD CONSTRAINT applications_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
+    ADD CONSTRAINT applications_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
 
 ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_fk_proposals FOREIGN KEY (proposal_id) REFERENCES public.proposals(proposal_id);
