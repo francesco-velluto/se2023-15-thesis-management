@@ -77,14 +77,6 @@ module.exports = {
                 }
                 
                 // each application is pushed into an array of applications related to the same thesis proposal
-                /* let applications = rows.rows.reduce((proposals, element) => {
-                    const id = element.proposal_id;
-                    if (!proposals[id]) {
-                        proposals[id] = [];
-                    }
-                    proposals[id].push(element);
-                    return proposals;
-                }, {}); */
                 let applications = rows.rows.reduce((proposals, applicationRow) => {
                     const id = applicationRow.proposal_id;
                     if (!proposals[id]) {

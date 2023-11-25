@@ -183,7 +183,7 @@ INSERT INTO public.career (id, cod_course, title_course, cfu, grade, date) VALUE
 
 ALTER TABLE public.career OWNER TO postgres;
 
-ALTER TABLE ONLY public.passed
+ALTER TABLE ONLY public.career
   ADD CONSTRAINT career_fk_student FOREIGN KEY (id) REFERENCES public.student(id);
 
 --
