@@ -30,7 +30,7 @@ services:
       - mynetwork
 
   db:
-    image: francescovelluto/se2023-15-thesis-management-database:latest
+    image: francescovelluto/se2023-15-thesis-management-db:latest
     environment:
       - POSTGRES_DB='Thesis-Management-System'
       - POSTGRES_USER=${DB_USER}
