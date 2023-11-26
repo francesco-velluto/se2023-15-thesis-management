@@ -7,7 +7,7 @@ import { getAllDegrees, getProposalById, insertNewProposal } from "../api/Propos
 import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
-import { VirtualClockContext } from "../components/VirtualClockContext";
+import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 
 /**
@@ -205,7 +205,7 @@ function ProposalDetailsPage({ mode }) {
             <TitleBar title={"Proposal Details"} />
             {
                 isLoading ? (<Alert variant="info">Loading...</Alert>) : (
-                    <Container style={{backgroundColor:"#F4EEE0"}}className={"proposal-details-container"} fluid>
+                    <Container style={{ backgroundColor: "#F4EEE0" }} className={"proposal-details-container"} fluid>
                         <Form>
                             {errorMessage &&
                                 <Row>
@@ -244,7 +244,7 @@ function ProposalDetailsPage({ mode }) {
                                     <>
                                         <Row>
                                             <Col className={"proposal-details-keyword"}>
-                                                {keywords.map((keyword) => <Badge bg="" style={{backgroundColor:"#917FB3"}}>{keyword}</Badge>)}
+                                                {keywords.map((keyword) => <Badge bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>)}
                                             </Col>
                                         </Row>
                                         <Row>
@@ -369,13 +369,13 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Title>CdS / Programmes:</Card.Title>
                                                 {mode === 0 ?
                                                     <Card.Text>
-                                                        {programmes.map((programme) => <Badge bg="" style={{backgroundColor:"#917FB3", fontSize:"14px"}} >{programme.title_degree}</Badge>)}
+                                                        {programmes.map((programme) => <Badge bg="" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >{programme.title_degree}</Badge>)}
                                                     </Card.Text>
                                                     :
                                                     <div>
                                                         <Form.Group>
                                                             {!level &&
-                                                                <div className="disabled-message" style={{fontSize:"14px", marginBottom: "10px"}}>
+                                                                <div className="disabled-message text-muted" style={{ fontSize: "14px", marginBottom: "10px" }}>
                                                                     Please select a proposal level before choosing a program.
                                                                 </div>
                                                             }
@@ -427,10 +427,10 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Title>Groups:</Card.Title>
                                                 {mode === 0 ?
                                                     <Card.Text>
-                                                        {groups.map((group) => <Badge bg="" style={{backgroundColor:"#917FB3", fontSize:"14px"}}>{group}</Badge>)}
+                                                        {groups.map((group) => <Badge bg="" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
                                                     </Card.Text>
                                                     :
-                                                    <Form.Group className="h-100" style={{marginTop:"25px"}}>
+                                                    <Form.Group className="h-100" style={{ marginTop: "25px" }}>
                                                         <div className="text-plus ">
                                                             <Col xs={8}>
                                                                 <Form.Control
@@ -445,8 +445,10 @@ function ProposalDetailsPage({ mode }) {
                                                                 />
                                                             </Col>
                                                             <Col >
-                                                                <Button style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} onClick={() => {
-                                                                    if (!groups.includes(newGroup)) {
+                                                                <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                    if (!newGroup.trim()) {
+                                                                        return;
+                                                                    } else if (!groups.includes(newGroup)) {
                                                                         setGroups([...groups, newGroup]);
                                                                         setNewGroup('');
                                                                     } else {
@@ -462,7 +464,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                     {group}
                                                                     <Button
-                                                                        style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} 
+                                                                        style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                                         variant="danger"
                                                                         size="sm"
                                                                         onClick={() => {
@@ -483,7 +485,7 @@ function ProposalDetailsPage({ mode }) {
                                     </Col>
                                 </Row>
                                 <Row>
-                                {mode !== 0 &&
+                                    {mode !== 0 &&
                                         <Col>
                                             <Card className="h-100">
                                                 <Card.Body>
@@ -523,8 +525,10 @@ function ProposalDetailsPage({ mode }) {
                                                                 />
                                                             </Col>
                                                             <Col >
-                                                                <Button style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} onClick={() => {
-                                                                    if (!keywords.includes(newKeyword)) {
+                                                                <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                    if (!newKeyword.trim()) {
+                                                                        return;
+                                                                    } else if (!keywords.includes(newKeyword)) {
                                                                         setKeywords([...keywords, newKeyword]);
                                                                         setNewKeyword('');
                                                                     } else {
@@ -541,7 +545,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                 {keyword}
                                                                 <Button
-                                                                    style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} 
+                                                                    style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                                     variant="danger"
                                                                     size="sm"
                                                                     onClick={() => {
@@ -608,26 +612,19 @@ function ProposalDetailsPage({ mode }) {
 
                                 <Row>
                                     <Col>{
-                                        mode === 0 && <Button style={{backgroundColor:"#6D5D6E", borderColor:"#6D5D6E"}} onClick={() => {
+                                        mode === 0 && <Button style={{ backgroundColor: "#6D5D6E", borderColor: "#6D5D6E" }} onClick={() => {
                                             navigate('/proposals')
                                         }}>{loggedUser.role === 1 ? "Back to Search Proposal" : "Back to Browse Proposals"}</Button>
                                     }
-                                    {
-                                        mode !== 0 && <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
-                                            navigate('/')
-                                        }}>Back to Homepage</Button>
-                                    }
+                                        {
+                                            mode !== 0 && <Button className={"proposal-details-back"} variant={"secondary"} onClick={() => {
+                                                navigate('/')
+                                            }}>Back to Homepage</Button>
+                                        }
                                     </Col>
-                                {mode !== 0 && (
-                                    <Col>
-                                        <Button style={{backgroundColor:"#6D5D6E", borderColor:"#6D5D6E"}}  onClick={() => {
-                                            navigate('/')
-                                        }}>Return</Button>
-                                    </Col>
-                                )}
                                     <Col className={"d-flex flex-row-revers"}>
                                         {mode === 0 && <ApplicationButton proposalID={proposal_id} />}
-                                        {mode !== 0 && <Button style={{backgroundColor:"#4F4557", borderColor:"#4F4557"}} onClick={handleCreateProposal}>Create Proposal</Button>}
+                                        {mode !== 0 && <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={handleCreateProposal}>Create Proposal</Button>}
                                     </Col>
                                 </Row>
                             </Container>

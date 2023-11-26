@@ -16,11 +16,10 @@ const rowToProposal = (row) => {
     row.notes || "",
     row.expiration_date,
     row.level,
-    row.programmes
+    row.programmes,
+    row.archived
   );
 };
-
-
 
 exports.insertProposal = async (proposal) => {
   try {
@@ -44,7 +43,7 @@ exports.insertProposal = async (proposal) => {
         proposal.expiration_date,
         proposal.level,
         proposal.programmes,
-        'active'
+        false,
       ]
     );
     return rowToProposal(result.rows[0]);
@@ -66,7 +65,6 @@ exports.getMaxProposalIdNumber = async () => {
   }
 };
 
-
 exports.getAllProposals = async (cod_degree) => {
   return new Promise((resolve, reject) => {
     db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
@@ -82,18 +80,18 @@ exports.getAllProposals = async (cod_degree) => {
       "ORDER BY p.proposal_id")
       .then((rows) => {
         if (rows.lenght == 0) {
-          console.error('[BACKEND-SERVER] Error in getAllProposals');
-          reject({ status: 404, data: 'proposals not found' });
+          console.error("[BACKEND-SERVER] Error in getAllProposals");
+          reject({ status: 404, data: "proposals not found" });
         }
 
         resolve({ status: 200, data: rows.rows });
-
-      }).catch((err) => {
-        console.error('[BACKEND-SERVER] Error in getAllProposals', err);
-        reject({ status: 500, data: 'Internal server error' });
+      })
+      .catch((err) => {
+        console.error("[BACKEND-SERVER] Error in getAllProposals", err);
+        reject({ status: 500, data: "Internal server error" });
       });
-  })
-}
+  });
+};
 
 exports.getAllProfessorProposals = async (prof_id) => {
   return new Promise((resolve, reject) => {
@@ -118,21 +116,32 @@ exports.getAllProfessorProposals = async (prof_id) => {
                   reject({ status: 404, data: 'proposals not found' });
               }
 
-              resolve({ status: 200, data: rows.rows });
-
-          }).catch((err) => {
-          console.error('[BACKEND-SERVER] Error in getAllProposals', err);
-          reject({ status: 500, data: 'Internal server error' });
+        resolve({ status: 200, data: rows.rows });
+      })
+      .catch((err) => {
+        console.error("[BACKEND-SERVER] Error in getAllProposals", err);
+        reject({ status: 500, data: "Internal server error" });
       });
-  })
-}
+  });
+};
 
+/**
+ *
+ * @param {string} proposal_id
+ *
+ * @returns  { Promise<{ status: Integer, data: Proposal }>}
+ */
 exports.getProposalById = (proposal_id) => {
   return new Promise((resolve, reject) => {
-    db.query('SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1', [proposal_id])
-      .then(result => {
+    db.query(
+      "SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1",
+      [proposal_id]
+    )
+      .then((result) => {
         if (result.rows.length === 0) {
-          console.error(`Error in getProposalById - proposal_id: ${proposal_id} not found`);
+          console.error(
+            `Error in getProposalById - proposal_id: ${proposal_id} not found`
+          );
           reject({ status: 404, data: "Proposal not found" });
         } else {
           let proposal = result.rows[0];
@@ -140,54 +149,52 @@ exports.getProposalById = (proposal_id) => {
           // get the names of each programme of the proposal
           // we cannot use the 'WHERE cod_degree IN $1' because it is not supported by the pg library
           // we will use a workaround with ANY
-          db.query('SELECT * FROM degree WHERE cod_degree = ANY($1)', [proposal.programmes])
-            .then(degrees_result => {
+          db.query("SELECT * FROM degree WHERE cod_degree = ANY($1)", [
+            proposal.programmes,
+          ])
+            .then((degrees_result) => {
               let degrees = degrees_result.rows;
               proposal.programmes = degrees;
               resolve({ status: 200, data: proposal });
-            }).catch(error => {
-              console.log("Error in getProposalById - cannot get programmes: ", error);
+            })
+            .catch((error) => {
+              console.log(
+                "Error in getProposalById - cannot get programmes: ",
+                error
+              );
               reject({ status: 500, data: "Internal Server Error" });
             });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error in getProposalById: ", error);
         reject({ status: 500, data: "Internal Server Error" });
       });
   });
-}
+};
+
 /**
  * Set the proposal as archived
- * 
- * @param {number} proposal_id 
- * 
- * @returns {Promise<{proposal_id: string, archived: true}>}
+ *
+ * @param {number} proposal_id
+ *
+ * @returns {Promise<{ data: Proposal }>}
  */
 exports.setProposalArchived = async (proposal_id) => {
-
   try {
-    let queryUpdate = "UPDATE proposals SET status = 'Archived' where proposal_id = $1 RETURNING *";
+    let queryUpdate =
+      "UPDATE proposals SET status = 'Archived' where proposal_id = $1 RETURNING *";
 
-    const archivedProposal = await db.query(queryUpdate, [proposal_id]);
-    if (archivedProposal.rows.length === 0) {
-      console.error("Proposal not found");
-      throw new Error("Proposal to set archived not found");
+    const { rows, rowCount } = await db.query(queryUpdate, [proposal_id]);
+    if (rowCount === 0) {
+      return {};
     }
 
-    const res = {
-      proposal_id: archivedProposal.rows[0].proposal_id,
-      status: archivedProposal.rows[0].status
-    };
+    const proposal = rowToProposal(rows[0]);
 
-    return res;
-
+    return { data: proposal };
   } catch (error) {
     console.log("Error in setProposalArchived: ", error);
     throw error;
   }
-
-}
-
-
-
+};

@@ -10,7 +10,7 @@ import { LoggedUserContext, LoggedUserProvider } from "./context/AuthenticationC
 import { useContext, useEffect } from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
 import ApplicationList from "./pages/ApplicationList";
-import { VirtualClockProvider } from "./components/VirtualClockContext";
+import { VirtualClockProvider } from "./context/VirtualClockContext";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/index.css";

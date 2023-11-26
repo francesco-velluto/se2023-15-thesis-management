@@ -107,34 +107,58 @@ module.exports = {
      * 
      * @body {application_id: string, status: string}
      * 
-     * @returns {Promise<Application>} the application with the status modified
      */
     acceptOrRejectApplication: async (req, res) => {
-
         const status = req.body.status;
         const application_id = req.params.application_id;
         const teacher_id = req.user.id;
 
-        if (!(status == "Accepted" || status == "Rejected"))
-            return res.status(400).json({ error: "Error in status parameter" });
+        if (!(status === "Accepted" || status === "Rejected"))
+            return res.status(400).json({ error: "Invalid status field value in request body" });
 
-        if (!status || !application_id) {
-            return res.status(400).json({ error: "Parameters error!" });
+        if (!application_id) {
+            return res.status(400).json({ error: "Invalid application id parameter" }); //? Maybe useless because if application_id is null the router wouln't go here
         }
 
         try {
-            const applicationModified = await applicationsService.setApplicationStatus(status, teacher_id, application_id);
+            // Check that the application exists
+            const { data: application } = await applicationsService.getApplicationById(application_id);
 
-            if(applicationModified instanceof Error)
-                return res.status(400).json({error: applicationModified.message});
-
-            if(status === "Accepted"){
-                const proposal_id = applicationModified.proposal_id;
-                await applicationsService.setApplicationsStatusCanceledByProposalId(proposal_id, teacher_id);
-                await proposalsService.setProposalArchived(proposal_id);
+            if (!application) {
+                return res.status(404).json({ error: "Application not found!" });
+            }
+            
+            const { data: proposal } = await proposalsService.getProposalById(application.proposal_id);
+            if (!proposal) {
+                return res.status(404).json({ error: "Proposal corresponding to the application not found!" });
             }
 
-            return res.status(200).json({application: applicationModified});
+            if (proposal.supervisor_id !== teacher_id) {
+                return res.status(403).json({ error: "Not authorized!" });
+            }
+
+            const { data: updatedApplication } = await applicationsService.setApplicationStatus(application_id, status);
+
+            if (!updatedApplication) {
+                throw Error("Some error occurred in the database: application status not updated");
+            }
+
+            /*
+             * If the application has been accepted:
+             *  - cancel all other pending applications for the same thesis proposal
+             *  - archive the thesis proposal related to that application
+             */
+            if (status === "Accepted") {
+                const { proposal_id } = updatedApplication;
+                await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
+
+                const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
+                
+                if (!archivedProposal || !archivedProposal.archived)
+                    throw Error("Some error occurred in the database: proposal not archived");
+            }
+            
+            return res.status(200).json({ application: updatedApplication });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ error: "Internal server error" });
@@ -144,7 +168,7 @@ module.exports = {
     /**
      * Get the application given its id
      * 
-     * @param {application_id} number id of the application 
+     * @param {string} application_id id of the application 
      * 
      * @body none
      * 
@@ -154,18 +178,16 @@ module.exports = {
         const application_id = req.params.application_id;
 
         try {
-            const application = await applicationsService.getApplicationById(application_id);
+            const { data: application } = await applicationsService.getApplicationById(application_id);
 
-            if (application instanceof Error) {
-                return res.status(404).json({ error: "Application not found" });
+            if (!application) {
+                return res.status(404).json({ error: "Application not found!" });
             }
 
             return res.status(200).json({ application });
         } catch (err) {
-            console.error("[BACKEND-SERVER] Cannot get the application", err);
+            console.error("[BACKEND-SERVER] Cannot get the application: ", err);
             return res.status(500).json({ error: "Internal server error" });
-
         }
-
     }
 }

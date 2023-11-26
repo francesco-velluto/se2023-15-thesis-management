@@ -44,9 +44,9 @@ module.exports = {
     ('S002', 'Johnson', 'Emily', 'F', 'Canada', 'emily.johnson@example.com', 'BSC001', 2022);`,
 
   createApplicationsTableQuery: 'CREATE TABLE public.applications (\n' +
-      '    application_id SERIAL PRIMARY KEY,\n' +
+      '    id SERIAL PRIMARY KEY,\n' +
       '    proposal_id VARCHAR(10) NOT NULL,\n' +
-      '    id VARCHAR(10) NOT NULL,\n' +
+      '    student_id VARCHAR(10) NOT NULL,\n' +
       '    status VARCHAR(255) NOT NULL, \n' +
       '    application_date DATE NOT NULL\n' +
       ')'
