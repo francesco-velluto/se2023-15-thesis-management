@@ -1,6 +1,7 @@
 const applicationService = require("../service/applications.service");
 const db = require("../service/db");
 const Application = require("../model/Application");
+const Proposal = require("../model/Proposal");
 
 jest.mock("../service/db", () => ({
   query: jest.fn(),
@@ -12,7 +13,6 @@ beforeEach(() => {
   jest.spyOn(console, "log").mockImplementation(() => {});
   jest.spyOn(console, "info").mockImplementation(() => {});
   jest.spyOn(console, "error").mockImplementation(() => {});
-  
 });
 
 describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
@@ -20,20 +20,23 @@ describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
     db.query.mockResolvedValue({
       rows: [
         {
+          id: "A001",
           proposal_id: "1",
-          id: "s1",
+          student_id: "s1",
           status: "Pending",
           application_date: "12-01-2023",
         },
         {
+          id: "A002",
           proposal_id: "2",
-          id: "s2",
+          student_id: "s2",
           status: "Pending",
           application_date: "12-01-2023",
         },
         {
+          id: "A003",
           proposal_id: "3",
-          id: "s3",
+          student_id: "s3",
           status: "Pending",
           application_date: "12-01-2023",
         },
@@ -41,9 +44,9 @@ describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
     });
 
     const expectedApplications = [
-      new Application("1", "s1", "Pending", "12-01-2023"),
-      new Application("2", "s2", "Pending", "12-01-2023"),
-      new Application("3", "s3", "Pending", "12-01-2023"),
+      new Application("A001", "1", "s1", "Pending", "12-01-2023"),
+      new Application("A002", "2", "s2", "Pending", "12-01-2023"),
+      new Application("A003", "3", "s3", "Pending", "12-01-2023"),
     ];
     const res = await applicationService.getAllApplicationsByStudentId(
       "studentId"
@@ -242,13 +245,14 @@ describe("UNIT-SERVICE: setApplicationStatus", () => {
     ).rejects.toThrow("Invalid status value.");
   });
 
-  it("should throw error if application doesn't exist", async () => {
+  it("should throw error if application doesn't exist or doesn't belong to the teacher", async () => {
     db.query.mockResolvedValue({ rows: [] });
 
     expect(
       applicationService.setApplicationStatus("Accepted", "T001", "A001")
-    ).rejects.toThrow("This application doesn't exist or doesn't belong to the teacher");
-
+    ).rejects.toThrow(
+      "This application doesn't exist or doesn't belong to the teacher"
+    );
   });
 
   it("should throw error if application doesn't exist when trying to update the status", async () => {
@@ -262,13 +266,14 @@ describe("UNIT-SERVICE: setApplicationStatus", () => {
 
   it("should set the new application status successfully", async () => {
     const mockApplication = new Application(
-      "P001",
       "A001",
+      "P001",
+      "S001",
       "Accepted",
       "2023-11-23"
     );
 
-    db.query.mockResolvedValueOnce({ rows: [{ application_id: "A001" }] });
+    db.query.mockResolvedValueOnce({ rows: [{ id: "A001" }] });
     db.query.mockResolvedValueOnce({ rows: [mockApplication] });
 
     const res = await applicationService.setApplicationStatus(
@@ -281,6 +286,58 @@ describe("UNIT-SERVICE: setApplicationStatus", () => {
   });
 });
 
-describe("UNIT-SERVICE: setApplicationsStatusCanceledByProposalId", () => {});
+describe("UNIT-SERVICE: setApplicationsStatusCanceledByProposalId", () => {
+  it("should throw error if application doesn't exist or doesn't belong to the teacher", async () => {
+    db.query.mockResolvedValueOnce({ rows: [] });
 
-describe("UNIT-SERVICE: getApplicationById", () => {});
+    expect(
+      applicationService.setApplicationsStatusCanceledByProposalId(
+        "P001",
+        "T001"
+      )
+    ).rejects.toThrow(
+      "Proposal with proposal_id = P001 not found or not belonging to this teacher"
+    );
+  });
+
+  it("should return the number of applications canceled", async () => {
+    const mockProposal = new Proposal("P001");
+
+    db.query.mockResolvedValueOnce({ rows: [mockProposal] });
+    db.query.mockResolvedValueOnce({ rowCount: 4 });
+
+    const res =
+      await applicationService.setApplicationsStatusCanceledByProposalId(
+        "P001",
+        "T001"
+      );
+
+    expect(res).toBe(4);
+  });
+});
+
+describe("UNIT-SERVICE: getApplicationById", () => {
+  it("should throw error if application doesn't exist", async () => {
+    db.query.mockResolvedValueOnce({ rows: [] });
+
+    expect(applicationService.getApplicationById("A001")).rejects.toThrow(
+      "Application with application_id = A001 not found"
+    );
+  });
+
+  it("should return the number of applications canceled", async () => {
+    const mockApplication = new Application(
+      "A001",
+      "P001",
+      "S001",
+      "Accepted",
+      "2023-11-23"
+    );
+
+    db.query.mockResolvedValueOnce({ rows: [mockApplication] });
+
+    const res = await applicationService.getApplicationById("A001");
+
+    expect(res).toEqual(mockApplication);
+  });
+});

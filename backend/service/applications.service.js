@@ -185,8 +185,9 @@ module.exports = {
                 if (updatedApplication.rows.length === 0)
                     throw new Error(`No application found with application_id: ${application_id}`);
                 return new Application(
-                    updatedApplication.rows[0].proposal_id,
                     updatedApplication.rows[0].id,
+                    updatedApplication.rows[0].proposal_id,
+                    updatedApplication.rows[0].student_id,
                     updatedApplication.rows[0].status,
                     updatedApplication.rows[0].application_date
                 );
@@ -203,7 +204,7 @@ module.exports = {
      * @param {string} proposal_id 
      * @param {string} teacher_id
      * 
-     * @returns {number} Number of proposals modified
+     * @returns {Promise<Number>} Number of proposals modified
      * 
      * @throws {Error} if 
      */
@@ -211,20 +212,20 @@ module.exports = {
     setApplicationsStatusCanceledByProposalId: async(proposal_id, teacher_id) => {
         const query = "UPDATE applications SET status = 'Canceled' WHERE proposal_id = $1 AND status = 'Pending';";
 
-        try{
+        try {
             const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1 AND supervisor_id = $2;',
                 [proposal_id, teacher_id]);
             
-            if (proposalCheck.rows.length === 0){
+            if (proposalCheck.rows.length === 0) {
                 throw new Error(`Proposal with proposal_id = ${proposal_id} not found or not belonging to this teacher`);
-            }else{
+            } else {
 
                 const deletedApplications = await db.query(query, [proposal_id]);
-                return deletedApplications.rowCount
+                return deletedApplications.rowCount;
             }
-        }catch(error){
+        } catch (error) {
             console.error('[BACKEND-SERVER] Error in setApplicationStatusCanceledByProposalId service: ', error);
-            return error;
+            throw error;
         }
     },
 
@@ -233,31 +234,31 @@ module.exports = {
      * 
      * @param {string} proposal_id
      * 
-     * @returns {Application}
+     * @returns {Promise<Application>}
      * 
      * @throws {Error} if application not found
      */
-
     getApplicationById: async(application_id) =>{
-        const query = "SELECT * FROM applications where application_id = $1";
+        const query = "SELECT * FROM applications where id = $1";
 
-        try{
+        try {
             const row = await db.query(query, [application_id]);
-            if (row.rows.length === 0){
-                return new Error(`Application with application_id = ${application_id} not found`);
+            if (row.rows.length === 0) {
+                throw new Error(`Application with application_id = ${application_id} not found`);
             }
             const application = row.rows[0];
 
             return new Application(
-                application.proposal_id,
                 application.id,
+                application.proposal_id,
+                application.student_id,
                 application.status,
                 application.application_date
             );
 
-        }catch(error){
+        } catch (error) {
             console.error('[BACKEND-SERVER] Error in getApplicationById: ', error);
-            return error;
+            throw error;
         }
     }
 }
