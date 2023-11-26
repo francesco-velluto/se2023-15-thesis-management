@@ -10,8 +10,8 @@ module.exports = {
      *
      * @params: student_id
      * @body: none
-     * @returns: { [ { proposal_id: number, title: string, description: string, application_date: date, status: string } ] }
-     * @error 401 Unauthorized - if student_id is not the same as the authenticated user
+     * @returns: { [ { application_id: string, title: string, proposal_id: string, student_id: string, status: string, application_date: Date, supervisor_name: string, supervisor_surname: string } ] }
+     * @error 401 Unauthorized - if the user is not authenticated or student_id is not the same as the authenticated user
      * @error 404 Not Found - if the student_id is not found
      * @error 500 Internal Server Error - if something went wrong
      *
