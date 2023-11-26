@@ -3,33 +3,36 @@
 const db = require("./db");
 const Student = require("../model/Student");
 
+exports.rowToStudent = (row) => {
+  return new Student(
+    row.id,
+    row.surname,
+    row.name,
+    row.gender,
+    row.nationality,
+    row.email,
+    row.cod_degree,
+    row.enrollment_year
+  );
+};
 
 /**
  * Get a student by his Id
- * 
+ *
  */
+exports.getStudentById = async (student_id) => {
+  try {
+    const query = "SELECT * FROM student WHERE id = $1";
+    const { rows, rowCount } = await db.query(query, [student_id]);
 
-exports.getStudentById = async(student_id)=>{
-    let query = "SELECT * FROM student WHERE id = $1";
-
-    try{
-        const res = await db.query(query, [student_id]);
-
-        if(res.rows.length === 0)
-            throw new Error("This student doesn't exist");
-        const student = res.rows[0];
-        return new Student(
-            student.id,
-            student.surname,
-            student.name,
-            student.gender,
-            student.nationality,
-            student.email,
-            student.cod_degree,
-            student.enrollment_year
-        );
-    }catch(error){
-        console.log("Error in getStudentById: ", error);
-        return error;
+    if (rowCount === 0) {
+      return { data: undefined };
     }
-}
+
+    const student = this.rowToStudent(rows[0]);
+    return { data: student };
+  } catch (error) {
+    console.log("Error in getStudentById: ", error);
+    throw error;
+  }
+};
