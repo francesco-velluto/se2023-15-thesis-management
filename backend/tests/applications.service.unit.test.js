@@ -239,29 +239,24 @@ describe("UNIT-SERVICE: insertNewApplication", () => {
 });
 
 describe("UNIT-SERVICE: setApplicationStatus", () => {
-  it("should throw error if status field is invalid", async () => {
-    expect(
-      applicationService.setApplicationStatus("sdf", "T001", "A001")
-    ).rejects.toThrow("Invalid status value.");
-  });
+  it("should return undefined data if the application doesn't exist", async () => {
+    db.query.mockResolvedValue({ rowCount: 0 });
 
-  it("should throw error if application doesn't exist or doesn't belong to the teacher", async () => {
-    db.query.mockResolvedValue({ rows: [] });
-
-    expect(
-      applicationService.setApplicationStatus("Accepted", "T001", "A001")
-    ).rejects.toThrow(
-      "This application doesn't exist or doesn't belong to the teacher"
+    const res = await applicationService.setApplicationStatus(
+      "A001",
+      "Accepted"
     );
+    expect(res.data).toBeUndefined();
   });
 
-  it("should throw error if application doesn't exist when trying to update the status", async () => {
-    db.query.mockResolvedValueOnce({ rows: [{ application_id: "A001" }] });
-    db.query.mockResolvedValueOnce({ rows: [] });
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
 
     expect(
       applicationService.setApplicationStatus("Accepted", "T001", "A001")
-    ).rejects.toThrow("No application found with application_id: A001");
+    ).rejects.toThrow("Internal error");
   });
 
   it("should set the new application status successfully", async () => {
@@ -273,71 +268,70 @@ describe("UNIT-SERVICE: setApplicationStatus", () => {
       "2023-11-23"
     );
 
-    db.query.mockResolvedValueOnce({ rows: [{ id: "A001" }] });
-    db.query.mockResolvedValueOnce({ rows: [mockApplication] });
+    db.query.mockResolvedValueOnce({ rows: [mockApplication], rowCount: 1 });
 
     const res = await applicationService.setApplicationStatus(
-      "Accepted",
-      "T001",
-      "A001"
+      "A001",
+      "Accepted"
     );
 
-    expect(res).toEqual(mockApplication);
+    expect(res).toEqual({ data: mockApplication });
   });
 });
 
-describe("UNIT-SERVICE: setApplicationsStatusCanceledByProposalId", () => {
-  it("should throw error if application doesn't exist or doesn't belong to the teacher", async () => {
-    db.query.mockResolvedValueOnce({ rows: [] });
+describe("UNIT-SERVICE: cancelPendingApplicationsByProposalId", () => {
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
 
     expect(
-      applicationService.setApplicationsStatusCanceledByProposalId(
-        "P001",
-        "T001"
-      )
-    ).rejects.toThrow(
-      "Proposal with proposal_id = P001 not found or not belonging to this teacher"
-    );
+      applicationService.cancelPendingApplicationsByProposalId("P001")
+    ).rejects.toThrow("Internal error");
   });
 
-  it("should return the number of applications canceled", async () => {
-    const mockProposal = new Proposal("P001");
-
-    db.query.mockResolvedValueOnce({ rows: [mockProposal] });
+  it("should return the number of canceled applications", async () => {
     db.query.mockResolvedValueOnce({ rowCount: 4 });
 
-    const res =
-      await applicationService.setApplicationsStatusCanceledByProposalId(
-        "P001",
-        "T001"
-      );
+    const res = await applicationService.cancelPendingApplicationsByProposalId(
+      "P001"
+    );
 
-    expect(res).toBe(4);
+    expect(res).toEqual({ data: 4 });
   });
 });
 
 describe("UNIT-SERVICE: getApplicationById", () => {
-  it("should throw error if application doesn't exist", async () => {
-    db.query.mockResolvedValueOnce({ rows: [] });
+  it("should return undefined data field if application doesn't exist", async () => {
+    db.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
 
-    expect(applicationService.getApplicationById("A001")).rejects.toThrow(
-      "Application with application_id = A001 not found"
-    );
+    const res = await applicationService.getApplicationById("A001");
+    expect(res.data).toBeUndefined();
   });
 
-  it("should return the number of applications canceled", async () => {
+  it("should return the application", async () => {
     const mockApplication = new Application(
       "A001",
       "P001",
       "S001",
-      "Accepted",
+      "Pending",
       "2023-11-23"
     );
 
-    db.query.mockResolvedValueOnce({ rows: [mockApplication] });
+    db.query.mockResolvedValueOnce({ rows: [mockApplication], rowCount: 1 });
 
     const res = await applicationService.getApplicationById("A001");
 
-    expect(res).toEqual(mockApplication);
+    expect(res).toEqual({ data: mockApplication });
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    expect(
+      applicationService.getApplicationById("A001")
+    ).rejects.toThrow("Internal error");
   });
 });
