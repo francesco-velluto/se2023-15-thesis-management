@@ -128,15 +128,20 @@ module.exports = {
                 return res.status(404).json({ error: "Application not found!" });
             }
             
-            const { data: proposal } = await proposalsService.getProposalById(application.proposal_id);
-            if (!proposal) {
-                return res.status(404).json({ error: "Proposal corresponding to the application not found!" });
+            //? maybe this is a mess, change return object of getProposalById ??
+            try {
+                const { data: proposal } = await proposalsService.getProposalById(application.proposal_id);
+                if (proposal.supervisor_id !== teacher_id) {
+                    return res.status(403).json({ error: "Not authorized!" });
+                }
+            } catch (err) {
+                if (err.status === 404) {
+                    return res.status(404).json({ error: "Proposal corresponding to the application not found!" });
+                } else {
+                    throw err; // propagate 500 internal errors
+                }
             }
-
-            if (proposal.supervisor_id !== teacher_id) {
-                return res.status(403).json({ error: "Not authorized!" });
-            }
-
+            
             const { data: updatedApplication } = await applicationsService.setApplicationStatus(application_id, status);
 
             if (!updatedApplication) {
