@@ -28,7 +28,7 @@ router.get('/:student_id', authenticationController.isLoggedIn, applicationsCont
  *
  * @params none
  * @body none
- * @returns { [ { thesis_id: number, title: string, description: string, application_date: date, status: string } ] }
+ * @returns { [ { proposal_id: number, title: string, description: string, application_date: date, status: string } ] }
  */
 router.get('/', authenticationController.isLoggedIn, applicationsController.getAllApplicationsByTeacherId);
 

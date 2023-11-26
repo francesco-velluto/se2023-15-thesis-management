@@ -2,7 +2,7 @@ import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup, FormControl } fro
 import { FaCalendar } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
-import { VirtualClockContext } from './VirtualClockContext';
+import { VirtualClockContext } from '../context/VirtualClockContext';
 import { useContext, useState } from 'react';
 
 import dayjs from 'dayjs';

@@ -15,20 +15,23 @@ describe("getAllApplicationsByStudentId function", () => {
     db.query.mockResolvedValue({
       rows: [
         {
-          thesis_id: "1",
-          id: "s1",
+          id: "A001",
+          proposal_id: "1",
+          student_id: "s1",
           status: "Pending",
           application_date: "12-01-2023",
         },
         {
-          thesis_id: "2",
-          id: "s2",
+          id: "A002",
+          proposal_id: "2",
+          student_id: "s2",
           status: "Pending",
           application_date: "12-01-2023",
         },
         {
-          thesis_id: "3",
-          id: "s3",
+          id: "A003",
+          proposal_id: "3",
+          student_id: "s3",
           status: "Pending",
           application_date: "12-01-2023",
         },
@@ -36,9 +39,9 @@ describe("getAllApplicationsByStudentId function", () => {
     });
 
     const expectedApplications = [
-      new Application("1", "s1", "Pending", "12-01-2023"),
-      new Application("2", "s2", "Pending", "12-01-2023"),
-      new Application("3", "s3", "Pending", "12-01-2023"),
+      new Application("A001", "1", "s1", "Pending", "12-01-2023"),
+      new Application("A002", "2", "s2", "Pending", "12-01-2023"),
+      new Application("A003", "3", "s3", "Pending", "12-01-2023"),
     ];
     const res = await applicationService.getAllApplicationsByStudentId(
       "studentId"
