@@ -2,9 +2,6 @@ version: '3.8'
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-backend:latest
     depends_on:
       db:
@@ -21,9 +18,6 @@ services:
       - mynetwork
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-frontend:latest
     depends_on:
       - backend
@@ -36,13 +30,11 @@ services:
       - mynetwork
 
   db:
-    image: postgres:16-alpine
+    image: francescovelluto/se2023-15-thesis-management-database:latest
     environment:
       - POSTGRES_DB='Thesis-Management-System'
       - POSTGRES_USER=${DB_USER}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
-    volumes:
-      - ./database/Thesis-Management-System-initDocker.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - mynetwork
     ports:
