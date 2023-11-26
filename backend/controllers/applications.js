@@ -2,7 +2,9 @@
 
 const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
+const Application = require("../model/Application");
 const applicationsService = require("../service/applications.service");
+const proposalsService = require("../service/proposals.service");
 
 module.exports = {
     /**
@@ -85,18 +87,115 @@ module.exports = {
             });
     },
 
-    insertNewApplication: (req,res) => {
+    insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
-            .then((result) => {
-                res.status(200).json(result.data);
-            })
-            .catch((err) => {
-                res.status(500).json({ errors: [err.message] });
-            });
+                .then((result) => {
+                    res.status(200).json(result.data);
+                })
+                .catch((err) => {
+                    res.status(500).json({ errors: [err.message] });
+                });
 
         } else
-        return res.status(400).send("Parameters not found in insert new application controller");
-        
+            return res.status(400).send("Parameters not found in insert new application controller");
+
+    },
+
+
+    /**
+     * Accept/Reject an application
+     * 
+     * @params none
+     * 
+     * @body {application_id: string, status: string}
+     * 
+     */
+    acceptOrRejectApplication: async (req, res) => {
+        const status = req.body.status;
+        const application_id = req.params.application_id;
+        const teacher_id = req.user.id;
+
+        if (!(status === "Accepted" || status === "Rejected"))
+            return res.status(400).json({ error: "Invalid status field value in request body" });
+
+        if (!application_id) {
+            return res.status(400).json({ error: "Invalid application id parameter" }); //? Maybe useless because if application_id is null the router wouln't go here
+        }
+
+        try {
+            // Check that the application exists
+            const { data: application } = await applicationsService.getApplicationById(application_id);
+
+            if (!application) {
+                return res.status(404).json({ error: "Application not found!" });
+            }
+            
+            //? maybe this is a mess, change return object of getProposalById ??
+            try {
+                const { data: proposal } = await proposalsService.getProposalById(application.proposal_id);
+                if (proposal.supervisor_id !== teacher_id) {
+                    return res.status(403).json({ error: "Not authorized!" });
+                }
+            } catch (err) {
+                if (err.status === 404) {
+                    return res.status(404).json({ error: "Proposal corresponding to the application not found!" });
+                } else {
+                    throw err; // propagate 500 internal errors
+                }
+            }
+            
+            const { data: updatedApplication } = await applicationsService.setApplicationStatus(application_id, status);
+
+            if (!updatedApplication) {
+                throw Error("Some error occurred in the database: application status not updated");
+            }
+
+            /*
+             * If the application has been accepted:
+             *  - cancel all other pending applications for the same thesis proposal
+             *  - archive the thesis proposal related to that application
+             */
+            if (status === "Accepted") {
+                const { proposal_id } = updatedApplication;
+                await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
+
+                const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
+                
+                if (!archivedProposal || !archivedProposal.archived)
+                    throw Error("Some error occurred in the database: proposal not archived");
+            }
+            
+            return res.status(200).json({ application: updatedApplication });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    },
+
+    /**
+     * Get the application given its id
+     * 
+     * @param {string} application_id id of the application 
+     * 
+     * @body none
+     * 
+     * @returns {Application} the application
+     */
+    getApplicationById: async (req, res) => {
+        const application_id = req.params.application_id;
+
+        try {
+            const { data: application } = await applicationsService.getApplicationById(application_id);
+
+            if (!application) {
+                return res.status(404).json({ error: "Application not found!" });
+            }
+
+            return res.status(200).json({ application });
+        } catch (err) {
+            console.error("[BACKEND-SERVER] Cannot get the application: ", err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
     }
-};
+}

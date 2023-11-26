@@ -25,7 +25,7 @@ In this design 4 tables can NOT be modified :
 - Student: [**id** (PK), **surname**, **name**, **gender**, **nationality**, **email**, *cod_degree*, **enrollment_year**]
 - Teacher: [**id** (PK), **surname**, **name**, **email**, cod_group, **cod_department**]
 - Career: [**id** (PK), **cod_course** (PK), **title_course**, **cfu**, **grade**, **date**]
-- Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **programmes**]
+- Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **programmes**, **archived**]
 - Applications: [**id** (PK), *proposal_id*, *student_id*, **status**, **application_date**]
 
 ## Tables details
@@ -92,6 +92,7 @@ Table for all thesis proposals.
 | expiration_date | DATE | Expiration date of the proposal. |
 | level | VARCHAR(30) | Level of the proposal. Graduate/Undergraduate |
 | programmes | TEXT[] | All degrees concerned:list of cod_degree |
+| archived | BOOLEAN | Tells if the teacher archived this proposal (either manually or after accepting an application) |
 
 ### Applications
 

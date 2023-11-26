@@ -111,6 +111,12 @@ The student application page is in `src/pages/StudentApplicationPage.js`.
 
 The route is accessible at `/applications/` when the user is logged in as a student.
 
+### ApplicationsDetailsPabe
+
+The application details page is in `src/pages/ProposalDetailsPage.js`.
+
+The route is accesible at `/applications/:application_id`.
+
 ## Users Credentials
 
 - user with the role of student

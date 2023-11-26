@@ -13,7 +13,8 @@ const proposals = require("./proposals");
 const applications = require("./applications");
 const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
-const { isLoggedIn } = require("../controllers/authentication");
+const { getStudentById } = require("../controllers/students");
+const { isLoggedIn, isTeacher } = require("../controllers/authentication");
 
 /**
  * Authentication routes
@@ -73,5 +74,23 @@ router.get("/degrees", isLoggedIn, getDegrees);
  * Route /api/applications
  */
 router.use('/applications', applications);
+
+/**
+ * GET /api/students/:student_id
+ * 
+ * Retrieve the lstudent given his id
+ * Authentication: Required
+ * Authorization required: Teacher
+ *
+ * @param {Object} res HTTP Response Object
+ * response body contains an array of degrees
+ * 
+ * @error 401 - Not Authenticated, Not Authorized
+ * @error 404 - Student not found
+ * @error 500 - Internal Server Error
+ *
+ */
+router.get("/students/:student_id", isLoggedIn, isTeacher, getStudentById);
+
 
 module.exports = router;
