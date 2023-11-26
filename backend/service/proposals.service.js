@@ -3,7 +3,7 @@
 const db = require("./db");
 const Proposal = require("../model/Proposal");
 
-const rowToProposal = (row) => {
+exports.rowToProposal = (row) => {
   return new Proposal(
     row.proposal_id,
     row.title,
