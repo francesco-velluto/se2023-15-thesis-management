@@ -16,7 +16,8 @@ const rowToProposal = (row) => {
     row.notes || "",
     row.expiration_date,
     row.level,
-    row.programmes
+    row.programmes,
+    row.archived
   );
 };
 
@@ -42,7 +43,7 @@ exports.insertProposal = async (proposal) => {
         proposal.expiration_date,
         proposal.level,
         proposal.programmes,
-        "active",
+        false,
       ]
     );
     return rowToProposal(result.rows[0]);

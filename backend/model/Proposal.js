@@ -15,7 +15,8 @@ module.exports = function Proposal(
   notes = '',
   expiration_date = undefined,
   level = '',
-  programmes = []
+  programmes = [],
+  archived = false
 ) {
   this.proposal_id = proposal_id;
   this.title = title;
@@ -29,4 +30,5 @@ module.exports = function Proposal(
   this.expiration_date = expiration_date;
   this.level = level;
   this.programmes = programmes;
+  this.archived = archived;
 };
