@@ -185,7 +185,6 @@ module.exports = {
      * Set the status of the applications of a certain proposal identified by its id as Canceled if they are Pending
      * 
      * @param {string} proposal_id 
-     * @param {string} teacher_id
      * 
      * @returns {Promise<{data: Number}>} Number of proposals modified
      * 
@@ -193,7 +192,7 @@ module.exports = {
      */
     cancelPendingApplicationsByProposalId: async (proposal_id) => {
         try {
-            const query = "UPDATE applications SET status = 'Canceled' WHERE id = $1 AND status = 'Pending';";
+            const query = "UPDATE applications SET status = 'Canceled' WHERE proposal_id = $1 AND status = 'Pending';";
 
             const { rowCount } = await db.query(query, [proposal_id]);
             return { data: rowCount };
