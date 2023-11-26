@@ -6,7 +6,6 @@ import TitleBar from "../components/TitleBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { getProposalById } from "../api/ProposalsAPI";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
 import { Container, Spinner, Row, Col, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
@@ -40,15 +39,9 @@ function ApplicationDetails() {
 
                 if (application) {
                     setInfoApplication(application);
-                    const responseProposal = await getProposalById(application.proposal_id);
-                    if (responseProposal.ok) {
-                        const proposal = await responseProposal.json();
-                        setInfoProposal(proposal);
-                    } else {
-                        setErrorMessage("Error in fetching the proposal related to the application");
-                    }
+                    setInfoProposal(application.proposal);
 
-                    const student = await getStudentById(application.id);
+                    const student = await getStudentById(application.student_id);
                     setInfoStudent(student);
 
                 } else {
@@ -57,7 +50,7 @@ function ApplicationDetails() {
                 setIsLoading(false);
 
             } catch (error) {
-                setErrorMessage(error);
+                setErrorMessage(error.message);
                 setIsLoading(false);
             }
         }
