@@ -163,7 +163,7 @@ module.exports = {
             const { rows, rowCount } = await db.query(query, [status, application_id]);
 
             if (rowCount === 0) {
-                return { data: {} };
+                return { data: undefined };
             }
 
             const application = new Application(
@@ -217,7 +217,7 @@ module.exports = {
 
             const { rows, rowCount } = await db.query(query, [application_id]);
             if (rowCount === 0) {
-                return {};
+                return { data: undefined };
             }
 
             const application = new Application(
