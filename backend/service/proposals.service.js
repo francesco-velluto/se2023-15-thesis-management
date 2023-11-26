@@ -187,7 +187,7 @@ exports.setProposalArchived = async (proposal_id) => {
 
     const { rows, rowCount } = await db.query(queryUpdate, [proposal_id]);
     if (rowCount === 0) {
-      return {};
+      return { data: undefined };
     }
 
     const proposal = rowToProposal(rows[0]);
