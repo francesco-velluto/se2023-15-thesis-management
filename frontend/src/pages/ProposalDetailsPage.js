@@ -622,13 +622,6 @@ function ProposalDetailsPage({ mode }) {
                                             }}>Back to Homepage</Button>
                                         }
                                     </Col>
-                                    {mode !== 0 && (
-                                        <Col>
-                                            <Button style={{ backgroundColor: "#6D5D6E", borderColor: "#6D5D6E" }} onClick={() => {
-                                                navigate('/')
-                                            }}>Return</Button>
-                                        </Col>
-                                    )}
                                     <Col className={"d-flex flex-row-revers"}>
                                         {mode === 0 && <ApplicationButton proposalID={proposal_id} />}
                                         {mode !== 0 && <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={handleCreateProposal}>Create Proposal</Button>}
