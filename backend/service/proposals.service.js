@@ -162,7 +162,7 @@ exports.getProposalById = (proposal_id) => {
  * 
  * @param {number} proposal_id 
  * 
- * @returns {{proposal_id: string, archived: true}}
+ * @returns {Promise<{proposal_id: string, archived: true}>}
  */
 exports.setProposalArchived = async (proposal_id) => {
 

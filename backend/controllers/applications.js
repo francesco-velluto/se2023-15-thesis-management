@@ -107,7 +107,7 @@ module.exports = {
      * 
      * @body {application_id: string, status: string}
      * 
-     * @returns {Application} the application with the status modified
+     * @returns {Promise<Application>} the application with the status modified
      */
     acceptOrRejectApplication: async (req, res) => {
 
