@@ -105,6 +105,12 @@ The proposal details page is in `src/pages/ProposalDetailsPage.js`.
 
 The route is accessible at `/proposals/:proposalId`.
 
+### ApplicationsDetailsPabe
+
+The application details page is in `src/pages/ProposalDetailsPage.js`.
+
+The route is accesible at `/applications/:application_id`.
+
 ## Users Credentials
 
 - user with the role of student

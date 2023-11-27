@@ -1,6 +1,7 @@
 const applicationService = require("../service/applications.service");
 const db = require("../service/db");
 const Application = require("../model/Application");
+const Proposal = require("../model/Proposal");
 
 jest.mock("../service/db", () => ({
   query: jest.fn(),
@@ -8,9 +9,13 @@ jest.mock("../service/db", () => ({
 
 beforeEach(() => {
   jest.resetAllMocks();
+  // comment these lines if you want to see console prints during tests
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
-describe("getAllApplicationsByStudentId function", () => {
+describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
   it("should return all applications for a student by its id", async () => {
     db.query.mockResolvedValue({
       rows: [
@@ -63,7 +68,7 @@ describe("getAllApplicationsByStudentId function", () => {
   });
 });
 
-describe("getAllApplicationsByTeacherId function", () => {
+describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   it("should return all applications for thesis proposals supervised by a teacher", async () => {
     teacherId = "teacher";
     db.query.mockResolvedValue({
@@ -175,7 +180,7 @@ describe("getAllApplicationsByTeacherId function", () => {
   });
 });
 
-describe("insertNewApplication function", () => {
+describe("UNIT-SERVICE: insertNewApplication", () => {
   it("should insert a new application", async () => {
     const proposalId = 1;
     const studentId = "s1";
@@ -230,5 +235,118 @@ describe("insertNewApplication function", () => {
       mockError
     );
     consoleErrorSpy.mockRestore();
+  });
+});
+
+describe("UNIT-SERVICE: setApplicationStatus", () => {
+  it("should return undefined data if the application doesn't exist", async () => {
+    db.query.mockResolvedValue({ rowCount: 0 });
+
+    const res = await applicationService.setApplicationStatus(
+      "A001",
+      "Accepted"
+    );
+    expect(res.data).toBeUndefined();
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    expect(
+      applicationService.setApplicationStatus("Accepted", "T001", "A001")
+    ).rejects.toThrow("Internal error");
+  });
+
+  it("should set the new application status successfully", async () => {
+    const mockApplication = new Application(
+      "A001",
+      "P001",
+      "S001",
+      "Accepted",
+      "2023-11-23"
+    );
+
+    db.query.mockResolvedValueOnce({ rows: [mockApplication], rowCount: 1 });
+
+    const res = await applicationService.setApplicationStatus(
+      "A001",
+      "Accepted"
+    );
+
+    expect(res).toEqual({ data: mockApplication });
+  });
+});
+
+describe("UNIT-SERVICE: cancelPendingApplicationsByProposalId", () => {
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    expect(
+      applicationService.cancelPendingApplicationsByProposalId("P001")
+    ).rejects.toThrow("Internal error");
+  });
+
+  it("should return the number of canceled applications", async () => {
+    db.query.mockResolvedValueOnce({ rowCount: 4 });
+
+    const res = await applicationService.cancelPendingApplicationsByProposalId(
+      "P001"
+    );
+
+    expect(res).toEqual({ data: 4 });
+  });
+});
+
+describe("UNIT-SERVICE: getApplicationById", () => {
+  it("should return undefined data field if application doesn't exist", async () => {
+    db.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
+
+    const res = await applicationService.getApplicationById("A001");
+    expect(res.data).toBeUndefined();
+  });
+
+  it("should return the application", async () => {
+    const mockProposal = new Proposal("P001");
+
+    const queryResult = {
+      id: "A001",
+      student_id: "S001",
+      status: "Pending",
+      application_date: "2023-11-23",
+      ...mockProposal,
+    };
+
+    const expectedResult = {
+      id: "A001",
+      student_id: "S001",
+      status: "Pending",
+      application_date: "2023-11-23",
+      proposal: mockProposal,
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [queryResult],
+      rowCount: 1,
+    });
+
+    const res = await applicationService.getApplicationById("A001");
+
+    expect(res).toEqual({
+      data: expectedResult,
+    });
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    expect(applicationService.getApplicationById("A001")).rejects.toThrow(
+      "Internal error"
+    );
   });
 });

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Accordion, Alert, Card, Container, Row, Spinner } from "react-bootstrap";
+import { Accordion, Alert, Card, Container, Row, Col, Spinner, Button } from "react-bootstrap";
 import { getAllApplicationsByTeacher } from '../api/ApplicationsAPI';
 import { format } from 'date-fns';
 import NavbarContainer from '../components/Navbar';
 import TitleBar from '../components/TitleBar';
+import { useNavigate } from 'react-router-dom';
 
 function ApplicationList() {
     const [applications, setApplications] = useState([]);
     const [errors, setErrors] = useState(undefined);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const formattedDate = (date) => {
         return format(new Date(date), "EEEE, MMMM do yyyy")
@@ -60,10 +62,19 @@ function ApplicationList() {
                                                 {proposal.applications.map((application, index) => (
                                                     <Card key={index} className='my-3'>
                                                         <Card.Body>
-                                                            <strong>
-                                                                {application.name} {application.surname}
-                                                            </strong>
-                                                            {' '} has applied for this thesis on {formattedDate(application.application_date)}
+                                                            <Row className="align-items-center">
+                                                                <Col>
+                                                                    <strong>
+                                                                        {application.name} {application.surname}
+                                                                    </strong>
+                                                                    {' '} has applied for this thesis on {formattedDate(application.application_date)}
+                                                                </Col>
+                                                                <Col className="text-end">
+                                                                    <Button variant="outline-secondary" className='text-end' onClick={()=>navigate(`/applications/${application.application_id}`)}>Show details</Button>
+                                                                </Col>
+                                                            </Row>
+
+
                                                         </Card.Body>
                                                     </Card>
                                                 ))}
