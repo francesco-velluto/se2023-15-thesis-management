@@ -104,7 +104,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
                 "JOIN unnest(p.programmes) AS prog ON true " +
                 "JOIN degree d ON prog = d.cod_degree " +
 
-                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.status = 'active'" +
+                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.archived = false " +
 
                 "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
                 "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
