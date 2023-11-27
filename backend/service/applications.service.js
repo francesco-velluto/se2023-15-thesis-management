@@ -17,7 +17,7 @@ module.exports = {
                         reject({ status: 404, data: 'Student not found' });
                     }
 
-                    return db.query('SELECT a.*, p.title, t.name as supervisor_name, t.surname as supervisor_surname FROM applications a JOIN proposals p ON a.proposal_id = p.proposal_id JOIN teacher t ON p.supervisor_id = t.id WHERE a.id = $1;', [student_id]);
+                    return db.query('SELECT a.*, p.title, t.name as supervisor_name, t.surname as supervisor_surname FROM applications a JOIN proposals p ON a.proposal_id = p.proposal_id JOIN teacher t ON p.supervisor_id = t.id WHERE a.student_id = $1;', [student_id]);
                 })
                 .then((rows) => {
                     resolve({ status: 200, data: rows.rows });
