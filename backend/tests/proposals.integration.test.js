@@ -150,7 +150,6 @@ describe("End to end tests for Search proposals", () => {
 
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
-        await restoreProposalsTable(); // should be already restored but to be sure...
     });
 
     afterAll(async () => {
