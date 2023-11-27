@@ -77,7 +77,8 @@ function ApplicationDetails() {
             <NavbarContainer />
             <TitleBar title={"Application details"} />
 
-            <Container className="w-50 text-center">
+
+            <Col md={6} className="text-center mx-auto">
                 <Row className='mt-2'>
                     {errorMessage ?
                         <Alert variant='danger'
@@ -100,10 +101,10 @@ function ApplicationDetails() {
                         <ProposalInfo infoProposal={infoProposal} />
 
                         <Row className="py-1 my-2">
-                            <Col className="text-start" sm={12} md={6}>
+                            <Col className="text-start" >
                                 <Button variant="outline-secondary" onClick={() => navigate("/applications")}> Go back</Button>
                             </Col>
-                            <Col className="text-end" sm={12} md={6}>
+                            <Col className="text-end" >
                                 <Button className="mx-2" variant="outline-success" onClick={() => handleButton("Accepted")}>Accept</Button>
                                 <Button variant="outline-danger" onClick={() => handleButton("Rejected")}>Reject</Button>
                             </Col>
@@ -127,7 +128,7 @@ function ApplicationDetails() {
 
                 }
 
-            </Container>
+            </Col>
         </>
     )
 }
