@@ -15,11 +15,11 @@ import { LoggedUserContext } from "../context/AuthenticationContext";
  *  - Read Mode: Displaying a proposal in read-only format.
  *  - Write Mode: Editing an existing proposal.
  *  - Add Mode: Adding a new proposal.
- * 
+ *
  * @param {number} mode - An integer indicating the mode:
  *  - 0: Read Mode
  *  - 1: Write Mode
- *  - 2: Add Mode 
+ *  - 2: Add Mode
  */
 function ProposalDetailsPage({ mode }) {
     const navigate = useNavigate();
@@ -446,7 +446,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 />
                                                             </Col>
                                                             <Col >
-                                                                <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                <Button id="add-group-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
                                                                     if (!newGroup.trim()) {
                                                                         return;
                                                                     } else if (!groups.includes(newGroup)) {
@@ -524,7 +524,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 />
                                                             </Col>
                                                             <Col >
-                                                                <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                <Button id="add-keyword-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
                                                                     if (!newKeyword.trim()) {
                                                                         return;
                                                                     } else if (!keywords.includes(newKeyword)) {
@@ -623,7 +623,13 @@ function ProposalDetailsPage({ mode }) {
                                     </Col>
                                     <Col className={"d-flex flex-row-reverse"}>
                                         {mode === 0 && loggedUser.role === 1 && <ApplicationButton proposalID={proposal_id} />}
-                                        {mode !== 0 && loggedUser.role === 0 && <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={handleCreateProposal}>Create Proposal</Button>}
+                                        {mode !== 0 && loggedUser.role === 0 &&
+                                            <Button
+                                                id="add-proposal-btn"
+                                                style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
+                                                onClick={handleCreateProposal}>
+                                                    Create Proposal
+                                            </Button>}
                                     </Col>
                                 </Row>
                             </Container>
