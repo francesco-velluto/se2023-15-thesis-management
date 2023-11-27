@@ -24,6 +24,7 @@ const applicationsController = require("../controllers/applications");
 router.get(
   "/:student_id", //TODO: change this to use a query ?student_id=...
   authenticationController.isLoggedIn,
+  authenticationController.isStudent,
   applicationsController.getAllApplicationsByStudentId
 );
 

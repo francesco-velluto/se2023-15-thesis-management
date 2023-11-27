@@ -23,9 +23,6 @@ module.exports = {
     getAllApplicationsByStudentId: (req, res) => {
         const student_id = req.params.student_id;
 
-        if(!(req.user instanceof Student))
-            return res.status(401).json({ error: "Must be a student to make this request!" });
-
         // check if student_id is the same as the authenticated user
         if (student_id !== req.user.id)
             return res.status(401).json({ error: "You cannot get applications of another student" });
@@ -105,11 +102,11 @@ module.exports = {
 
     /**
      * Accept/Reject an application
-     * 
+     *
      * @params none
-     * 
+     *
      * @body {application_id: string, status: string}
-     * 
+     *
      */
     acceptOrRejectApplication: async (req, res) => {
         const status = req.body.status;
@@ -130,13 +127,13 @@ module.exports = {
             if (!application) {
                 return res.status(404).json({ error: "Application not found!" });
             }
-            
+
             const { proposal } = application;
 
             if (proposal.supervisor_id !== teacher_id) {
                 return res.status(403).json({ error: "Not authorized!" });
             }
-            
+
             const { data: updatedApplication } = await applicationsService.setApplicationStatus(application_id, status);
 
             if (!updatedApplication) {
@@ -153,11 +150,11 @@ module.exports = {
                 await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
 
                 const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
-                
+
                 if (!archivedProposal || !archivedProposal.archived)
                     throw Error("Some error occurred in the database: proposal not archived");
             }
-            
+
             return res.status(200).json({ application: updatedApplication });
         } catch (error) {
             console.log(error);
@@ -167,11 +164,11 @@ module.exports = {
 
     /**
      * Get the application given its id
-     * 
-     * @param {string} application_id id of the application 
-     * 
+     *
+     * @param {string} application_id id of the application
+     *
      * @body none
-     * 
+     *
      */
     getApplicationById: async (req, res) => {
         const application_id = req.params.application_id;
@@ -180,14 +177,14 @@ module.exports = {
         if (!application_id) {
             return res.status(400).json({ error: "Invalid application id parameter" });
         }
-        
+
         try {
             const { data: application } = await applicationsService.getApplicationById(application_id);
 
             if (!application) {
                 return res.status(404).json({ error: "Application not found!" });
             }
-            
+
             const { proposal } = application;
 
             if (proposal.supervisor_id !== teacher_id) {
