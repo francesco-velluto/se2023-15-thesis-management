@@ -187,6 +187,9 @@ function HomePage() {
                       <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
                         Thesis Proposals
                       </Button>
+                      <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
+                        My Applications
+                      </Button>
                     </Col>
                   )}
                 </Row>

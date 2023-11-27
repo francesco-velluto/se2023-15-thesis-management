@@ -24,8 +24,6 @@ module.exports = {
         return await APICall(ApplicationsAPIURL + `/${id}`, 'GET');
     },
 
-
-
     insertNewApplication: async ({ proposalID }) => {
         const postData = {
             proposal_id: `${proposalID}`,

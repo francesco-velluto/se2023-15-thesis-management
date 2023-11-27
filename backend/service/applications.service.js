@@ -11,17 +11,13 @@ module.exports = {
             // check if student exists in student db table
             db.query('SELECT * FROM student WHERE id = $1;', [student_id])
                 .then((rows) => {
-                    if (rows.rowCount === 0) {
+                    if (rows.count === 0) {
                         console.error('[BACKEND-SERVER] Error in getAllApplicationsByStudentId Student with id ' + 
                             student_id + ' not found in table student');
                         reject({ status: 404, data: 'Student not found' });
                     }
 
-                    return db.query('SELECT p.proposal_id, p.title, p.description, \
-                        a.application_date, a.status \
-                        FROM applications a \
-                        JOIN proposals p ON a.proposal_id = p.proposal_id \
-                        WHERE a.student_id = $1;', [student_id]);
+                    return db.query('SELECT a.*, p.title, t.name as supervisor_name, t.surname as supervisor_surname FROM applications a JOIN proposals p ON a.proposal_id = p.proposal_id JOIN teacher t ON p.supervisor_id = t.id WHERE a.student_id = $1;', [student_id]);
                 })
                 .then((rows) => {
                     resolve({ status: 200, data: rows.rows });

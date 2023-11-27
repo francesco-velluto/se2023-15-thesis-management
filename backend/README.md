@@ -105,7 +105,7 @@ POST `/api/authentication/login`
 
   \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
 
-- `SUCCESS 201` Response Body:
+- `SUCCESS 200` Response Body:
   - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal and the supervisor_id field which represents the id of the teacher supervisor of the thesis.\
     - `id` | string: ID of the proposal
     - `supervisor_id` | string: ID of the teacher supervisor
@@ -210,6 +210,34 @@ POST `/api/authentication/login`
 - Errors:
  - `ERROR 500` Response Body: `{"error": "Student/Proposal not found or already applied" }`
 
+
+### Applications
+
+#### Get all applications by student id
+
+**GET** `/api/applications/:student_id`
+
+- Get all the applications of a student
+- Authentication: required
+- Authorization: only a student can access this endpoint
+- Request Query Parameters: _none_
+- Request Body: _none_
+- `SUCCESS 200` Response Body:
+  - Array of applications. Each application has the following attributes:
+    - `proposal_id` : ID of the proposal
+    - `student_id` : ID of the student
+    - `title` : Title of the proposal
+    - `supervisor_surname` : Surname of the supervisor
+    - `supervisor_name` : Name of the supervisor
+    - `status` : Status of the application (e.g. accepted, rejected, pending, canceled)
+    - `application_date` : Date of the application when the student applied
+- Errors:
+  - `ERROR 500` Response Body: `{"error": "Internal Server Error"}`
+  - `ERROR 401` Response Body: `{"error": "Must be authenticated to make this request!"}`
+  - `ERROR 401` Response Body: `{"error": "Must be a student to make this request!"}`
+  - `ERROR 401` Response Body: `{"error": "You cannot get applications of another student"}`
+  - `ERROR 404` Response Body: `{"error": "Student not found"}`
+  
 **PUT** `/api/applications/:application_id`
 - Set the status of an application to "Accepted" or "Rejected".
 The others pending applications relative to the same proposal are set to "Canceled".

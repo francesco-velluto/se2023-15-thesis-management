@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
+import StudentApplicationsPage from "./pages/StudentApplicationsPage";
 import ApplicationDetails from "./pages/ApplicationDetailsPage";
 
 import { Alert, Card, Col, Container, Row } from "react-bootstrap";
@@ -46,7 +47,10 @@ function Main() {
                 <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications'>
-                    <Route index element={(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <UnAuthorizationPage />} />
+                    <Route index element={
+                    	!loggedUser ? <UnAuthorizationPage /> :
+                        	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
+                    } />
                     <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
