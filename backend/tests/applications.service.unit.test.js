@@ -310,19 +310,34 @@ describe("UNIT-SERVICE: getApplicationById", () => {
   });
 
   it("should return the application", async () => {
-    const mockApplication = new Application(
-      "A001",
-      "P001",
-      "S001",
-      "Pending",
-      "2023-11-23"
-    );
+    const mockProposal = new Proposal("P001");
 
-    db.query.mockResolvedValueOnce({ rows: [mockApplication], rowCount: 1 });
+    const queryResult = {
+      id: "A001",
+      student_id: "S001",
+      status: "Pending",
+      application_date: "2023-11-23",
+      ...mockProposal,
+    };
+
+    const expectedResult = {
+      id: "A001",
+      student_id: "S001",
+      status: "Pending",
+      application_date: "2023-11-23",
+      proposal: mockProposal,
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [queryResult],
+      rowCount: 1,
+    });
 
     const res = await applicationService.getApplicationById("A001");
 
-    expect(res).toEqual({ data: mockApplication });
+    expect(res).toEqual({
+      data: expectedResult,
+    });
   });
 
   it("should throw error if a generic error occurs on the database", async () => {
@@ -330,8 +345,8 @@ describe("UNIT-SERVICE: getApplicationById", () => {
       throw new Error("Internal error");
     });
 
-    expect(
-      applicationService.getApplicationById("A001")
-    ).rejects.toThrow("Internal error");
+    expect(applicationService.getApplicationById("A001")).rejects.toThrow(
+      "Internal error"
+    );
   });
 });

@@ -256,14 +256,14 @@ function ProposalDetailsPage({ mode }) {
                                 )}
                                 <Row>
                                     <Col>
-                                        <Card className="h-100">
+                                        <Card>
                                             <Card.Body>
                                                 <Card.Title>Description:</Card.Title>
                                                 <Form.Group>
                                                     <Form.Control
-                                                        as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                        as={mode === 1 ? 'input' : 'textarea'}  // read mode
                                                         name='description'
-                                                        rows={mode === 0 ? 1 : 7}               // read mode
+                                                                       // read mode
                                                         aria-label='Enter description'
                                                         placeholder='Enter description'
                                                         value={description}
@@ -273,6 +273,7 @@ function ProposalDetailsPage({ mode }) {
                                                         readOnly={mode === 0}                   // read mode
                                                         plaintext={mode === 0}                  // read mode
                                                         required
+                                                        style={{ whiteSpace: 'pre-wrap' }}
                                                     />
                                                 </Form.Group>
                                             </Card.Body>
@@ -282,7 +283,7 @@ function ProposalDetailsPage({ mode }) {
                             </Container>
                             <Container>
                                 <Row>
-                                    <Col>
+                                    <Col xs={12} md={6} className="mb-1 mb-md-0">
                                         <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Supervisor:</Card.Title>
@@ -295,7 +296,7 @@ function ProposalDetailsPage({ mode }) {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col xs={6}>
+                                    <Col xs={12} md={6}>
                                         <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Co-Supervisor:</Card.Title>
@@ -310,7 +311,7 @@ function ProposalDetailsPage({ mode }) {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col>
+                                    <Col >
                                         <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Level:</Card.Title>
@@ -363,13 +364,13 @@ function ProposalDetailsPage({ mode }) {
                                     </Col>
                                 </Row>
                                 <Row>
-                                    <Col>
+                                    <Col xs={12} md={6} className="mb-1 mb-md-0">
                                         <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>CdS / Programmes:</Card.Title>
                                                 {mode === 0 ?
                                                     <Card.Text>
-                                                        {programmes.map((programme) => <Badge bg="" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >{programme.title_degree}</Badge>)}
+                                                        {programmes.map((programme) => <Badge bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >{programme.title_degree}</Badge>)}
                                                     </Card.Text>
                                                     :
                                                     <div>
@@ -421,13 +422,13 @@ function ProposalDetailsPage({ mode }) {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col>
+                                    <Col xs={12} md={6}>
                                         <Card className="h-100">
                                             <Card.Body >
                                                 <Card.Title>Groups:</Card.Title>
                                                 {mode === 0 ?
                                                     <Card.Text>
-                                                        {groups.map((group) => <Badge bg="" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
+                                                        {groups.map((group) => <Badge bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
                                                     </Card.Text>
                                                     :
                                                     <Form.Group className="h-100" style={{ marginTop: "25px" }}>
@@ -484,9 +485,9 @@ function ProposalDetailsPage({ mode }) {
                                         </Card>
                                     </Col>
                                 </Row>
+                                {mode !== 0 &&
                                 <Row>
-                                    {mode !== 0 &&
-                                        <Col>
+                                        <Col xs={12} md={6} className="mb-1 mb-md-0">
                                             <Card className="h-100">
                                                 <Card.Body>
                                                     <Card.Title>Expiration Date:</Card.Title>
@@ -504,9 +505,7 @@ function ProposalDetailsPage({ mode }) {
                                                 </Card.Body>
                                             </Card>
                                         </Col>
-                                    }
-                                    {mode !== 0 &&
-                                        <Col>
+                                        <Col xs={12} md={6}>
                                             <Card className="h-100">
                                                 <Card.Body >
                                                     <Card.Title>Keywords</Card.Title>
@@ -561,10 +560,10 @@ function ProposalDetailsPage({ mode }) {
                                                     </ListGroup>
                                                 </Card.Body>
                                             </Card>
-                                        </Col>}
-                                </Row>
+                                        </Col>
+                                </Row>}
                                 <Row>
-                                    <Col>
+                                    <Col xs={12} md={6} className="mb-1 mb-md-0">
                                         <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Required Knowledge:</Card.Title>
@@ -586,7 +585,7 @@ function ProposalDetailsPage({ mode }) {
                                             </Card.Body>
                                         </Card>
                                     </Col>
-                                    <Col>
+                                    <Col xs={12} md={6}>
                                         <Card className="h-100">
                                             <Card.Body>
                                                 <Card.Title>Notes:</Card.Title>
@@ -622,9 +621,9 @@ function ProposalDetailsPage({ mode }) {
                                             }}>Back to Homepage</Button>
                                         }
                                     </Col>
-                                    <Col className={"d-flex flex-row-revers"}>
-                                        {mode === 0 && <ApplicationButton proposalID={proposal_id} />}
-                                        {mode !== 0 && <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={handleCreateProposal}>Create Proposal</Button>}
+                                    <Col className={"d-flex flex-row-reverse"}>
+                                        {mode === 0 && loggedUser.role === 1 && <ApplicationButton proposalID={proposal_id} />}
+                                        {mode !== 0 && loggedUser.role === 0 && <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={handleCreateProposal}>Create Proposal</Button>}
                                     </Col>
                                 </Row>
                             </Container>

@@ -120,7 +120,7 @@ module.exports = {
             return res.status(400).json({ error: "Invalid status field value in request body" });
 
         if (!application_id) {
-            return res.status(400).json({ error: "Invalid application id parameter" }); //? Maybe useless because if application_id is null the router wouln't go here
+            return res.status(400).json({ error: "Invalid application id parameter" });
         }
 
         try {
@@ -131,18 +131,10 @@ module.exports = {
                 return res.status(404).json({ error: "Application not found!" });
             }
             
-            //? maybe this is a mess, change return object of getProposalById ??
-            try {
-                const { data: proposal } = await proposalsService.getProposalById(application.proposal_id);
-                if (proposal.supervisor_id !== teacher_id) {
-                    return res.status(403).json({ error: "Not authorized!" });
-                }
-            } catch (err) {
-                if (err.status === 404) {
-                    return res.status(404).json({ error: "Proposal corresponding to the application not found!" });
-                } else {
-                    throw err; // propagate 500 internal errors
-                }
+            const { proposal } = application;
+
+            if (proposal.supervisor_id !== teacher_id) {
+                return res.status(403).json({ error: "Not authorized!" });
             }
             
             const { data: updatedApplication } = await applicationsService.setApplicationStatus(application_id, status);
@@ -180,16 +172,26 @@ module.exports = {
      * 
      * @body none
      * 
-     * @returns {Application} the application
      */
     getApplicationById: async (req, res) => {
         const application_id = req.params.application_id;
+        const teacher_id = req.user.id;
 
+        if (!application_id) {
+            return res.status(400).json({ error: "Invalid application id parameter" });
+        }
+        
         try {
             const { data: application } = await applicationsService.getApplicationById(application_id);
 
             if (!application) {
                 return res.status(404).json({ error: "Application not found!" });
+            }
+            
+            const { proposal } = application;
+
+            if (proposal.supervisor_id !== teacher_id) {
+                return res.status(403).json({ error: "Not authorized!" });
             }
 
             return res.status(200).json({ application });

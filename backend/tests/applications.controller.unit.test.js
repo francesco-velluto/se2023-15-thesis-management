@@ -9,7 +9,6 @@ const {
 const {
   getAllApplicationsByStudentId,
   setApplicationStatus,
-  setApplicationsStatusCanceledByProposalId,
   getApplicationById,
   cancelPendingApplicationsByProposalId,
 } = require("../service/applications.service");
@@ -21,10 +20,7 @@ const app = require("../app");
 const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
 const Application = require("../model/Application");
-const {
-  setProposalArchived,
-  getProposalById,
-} = require("../service/proposals.service");
+const { setProposalArchived } = require("../service/proposals.service");
 const Proposal = require("../model/Proposal");
 
 jest.mock("../service/applications.service");
@@ -37,7 +33,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  // jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => {});
   jest.spyOn(console, "info").mockImplementation(() => {});
   jest.spyOn(console, "error").mockImplementation(() => {});
 });
@@ -357,35 +353,6 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("ERROR 404 | Should return error if the corresponding thesis proposal doesn't exist", async () => {
-    const mockReq = {
-      params: { application_id: "A001" },
-      body: { status: "Accepted" },
-      user: { id: "T001" },
-    };
-
-    const mockRes = {
-      status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
-    };
-
-    getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
-    });
-
-    getProposalById.mockRejectedValue({
-      status: 404,
-      data: "Proposal not found",
-    });
-
-    await controller.acceptOrRejectApplication(mockReq, mockRes);
-
-    expect(mockRes.status).toHaveBeenCalledWith(404);
-    expect(mockRes.json).toHaveBeenCalledWith({
-      error: "Proposal corresponding to the application not found!",
-    });
-  });
-
   it("ERROR 403 | Should return error if the proposal doesn't belong to the teacher making the request", async () => {
     const mockReq = {
       params: { application_id: "A001" },
@@ -399,12 +366,15 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     };
 
     getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
-    });
-
-    getProposalById.mockResolvedValue({
-      status: 200,
-      data: new Proposal("P001", "title", "T002"),
+      data: {
+        id: "A001",
+        student_id: "S001",
+        status: "Pending",
+        proposal: {
+          proposal_id: "P001",
+          supervisor_id: "T002",
+        },
+      },
     });
 
     await controller.acceptOrRejectApplication(mockReq, mockRes);
@@ -428,16 +398,124 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     };
 
     getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
+      data: {
+        id: "A001",
+        student_id: "S001",
+        status: "Pending",
+        proposal: {
+          proposal_id: "P001",
+          supervisor_id: "T001",
+        },
+      },
     });
 
-    getProposalById.mockResolvedValue({
-      status: 200,
-      data: new Proposal("P001", "title", "T001"),
+    setApplicationStatus.mockResolvedValue({ data: undefined });
+
+    await controller.acceptOrRejectApplication(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      error: "Internal server error",
+    });
+  });
+
+  it("ERROR 500 | Should return error if the proposal to archive is not found while updating the status", async () => {
+    const mockReq = {
+      params: { application_id: "A001" },
+      body: { status: "Accepted" },
+      user: { id: "T001" },
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    getApplicationById.mockResolvedValue({
+      data: {
+        id: "A001",
+        student_id: "S001",
+        status: "Pending",
+        proposal: {
+          proposal_id: "P001",
+          supervisor_id: "T001",
+        },
+      },
     });
 
-    setApplicationStatus.mockImplementation(async () => {
-      throw Error("Database error");
+    const updatedApplication = new Application(
+      "A001",
+      "P001",
+      "S001",
+      "Accepted"
+    );
+    setApplicationStatus.mockResolvedValue({
+      data: updatedApplication,
+    });
+
+    cancelPendingApplicationsByProposalId.mockResolvedValue({ data: 2 });
+    setProposalArchived.mockResolvedValue({ data: undefined });
+
+    await controller.acceptOrRejectApplication(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      error: "Internal server error",
+    });
+  });
+
+  it("ERROR 500 | Should return error if the proposal archived status is not udpated", async () => {
+    const mockReq = {
+      params: { application_id: "A001" },
+      body: { status: "Accepted" },
+      user: { id: "T001" },
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    getApplicationById.mockResolvedValue({
+      data: {
+        id: "A001",
+        student_id: "S001",
+        status: "Pending",
+        proposal: {
+          proposal_id: "P001",
+          supervisor_id: "T001",
+        },
+      },
+    });
+
+    const updatedApplication = new Application(
+      "A001",
+      "P001",
+      "S001",
+      "Accepted"
+    );
+
+    setApplicationStatus.mockResolvedValue({
+      data: updatedApplication,
+    });
+
+    cancelPendingApplicationsByProposalId.mockResolvedValue({ data: 2 });
+    setProposalArchived.mockResolvedValue({
+      data: new Proposal(
+        "P001",
+        "title",
+        "T001",
+        [],
+        "Research",
+        [],
+        "Descr",
+        "req. knowledge",
+        "notes",
+        "2024-01-01",
+        "Bachelor",
+        [],
+        false
+      ),
     });
 
     await controller.acceptOrRejectApplication(mockReq, mockRes);
@@ -461,12 +539,15 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     };
 
     getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
-    });
-
-    getProposalById.mockResolvedValue({
-      status: 200,
-      data: new Proposal("P001", "title", "T001"),
+      data: {
+        id: "A001",
+        student_id: "S001",
+        status: "Pending",
+        proposal: {
+          proposal_id: "P001",
+          supervisor_id: "T001",
+        },
+      },
     });
 
     const updatedApplication = new Application(
@@ -475,6 +556,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
       "S001",
       "Rejected"
     );
+
     setApplicationStatus.mockResolvedValue({
       data: updatedApplication,
     });
@@ -500,12 +582,15 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     };
 
     getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
-    });
-
-    getProposalById.mockResolvedValue({
-      status: 200,
-      data: new Proposal("P001", "title", "T001"),
+      data: {
+        id: "A001",
+        student_id: "S001",
+        status: "Pending",
+        proposal: {
+          proposal_id: "P001",
+          supervisor_id: "T001",
+        },
+      },
     });
 
     const updatedApplication = new Application(
@@ -543,11 +628,12 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
       application: updatedApplication,
     });
   });
+});
 
-  it("ERROR 500 | Should return error if the proposal to archive is not found while updating the status", async () => {
+describe("UNIT-CONTROLLER: getApplicationById", () => {
+  it("ERROR 400 | Should return error if application_id param is invalid", async () => {
     const mockReq = {
-      params: { application_id: "A001" },
-      body: { status: "Accepted" },
+      params: { application_id: "" },
       user: { id: "T001" },
     };
 
@@ -556,40 +642,35 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
       json: jest.fn(),
     };
 
-    getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
-    });
+    await controller.getApplicationById(mockReq, mockRes);
 
-    getProposalById.mockResolvedValue({
-      status: 200,
-      data: new Proposal("P001", "title", "T001"),
-    });
-
-    const updatedApplication = new Application(
-      "A001",
-      "P001",
-      "S001",
-      "Accepted"
-    );
-    setApplicationStatus.mockResolvedValue({
-      data: updatedApplication,
-    });
-
-    cancelPendingApplicationsByProposalId.mockResolvedValue({ data: 2 });
-    setProposalArchived.mockResolvedValue({ data: undefined });
-
-    await controller.acceptOrRejectApplication(mockReq, mockRes);
-
-    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.status).toHaveBeenCalledWith(400);
     expect(mockRes.json).toHaveBeenCalledWith({
-      error: "Internal server error",
+      error: "Invalid application id parameter",
     });
   });
 
-  it("ERROR 500 | Should return error if the proposal archived status is not udpated", async () => {
+  it("ERROR 404 | Should return error if the application doesn't exist", async () => {
     const mockReq = {
       params: { application_id: "A001" },
-      body: { status: "Accepted" },
+      user: { id: "T001" },
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    getApplicationById.mockResolvedValue({ data: undefined });
+
+    await controller.getApplicationById(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+  });
+
+  it("ERROR 403 | Should return error if the application doesn't belong to the teacher logged in", async () => {
+    const mockReq = {
+      params: { application_id: "A001" },
       user: { id: "T001" },
     };
 
@@ -599,50 +680,54 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     };
 
     getApplicationById.mockResolvedValue({
-      data: new Application("A001", "P001", "S001", "Pending"),
+      data: { id: "A001", proposal: { supervisor_id: "T002" } },
     });
 
-    getProposalById.mockResolvedValue({
-      status: 200,
-      data: new Proposal("P001", "title", "T001"),
+    await controller.getApplicationById(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(403);
+  });
+
+  it("ERROR 500 | Should return error if an internal error occurred", async () => {
+    const mockReq = {
+      params: { application_id: "A001" },
+      user: { id: "T001" },
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    getApplicationById.mockImplementation(async () => {
+      throw new Error("Some error");
     });
 
-    const updatedApplication = new Application(
-      "A001",
-      "P001",
-      "S001",
-      "Accepted"
-    );
-    setApplicationStatus.mockResolvedValue({
-      data: updatedApplication,
-    });
-
-    cancelPendingApplicationsByProposalId.mockResolvedValue({ data: 2 });
-    setProposalArchived.mockResolvedValue({
-      data: new Proposal(
-        "P001",
-        "title",
-        "T001",
-        [],
-        "Research",
-        [],
-        "Descr",
-        "req. knowledge",
-        "notes",
-        "2024-01-01",
-        "Bachelor",
-        [],
-        false
-      ),
-    });
-
-    await controller.acceptOrRejectApplication(mockReq, mockRes);
+    await controller.getApplicationById(mockReq, mockRes);
 
     expect(mockRes.status).toHaveBeenCalledWith(500);
+  });
+
+  it("SUCCESS 200 | Should return the corresponding application", async () => {
+    const mockReq = {
+      params: { application_id: "A001" },
+      user: { id: "T001" },
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    getApplicationById.mockResolvedValue({
+      data: { id: "A001", proposal: { supervisor_id: "T001" } },
+    });
+
+    await controller.getApplicationById(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(200);
     expect(mockRes.json).toHaveBeenCalledWith({
-      error: "Internal server error",
+      application: { id: "A001", proposal: { supervisor_id: "T001" } },
     });
   });
 });
-
-describe("UNIT-CONTROLLER: getApplicationById", () => {});

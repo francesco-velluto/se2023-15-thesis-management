@@ -35,7 +35,7 @@ function ApplicationList() {
 
             <TitleBar title={"Browse Applications"} />
             <Container>
-                <Row className='mt-2'>
+                <Row >
                     {errors?.map((error, index) => (
                         <Alert variant='danger'
                             dismissible={true}

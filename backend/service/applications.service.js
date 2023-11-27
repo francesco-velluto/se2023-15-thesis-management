@@ -3,6 +3,7 @@
 const Application = require("../model/Application");
 const Teacher = require("../model/Teacher");
 const db = require("./db");
+const { rowToProposal } = require("./proposals.service");
 
 module.exports = {
     getAllApplicationsByStudentId: (student_id) => {
@@ -180,7 +181,6 @@ module.exports = {
      * Set the status of the applications of a certain proposal identified by its id as Canceled if they are Pending
      * 
      * @param {string} proposal_id 
-     * @param {string} teacher_id
      * 
      * @returns {Promise<{data: Number}>} Number of proposals modified
      * 
@@ -188,7 +188,7 @@ module.exports = {
      */
     cancelPendingApplicationsByProposalId: async (proposal_id) => {
         try {
-            const query = "UPDATE applications SET status = 'Canceled' WHERE id = $1 AND status = 'Pending';";
+            const query = "UPDATE applications SET status = 'Canceled' WHERE proposal_id = $1 AND status = 'Pending';";
 
             const { rowCount } = await db.query(query, [proposal_id]);
             return { data: rowCount };
@@ -199,30 +199,41 @@ module.exports = {
     },
 
     /**
-     * Get the application given its id
+     * Get the application given its id.
+     * The returned object contains also the corresponding proposal
+     * object embedded.
      * 
      * @param {string} application_id
      * 
-     * @returns {Promise<{ data: Application }>}
+     * @returns {Promise<{ 
+     * data: {
+     *  id: string,
+     *  student_id: string,
+     *  status: string,
+     *  application_date: date,
+     *  proposal: Proposal
+     * } }>}
      * 
      * @throws {Error} if application not found
      */
     getApplicationById: async (application_id) => {
         try {
-            const query = "SELECT * FROM applications where id = $1";
+            const query = "SELECT * FROM applications a join proposals p " + 
+                "ON a.proposal_id = p.proposal_id " +
+                "WHERE a.id = $1;"
 
             const { rows, rowCount } = await db.query(query, [application_id]);
             if (rowCount === 0) {
                 return { data: undefined };
             }
 
-            const application = new Application(
-                rows[0].id,
-                rows[0].proposal_id,
-                rows[0].student_id,
-                rows[0].status,
-                rows[0].application_date
-            );
+            const application = {
+                id: rows[0].id,
+                student_id: rows[0].student_id,
+                status: rows[0].status,
+                application_date: rows[0].application_date,
+                proposal: rowToProposal(rows[0])
+            }
 
             return { data: application };
         } catch (error) {

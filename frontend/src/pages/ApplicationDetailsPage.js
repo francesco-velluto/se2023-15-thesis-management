@@ -6,7 +6,6 @@ import TitleBar from "../components/TitleBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { getProposalById } from "../api/ProposalsAPI";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
 import { Container, Spinner, Row, Col, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
@@ -40,15 +39,9 @@ function ApplicationDetails() {
 
                 if (application) {
                     setInfoApplication(application);
-                    const responseProposal = await getProposalById(application.proposal_id);
-                    if (responseProposal.ok) {
-                        const proposal = await responseProposal.json();
-                        setInfoProposal(proposal);
-                    } else {
-                        setErrorMessage("Error in fetching the proposal related to the application");
-                    }
+                    setInfoProposal(application.proposal);
 
-                    const student = await getStudentById(application.id);
+                    const student = await getStudentById(application.student_id);
                     setInfoStudent(student);
 
                 } else {
@@ -57,7 +50,7 @@ function ApplicationDetails() {
                 setIsLoading(false);
 
             } catch (error) {
-                setErrorMessage(error);
+                setErrorMessage(error.message);
                 setIsLoading(false);
             }
         }
@@ -84,7 +77,8 @@ function ApplicationDetails() {
             <NavbarContainer />
             <TitleBar title={"Application details"} />
 
-            <Container className="w-50 text-center">
+
+            <Col md={6} className="text-center mx-auto">
                 <Row className='mt-2'>
                     {errorMessage ?
                         <Alert variant='danger'
@@ -107,10 +101,10 @@ function ApplicationDetails() {
                         <ProposalInfo infoProposal={infoProposal} />
 
                         <Row className="py-1 my-2">
-                            <Col className="text-start" sm={12} md={6}>
+                            <Col className="text-start" >
                                 <Button variant="outline-secondary" onClick={() => navigate("/applications")}> Go back</Button>
                             </Col>
-                            <Col className="text-end" sm={12} md={6}>
+                            <Col className="text-end" >
                                 <Button className="mx-2" variant="outline-success" onClick={() => handleButton("Accepted")}>Accept</Button>
                                 <Button variant="outline-danger" onClick={() => handleButton("Rejected")}>Reject</Button>
                             </Col>
@@ -134,7 +128,7 @@ function ApplicationDetails() {
 
                 }
 
-            </Container>
+            </Col>
         </>
     )
 }
