@@ -4,13 +4,15 @@
  * Application model
  */
 module.exports = function Application(
-  thesis_id = '',
   id = '',
+  proposal_id = '',
+  student_id = '',
   status = '',
   application_date = null
 ) {
-  this.thesis_id = thesis_id;
   this.id = id;
+  this.proposal_id = proposal_id;
+  this.student_id = student_id;
   this.status = status;
   this.application_date = application_date;
 };

@@ -93,7 +93,6 @@ POST `/api/authentication/login`
   | Field name | Type | Required* | Description |
   | ----------- | ----------- | ----------- | ----------- |
   | `title` | _string_ | Yes | Title of the proposal |
-  | `supervisor_id` | _string_ | Yes | Identifier of the supervisor of the proposal |
   | `keywords` | _string[]_ | Yes | Keywords related to the proposal |
   | `type` | _string_ | Yes | Type of thesis (e.g. research, experimental...) |
   | `groups` | _string[]_ | Yes | List of research groups related to the thesis proposal |
@@ -106,9 +105,10 @@ POST `/api/authentication/login`
 
   \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
 
-- `SUCCESS 201` Response Body:
-  - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal.\
+- `SUCCESS 200` Response Body:
+  - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal and the supervisor_id field which represents the id of the teacher supervisor of the thesis.\
     - `id` | string: ID of the proposal
+    - `supervisor_id` | string: ID of the teacher supervisor
     - ...
 
 - Errors:
@@ -145,6 +145,9 @@ POST `/api/authentication/login`
   - `ERROR 404` Response Body: `{ "error": "Proposal not found" }`
   - `ERROR 500` Response Body: `{ "error": "Internal Server Error" }`
 
+
+### Teachers
+
 **GET** `/api/teachers`
 - Retrieve the list of teachers
 - Authentication: required
@@ -168,6 +171,8 @@ POST `/api/authentication/login`
   - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
   - `ERROR 500` Response Body: `{"error": "Internal Server Error" }`
 
+### Degrees
+
 **GET** `/api/degrees`
 - Retrieve the list of programmes
 - Authentication: required
@@ -187,6 +192,9 @@ POST `/api/authentication/login`
   - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
   - `ERROR 500` Response Body: `{"error": "Internal Server Error" }`
 
+
+### Applications
+
 **POST** `/api/applications`
 - Insert a new application
 - Authentication: required
@@ -201,3 +209,111 @@ POST `/api/authentication/login`
 - `SUCCESS 200`
 - Errors:
  - `ERROR 500` Response Body: `{"error": "Student/Proposal not found or already applied" }`
+
+
+### Applications
+
+#### Get all applications by student id
+
+**GET** `/api/applications/:student_id`
+
+- Get all the applications of a student
+- Authentication: required
+- Authorization: only a student can access this endpoint
+- Request Query Parameters: _none_
+- Request Body: _none_
+- `SUCCESS 200` Response Body:
+  - Array of applications. Each application has the following attributes:
+    - `proposal_id` : ID of the proposal
+    - `student_id` : ID of the student
+    - `title` : Title of the proposal
+    - `supervisor_surname` : Surname of the supervisor
+    - `supervisor_name` : Name of the supervisor
+    - `status` : Status of the application (e.g. accepted, rejected, pending, canceled)
+    - `application_date` : Date of the application when the student applied
+- Errors:
+  - `ERROR 500` Response Body: `{"error": "Internal Server Error"}`
+  - `ERROR 401` Response Body: `{"error": "Must be authenticated to make this request!"}`
+  - `ERROR 401` Response Body: `{"error": "Must be a student to make this request!"}`
+  - `ERROR 401` Response Body: `{"error": "You cannot get applications of another student"}`
+  - `ERROR 404` Response Body: `{"error": "Student not found"}`
+  
+**PUT** `/api/applications/:application_id`
+- Set the status of an application to "Accepted" or "Rejected".
+The others pending applications relative to the same proposal are set to "Canceled".
+The proposal is archived.
+
+- Authentication: required
+- Authorization: only a teacher can accept or reject an application
+- Request query parameters:
+  - `application_id`: the id of the application
+- Request body:
+
+  | Field name | Type | Required* | Description |
+  | ----------- | ----------- | ----------- | ----------- |
+  | status | _string_ | Yes | New status: can only be `Accepted` or `Rejected`
+
+- `Success 200`  Response body:
+  - The application modified with the new status:
+    - `proposal_id`: id of the thesis
+    - `id`: id of the student
+    - `status`: status updated
+    - `application_date`: date of the application
+
+- `Error`:
+  - `400`: Error in the parameters:
+    - New status is something different from "Accepted" or "Rejected"
+    - The application_id corresponds to a non-existing proposal or to a proposal not belonging to the teacher.
+  - `401`: Not authenticated or not authorized
+  - `500`: Internal server error
+
+**GET** `api/applications/application/:application_id`
+- Get an application given its id
+
+- Authentication: required
+- Authorization: must be a teacher
+- Request query parameters:
+  - `application_id`: the id of the application
+- Request body: _none_
+
+- `Success 200`  Response body:
+  - The application:
+    - `proposal_id`: id of the thesis
+    - `id`: id of the student
+    - `status`: status updated
+    - `application_date`: date of the application
+
+- `Error`:
+  - `404`: Application not found
+  - `401`: Not authenticated or not authorized
+  - `500`: Internal server error
+
+### Students
+
+**GET** `/api/students/student_id`
+
+- Get the info of a student given its id
+
+- Authentication: required
+- Authorization: must be a teacher to get student info
+- Request query parameters:
+  - `student_id`: the id of the student
+- Request body: _none_
+
+- `Success 200`  Response body:
+  - The student:
+    - `id`: id of the student
+    - `surname`: surname of the student
+    - `name`: name of the student
+    - `gender`: gender of the student
+    - `nationality`: nationality of the student
+    - `email`: email of the student
+    - `cod_degree`: id of the degree attended by the student
+    - `enrollment_year`: enrollement year of the student
+    - `role`: the role of the student is 1
+
+- `Error`:
+  - `404`: Student not found
+  - `401`: Not authenticated or not authorized
+  - `500`: Internal server error
+

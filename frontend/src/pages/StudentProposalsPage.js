@@ -2,11 +2,11 @@ import { useContext, useState } from "react";
 import NavbarContainer from "../components/Navbar";
 import ProposalsSearchArea from "../components/ProposalsSearchArea";
 import TitleBar from "../components/TitleBar";
-import ProposalsList from "../components/ProposalsList";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { Alert } from "react-bootstrap";
+import StudentProposalsList from "../components/StudentProposalsList";
 
-function ProposalsPage() {
+function StudentProposalsPage() {
     const [searchData, setSearchData] = useState([]); // [{field: string, value: string}, {}]
     const { loggedUser } = useContext(LoggedUserContext);
 
@@ -16,18 +16,18 @@ function ProposalsPage() {
             <TitleBar title={"Browse Proposals"} />
 
             {
-                Object.keys(loggedUser).includes("cod_group") ?
+                loggedUser.role === 0 ?
                     <Alert variant="danger" className="mt-2">
                         You cannot take a look at thesis proposals
                     </Alert>
                     :
                     <>
                         <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
-                        <ProposalsList searchData={searchData} />
+                        <StudentProposalsList searchData={searchData} />
                     </>
             }
         </>
     );
 }
 
-export default ProposalsPage;
+export default StudentProposalsPage;

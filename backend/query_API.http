@@ -1,11 +1,21 @@
 
-## test login
+## test login student
 POST http://localhost:8080/api/authentication/login HTTP/1.1
 content-type: application/json
 
 {
     "username": "david.lee@example.com",
     "password": "S003"
+}
+###
+
+## test login teacher
+POST http://localhost:8080/api/authentication/login HTTP/1.1
+content-type: application/json
+
+{
+    "username": "ana.gomez@example.com",
+    "password": "T003"
 }
 ###
 
@@ -24,3 +34,31 @@ GET http://localhost:8080/api/teachers HTTP/1.1
 
 ## test getProposalById
 GET http://localhost:8080/api/proposals/P001 HTTP/1.1
+###
+
+
+## test acceptOrRejectApplication
+PUT http://localhost:8080/api/applications/3 HTTP/1.1
+content-type: application/json
+
+{
+    "status": "Accepted"
+} 
+###
+
+## test getApplicationById
+GET http://localhost:8080/api/applications/application/1 HTTP/1.1
+content-type: application/json
+###
+
+## test getAllApplicationsByTeacher
+GET http://localhost:8080/api/applications HTTP/1.1
+###
+
+## test getStudentById
+GET http://localhost:8080/api/students/S001
+###
+
+## test getAllProfessorProposals
+GET http://localhost:8080/api/proposals/professor
+###

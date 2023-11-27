@@ -2,7 +2,7 @@ import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup, FormControl } fro
 import { FaCalendar } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
-import { VirtualClockContext } from './VirtualClockContext';
+import { VirtualClockContext } from '../context/VirtualClockContext';
 import { useContext, useState } from 'react';
 
 import dayjs from 'dayjs';
@@ -26,7 +26,7 @@ function NavbarContainer() {
 
     return (
         <>
-            <Navbar expand="lg" className='px-3 navbar-dark d-flex justify-content-between' style={{ backgroundColor: "#e68b00" }} >
+            <Navbar expand="md" className='px-3 navbar-dark d-flex justify-content-between' style={{ backgroundColor: "#393646" }} >
                 <Navbar.Brand as={Link} to={"/"}>
                 <div>
                 <img src={Logo} alt="Logo" width="70" height="auto" className="bi bi-mortarboard-fill me-2"  />
@@ -34,33 +34,34 @@ function NavbarContainer() {
                 </div>
                 </Navbar.Brand>
 
-
-                <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>
-                    <Col className='me-3'>
-                            <InputGroup>
-                                
-                                {!showFormControl && (
-                                    <Button onClick={handleButtonClick} style={{ backgroundColor: 'white', color: 'orange', borderColor: 'white', height: '50px', width: '50px' }}>
-                                        <FaCalendar /> 
-                                    </Button>
-                                )}
-                                {showFormControl && (
-                                    <Form.Control
-                                    type="date"
-                                    min={dayjs().format("YYYY-MM-DD")}
-                                    value={currentDate}
-                                    onChange={(ev) => setCurrentDate(ev.target.value)}
-                                    style={{ backgroundColor: 'white', color: 'orange', borderColor: 'white', height: '50px', width:'115px', lineHeight: '37px'  }}
-                                    />
-                                )}
-                            </InputGroup>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+                    <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>
+                        <Col className='me-0 me-md-3 my-3 my-md-0'>
+                                <InputGroup className='d-flex justify-content-center'>
+                                    
+                                    {!showFormControl && (
+                                        <Button onClick={handleButtonClick} style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '50px' }}>
+                                            <FaCalendar /> 
+                                        </Button>
+                                    )}
+                                    {showFormControl && (
+                                        <Form.Control
+                                        type="date"
+                                        min={dayjs().format("YYYY-MM-DD")}
+                                        value={currentDate}
+                                        onChange={(ev) => setCurrentDate(ev.target.value)}
+                                        style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width:'135px', lineHeight: '37px'  }}
+                                        />
+                                    )}
+                                </InputGroup>
                         </Col>
-                        <Col className='me-3'>
-                            <Dropdown show={showDropdown} onToggle={toggleDropdown}>
+                        <Col className='me-0 me-md-3 my-3 my-md-0 d-flex justify-content-center align-items-center'>
+                            <Dropdown show={showDropdown} onToggle={toggleDropdown} className='d-flex flex-column justify-content-center align-items-center' >
                             <Dropdown.Toggle
                                 variant="danger"
                                 id="dropdown-basic"
-                                style={{ backgroundColor: 'white', color: 'orange', height: '50px' }}
+                                style={{ backgroundColor: 'white', color: '#393646', height: '50px', borderColor: 'white', justifySelf: 'center', display: 'flex', alignItems: 'center', fontSize: '16px' }}
                             >
                                 <svg
                                 onClick={() => navigate("/")}
@@ -75,12 +76,13 @@ function NavbarContainer() {
                                 </svg>
                                 {' ' + (loggedUser.name || 'Guest')}
                             </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                                <Dropdown.Item onClick={handleLogout}  style={{ backgroundColor: 'white', color: 'orange' }}>Logout</Dropdown.Item>
+                            <Dropdown.Menu style={{ minWidth: "120px" }}>
+                                <Dropdown.Item onClick={handleLogout} style={{ backgroundColor: 'white', color: '#393646', fontSize:"16px"}}>Logout</Dropdown.Item>
                             </Dropdown.Menu>
                             </Dropdown>
                         </Col>
                     </Nav>
+                </Navbar.Collapse>
             </Navbar>
 
         </>

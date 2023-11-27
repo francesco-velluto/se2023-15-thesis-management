@@ -3,8 +3,8 @@
 ## Conceptual design
 
 The goal is to implement Thesis Management System for PoliTO. The primary entities include "Degree," representing different academic degrees they can be followed my 0 or many students. A student is always associated to one or many degrees.
-"Student," contains student information with enrollment details such as the degree.
-"Career," contains an exam informations (cpu, grade, date) taken by a student, one career is associated to one student but a student can have many careers (related to all exams he had). The link between student and career detail is stored in “passed” table.
+"Student" contains student information with enrollment details such as the degree.
+"Career" contains information about exams taken by a student (cfu, grade, date).
 The "Proposals" entity list thesis projects, proposed by teachers.
 "Applications" entity tracks student applications for thesis proposals. A student can applied to as many proposal as he wants. A proposal can be applied by 0 or many students.
 
@@ -24,10 +24,9 @@ In this design 4 tables can NOT be modified :
 - Degree: [**cod_degree** (PK), **title_degree**]
 - Student: [**id** (PK), **surname**, **name**, **gender**, **nationality**, **email**, *cod_degree*, **enrollment_year**]
 - Teacher: [**id** (PK), **surname**, **name**, **email**, cod_group, **cod_department**]
-- Career: [**id** (PK), **cod_course**, **title_course**, **cfu**, **grade**, **date**]
-- Passed: [**pid** (PK), *career_id*, *id* ]
-- Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **programmes**]
-- Applications: [**application_id** (PK), *proposal_id*, *id*, **status**, **application_date**]
+- Career: [**id** (PK), **cod_course** (PK), **title_course**, **cfu**, **grade**, **date**]
+- Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **programmes**, **archived**]
+- Applications: [**id** (PK), *proposal_id*, *student_id*, **status**, **application_date**]
 
 ## Tables details
 
@@ -64,26 +63,16 @@ In this design 4 tables can NOT be modified :
 
 ### Career
 
-This tables tracks the credits, grade, and date or a specific course, passed by a student. A student can have many “career” (he passes many exams) but a “career” is associated to a **unique student**. 
+This tables tracks the credits, grade, and date or a specific course, passed by a student. A student can have more passed exams: the primary key is the couple (id, cod_course).
 
 | Attribute | Typology | Description |
 | --- | --- | --- |
-| id | VARCHAR(10) | Career ID. |
+| id | VARCHAR(10) | Student ID (Foreign key). |
 | cod_course | VARCHAR(10)  | Code of a specific course. |
 | title_course | VARCHAR(50) NOT NULL  | Code of the course associated with the career. |
 | cfu | INT NOT NULL  | Credit units for the course. |
 | grade |  INT NOT NULL | Grade achieved in the course. |
 | date | DATE NOT NULL  | Date of completion of the exam |
-
-### Passed
-
-This particular table is the “link” between a student and the “career” (exam) he attended.
-
-| Attribute | Typology | Description |
-| --- | --- | --- |
-| pid | SERIAL | ID, auto increment. |
-| career_id | VARCHAR(10) NOT NULL | ID of the career link to this student (FOREIGN KEY) |
-| id | VARCHAR(10) NOT NULL | Student ID. (FOREIGN KEY) |
 
 ### Proposals
 
@@ -103,6 +92,7 @@ Table for all thesis proposals.
 | expiration_date | DATE | Expiration date of the proposal. |
 | level | VARCHAR(30) | Level of the proposal. Graduate/Undergraduate |
 | programmes | TEXT[] | All degrees concerned:list of cod_degree |
+| archived | BOOLEAN | Tells if the teacher archived this proposal (either manually or after accepting an application) |
 
 ### Applications
 
@@ -112,9 +102,9 @@ The status of an application can be : `Pending, Accepted, Refused`
 
 | Attribute | Typology | Description |
 | --- | --- | --- |
-| application_id | SERIAL | ID, auto increment |
+| id | SERIAL | ID, auto increment |
 | proposal_id |  VARCHAR(10) NOT NULL | Proposal ID. (FOREIGN KEY) |
-| id |  VARCHAR(10) NOT NULL | Student ID (FOREIGN KEY) |
+| student_id |  VARCHAR(10) NOT NULL | Student ID (FOREIGN KEY) |
 | status | VARCHAR(255) NOT NULL | Status of the application. Pending, Accepted, Refused |
 | application_date | DATE NOT NULL | Date of the application. |
 

@@ -1,0 +1,18 @@
+.student-applications-container {
+    padding: 9px;
+}
+
+.student-application-row {
+    margin: 5px;
+}
+
+.student-application-card-body {
+    background-color: #eeeeee;
+    color: #282828 !important;
+}
+
+.student-application-card-body .card-title,
+.student-application-card-body .card-subtitle {
+    color: #282828;
+}
+

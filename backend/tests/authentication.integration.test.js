@@ -32,7 +32,10 @@ describe("End to end tests login", () => {
       .sendKeys("john.smith@example.com");
     await driver.findElement(By.id("password")).sendKeys("wrongpassword");
 
-    await driver.findElement(By.css("button")).click();
+    const submitButton = await driver.findElement(By.css("button"))
+
+    // click using js
+    await driver.executeScript("arguments[0].click();", submitButton);
 
     await driver.sleep(500);
 
@@ -42,7 +45,7 @@ describe("End to end tests login", () => {
     expect(textAlert).toEqual("Incorrect email and/or password!");
   }, 10000);
 
-  test("Should span an alert when login credentials are wrong", async () => {
+  test("Should login correctly", async () => {
     await driver.get(baseURL + "/login");
 
     await driver
@@ -50,7 +53,10 @@ describe("End to end tests login", () => {
       .sendKeys("michael.wilson@example.com");
     await driver.findElement(By.id("password")).sendKeys("T002");
 
-    await driver.findElement(By.css("button")).click();
+    const submitButton = await driver.findElement(By.css("button"))
+
+    // click using js
+    await driver.executeScript("arguments[0].click();", submitButton);
 
     await driver.sleep(500);
 

@@ -4,6 +4,7 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 import NavbarContainer from "../components/Navbar";
+import TitleBar from "../components/TitleBar";
 
 function HomePage() {
   const { loggedUser, handleLogout } = useContext(LoggedUserContext);
@@ -11,12 +12,13 @@ function HomePage() {
   return (
     <>
     <NavbarContainer />
-      <Container fluid className="home-page">
-        <Row className="m-3 mt-5">
-          <h1>
-            <b>Thesis Management System</b>
-          </h1>
-        </Row>
+    {loggedUser.role === 0 && (
+      <TitleBar title={"TEACHER"} />
+    )}
+    {loggedUser.role === 1 && (
+      <TitleBar title={"STUDENT"} />
+    )}
+      <Container fluid className="home-page" style={{backgroundColor: "#F4EEE0"}}>
         <Row className="home-page-content p-3">
           {loggedUser && (
             <>
@@ -28,7 +30,7 @@ function HomePage() {
                   <Form.Group as={Row} className="mt-2">
                     <Col sm={3}>
                       <Form.Label column>
-                        <b>Id:</b>
+                        <b>ID:</b>
                       </Form.Label>
                     </Col>
                     <Col>
@@ -163,24 +165,30 @@ function HomePage() {
               </Card>
               <Card bg="light" className="rounded p-4 mt-3">
                 <Row>
-                  {/*loggedUser.role === 0 && (
+                  {loggedUser.role === 0 && (
                     <Col> 
                       <Button className="w-100 my-3" as={Link} to="/applications">
                         My Thesis Applications
                       </Button>
                     </Col>
-                  )*/}
+                  )}
                   {loggedUser.role === 0 && (
                     <Col>
-                      <Button className="w-100 my-3" as={Link} to="/proposals/new">
+                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
+                        My Thesis Proposals
+                      </Button>
+                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals/new">
                         Add a New Proposal
                       </Button>
                     </Col>
                   )}
                   {loggedUser.role === 1 && (
                     <Col>
-                      <Button className="w-100 my-3" as={Link} to="/proposals">
+                      <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
                         Thesis Proposals
+                      </Button>
+                      <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
+                        My Applications
                       </Button>
                     </Col>
                   )}
@@ -198,7 +206,7 @@ function HomePage() {
         </Row>
       </Container>
       <footer /* className="fixed-bottom" */>
-        <Col className="pr-3" xs={12} sm={2}>
+        <Col  xs={12} sm={2}>
           <img src="logo.svg" alt="logo" />
         </Col>
         <Col xs={12} sm={10}>

@@ -2,7 +2,7 @@ import {useContext, useEffect, useState} from 'react';
 import {Form, Button, Col, Row, Alert, Container} from 'react-bootstrap';
 import {getAllProposals} from "../api/ProposalsAPI";
 import {Typeahead} from 'react-bootstrap-typeahead';
-import {VirtualClockContext} from "./VirtualClockContext";
+import {VirtualClockContext} from "../context/VirtualClockContext";
 import dayjs from "dayjs";
 import {isSameDay, parse, parseISO} from "date-fns";
 
@@ -225,7 +225,7 @@ function ProposalsSearchArea(props) {
 
     return (
         isLoading ?
-            <Container>
+            <Container >
                 <Row className="justify-content-md-center">
                     <Col md="auto">
                         <div className="spinner-border" role="status">

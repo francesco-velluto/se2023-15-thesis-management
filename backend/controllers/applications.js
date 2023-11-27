@@ -2,7 +2,9 @@
 
 const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
+const Application = require("../model/Application");
 const applicationsService = require("../service/applications.service");
+const proposalsService = require("../service/proposals.service");
 
 module.exports = {
     /**
@@ -10,8 +12,8 @@ module.exports = {
      *
      * @params: student_id
      * @body: none
-     * @returns: { [ { proposal_id: number, title: string, description: string, application_date: date, status: string } ] }
-     * @error 401 Unauthorized - if student_id is not the same as the authenticated user
+     * @returns: { [ { application_id: string, title: string, proposal_id: string, student_id: string, status: string, application_date: Date, supervisor_name: string, supervisor_surname: string } ] }
+     * @error 401 Unauthorized - if the user is not authenticated or student_id is not the same as the authenticated user
      * @error 404 Not Found - if the student_id is not found
      * @error 500 Internal Server Error - if something went wrong
      *
@@ -82,18 +84,117 @@ module.exports = {
             });
     },
 
-    insertNewApplication: (req,res) => {
+    insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
-            .then((result) => {
-                res.status(200).json(result.data);
-            })
-            .catch((err) => {
-                res.status(500).json({ errors: [err.message] });
-            });
+                .then((result) => {
+                    res.status(200).json(result.data);
+                })
+                .catch((err) => {
+                    res.status(500).json({ errors: [err.message] });
+                });
 
         } else
-        return res.status(400).send("Parameters not found in insert new application controller");
-        
+            return res.status(400).send("Parameters not found in insert new application controller");
+
+    },
+
+
+    /**
+     * Accept/Reject an application
+     *
+     * @params none
+     *
+     * @body {application_id: string, status: string}
+     *
+     */
+    acceptOrRejectApplication: async (req, res) => {
+        const status = req.body.status;
+        const application_id = req.params.application_id;
+        const teacher_id = req.user.id;
+
+        if (!(status === "Accepted" || status === "Rejected"))
+            return res.status(400).json({ error: "Invalid status field value in request body" });
+
+        if (!application_id) {
+            return res.status(400).json({ error: "Invalid application id parameter" });
+        }
+
+        try {
+            // Check that the application exists
+            const { data: application } = await applicationsService.getApplicationById(application_id);
+
+            if (!application) {
+                return res.status(404).json({ error: "Application not found!" });
+            }
+
+            const { proposal } = application;
+
+            if (proposal.supervisor_id !== teacher_id) {
+                return res.status(403).json({ error: "Not authorized!" });
+            }
+
+            const { data: updatedApplication } = await applicationsService.setApplicationStatus(application_id, status);
+
+            if (!updatedApplication) {
+                throw Error("Some error occurred in the database: application status not updated");
+            }
+
+            /*
+             * If the application has been accepted:
+             *  - cancel all other pending applications for the same thesis proposal
+             *  - archive the thesis proposal related to that application
+             */
+            if (status === "Accepted") {
+                const { proposal_id } = updatedApplication;
+                await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
+
+                const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
+
+                if (!archivedProposal || !archivedProposal.archived)
+                    throw Error("Some error occurred in the database: proposal not archived");
+            }
+
+            return res.status(200).json({ application: updatedApplication });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: "Internal server error" });
+        }
+    },
+
+    /**
+     * Get the application given its id
+     *
+     * @param {string} application_id id of the application
+     *
+     * @body none
+     *
+     */
+    getApplicationById: async (req, res) => {
+        const application_id = req.params.application_id;
+        const teacher_id = req.user.id;
+
+        if (!application_id) {
+            return res.status(400).json({ error: "Invalid application id parameter" });
+        }
+
+        try {
+            const { data: application } = await applicationsService.getApplicationById(application_id);
+
+            if (!application) {
+                return res.status(404).json({ error: "Application not found!" });
+            }
+
+            const { proposal } = application;
+
+            if (proposal.supervisor_id !== teacher_id) {
+                return res.status(403).json({ error: "Not authorized!" });
+            }
+
+            return res.status(200).json({ application });
+        } catch (err) {
+            console.error("[BACKEND-SERVER] Cannot get the application: ", err);
+            return res.status(500).json({ error: "Internal server error" });
+        }
     }
-};
+}

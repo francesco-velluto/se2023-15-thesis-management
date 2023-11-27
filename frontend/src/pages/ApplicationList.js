@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Accordion, Alert, Card, Container, Row, Spinner } from "react-bootstrap";
+import { Accordion, Alert, Card, Container, Row, Col, Spinner, Button } from "react-bootstrap";
 import { getAllApplicationsByTeacher } from '../api/ApplicationsAPI';
 import { format } from 'date-fns';
 import NavbarContainer from '../components/Navbar';
 import TitleBar from '../components/TitleBar';
+import { useNavigate } from 'react-router-dom';
 
 function ApplicationList() {
     const [applications, setApplications] = useState([]);
     const [errors, setErrors] = useState(undefined);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const formattedDate = (date) => {
         return format(new Date(date), "EEEE, MMMM do yyyy")
@@ -33,7 +35,7 @@ function ApplicationList() {
 
             <TitleBar title={"Browse Applications"} />
             <Container>
-                <Row className='mt-2'>
+                <Row >
                     {errors?.map((error, index) => (
                         <Alert variant='danger'
                             dismissible={true}
@@ -52,18 +54,27 @@ function ApplicationList() {
                     ) : (
                         <>
                             <Accordion alwaysOpen>
-                                {applications && Object.keys(applications).length > 0 &&
-                                    Object.keys(applications).map((key, index) => (
+                                {applications && applications.length > 0 &&
+                                    applications.map((proposal, index) => (
                                         <Accordion.Item key={index} eventKey={index.toString()}>
-                                            <Accordion.Header>{applications[key][0].title}</Accordion.Header>
+                                            <Accordion.Header>{proposal.title}</Accordion.Header>
                                             <Accordion.Body>
-                                                {applications[key].map((proposal, index) => (
+                                                {proposal.applications.map((application, index) => (
                                                     <Card key={index} className='my-3'>
                                                         <Card.Body>
-                                                            <strong>
-                                                                {proposal.name} {proposal.surname}
-                                                            </strong>
-                                                            {' '} has applied for this thesis on {formattedDate(proposal.application_date)}
+                                                            <Row className="align-items-center">
+                                                                <Col>
+                                                                    <strong>
+                                                                        {application.name} {application.surname}
+                                                                    </strong>
+                                                                    {' '} has applied for this thesis on {formattedDate(application.application_date)}
+                                                                </Col>
+                                                                <Col className="text-end">
+                                                                    <Button variant="outline-secondary" className='text-end' onClick={()=>navigate(`/applications/${application.application_id}`)}>Show details</Button>
+                                                                </Col>
+                                                            </Row>
+
+
                                                         </Card.Body>
                                                     </Card>
                                                 ))}
