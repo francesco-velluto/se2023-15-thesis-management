@@ -256,14 +256,14 @@ function ProposalDetailsPage({ mode }) {
                                 )}
                                 <Row>
                                     <Col>
-                                        <Card className="h-100">
+                                        <Card>
                                             <Card.Body>
                                                 <Card.Title>Description:</Card.Title>
                                                 <Form.Group>
                                                     <Form.Control
-                                                        as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                        as={mode === 1 ? 'input' : 'textarea'}  // read mode
                                                         name='description'
-                                                        rows={mode === 0 ? 1 : 7}               // read mode
+                                                                       // read mode
                                                         aria-label='Enter description'
                                                         placeholder='Enter description'
                                                         value={description}
@@ -273,6 +273,7 @@ function ProposalDetailsPage({ mode }) {
                                                         readOnly={mode === 0}                   // read mode
                                                         plaintext={mode === 0}                  // read mode
                                                         required
+                                                        style={{ whiteSpace: 'pre-wrap' }}
                                                     />
                                                 </Form.Group>
                                             </Card.Body>

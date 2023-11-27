@@ -20,9 +20,7 @@ const app = require("../app");
 const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
 const Application = require("../model/Application");
-const {
-  setProposalArchived,
-} = require("../service/proposals.service");
+const { setProposalArchived } = require("../service/proposals.service");
 const Proposal = require("../model/Proposal");
 
 jest.mock("../service/applications.service");
@@ -411,9 +409,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
       },
     });
 
-    setApplicationStatus.mockImplementation(async () => {
-      throw Error("Database error");
-    });
+    setApplicationStatus.mockResolvedValue({ data: undefined });
 
     await controller.acceptOrRejectApplication(mockReq, mockRes);
 
