@@ -3,7 +3,7 @@
 const db = require("./db");
 const Proposal = require("../model/Proposal");
 
-exports.rowToProposal = (row) => {
+ exports.rowToProposal = (row) => {
   return new Proposal(
     row.proposal_id,
     row.title,
@@ -46,7 +46,7 @@ exports.insertProposal = async (proposal) => {
         false,
       ]
     );
-    return rowToProposal(result.rows[0]);
+    return this.rowToProposal(result.rows[0]);
   } catch (err) {
     console.log(err);
     throw err;

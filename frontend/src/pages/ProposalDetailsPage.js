@@ -44,6 +44,7 @@ function ProposalDetailsPage({ mode }) {
     const [description, setDescription] = useState("");
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
+    const [rows, setRows] = useState(3); 
 
     const levelEnum = {
         BACHELOR: "Bachelor",
@@ -52,6 +53,19 @@ function ProposalDetailsPage({ mode }) {
     const [newGroup, setNewGroup] = useState('');
     const [newKeyword, setNewKeyword] = useState('');
 
+    const calculateRows = () => {
+        const lineCount = (description.match(/\n/g) || []).length + 1;
+        const minRows = 3;
+        const calculatedRows = Math.max(lineCount, minRows);
+        return calculatedRows;
+      };
+
+    const updateRows = () => {
+        const calculatedRows = calculateRows();
+        setRows(calculatedRows);
+      };
+    
+      
     // list of useful data
     const proposalLevelsList = [levelEnum.BACHELOR, levelEnum.MASTER];
     const [proposalDegreeList, setProposalDegreeList] = useState([]);
@@ -145,7 +159,7 @@ function ProposalDetailsPage({ mode }) {
         if (mode === 0) {       // if it is in read mode
             setIsLoading(true);
             setErrorMessage(null); // reset error message when component is re-rendered
-
+            updateRows();
             getProposalById(proposal_id)
                 .then(async res => {
                     let data = await res.json()
@@ -197,7 +211,7 @@ function ProposalDetailsPage({ mode }) {
                     setProposalDegreeList([]);
                 });
         }
-    }, [proposal_id, currentDate]);
+    }, [proposal_id, currentDate, description]);
 
     return (
         <>
@@ -273,6 +287,7 @@ function ProposalDetailsPage({ mode }) {
                                                         readOnly={mode === 0}                   // read mode
                                                         plaintext={mode === 0}                  // read mode
                                                         required
+                                                        rows={mode !== 0 ? 8 : rows }  
                                                         style={{ whiteSpace: 'pre-wrap' }}
                                                     />
                                                 </Form.Group>
@@ -431,7 +446,7 @@ function ProposalDetailsPage({ mode }) {
                                                         {groups.map((group) => <Badge bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
                                                     </Card.Text>
                                                     :
-                                                    <Form.Group className="h-100" style={{ marginTop: "25px" }}>
+                                                    <Form.Group className="h-100" >
                                                         <div className="text-plus ">
                                                             <Col xs={8}>
                                                                 <Form.Control
@@ -465,7 +480,6 @@ function ProposalDetailsPage({ mode }) {
                                                                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                     {group}
                                                                     <Button
-                                                                        style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                                         variant="danger"
                                                                         size="sm"
                                                                         onClick={() => {
@@ -573,7 +587,7 @@ function ProposalDetailsPage({ mode }) {
                                                         name='required-knowledge'
                                                         rows={mode === 0 ? 1 : 4}               // read mode
                                                         aria-label='Enter required knowledge'
-                                                        placeholder='Enter required knowledge'
+                                                        placeholder={mode === 0 ? "Not specified" : 'Enter required knowledge'} 
                                                         value={knowledge}
                                                         onChange={(e) => {
                                                             setKnowledge(e.target.value);
@@ -595,7 +609,7 @@ function ProposalDetailsPage({ mode }) {
                                                         name='additional-notes'
                                                         rows={mode === 0 ? 1 : 4}               // read mode
                                                         aria-label='Enter notes'
-                                                        placeholder='Enter notes'
+                                                        placeholder={mode === 0 ? "Not specified" : 'Enter notes'} 
                                                         value={notes}
                                                         onChange={(e) => {
                                                             setNotes(e.target.value);

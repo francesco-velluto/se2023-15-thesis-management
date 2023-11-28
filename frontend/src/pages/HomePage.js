@@ -167,7 +167,7 @@ function HomePage() {
                 <Row>
                   {loggedUser.role === 0 && (
                     <Col> 
-                      <Button className="w-100 my-3" as={Link} to="/applications">
+                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
                         My Thesis Applications
                       </Button>
                     </Col>
