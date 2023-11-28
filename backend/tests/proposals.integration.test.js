@@ -287,3 +287,56 @@ describe("End to End Tests for Insert Proposal", () => {
         expect(currentUrl).toMatch(new RegExp(baseURL + "/proposals/P" + idRegex));
     }, 10000);
 });
+
+describe("End to end test for professor proposals", () =>{
+    beforeAll(async () => {
+        driver = await new Builder().forBrowser("chrome").build();
+    });
+
+    afterAll(async () => {
+        await driver.quit();
+    });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(500);
+
+        let pageTitle = await driver
+            .findElement(By.className("alert-danger"))
+            .getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+    });
+
+    test("Should show the proposals list if logged", async () =>{
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(500);
+        await driver.findElement(By.className("bg-white rounded-bottom py-4 container"));
+    });
+
+    test("Should see the details of a proposal", async()=>{
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals/P002");
+
+        await driver.sleep(500);
+        let pageTitle = await driver.findElement(By.className("proposal-details-title")).getText();
+
+        expect(pageTitle).toEqual("Machine Learning");
+    });
+
+    test("Should see proposal not found alert", async() =>{
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals/P0066");
+
+        await driver.sleep(500);
+
+        let alertText = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show")).getText();
+        expect(alertText).toEqual("Proposal not found");
+    });
+
+})
