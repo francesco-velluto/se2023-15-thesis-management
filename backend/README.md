@@ -195,25 +195,7 @@ POST `/api/authentication/login`
 
 ### Applications
 
-**POST** `/api/applications`
-- Insert a new application
-- Authentication: required
-- Authorization: only a student can access this endpoint
-- Request Query Parameters: _none_
-- Request Body:
-
-  | Field name | Type | Required* | Description |
-  | ----------- | ----------- | ----------- | ----------- |
-  | `proposal_id` | _string_ | Yes | ID of the proposal |
-
-- `SUCCESS 200`
-- Errors:
- - `ERROR 500` Response Body: `{"error": "Student/Proposal not found or already applied" }`
-
-
-### Applications
-
-#### Get all applications by student id
+#### For a student get all applications 
 
 **GET** `/api/applications/:student_id`
 
@@ -237,7 +219,9 @@ POST `/api/authentication/login`
   - `ERROR 401` Response Body: `{"error": "Must be a student to make this request!"}`
   - `ERROR 401` Response Body: `{"error": "You cannot get applications of another student"}`
   - `ERROR 404` Response Body: `{"error": "Student not found"}`
-  
+
+#### Accept or reject applications
+
 **PUT** `/api/applications/:application_id`
 - Set the status of an application to "Accepted" or "Rejected".
 The others pending applications relative to the same proposal are set to "Canceled".
@@ -267,6 +251,8 @@ The proposal is archived.
   - `401`: Not authenticated or not authorized
   - `500`: Internal server error
 
+####  Browse a specific application to the teacher's proposals
+
 **GET** `api/applications/application/:application_id`
 - Get an application given its id
 
@@ -287,6 +273,66 @@ The proposal is archived.
   - `404`: Application not found
   - `401`: Not authenticated or not authorized
   - `500`: Internal server error
+
+
+#### For a teacher get all applications
+
+***GET*** `api/applications`
+- Get all aplications to his thesis proposals for a teacher 
+
+- Authentication: required 
+- Authorization: must be a teacher 
+- Request query parameters: _none_
+- Request body: _none_
+
+- `Success 200`  Response body:
+  - `proposal_id` 
+  - `title` 
+  - `type`
+  - `description`,
+  - `expiration_date`,
+  - `level`: level of the thesis,
+  - applications: 
+    - `application_id`: number,
+    - `status`: status of the application,
+    - `application_date`,
+    - `student_id`: is of the student who applied,
+    - `surname`: surname of the student,
+    - `name`: name of the student,
+    - `email`: email of the student,
+    - `enrollment_year`: year of enrollment of the student,
+    - `cod_degree`: degree of the student
+
+- `Error`
+  - `401`: Not authenticated or not authorized
+  - `404` Applications not found
+  - `500` Internal Server Error
+
+#### For a student apply to a thesis proposal
+
+***POST*** `api/applications`
+- Insert a new application for a thesis proposal
+
+- Authentication: required
+- Authorization: must be a student
+- Request query parameters: _none_
+- Request body: 
+    - proposal_id: number (ID of the thesis proposal)
+
+- `Success 200` Response body:
+  - `proposal_id`: id of the thesis
+  - `student_id`: id of the student
+  - `status`: status updated
+  - `application_date`: date of the application
+  - `title`: title of the thesis
+  - `supervisor_name`: name of the supervisor 
+  - `supervisor_surname`
+
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized (only students are authorized)
+  - `500`: Internal Server Error
 
 ### Students
 
