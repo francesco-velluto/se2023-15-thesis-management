@@ -8,14 +8,14 @@ import { useContext, useState } from 'react';
 import dayjs from 'dayjs';
 import Logo from '../images/logo_poli_bianco_260.png'
 
-function NavbarContainer() {  
+function NavbarContainer() {
 
     const navigate = useNavigate();
     const { currentDate, setCurrentDate } = useContext(VirtualClockContext);
     const [showFormControl, setShowFormControl] = useState(false);
     const { handleLogout } = useContext(LoggedUserContext);
     const { loggedUser } = useContext(LoggedUserContext);
-    const [showDropdown, setShowDropdown] = useState(false);   
+    const [showDropdown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -39,14 +39,15 @@ function NavbarContainer() {
                     <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer' }}>
                         <Col className='me-0 me-md-3 my-3 my-md-0'>
                                 <InputGroup className='d-flex justify-content-center'>
-                                    
+
                                     {!showFormControl && (
-                                        <Button onClick={handleButtonClick} style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '50px' }}>
-                                            <FaCalendar /> 
+                                        <Button id="show-virtual-clock-btn" onClick={handleButtonClick} style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '50px' }}>
+                                            <FaCalendar />
                                         </Button>
                                     )}
                                     {showFormControl && (
                                         <Form.Control
+                                        id="virtual-clock-form"
                                         type="date"
                                         min={dayjs().format("YYYY-MM-DD")}
                                         value={currentDate}

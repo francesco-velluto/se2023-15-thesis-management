@@ -15,11 +15,11 @@ function StudentProposalsList(props) {
     const { currentDate } = useContext(VirtualClockContext);
     /**
      * ! ONLY FOR DEV SIMULATIONS
-     * 
+     *
      * Function to use an extra filter on the proposals list,
      * to exclude those who are expired in the current date
      * set by the virtual clock.
-     * 
+     *
      * ! If the virtual clock in on:
      * !    every time you call the setFilteredProposals, you should call this
      * !    function right after that, so you apply an extra filter on the already filtered proposals.
@@ -43,7 +43,7 @@ function StudentProposalsList(props) {
                 }
                 let db_proposals = (await res.json()).proposals;
 
-                
+
                 setProposals(db_proposals);
                 setFilteredProposals(db_proposals);
                 filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
@@ -53,9 +53,9 @@ function StudentProposalsList(props) {
                 setIsLoading(false);
             })
 
-            
+
             setIsLoading(false);
-           
+
 
         }
 
@@ -76,9 +76,9 @@ function StudentProposalsList(props) {
                 'required_knowledge',
                 'notes',
                 'level'].includes(fltr.field)){
-                    
+
                     result = result.filter((elem) => ((elem[fltr.field]).toLowerCase().includes(fltr.value.toLowerCase())));
-                   
+
                 }
 
                 if(fltr.field === 'supervisor'){
@@ -94,19 +94,19 @@ function StudentProposalsList(props) {
 
                 }
 
-                
+
             }
             return result;
         });
         filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
 
     }, [props.searchData.length, currentDate])
-    
+
 
     return (
         <Container className="bg-white rounded-bottom py-4">
         {
-            isLoading && 
+            isLoading &&
             <Row>
                 <Col>
                     <Alert variant="danger">Loading...</Alert>
@@ -115,7 +115,7 @@ function StudentProposalsList(props) {
         }
         {
             !errorMessage && filteredProposals.length > 0 && <>
-            
+
             <Row className='mt-1 mb-4 mx-2 p-2' >
                 <Col xs={12} md={3} className="text-center text-md-start">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-alphabet d-xs-block d-md-none me-2" viewBox="0 0 16 16">
@@ -142,25 +142,25 @@ function StudentProposalsList(props) {
                     <strong>Expiration date</strong>
                 </Col>
                 <Col xs={12} md={2}>
-                    
+
                 </Col>
             </Row>
-            
+
             </>
         }
 
-        {   !errorMessage && filteredProposals.length > 0 ? 
+        {   !errorMessage && filteredProposals.length > 0 ?
             filteredProposals.map((fp, index) => (
                 <ProposalRow key={index} data={fp}/>
-            )) : 
+            )) :
             <Row>
                 <Col className="d-flex flex-row justify-content-center">
                     There are no available thesis proposals
                 </Col>
             </Row>
-        }  
+        }
         {
-            errorMessage && 
+            errorMessage &&
             <Row>
                 <Col>
                     <Alert variant="danger">{errorMessage}</Alert>
@@ -198,7 +198,7 @@ function ProposalRow(props){
             </svg>
             {props.data.type}
         </Col>
-        <Col xs={12} md={2} className="text-center text-md-start">
+        <Col xs={12} md={2} className="text-center text-md-start expiration-date">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-calendar-week-fill d-xs-block d-md-none me-2" viewBox="0 0 16 16">
                 <path d="M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v1h16V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zM16 14V5H0v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2zM9.5 7h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm3 0h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zM2 10.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z"/>
             </svg>
