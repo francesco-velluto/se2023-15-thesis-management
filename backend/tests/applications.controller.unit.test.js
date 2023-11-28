@@ -81,7 +81,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
       status: 200,
     });
 
-    controller.getAllApplicationsByStudentId(req, res);
+    
 
     request(app)
       .get(`/api/applications/${req.user.id}`)
@@ -91,30 +91,73 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
         expect(getAllApplicationsByStudentId).toHaveBeenCalled();
         expect(res.body).toEqual(expectedApplications);
         expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
         done();
       });
   });
 
   it("should handle unauthorized access", async () => {
-    const mockRequest = {
+    const req = {
       params: { student_id: "unauthorizedStudentId" },
       user: { id: "authenticatedStudentId" }, // Simulate authenticated user
     };
-    const mockResponse = {
+    const res = {
       status: jest.fn().mockReturnThis(),
       json: jest.fn(),
     };
 
-    await controller.getAllApplicationsByStudentId(mockRequest, mockResponse);
-
-    expect(mockResponse.status).toHaveBeenCalledWith(401);
-    expect(mockResponse.json).toHaveBeenCalledWith({
-      error: "You cannot get applications of another student",
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "authenticatedStudentId" };
+      next(); // Authenticated
     });
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    request(app)
+      .get(`/api/applications/${req.user.id}`)
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body.error).toEqual(
+          "You cannot get applications of another student"
+        );
+        expect(res.body.error).toBeTruthy();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+      });
+  
   });
 
   it("should handle service layer error", async () => {
-    // todo
+
+    const studentId = "authenticatedStudentId";
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: studentId };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    // Mock the getAllApplicationsByStudentId to simulate a server error
+    getAllApplicationsByStudentId.mockRejectedValue({
+      status: 500,
+      data: "Internal server error",
+    });
+
+    request(app)
+      .get(`/api/applications/${studentId}`)
+      .end((err, res) => {
+        if (err) throw err;
+
+        expect(res.status).toBe(500);
+        expect(res.body.error).toEqual("Internal server error");
+        expect(getAllApplicationsByStudentId).toHaveBeenCalled();
+        done();
+      });
+
   });
 });
 
