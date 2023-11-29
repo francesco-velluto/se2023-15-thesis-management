@@ -143,7 +143,7 @@ exports.getProposalById = (proposal_id) => {
           console.error(
             `Error in getProposalById - proposal_id: ${proposal_id} not found`
           );
-          reject({ status: 404, data: "Proposal not found" });
+          reject({ status: 404, data: "The proposal has not been found!" });
         } else {
           let proposal = result.rows[0];
 
