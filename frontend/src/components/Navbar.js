@@ -15,7 +15,6 @@ function NavbarContainer() {
     const { handleLogout } = useContext(LoggedUserContext);
     const { loggedUser } = useContext(LoggedUserContext);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [showDropdown, setShowDropdown] = useState(false);
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
