@@ -1,7 +1,7 @@
 version: '3.8'
 
 # This is the version for release of the docker-compose.yml file that will be used by developers only and not sent to the professor.
-# This version builds the images locally, so that the developer can test the application locally.
+# This version can build the images locally, so that the developer can test the application locally.
 # This version is needed to build the images with updated code that can be tested locally and pushed to Docker Hub.
 
 services:
