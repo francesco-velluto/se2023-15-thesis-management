@@ -27,10 +27,15 @@ describe("End to end tests login", () => {
   test("Should span an alert when login credentials are wrong", async () => {
     await driver.get(baseURL + "/login");
 
-    await driver
-      .findElement(By.id("username"))
-      .sendKeys("john.smith@example.com");
-    await driver.findElement(By.id("password")).sendKeys("wrongpassword");
+    await driver.sleep(500);
+
+    let usernameBox = await driver.findElement(By.id("username"));
+    await usernameBox.clear();
+    await usernameBox.sendKeys("john.smith@example.com");
+
+    let passwordBox = await driver.findElement(By.id("password"));
+    await passwordBox.clear();
+    await passwordBox.sendKeys("wrongpassword");
 
     const submitButton = await driver.findElement(By.css("button"))
 
@@ -48,10 +53,15 @@ describe("End to end tests login", () => {
   test("Should login correctly", async () => {
     await driver.get(baseURL + "/login");
 
-    await driver
-      .findElement(By.id("username"))
-      .sendKeys("michael.wilson@example.com");
-    await driver.findElement(By.id("password")).sendKeys("T002");
+    await driver.sleep(500);
+
+    let usernameBox = await driver.findElement(By.id("username"));
+    await usernameBox.clear();
+    await usernameBox.sendKeys("john.smith@example.com");
+
+    let passwordBox = await driver.findElement(By.id("password"));
+    await passwordBox.clear();
+    await passwordBox.sendKeys("S001");
 
     const submitButton = await driver.findElement(By.css("button"))
 
