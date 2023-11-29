@@ -145,6 +145,36 @@ POST `/api/authentication/login`
   - `ERROR 404` Response Body: `{ "error": "Proposal not found" }`
   - `ERROR 500` Response Body: `{ "error": "Internal Server Error" }`
 
+**GET** `/api/proposals/professor`
+- Retrieve a proposal belonging to the authenticated professor
+- Authentication: required
+- Authorization: only professors can access this endpoint
+- Request Query Parameters: none
+- Request Body: _none_
+- `SUCCESS 200` Response Body: Array of proposal objects with the following fields
+
+  | Field name           | Type | Description                                                             |
+  |----------------------| ----------- |-------------------------------------------------------------------------|
+  | `proposal_id`        | _string_ | Id of the proposal                                                   |
+  | `title`              | _string_ | Title of the proposal                                                   |
+  | `supervisor_name`    | _string_ | Name of the supervisor of the proposal                                  |
+  | `supervisor_surname` | _string_ | Surname of the supervisor of the proposal                               |
+  | `keywords`           | _string[]_ | Keywords related to the proposal                                        |
+  | `type`               | _string_ | Type of thesis (e.g. research, experimental...)                         |
+  | `groups`             | _string[]_ | List of research groups related to the thesis proposal                  |
+  | `description`        | _string_ | Description of the activities of the thesis                             |
+  | `required_knowledge` | _string_ | Description of the knowledge required for the thesis                    |
+  | `notes`              | _string_ | Additional notes by the professor                                       |
+  | `expiration_date`    | _string_ | Date in ISO 8601 format YYYY-MM-DD                                      |
+  | `level`              | _string_ | Level of the thesis (e.g. Bachelor, Master)                             |
+  | `degrees`         | _[]_ | Programmes related to the thesis, both with cod_degree and degree_title |
+
+- Errors:
+  - `ERROR 401` Response Body: `{ errors: ['Must be authenticated to make this request!'] }`
+  - `ERROR 401` Response Body: `{ errors: ["Not authorized"] }`
+  - `ERROR 404` Response Body: `{ "error": "Proposals not found" }`
+  - `ERROR 500` Response Body: `{ "error": "Internal Server Error" }`
+
 
 ### Teachers
 
