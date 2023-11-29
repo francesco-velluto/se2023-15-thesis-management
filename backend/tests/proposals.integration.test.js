@@ -341,8 +341,8 @@ describe("End to end test for professor proposals", () =>{
 
         await driver.sleep(500);
 
-        let alertText = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show")).getText();
-        expect(alertText).toEqual("Proposal not found");
+        let alertText = await driver.findElement(By.className("lead")).getText();
+        expect(alertText).toEqual("The proposal has not been found!");
     });
 
 })
