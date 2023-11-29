@@ -46,7 +46,7 @@ function ApplicationList() {
                     ))}
                 </Row>
 
-                <Row className='browse-application'>
+                <Row className='browse-application' style={{ backgroundColor: "#F4EEE0"}}>
                     {loading ? (
                         <Spinner animation="border" role="status">
                             <span className="visually-hidden">Loading...</span>
@@ -83,7 +83,7 @@ function ApplicationList() {
                                     ))}
                             </Accordion>
                             {(applications === undefined || Object.keys(applications).length === 0) &&
-                                <Card className='my-3 fs-5'>
+                                <Card className='my-3 fs-5' >
                                     <Card.Body>
                                         No applications were found for your thesis proposals!
                                     </Card.Body>
@@ -91,6 +91,12 @@ function ApplicationList() {
                             }
                         </>
                     )}
+                </Row>
+
+                <Row className="mx-auto">
+                    <Col>
+                        <Button variant="secondary" onClick={() => {navigate('/')}}>Back to Homepage</Button>
+                    </Col>
                 </Row>
             </Container>
         </>

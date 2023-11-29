@@ -48,15 +48,15 @@ function Main() {
                 <Route path='/login' element={<LoginPage />} />
                 <Route path='/applications'>
                     <Route index element={
-                    	!loggedUser ? <UnAuthorizationPage /> :
+                    	!loggedUser ? <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} /> :
                         	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
                     } />
-                    <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
+                    <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} />} />
                 </Route>
                 <Route path="/proposals">
-                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage/>} />
-                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
-                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
+                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"}/>} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} />} />
+                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} />} />
                 </Route>
             </Route>
 
@@ -76,21 +76,30 @@ function PageLayout() {
 /**
  * Informs the user that he does not have authorization for this page
  */
-function UnAuthorizationPage() {
+export function UnAuthorizationPage({error, message}) {
     return (
         <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">
-                        <h3><strong>Access Not Authorized</strong></h3>
+                        <h3><strong>{error}</strong></h3>
                     </Alert>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <Card bg="light" className="rounded p-3">
-                        <p className="lead fs-4">
-                            You are not allowed to access this page, please go back to the{' '}
+                        <p className="lead">
+                            {message}
+                        </p>
+                    </Card>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Card bg="light" className="rounded p-3 mt-2">
+                        <p className="lead">
+                            Please go back to the{' '}
                             <Link to="/">home</Link>.
                         </p>
                     </Card>
