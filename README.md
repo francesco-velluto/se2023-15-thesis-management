@@ -9,7 +9,15 @@ The Thesis Management System is a web application that allows students to submit
 - Make sure you have [Docker](https://docs.docker.com/get-docker/) installed.
 - Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
-### 1) Get .env and docker-compose.yml files from email attachment
+### 1) Start Docker Desktop
+
+Make sure Docker Desktop is running on your machine.
+
+If not, start it.
+
+This will ensure that the Docker daemon is running and that you can use the Docker CLI.
+
+### 2) Get .env and docker-compose.yml files from email attachment
 
 The .env is not publicly provided because they can contain sensitive information.
 
@@ -33,7 +41,7 @@ You will receive the two files a .zip file attached to an email.
 
 Simply unzip the file, you will find the two files inside the directory that will be created, named "se2023-15-release".
 
-### 2) Boot the application
+### 3) Boot the application
 
 Open the terminal and go to the newly created directory, named "se2023-15-release", running the following command:
 
@@ -47,7 +55,7 @@ Then, to pull and build the images and run all the application's containers, sim
 docker-compose up -d
 ```
 
-### 3) Access the application
+### 4) Access the application
 
 The application is now running on the port specified in the .env file.
 
