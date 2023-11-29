@@ -30,6 +30,7 @@ function ProposalDetailsPage({ mode }) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [unauthorized, setUnauthorized] = useState(false);    // it is useful to hide fields in the page if there is some issues (for example, proposal expired or proposal not found ...)
+    const [successMessage, setSuccessMessage] = useState(false);
 
     const { currentDate } = useContext(VirtualClockContext);
     const { loggedUser } = useContext(LoggedUserContext);
@@ -42,7 +43,7 @@ function ProposalDetailsPage({ mode }) {
     const [keywords, setKeywords] = useState([]);
     const [programmes, setProgrammes] = useState([]);
     // const [coSupervisors, setCoSupervisors] = useState([]);
-    const [groups, setGroups] = useState([]);
+    const [groups, setGroups] = useState([loggedUser.cod_group]);
     const [description, setDescription] = useState("");
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
@@ -150,9 +151,11 @@ function ProposalDetailsPage({ mode }) {
         };
 
         try {
-            await insertNewProposal(newProposal);
-            navigate("/");
+            const proposal = await insertNewProposal(newProposal);
+            setSuccessMessage(true);
+            navigate("/proposals/" + proposal.proposal_id);
         } catch (err) {
+            setSuccessMessage(false);
             setErrorMessage(err.message);
         }
     }
@@ -232,6 +235,11 @@ function ProposalDetailsPage({ mode }) {
                                 {errorMessage &&
                                     <Row>
                                         <Alert variant="danger" dismissible onClose={() => setErrorMessage('')}>{errorMessage}</Alert>
+                                    </Row>
+                                }
+                                {successMessage &&
+                                    <Row>
+                                        <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been created!</Alert>
                                     </Row>
                                 }
                                 <Container>
@@ -466,10 +474,11 @@ function ProposalDetailsPage({ mode }) {
                                                                         onChange={(e) => {
                                                                             setNewGroup(e.target.value);
                                                                         }}
+                                                                        disabled
                                                                     />
-                                                                </Col>
+                                                                    </Col>
                                                                 <Col >
-                                                                    <Button id="add-group-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                    <Button id="add-group-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} disabled onClick={() => {
                                                                         if (!newGroup.trim()) {
                                                                             return;
                                                                         } else if (!groups.includes(newGroup)) {
@@ -495,6 +504,7 @@ function ProposalDetailsPage({ mode }) {
                                                                                 updated.splice(index, 1);
                                                                                 setGroups(updated);
                                                                             }}
+                                                                            disabled
                                                                         >
                                                                             Delete
                                                                         </Button>
