@@ -822,7 +822,29 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       done();
     })
     .catch((err) => done(err));
-  })
+  });
+
+  test("T4.5 ERROR 500 | Internal Server Error", (done) =>{
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user.id = "T002";
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    getAllProposals.mockImplementation((mockedStudentDegree) => {
+      throw Error("some error");
+    });
+
+    request(app)
+      .get("/api/proposals")
+      .then((res) => {
+        expect(res.status).toBe(500);
+        done();
+      });
+  });
 
 })
 
