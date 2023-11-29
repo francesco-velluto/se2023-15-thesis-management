@@ -37,7 +37,7 @@ function NavbarContainer() {
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                         <Col className='me-3 d-flex justify-content-center'>
-                            <Button variant={"secondary"} onClick={() => { navigate('/') }}>
+                            <Button variant={"secondary"} onClick={() => { navigate('/') }} style={{height: '50px', color: '#393646',}}>
                                 <div className='d-flex align-items-center'>
                                     <span className='me-2 fs-5 d-flex align-items-center'>
                                         <FaHome />

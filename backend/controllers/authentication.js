@@ -4,58 +4,16 @@ const passport = require('passport');
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 
-const { validationResult } = require('express-validator');
-const { authUser, getUserById } = require('../service/authentication');
-const CryptoJS = require('crypto-js');
+const { getUserById, getUser } = require('../service/authentication');
 const Teacher = require('../model/Teacher');
 const Student = require('../model/Student');
 
+const SamlStrategy = require('passport-saml').Strategy;
+const fs = require('fs');
+const config = require('../config');
+
 
 module.exports = {
-    /**
-    * Authenticate a user and issue a session token upon successful login.
-    *
-    * @function
-    * @name login
-    * @memberof module:authenticationController
-    * @param {Object} req - Express request object
-    * @param {Object} res - Express response object
-    * @param {function} next - Express next middleware function
-    * @returns {JSON} - User information or errors
-    * @throws {JSON} - 400 Bad Request if username or password are not present,
-    *                  401 Unauthorized if username or password are not valid,
-    *                  500 Internal Server Error if something went wrong
-    */
-    login: (req, res, next) => {
-        // Check if validation is ok
-        const err = validationResult(req);
-        const errList = [];
-        if (!err.isEmpty()) {
-            errList.push(...err.errors.map(e => e.msg));
-            return res.status(400).json({ errors: errList });
-        }
-
-        // Perform the actual authentication
-        passport.authenticate("local", (err, user, info) => {
-            if (err) {
-                return res.status(err.status).json({ errors: [err.msg] });
-            }
-
-            if (!user) {
-                return res.status(401).json(info);
-            }
-
-            req.login(user, err => {
-                if (err) {
-                    return next(err);
-                }
-
-                // Send user information
-                return res.json(req.user);
-            });
-
-        })(req, res, next);
-    },
 
     /**
       * Fetch information about the currently authenticated user.
@@ -79,22 +37,6 @@ module.exports = {
     },
 
     /**
-     * Fetch information about the currently authenticated user.
-     *
-     * @async
-     * @function
-     * @name currentUser
-     * @memberof module:authenticationController
-     * @param {Object} req - Express request object
-     * @param {Object} res - Express response object
-     * @returns {JSON} - Current user information
-     * @throws {JSON} - 500 Internal Server Error if a database error occurs
-     */
-    logout: (req, res) => {
-        req.logout(() => res.end());
-    },
-
-    /**
      * Initialize passport authentication with the LocalStrategy.
      *
      * @function
@@ -104,50 +46,46 @@ module.exports = {
      * @returns {undefined}
      */
     inializeAuthentication: (app) => {
-        passport.use(new LocalStrategy((username, password, done) => {
-            authUser(username, password)
-                .then(user => {
-                    if (user) {
-                        done(null, user);
-                    }
-                    else {
-                        done({ status: 401, msg: 'Incorrect email and/or password!' }, false);
-                    }
-                })
-                .catch(() => {
-                    return done({ status: 500, msg: 'Database error' }, false);
-                });
-        }));
+
+        const samlStrategy = new SamlStrategy(
+            {
+            issuer: `http://localhost:${process.env.FRONTEND_PORT}`,
+            protocol: "http://",
+            path: "/api/authentication/login/callback",
+            entryPoint: config.saml.entryPoint,
+            logoutUrl: config.saml.logoutUrl,
+            cert: config.saml.cert,
+            wantAssertionsSigned: false,
+            wantAuthnResponseSigned: false
+            },
+            (expressUser, done) => {
+            console.log("Authentication");
+            console.log(expressUser);
+        
+            // rename of nameID property
+            //expressUser.id = expressUser.nameID;
+            //delete expressUser.nameID;
+        
+            return done(null, expressUser);
+            }
+        );
+        passport.use(samlStrategy);
 
         // Serialization and deserialization of the user to and from a cookie
         passport.serializeUser((user, done) => {
-            done(null, user.id);
+            console.log("serializzazione", user);
+            done(null, user.nameID);
         });
 
         passport.deserializeUser((id, done) => {
-            getUserById(id)
+            console.log("deserializzazione", id);
+            getUser(id)
                 .then(user => done(null, user))
                 .catch(e => done(e, null));
         });
 
-        function generateHash(length) {
-            const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let input = '';
-        
-            for (let i = 0; i < length; i++) {
-                const randomIndex = Math.floor(Math.random() * characters.length);
-                input += characters.charAt(randomIndex);
-            }
-        
-            return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
-        }
-
         // Initialize express-session
-        app.use(session({
-            secret: generateHash(32),
-            resave: false,
-            saveUninitialized: false,
-        }));
+        app.use(session(config.session));
 
         // Initialize passport middleware
         app.use(passport.initialize());
@@ -184,7 +122,7 @@ module.exports = {
      * @returns {undefined}
      */
     isTeacher: (req, res, next) => {
-        if (!req.isAuthenticated() || !(req.user instanceof Teacher)) 
+        if (!req.isAuthenticated() || !(req.user instanceof Teacher))
             return res.status(401).json({ errors: ["Not authorized"] });
         next();
     },
@@ -202,9 +140,8 @@ module.exports = {
      * @returns {undefined}
      */
     isStudent: (req, res, next) => {
-        if (!req.isAuthenticated() || !(req.user instanceof Student)) 
+        if (!req.isAuthenticated() || !(req.user instanceof Student))
             return res.status(401).json({ errors: ["Not authorized"] });
         next();
-    }
-
+    },
 }
