@@ -2,77 +2,60 @@
 
 The Thesis Management System is a web application that allows students to submit their thesis proposals and faculty to review and approve them.
 
-## [ Release 1 ] Instructions for install and boot the application in docker
+## [ Release ] Instructions for install and boot the application in Docker
 
 ### 0) Prerequisites
 
-- Make sure you have [Git](https://git-scm.com/downloads) installed.
-- Make sure you have [Postgres](https://www.postgresql.org/download/) installed.
 - Make sure you have [Docker](https://docs.docker.com/get-docker/) installed.
 - Make sure you have [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
-### 1) Get Docker Compose files from the GitHub repository
+### 1) Get .env and docker-compose.yml files from email attachment
 
-The Thesis Management System application is composed of three fundamental parts:
+The .env is not publicly provided because they can contain sensitive information.
+
+For this reason we will send you the .env via email, along with the docker-compose.yml file.
+
+We also provide the docker-compose.yml file because it contains the configurations for pulling, building and running all the images that compose the application.
+
+In fact, the Thesis Management System application is composed of three fundamental parts:
 - the frontend server
 - the backend server
 - the database server
 
-Each one of these parts is a Docker image that can be built and run independently.
+Each one of these parts is a Docker image that can be built and run independently, and they are publicly available on Docker Hub respectively at the following links:
+- [frontend server](https://hub.docker.com/repository/docker/francescovelluto/se2023-15-thesis-management-frontend)
+- [backend server](https://hub.docker.com/repository/docker/francescovelluto/se2023-15-thesis-management-backend)
+- [database server](https://hub.docker.com/repository/docker/francescovelluto/se2023-15-thesis-management-db)
 
-However, to simplify the process, we provide a Docker Compose file that allows you to compose and run the full application at once.
+However, to simplify the process, we provide the docker compose file that allows you to build and run all the images at the same time.
 
-To get the Docker Compose file, clone the GitHub repository with the following command:
+You will receive the two files a .zip file attached to an email.
 
-```bash
-git clone https://github.com/francesco-velluto/se2023-15-thesis-management.git
-```
+Simply unzip the file, you will find the two files inside the directory that will be created, named "se2023-15-release".
 
-Then go to the project root folder with the following command:
+### 2) Boot the application
 
-```bash
-cd se2023-15-thesis-management
-```
-
-### 2) Create a .env file with these informations in the root directory
-
-The .env file is not provided in the GitHub repository because it can contain sensitive information.
-
-You must manually create a .env file in the root directory of the project and fill it with the following information:
-
-```
-REACT_APP_BACKEND_SERVER_PORT=the port on which the backend server will run
-FRONTEND_PORT=the port on which the frontend server will run
-DB_PASSWORD=the password of the database user
-DB_USER=the username of the database user
-DB_HOST=the host of the database server (must equal to db)
-```
-
-Please note that the database server must be running on the same machine as the application on port 5432.
-
-### 3) Get the Docker images and Compose the application
-
-The images for the application components are provided in the Docker Hub repository.
-
-To get the images and compose the application, run the following command:
+Open the terminal and go to the newly created directory, named "se2023-15-release", running the following command:
 
 ```bash
-docker compose up -d
+cd se2023-15-release
 ```
 
-Wait for all the application components to be up and running.
+Then, to pull and build the images and run all the application's containers, simply run the following command:
 
-### 4) Access the application
+```bash
+docker-compose up -d
+```
+
+### 3) Access the application
 
 The application is now running on the port specified in the .env file.
 
 To access the application, open a browser and go to the following URL:
 
 ```
-http://localhost:FRONTEND_PORT
+http://localhost:3000
 ```
-
-where FRONTEND_PORT is the port specified in the .env file.
 
 ## Create a .env file with these informations in the root directory
 

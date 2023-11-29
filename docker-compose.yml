@@ -2,6 +2,9 @@ version: '3.8'
 
 services:
   backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-backend:latest
     depends_on:
       db:
@@ -18,6 +21,9 @@ services:
       - mynetwork
 
   frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-frontend:latest
     depends_on:
       - backend
@@ -30,6 +36,9 @@ services:
       - mynetwork
 
   db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-db:latest
     environment:
       - POSTGRES_DB='Thesis-Management-System'
