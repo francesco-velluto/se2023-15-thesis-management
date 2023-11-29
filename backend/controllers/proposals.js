@@ -10,6 +10,7 @@ const Student = require("../model/Student");
 
 const proposalsService = require("../service/proposals.service");
 const { proposal_id } = require("../model/Proposal");
+const Teacher = require("../model/Teacher");
 
 
 module.exports = {
@@ -58,7 +59,7 @@ module.exports = {
 
     proposalsService.getProposalById(proposal_id)
       .then((result) => {
-        if (result.data.supervisor_id !== req.user.id) {
+        if (result.data.supervisor_id !== req.user.id && req.user instanceof Teacher) {
           return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
         }
         return res.status(result.status).json(result.data);
