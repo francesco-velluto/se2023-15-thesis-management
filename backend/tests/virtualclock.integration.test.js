@@ -70,6 +70,8 @@ describe("End to end tests for virtual clock", () => {
     // to be sure that at least one proposal will be filtered out
     const virtualClockDate = add(min_exp_date, { days: 1 });
 
+    await driver.sleep(500)
+
     await driver.findElement(By.id("show-virtual-clock-btn")).click();
 
     await driver

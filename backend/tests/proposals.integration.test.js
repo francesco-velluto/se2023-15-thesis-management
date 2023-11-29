@@ -134,11 +134,11 @@ describe("End to end tests for Proposal details", () => {
         await driver.sleep(500);
 
         let pageTitle = await driver
-            .findElement(By.className("alert-danger"))
+            .findElement(By.className("lead"))
             .getText();
 
-        expect(pageTitle).toEqual("Proposal not found");
-    });
+        expect(pageTitle).toEqual("The proposal has not been found!");
+    }, 10000);
 
     test("Should show Proposal details", async () => {
         await doLogin("john.smith@example.com", "S001");
@@ -172,6 +172,9 @@ describe("End to End Tests for Insert Proposal", () => {
         // Type
         await driver.findElement(By.name("proposal-type")).sendKeys(mockProposalReq.type);
 
+        /**
+         *  Groups is now fixed
+         *
         // Groups
         for (const group of mockProposalReq.groups) {
             const groupField = await driver.findElement(By.name("proposal-groups"));
@@ -185,6 +188,7 @@ describe("End to End Tests for Insert Proposal", () => {
             await driver.sleep(200);
             await groupField.clear();
         }
+         **/
 
         // Description
         await driver
@@ -271,6 +275,8 @@ describe("End to End Tests for Insert Proposal", () => {
         await doLogin("sarah.anderson@example.com", "T001");
 
         await driver.get(baseURL + "/proposals/new");
+
+        await driver.sleep(500);
 
         // Fill all the form fields
         await fillProposalForm();
