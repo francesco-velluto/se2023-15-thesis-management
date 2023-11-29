@@ -1,14 +1,10 @@
 version: '3.8'
 
-# This is the version for release of the docker-compose.yml file that will be used by developers only and not sent to the professor.
-# This version builds the images locally, so that the developer can test the application locally.
-# This version is needed to build the images with updated code that can be tested locally and pushed to Docker Hub.
+# This is the version for release of the docker-compose.yml file that will be sent to the professor.
+# This version does not build the images, but uses the images already built and uploaded to Docker Hub.
 
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-backend:latest
     depends_on:
       db:
@@ -25,9 +21,6 @@ services:
       - mynetwork
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-frontend:latest
     depends_on:
       - backend
@@ -40,9 +33,6 @@ services:
       - mynetwork
 
   db:
-    build:
-      context: ./database
-      dockerfile: Dockerfile
     image: francescovelluto/se2023-15-thesis-management-db:latest
     environment:
       - POSTGRES_DB='Thesis-Management-System'
