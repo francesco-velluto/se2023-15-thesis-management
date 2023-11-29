@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Alert, Card, Col, Container, Row } from "react-bootstrap";
+import { Alert, Button, Card, Col, Container, Row } from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
@@ -11,6 +11,8 @@ function StudentProposalsList(props) {
     const [filteredProposals, setFilteredProposals] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+
+    const navigate = useNavigate();
 
     const { currentDate } = useContext(VirtualClockContext);
     /**
@@ -105,6 +107,8 @@ function StudentProposalsList(props) {
 
     return (
         <Container className="bg-white rounded-bottom py-4">
+
+            
         {
             isLoading &&
             <Row>
@@ -168,6 +172,12 @@ function StudentProposalsList(props) {
             </Row>
         }
 
+        <Row className="bg-white mx-auto">
+            <Col>
+                <Button variant="secondary" onClick={() => {navigate('/')}}>Back to Homepage</Button>
+            </Col>
+        </Row>
+
         </Container>
     );
 }
@@ -204,7 +214,7 @@ function ProposalRow(props){
             </svg>
             {format(parseISO(props.data.expiration_date), 'dd/MM/yyyy')}
         </Col>
-        <Col xs={12} md={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" style={{ marginTop: '-2px', cursor:'pointer', color: '#393646', fontWeight:"bold" }} onClick={() => {navigate('/proposals/' + props.data.proposal_id)}}>
+        <Col xs={12} md={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0 show-details-link" style={{ marginTop: '-2px', cursor:'pointer', color: '#393646', fontWeight:"bold" }} onClick={() => {navigate('/proposals/' + props.data.proposal_id)}}>
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-text me-1" viewBox="0 0 16 16" style={{marginTop: "6px"}}>
                 <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
                 <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>

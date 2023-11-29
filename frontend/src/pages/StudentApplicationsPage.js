@@ -60,9 +60,10 @@ function StudentApplicationsPage() {
                                 <Row key={index} className={"justify-content-center student-application-row"}>
                                     <Col lg={7}>
                                         <Card text={"light"}
+                                              id={"student-application-card"}
                                               bg={application.status === "Accepted" ? 'success' : (application.status === "Rejected" ? 'danger' : (application.status === "Pending" ? 'secondary' : 'dark'))}
                                         >
-                                            <Card.Header>
+                                            <Card.Header id="student-application-card-header">
                                                 {application.status === "Accepted" ? <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> :
                                                     (application.status === "Canceled" ? <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg> :
                                                             (application.status === "Pending" ?  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> :
@@ -72,7 +73,7 @@ function StudentApplicationsPage() {
                                                 } <b>{application.status}</b>
                                             </Card.Header>
                                             <Card.Body className={"student-application-card-body"}>
-                                                <Card.Title>
+                                                <Card.Title id="student-application-card-title">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16c0 1.1.9 2 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/><path d="M14 3v5h5M16 13H8M16 17H8M10 9H8"/></svg> {application.title}
                                                 </Card.Title>
                                                 <Card.Subtitle>
@@ -90,7 +91,7 @@ function StudentApplicationsPage() {
                 )}
                 <Row className={"justify-content-center student-application-row"}>
                     <Col lg={5}>
-                        <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/">
+                        <Button id='back-to-homepage-button' style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/">
                             Back to Homepage
                         </Button>
                     </Col>

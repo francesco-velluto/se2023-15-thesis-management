@@ -2,11 +2,14 @@ import { useContext, useState } from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { Alert } from "react-bootstrap";
+import { Alert, Button, Col, Row } from "react-bootstrap";
 import ProfessorProposalsList from "../components/ProfessorProposalsList";
+import { useNavigate } from "react-router-dom";
 
 function ProfessorProposalsPage() {
     const { loggedUser } = useContext(LoggedUserContext);
+
+    const navigate = useNavigate();
 
     return (
         <>
@@ -23,6 +26,12 @@ function ProfessorProposalsPage() {
                         <ProfessorProposalsList />
                     </>
             }
+
+            <Row className="bg-white mx-auto pb-3">
+                <Col>
+                    <Button variant="secondary" onClick={() => {navigate('/')}}>Back to Homepage</Button>
+                </Col>
+            </Row>
         </>
     );
 }
