@@ -757,15 +757,13 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       }
     ];
 
-    //console.log("PROVA");
     const mockedTeacherId = "T000";
 
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: mockedTeacherId };
-      
+
       next(); // Authenticated
     });
-    console.log(10);
 
     isTeacher.mockImplementation((req, res, next) => {
       next();   // Authorized
@@ -776,7 +774,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       data: mockProposals
     });
 
-    
+
     request(app)
     .get("/api/proposals/professor")
     .then((res) => {
@@ -796,10 +794,9 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
 
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: mockedTeacherId };
-      
+
       next(); // Authenticated
     });
-    console.log(10);
 
     isTeacher.mockImplementation((req, res, next) => {
       next();   // Authorized
@@ -810,7 +807,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       data: "Proposals not found"
     });
 
-    
+
     request(app)
     .get("/api/proposals/professor")
     .then((res) => {
@@ -847,5 +844,3 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
   });
 
 })
-
-

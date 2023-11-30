@@ -29,8 +29,6 @@ module.exports = {
       */
     currentUser: async (req, res) => {
         try {
-            console.log(req.user, "current user");
-
             const user = await getUser(req?.user?.nameID);
             return res.json(user);
         } catch (err) {
@@ -100,8 +98,6 @@ module.exports = {
      * @returns {undefined}
      */
     isLoggedIn: (req, res, next) => {
-        console.log(req.user, "is logged in");
-
         if (req.isAuthenticated()) return next();
         return res.status(401).json({ errors: ['Must be authenticated to make this request!'] });
     },

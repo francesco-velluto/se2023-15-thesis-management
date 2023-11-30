@@ -51,18 +51,13 @@ describe("End to end tests for browse applications", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
 
-    const accordion = await driver.wait(until.elementLocated(By.css('Accordion')), 5000);    
+    const accordion = await driver.wait(until.elementLocated(By.css('Accordion')), 5000);
     assert.isNotNull(accordion);
-  
-    console.log(accordion);
 
     // Assicurati che ci siano applicazioni nell'Accordion
     const applications = await driver.findElements(By.css('Accordion.Item'));
     assert.isTrue(applications.length > 0);
 
-    console.log(applications);
-
-    
     /*expect(
       applyButtonTextBefore === "Apply" || applyButtonTextBefore === "Applied"
     ).toBeTruthy();*/
