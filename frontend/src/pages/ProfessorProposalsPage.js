@@ -26,12 +26,6 @@ function ProfessorProposalsPage() {
                         <ProfessorProposalsList />
                     </>
             }
-
-            <Row className="bg-white mx-auto pb-3">
-                <Col>
-                    <Button variant="secondary" onClick={() => {navigate('/')}}>Back to Homepage</Button>
-                </Col>
-            </Row>
         </>
     );
 }

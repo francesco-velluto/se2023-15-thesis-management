@@ -92,12 +92,6 @@ function ApplicationList() {
                         </>
                     )}
                 </Row>
-
-                <Row className="mx-auto">
-                    <Col>
-                        <Button variant="secondary" onClick={() => {navigate('/')}}>Back to Homepage</Button>
-                    </Col>
-                </Row>
             </Container>
         </>
     );
