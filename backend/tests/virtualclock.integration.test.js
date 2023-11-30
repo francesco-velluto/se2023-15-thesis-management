@@ -8,9 +8,9 @@ const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 let driver;
 
 const doLogin = async (username, password) => {
-  await driver.get(baseURL + "/login");
+  await driver.get(baseURL);
 
-  await driver.sleep(500);
+  await driver.sleep(1000);
 
   // perform login
   const usernameBox = await driver.findElement(By.id("username"));
@@ -21,7 +21,7 @@ const doLogin = async (username, password) => {
   passwordBox.clear();
   passwordBox.sendKeys(password);
 
-  const submitButton = await driver.findElement(By.css("button"));
+  const submitButton = await driver.findElement(By.css("button.c480bc568"))
 
   // remove disabled property from button
   await driver.executeScript(
