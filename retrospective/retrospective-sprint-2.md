@@ -13,40 +13,58 @@ sections:
 ### Macro statistics
 
 - **Number of stories committed vs. done:**
-
+  we committed to do 4 stories and we did 4 stories.
+  Those are the 4 stories after the 3 we already did, all in order of business value.
+  The 4 new stories are:
+  - Browse Applications
+  - Accept Application
+  - Browse Application Decisions
+  - Browse Proposals
 
 - **Total points committed vs. done:**
-
+  We committed to do 11 points and we did 11 points.
 
 - **Nr of hours planned vs. spent (as a team):**
-
+  we planned to spend 96h hours (16 hours for each one of the 6 team members)
+  and we spent 90h 40m
 
 ### Detailed statistics
 
+| Story  | # Tasks | Points | Hours est. | Hours actual |
+|--------|---------|--------|------------|--------------|
+|   0    |   27   |   -    |   64h 30m   |   58h 5m   |
+|   4    |4 (this sprint)|   3    | 4h | 4h 55m |
+|   5    |6 (this sprint)|   2    | 9h | 13h 20m |
+|   6    |5 (this sprint)|   3    | 7h 30m | 8h 10m |
+|   7    |   6    |   3    | 11h | 6h 10m |
+| TOTAL |   48   |   11   | 96h | 90h 40m |
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
-
+  - Average Estimate: 2h
+  - Average Actual: 1h 53m
+  - Standard Deviation Estimate: 1h 21m
+  - Standard Deviation Actual: 1h 35m
 
 - **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
+  - 0.06
 
 
 ## QUALITY MEASURES
 
 - **Unit Testing:**
-  - **Total hours estimated:** 7h 45m (this comprises the stories we didn't do)
-  - **Total hours estimated:** 4h 30m (only stories done)
-  - **Total hours spent:** 5h 5m (only stories done)
-  - **Nr of automated unit test cases:** 41
-  - **Coverage (if available):** 62.78%
+  - **Total hours estimated:** 7h
+  - **Total hours spent:** 11h 5m
+  - **Nr of automated unit test cases:** 71
+  - **Coverage (if available):** 68.20%
 - **E2E testing:**
-  - **Total hours estimated:** 11h 45m (this comprises the stories we didn't do)
-  - **Total hours estimated:** 8h (only stories done)
-  - **Total hours spent:** 5h 5m (only stories done)
+  - **Total hours estimated:** 16h
+  - **Total hours spent:** 12h
 - **Code review:**
-  - **Total hours estimated:** 4h 15m (this comprises the stories we didn't do)
-  - **Total hours estimated:** 2h 15m (only stories done)
-  - **Total hours spent:** 1h 45m (only stories done)
+  - **Total hours estimated:** 4h 30m
+  - **Total hours spent:** 3h
+
+
 
 ## ASSESSMENT
 
