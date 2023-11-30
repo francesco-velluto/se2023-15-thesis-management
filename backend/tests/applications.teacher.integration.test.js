@@ -62,23 +62,27 @@ describe("End to end tests for browse applications", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
 
-    const accordionItems = await driver.findElement(By.className("accordion-item"));
+    const accordionItems = await driver.findElements(By.className("accordion-item"));
     expect(accordionItems !== undefined).toEqual(true);
     expect(accordionItems.length > 0).toEqual(true);
 
-    const accordionHeader = await driver.findElement(By.className("accordion-header"));
-    expect(accordionHeader !== undefined).toEqual(true);
-    await accordionHeader.click();
-
-    const accordionBody = await driver.findElement(By.className("accordion-body"));
-    expect(accordionBody !== undefined).toEqual(true);
-
-    // Assicurati che ci siano applicazioni nell'Accordion
-    const applications = await driver.findElements(By.className('my-3 card'));
-    expect(applications.length > 0).toEqual(true);
-
-    console.log(applications);
-
+    for (const accordionItem of accordionItems) {
+      // Verifica l'header
+      const accordionHeader = await accordionItem.findElement(By.className("accordion-header"));
+      expect(accordionHeader !== undefined).toEqual(true);
+    
+      // Clicca sull'header per aprire il body
+      await accordionHeader.click();
+    
+      // Verifica il body
+      const accordionBody = await accordionItem.findElement(By.className("accordion-body"));
+      expect(accordionBody !== undefined).toEqual(true);
+    
+      // Assicurati che ci siano applicazioni nell'Accordion-Body
+      const applications = await accordionBody.findElements(By.className('my-3 card'));
+      expect(applications.length > 0).toEqual(true);
+    }
+    
     await doLogout();
   }, 20000);
 });

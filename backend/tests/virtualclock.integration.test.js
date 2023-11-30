@@ -77,9 +77,9 @@ describe("End to end tests for virtual clock", () => {
 
     const min_exp_date = min(exp_dates_unfiltered);
 
-    // set virtual clock to be one day after the expiration date of the min exp date
+    // set virtual clock to be two days after the expiration date of the min exp date
     // to be sure that at least one proposal will be filtered out
-    const virtualClockDate = add(min_exp_date, { days: 1 });
+    const virtualClockDate = add(min_exp_date, { days: 2 });
 
     await driver.sleep(500)
 
