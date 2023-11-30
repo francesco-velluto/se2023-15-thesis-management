@@ -4,7 +4,7 @@ import { LoggedUserContext } from '../context/AuthenticationContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
 
-const APIConfig = require('../api/config.json');
+const APIConfig = require('../api/api.config.js');
 const AuthenticationAPIURL = APIConfig.API_URL + '/authentication';
 
 function SamlRedirect() {
