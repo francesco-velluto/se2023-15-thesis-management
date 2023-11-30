@@ -24,9 +24,9 @@ const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 let driver;
 
 const doLogin = async (username, password) => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
 
-    await driver.sleep(500);
+    await driver.sleep(1000);
 
     // perform login
     const usernameBox = await driver.findElement(By.id("username"));
@@ -37,7 +37,7 @@ const doLogin = async (username, password) => {
     passwordBox.clear();
     passwordBox.sendKeys(password);
 
-    const submitButton = await driver.findElement(By.css("button"));
+    const submitButton = await driver.findElement(By.css("button.c480bc568"))
 
     // remove disabled property from button
     await driver.executeScript(
@@ -134,11 +134,11 @@ describe("End to end tests for Proposal details", () => {
         await driver.sleep(500);
 
         let pageTitle = await driver
-            .findElement(By.className("alert-danger"))
+            .findElement(By.className("lead"))
             .getText();
 
-        expect(pageTitle).toEqual("Proposal not found");
-    });
+        expect(pageTitle).toEqual("The proposal has not been found!");
+    }, 10000);
 
     test("Should show Proposal details", async () => {
         await doLogin("john.smith@example.com", "S001");
@@ -172,6 +172,9 @@ describe("End to End Tests for Insert Proposal", () => {
         // Type
         await driver.findElement(By.name("proposal-type")).sendKeys(mockProposalReq.type);
 
+        /**
+         *  Groups is now fixed
+         *
         // Groups
         for (const group of mockProposalReq.groups) {
             const groupField = await driver.findElement(By.name("proposal-groups"));
@@ -185,6 +188,7 @@ describe("End to End Tests for Insert Proposal", () => {
             await driver.sleep(200);
             await groupField.clear();
         }
+         **/
 
         // Description
         await driver
@@ -272,6 +276,8 @@ describe("End to End Tests for Insert Proposal", () => {
 
         await driver.get(baseURL + "/proposals/new");
 
+        await driver.sleep(500);
+
         // Fill all the form fields
         await fillProposalForm();
 
@@ -287,3 +293,56 @@ describe("End to End Tests for Insert Proposal", () => {
         expect(currentUrl).toMatch(new RegExp(baseURL + "/proposals/P" + idRegex));
     }, 10000);
 });
+
+describe("End to end test for professor proposals", () =>{
+    beforeAll(async () => {
+        driver = await new Builder().forBrowser("chrome").build();
+    });
+
+    afterAll(async () => {
+        await driver.quit();
+    });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(500);
+
+        let pageTitle = await driver
+            .findElement(By.className("alert-danger"))
+            .getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+    });
+
+    test("Should show the proposals list if logged", async () =>{
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(500);
+        await driver.findElement(By.className("bg-white rounded-bottom py-4 container"));
+    });
+
+    test("Should see the details of a proposal", async()=>{
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals/P002");
+
+        await driver.sleep(500);
+        let pageTitle = await driver.findElement(By.className("proposal-details-title")).getText();
+
+        expect(pageTitle).toEqual("Machine Learning");
+    });
+
+    test("Should see proposal not found alert", async() =>{
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals/P0066");
+
+        await driver.sleep(500);
+
+        let alertText = await driver.findElement(By.className("lead")).getText();
+        expect(alertText).toEqual("The proposal has not been found!");
+    });
+
+})

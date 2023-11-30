@@ -54,15 +54,15 @@ module.exports = {
 
     /**
      * PUT /api/applications/:id
-     * 
+     *
      * Set the status of an application relative to a proposal of the teacher.
      * The status can only be "Accepted" or "Rejected".
      * If the application is accepted, by default the other applications to the same proposal are set with status "Canceled"
      * and the relative proposal is archived.
      * Returns the application modified
-     * 
-     * @param {string} applicationStatus 
-     * 
+     *
+     * @param {string} applicationStatus
+     *
      * @returns {Application}
      */
 
@@ -81,7 +81,6 @@ module.exports = {
 
             if (response.ok) {
                 const resObject = await response.json();
-                console.log(resObject);
                 return resObject.application;
             } else {
                 const res = await response.json();
@@ -94,10 +93,10 @@ module.exports = {
 
     /**
      * GET api/applications/application/:application_id
-     * 
+     *
      * Get the application given its id.
-     * 
-     * @param {number} application_id 
+     *
+     * @param {number} application_id
      * @returns {Application}
      */
 

@@ -1,6 +1,8 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
+import SamlRedirect from "./pages/Auth";
+
 
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage";
@@ -44,8 +46,7 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
-                <Route path='/login' element={<LoginPage />} />
+                <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect />} />
                 <Route path='/applications'>
                     <Route index element={
                     	!loggedUser ? <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} /> :

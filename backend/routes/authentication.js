@@ -3,30 +3,42 @@
 const express = require('express');
 const router = express.Router();
 
-const authenticationController = require('../controllers/authentication');
-const { body } = require('express-validator');
+const config = require('../config');
+const passport = require('passport');
+const { isLoggedIn, currentUser } = require('../controllers/authentication');
 
 /**
  * Authentication API routes
  * All the routes for the authentication
  */
 
-/**
- * POST /api/authentication/login
- *
- * @params none
- * @body { username: string, password: string }
- * @returns { user: object }
- * @error 400 Bad Request - if username or password are not present
- * @error 401 Unauthorized - if username or password are not valid
- * @error 500 Internal Server Error - if something went wrong
- *
- * @see authenticationController.login
- */
-router.post('/login',
-    body("username", "Must be entered a valid email!").isEmail(),
-    body("password", "Password can not be empty!").isString().notEmpty(),
-    authenticationController.login);
+
+/** Passport & SAML Routes */
+router.get('/login', passport.authenticate('saml', config.saml.options), (req, res, next) => {
+  return res.redirect(`http://localhost:${process.env.FRONTEND_PORT}`);
+});
+
+router.post('/login/callback', passport.authenticate('saml', config.saml.options), (req, res, next) => {
+  return res.redirect(`http://localhost:${process.env.FRONTEND_PORT}`);
+});
+
+router.get('/whoami', (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ errors: ['Not authorized'] });
+  } else {
+    return res.status(200).json({ user: req.user });
+  }
+});
+
+router.post("/logout", isLoggedIn, (req, res, next) => {
+  res.clearCookie("connect.sid");
+  req.logout(function (err) {
+    console.log(err);
+    req.session.destroy(function (err) {
+      res.send();
+    });
+  });
+});
 
 /**
  * GET /api/authentication/current/user
@@ -37,18 +49,7 @@ router.post('/login',
  *
  * @see authenticationController.login
  */
-router.get('/current/user', authenticationController.isLoggedIn, authenticationController.currentUser);
-
-/**
- * DELETE /api/authentication/logout
- *
- * @params none
- * @body none
- * @returns none
- *
- * @see authenticationController.login
- */
-router.delete('/logout', authenticationController.isLoggedIn, authenticationController.logout);
+router.get('/current/user', isLoggedIn, currentUser);
 
 
 module.exports = router;

@@ -8,19 +8,21 @@ describe("End to end tests for Apply to proposal", () => {
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async () => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
+
+    await driver.sleep(1000);
 
     // perform login
-    const usernameBox = await driver.findElement(By.id("username"));
+    let usernameBox = await driver.findElement(By.id("username"));
     usernameBox.clear();
     usernameBox.sendKeys("john.smith@example.com");
-    const passwordBox = await driver.findElement(By.id("password"));
+    let passwordBox = await driver.findElement(By.id("password"));
     passwordBox.clear();
     passwordBox.sendKeys("S001");
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.tagName("button"));
+    const submitButton = await driver.findElement(By.css("button.c480bc568"));
 
     // remove disabled property from button
     await driver.executeScript(
@@ -82,22 +84,24 @@ describe("End to end tests for Accept or Reject Application", () => {
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async (isTeacherOne = true) => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
+
+    await driver.sleep(1000);
 
     // perform login
-    const usernameBox = await driver.findElement(By.id("username"));
+    let usernameBox = await driver.findElement(By.id("username"));
     usernameBox.clear();
     usernameBox.sendKeys(
       isTeacherOne ? "sarah.anderson@example.com" : "ana.gomez@example.com"
     );
 
-    const passwordBox = await driver.findElement(By.id("password"));
+    let passwordBox = await driver.findElement(By.id("password"));
     passwordBox.clear();
     passwordBox.sendKeys(isTeacherOne ? "T001" : "T003");
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.tagName("button"));
+    const submitButton = await driver.findElement(By.css("button.c480bc568"));
 
     // remove disabled property from button
     await driver.executeScript(
@@ -237,20 +241,22 @@ describe("End to end tests for Browse applications decisions", () => {
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async () => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
+
+    await driver.sleep(1000);
 
     // perform login
-    const usernameBox = await driver.findElement(By.id("username"));
+    let usernameBox = await driver.findElement(By.id("username"));
     usernameBox.clear();
     usernameBox.sendKeys("john.smith@example.com");
 
-    const passwordBox = await driver.findElement(By.id("password"));
+    let passwordBox = await driver.findElement(By.id("password"));
     passwordBox.clear();
     passwordBox.sendKeys("S001");
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.tagName("button"));
+    const submitButton = await driver.findElement(By.css("button.c480bc568"));
 
     // remove disabled property from button
     await driver.executeScript(
