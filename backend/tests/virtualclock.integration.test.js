@@ -35,6 +35,18 @@ const doLogin = async (username, password) => {
   await driver.sleep(500);
 };
 
+const doLogout = async () => {
+  // click on the drop menu
+  const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
+  await logoutDropdown.click();
+
+  // click on logout
+  const logout = await driver.findElement(By.id("logout-id"));
+  await logout.click();
+
+  await driver.sleep(1000);
+}
+
 beforeAll(async () => {
   driver = await new Builder().forBrowser("chrome").build();
 });
@@ -45,7 +57,6 @@ afterAll(async () => {
 
 describe("End to end tests for virtual clock", () => {
   it("Should update the proposals list when virtual clock date changes", async () => {
-
     await doLogin("john.smith@example.com", "S001");
 
     await driver.get(baseURL + "/proposals");
@@ -91,5 +102,7 @@ describe("End to end tests for virtual clock", () => {
       const date = parse(date_text, "dd/MM/yyyy", new Date());
       expect(isAfter(date, virtualClockDate)).toBe(true);
     }
-  }, 10000);
+
+    await doLogout();
+  }, 20000);
 });

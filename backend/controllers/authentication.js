@@ -29,7 +29,7 @@ module.exports = {
       */
     currentUser: async (req, res) => {
         try {
-            const user = await getUser(req?.user?.nameID);
+            const user = await getUser(req?.user?.id);
             return res.json(user);
         } catch (err) {
             res.status(500).json({ errors: ["Database error"] });
