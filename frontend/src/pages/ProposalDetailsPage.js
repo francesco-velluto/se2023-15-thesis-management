@@ -161,9 +161,10 @@ function ProposalDetailsPage({ mode }) {
     }
 
     useEffect(() => {
+        setIsLoading(true);
+        setErrorMessage(null); // reset error message when component is re-rendered
+        setUnauthorized(false);
         if (mode === 0) {       // if it is in read mode
-            setIsLoading(true);
-            setErrorMessage(null); // reset error message when component is re-rendered
             updateRows();
             getProposalById(proposal_id)
                 .then(async res => {
@@ -219,7 +220,7 @@ function ProposalDetailsPage({ mode }) {
                     setProposalDegreeList([]);
                 });
         }
-    }, [proposal_id, currentDate, description]);
+    }, [proposal_id, currentDate, description, mode]);
 
     return (
         <>

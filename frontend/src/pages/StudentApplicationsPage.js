@@ -33,7 +33,7 @@ function StudentApplicationsPage() {
             setError(err[0]);
             setIsLoading(false);
         }
-    }, []);
+    }, [loggedUser.id]);
 
     return (
         <>
