@@ -21,7 +21,7 @@ This will ensure that the Docker daemon is running and that you can use the Dock
 
 The .env is not publicly provided because they can contain sensitive information.
 
-For this reason we will send you the .env via email, along with the docker-compose.yml file.
+For this reason we will send you the .env via email, along with the docker-compose.yml file and users credentials.
 
 We also provide the docker-compose.yml file because it contains the configurations for pulling, building and running all the images that compose the application.
 
@@ -64,6 +64,8 @@ To access the application, open a browser and go to the following URL:
 ```
 http://localhost:3000
 ```
+
+Login credentials will also be provided via email because they are sensitive information.
 
 ## Create a .env file with these informations in the root directory
 
