@@ -650,7 +650,7 @@ function ProposalDetailsPage({ mode }) {
                                             </Col>
                                         }
                                         <Col className={"d-flex flex-row-reverse"}>
-                                            {mode === 0 && loggedUser.role === 1 && <ApplicationButton proposalID={proposal_id} />}
+                                            {mode === 0 && loggedUser.role === 1 && <ApplicationButton setErrMsg={setErrorMessage} proposalID={proposal_id} />}
                                             {mode !== 0 && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"

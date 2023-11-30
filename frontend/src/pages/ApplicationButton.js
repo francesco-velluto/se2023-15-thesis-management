@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { insertNewApplication } from '../api/ApplicationsAPI';
+import { insertNewApplication, getAllApplicationsByStudent } from '../api/ApplicationsAPI';
 import { Button } from "react-bootstrap";
-import { getAllApplicationsByStudent } from '../api/ApplicationsAPI';
 import { LoggedUserContext } from "../context/AuthenticationContext";
 
-const ApplicationButton = ({ proposalID }) => {
+const ApplicationButton = ({ proposalID, setErrMsg }) => {
   const [applied, setApplied] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
   const { loggedUser } = useContext(LoggedUserContext);
 
   const getApplicationList = async () => {
@@ -13,11 +14,12 @@ const ApplicationButton = ({ proposalID }) => {
       const Applist = await getAllApplicationsByStudent(loggedUser.id);
 
       if (Applist.length !== 0) {
-        for (let application of Applist) {
-          if (application.proposal_id === proposalID) {
-            setApplied(true);
-            break;
-          }
+        // student can apply only if they have no application currently pending or accepted
+        if (Applist.some((a) => a.proposal_id === proposalID)) {
+          setApplied(true);
+        } else if (Applist.some((a) => a.status !== "Rejected" && a.proposal_id !== proposalID)) {
+          setDisabled(true);
+          setErrMsg("You can't apply to this proposal because you currently have pending or accepted applications.");
         }
       }
     } catch (error) {
@@ -35,7 +37,7 @@ const ApplicationButton = ({ proposalID }) => {
 
       if (response.length !== 0 ) {
         setApplied(true);
-        
+
         getApplicationList();
       } else {
         let data = await response.json();
@@ -47,8 +49,8 @@ const ApplicationButton = ({ proposalID }) => {
   };
 
   return (
-    <Button id={"apply-button"} variant="secondary" onClick={handleButtonClick} 
-      disabled={applied} 
+    <Button id={"apply-button"} variant="secondary" onClick={handleButtonClick}
+      disabled={applied || disabled}
       style={{marginLeft: "auto"}}>
       {applied ? 'Applied' : 'Apply'}
     </Button>
