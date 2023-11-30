@@ -5,7 +5,7 @@
 -- Dumped from database version 16.1 (Debian 16.1-1.pgdg130+1)
 -- Dumped by pg_dump version 16.1 (Debian 16.1-1.pgdg130+1)
 
--- Started on 2023-11-30 17:17:47 CET
+-- Started on 2023-11-30 17:24:15 CET
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -211,15 +211,15 @@ ALTER TABLE ONLY public.applications ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 INSERT INTO public.applications VALUES (1, 'P001', 'S001', 'Pending', '2023-11-01');
-INSERT INTO public.applications VALUES (7, 'P007', 'S007', 'Pending', '2023-11-15');
 INSERT INTO public.applications VALUES (8, 'P008', 'S008', 'Accepted', '2023-10-10');
 INSERT INTO public.applications VALUES (9, 'P009', 'S009', 'Pending', '2023-11-18');
 INSERT INTO public.applications VALUES (10, 'P010', 'S010', 'Accepted', '2023-10-05');
-INSERT INTO public.applications VALUES (2, 'P012', 'S002', 'Pending', '2023-10-15');
-INSERT INTO public.applications VALUES (3, 'P015', 'S003', 'Pending', '2023-11-05');
 INSERT INTO public.applications VALUES (4, 'P018', 'S004', 'Pending', '2023-10-25');
 INSERT INTO public.applications VALUES (5, 'P021', 'S005', 'Pending', '2023-11-08');
 INSERT INTO public.applications VALUES (6, 'P021', 'S006', 'Pending', '2023-10-12');
+INSERT INTO public.applications VALUES (2, 'P012', 'S002', 'Rejected', '2023-10-15');
+INSERT INTO public.applications VALUES (3, 'P015', 'S003', 'Canceled', '2023-11-05');
+INSERT INTO public.applications VALUES (7, 'P024', 'S007', 'Pending', '2023-11-15');
 
 
 --
@@ -435,7 +435,7 @@ ALTER TABLE ONLY public.student
     ADD CONSTRAINT student_fk_degree FOREIGN KEY (cod_degree) REFERENCES public.degree(cod_degree);
 
 
--- Completed on 2023-11-30 17:17:47 CET
+-- Completed on 2023-11-30 17:24:15 CET
 
 --
 -- PostgreSQL database dump complete
