@@ -651,6 +651,7 @@ describe("T3 - Get proposal by Id unit test", () => {
 
   test("T3.3 - SUCCESS 200 | Proposal found", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
       next(); // Authenticated
     });
 
