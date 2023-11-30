@@ -38,6 +38,7 @@ function Main() {
     useEffect(() => {
         fetchCurrentUser()                        // reload current session, it gets the user information from the server
             .then(user => {
+                console.log("utente preso", user);
                 setLoggedUser(user);
             })
             .catch(err => { });

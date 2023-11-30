@@ -89,7 +89,7 @@ function NavbarContainer() {
                                     {' ' + (loggedUser.name || 'Guest')}
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu style={{ minWidth: "120px" }}>
-                                    <Dropdown.Item onClick={handleLogout} style={{ backgroundColor: 'white', color: '#393646', fontSize: "16px" }}>Logout</Dropdown.Item>
+                                    <Dropdown.Item id="logout-id" onClick={handleLogout} style={{ backgroundColor: 'white', color: '#393646', fontSize: "16px" }}>Logout</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </Col>

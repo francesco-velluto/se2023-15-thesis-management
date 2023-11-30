@@ -1,6 +1,4 @@
-const request = require("supertest");
 const app = require("../app");
-
 const { Builder, By, until } = require("selenium-webdriver");
 
 describe("End to end tests for browse applications", () => {
@@ -8,19 +6,20 @@ describe("End to end tests for browse applications", () => {
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   const doLogin = async () => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
+
+    await driver.sleep(1000);
 
     // perform login
     const usernameBox = await driver.findElement(By.id("username"));
     usernameBox.clear();
     usernameBox.sendKeys("michael.wilson@example.com");
+
     const passwordBox = await driver.findElement(By.id("password"));
     passwordBox.clear();
     passwordBox.sendKeys("T002");
 
-    await driver.sleep(1000);
-
-    const submitButton = await driver.findElement(By.tagName("button"));
+    const submitButton = await driver.findElement(By.css("button.c480bc568"))
 
     // remove disabled property from button
     await driver.executeScript(
@@ -31,8 +30,20 @@ describe("End to end tests for browse applications", () => {
     // click submit button with js
     await submitButton.click();
 
-    await driver.sleep(1000);
+    await driver.sleep(500);
   };
+
+  const doLogout = async () => {
+    // click on the drop menu
+    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
+    await logoutDropdown.click();
+
+    // click on logout
+    const logout = await driver.findElement(By.id("logout-id"));
+    await logout.click();
+
+    await driver.sleep(1000);
+  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -42,7 +53,7 @@ describe("End to end tests for browse applications", () => {
     await driver.quit();
   });
 
-  test("Should show an application in the page", async () => {
+  test("Should show at least an application in the page", async () => {
     await doLogin();
 
     await driver.get(baseURL + "/applications");
@@ -51,48 +62,23 @@ describe("End to end tests for browse applications", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
 
-    const accordion = await driver.wait(until.elementLocated(By.css('Accordion')), 5000);    
-    assert.isNotNull(accordion);
-  
-    console.log(accordion);
+    const accordionItems = await driver.findElement(By.className("accordion-item"));
+    expect(accordionItems !== undefined).toEqual(true);
+    expect(accordionItems.length > 0).toEqual(true);
+
+    const accordionHeader = await driver.findElement(By.className("accordion-header"));
+    expect(accordionHeader !== undefined).toEqual(true);
+    await accordionHeader.click();
+
+    const accordionBody = await driver.findElement(By.className("accordion-body"));
+    expect(accordionBody !== undefined).toEqual(true);
 
     // Assicurati che ci siano applicazioni nell'Accordion
-    const applications = await driver.findElements(By.css('Accordion.Item'));
-    assert.isTrue(applications.length > 0);
+    const applications = await driver.findElements(By.className('my-3 card'));
+    expect(applications.length > 0).toEqual(true);
 
     console.log(applications);
 
-    
-    /*expect(
-      applyButtonTextBefore === "Apply" || applyButtonTextBefore === "Applied"
-    ).toBeTruthy();*/
-
-
-    /*let applyButtonTextBefore = await driver
-      .findElement(By.id("apply-button"))
-      .getText();
-
-    expect(
-      applyButtonTextBefore === "Apply" || applyButtonTextBefore === "Applied"
-    ).toBeTruthy();
-
-    if (applyButtonTextBefore === "Apply") {
-      await driver.findElement(By.id("apply-button"));
-
-      // simulate click with js
-      await driver.executeScript(
-        "document.getElementById('apply-button').click()"
-      );
-
-      await driver.sleep(1000);
-
-      let applyButtonText = await driver
-        .findElement(By.id("apply-button"))
-        .getText();
-
-      expect(applyButtonTextBefore).toEqual("Apply");
-      expect(applyButtonText).toEqual("Applied");
-    }*/
-
-  }, 10000);
+    await doLogout();
+  }, 20000);
 });

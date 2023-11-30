@@ -34,7 +34,23 @@ describe("End to end tests for Apply to proposal", () => {
     await submitButton.click();
 
     await driver.sleep(1000);
+
+    await driver.get(baseURL);
+    
+    await driver.sleep(1000);
   };
+
+  const doLogout = async () => {
+    // click on the drop menu
+    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
+    await logoutDropdown.click();
+
+    // click on logout
+    const logout = await driver.findElement(By.id("logout-id"));
+    await logout.click();
+
+    await driver.sleep(1000);
+  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -75,8 +91,10 @@ describe("End to end tests for Apply to proposal", () => {
 
       expect(applyButtonTextBefore).toEqual("Apply");
       expect(applyButtonText).toEqual("Applied");
+
+      await doLogout();
     }
-  }, 10000);
+  }, 20000);
 });
 
 describe("End to end tests for Accept or Reject Application", () => {
@@ -86,7 +104,7 @@ describe("End to end tests for Accept or Reject Application", () => {
   const doLogin = async (isTeacherOne = true) => {
     await driver.get(baseURL);
 
-    await driver.sleep(1000);
+    await driver.sleep(2000);
 
     // perform login
     let usernameBox = await driver.findElement(By.id("username"));
@@ -115,6 +133,18 @@ describe("End to end tests for Accept or Reject Application", () => {
     await driver.sleep(1000);
   };
 
+  const doLogout = async () => {
+    // click on the drop menu
+    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
+    await logoutDropdown.click();
+
+    // click on logout
+    const logout = await driver.findElement(By.id("logout-id"));
+    await logout.click();
+
+    await driver.sleep(1000);
+  }
+
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
   });
@@ -132,16 +162,14 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     await driver.sleep(1000);
 
-    const acceptButton = await driver.findElement(
-      By.className("btn-outline-success")
-    );
+    const acceptButton = await driver.findElement(By.id("accept-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", acceptButton);
 
     await driver.sleep(500);
 
-    const cancelButton = await driver.findElement(By.className("btn-danger"));
+    const cancelButton = await driver.findElement(By.id("cancel-reject-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", cancelButton);
@@ -149,7 +177,9 @@ describe("End to end tests for Accept or Reject Application", () => {
     await driver.sleep(500);
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications/1");
-  }, 10000);
+
+    await doLogout();
+  }, 20000);
 
   test("Should cancel the reject of an application", async () => {
     await doLogin();
@@ -160,16 +190,14 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     await driver.sleep(1000);
 
-    const rejectButton = await driver.findElement(
-      By.className("btn-outline-danger")
-    );
+    const rejectButton = await driver.findElement(By.id("reject-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", rejectButton);
 
     await driver.sleep(500);
 
-    const cancelButton = await driver.findElement(By.className("btn-danger"));
+    const cancelButton = await driver.findElement(By.id("cancel-reject-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", cancelButton);
@@ -177,7 +205,9 @@ describe("End to end tests for Accept or Reject Application", () => {
     await driver.sleep(500);
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications/1");
-  }, 10000);
+
+    await doLogout();
+  }, 20000);
 
   test("Should accept an application", async () => {
     await doLogin();
@@ -188,16 +218,14 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     await driver.sleep(1000);
 
-    const acceptButton = await driver.findElement(
-      By.className("btn-outline-success")
-    );
+    const acceptButton = await driver.findElement(By.id("accept-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", acceptButton);
 
     await driver.sleep(500);
 
-    const confirmButton = await driver.findElement(By.className("btn-success"));
+    const confirmButton = await driver.findElement(By.id("confirm-reject-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", confirmButton);
@@ -205,7 +233,9 @@ describe("End to end tests for Accept or Reject Application", () => {
     await driver.sleep(500);
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
-  }, 10000);
+
+    await doLogout();
+  }, 20000);
 
   test("Should reject an application", async () => {
     await doLogin(false);
@@ -216,16 +246,14 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     await driver.sleep(1000);
 
-    const rejectButton = await driver.findElement(
-      By.className("btn-outline-danger")
-    );
+    const rejectButton = await driver.findElement(By.id("reject-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", rejectButton);
 
     await driver.sleep(500);
 
-    const confirmButton = await driver.findElement(By.className("btn-success"));
+    const confirmButton = await driver.findElement(By.id("confirm-reject-application"));
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", confirmButton);
@@ -233,7 +261,9 @@ describe("End to end tests for Accept or Reject Application", () => {
     await driver.sleep(500);
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
-  }, 10000);
+
+    await doLogout();
+  }, 20000);
 });
 
 describe("End to end tests for Browse applications decisions", () => {
@@ -269,6 +299,18 @@ describe("End to end tests for Browse applications decisions", () => {
 
     await driver.sleep(1000);
   };
+
+  const doLogout = async () => {
+    // click on the drop menu
+    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
+    await logoutDropdown.click();
+
+    // click on logout
+    const logout = await driver.findElement(By.id("logout-id"));
+    await logout.click();
+
+    await driver.sleep(1000);
+  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -310,7 +352,9 @@ describe("End to end tests for Browse applications decisions", () => {
     await driver.sleep(500);
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/");
-  }, 10000);
+
+    await doLogout();
+  }, 20000);
 
   test("Should show the new application decision if the student applies to a new proposal", async () => {
     await doLogin();
@@ -361,5 +405,7 @@ describe("End to end tests for Browse applications decisions", () => {
         break;
       }
     }
-  });
+
+    await doLogout();
+  }, 20000);
 });

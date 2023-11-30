@@ -1,5 +1,5 @@
 const dayjs = require("dayjs");
-const {Builder, By, Select} = require("selenium-webdriver");
+const { Builder, By, Select } = require("selenium-webdriver");
 const app = require("../app");
 
 /*
@@ -26,7 +26,7 @@ let driver;
 const doLogin = async (username, password) => {
     await driver.get(baseURL);
 
-    await driver.sleep(1000);
+    await driver.sleep(2000);
 
     // perform login
     const usernameBox = await driver.findElement(By.id("username"));
@@ -51,6 +51,18 @@ const doLogin = async (username, password) => {
     await driver.sleep(500);
 };
 
+const doLogout = async () => {
+    // click on the drop menu
+    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
+    await logoutDropdown.click();
+
+    // click on logout
+    const logout = await driver.findElement(By.id("logout-id"));
+    await logout.click();
+
+    await driver.sleep(1000);
+}
+
 describe("End to end tests for Search proposals", () => {
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
@@ -69,7 +81,7 @@ describe("End to end tests for Search proposals", () => {
             .findElement(By.className("alert-danger"))
             .getText();
         expect(pageTitle).toEqual("Access Not Authorized");
-    });
+    }, 20000);
 
     test("Should show proposals list", async () => {
         await doLogin("john.smith@example.com", "S001");
@@ -78,7 +90,9 @@ describe("End to end tests for Search proposals", () => {
 
         await driver.sleep(500);
         await driver.findElement(By.className("border-dark"));
-    });
+
+        await doLogout();
+    }, 20000);
 
     test("Should show proposals list filtered by description", async () => {
         await doLogin("john.smith@example.com", "S001");
@@ -103,7 +117,9 @@ describe("End to end tests for Search proposals", () => {
         await driver.sleep(500);
 
         await driver.findElement(By.className("border-dark"));
-    }, 10000);
+
+        await doLogout();
+    }, 20000);
 });
 
 describe("End to end tests for Proposal details", () => {
@@ -124,7 +140,7 @@ describe("End to end tests for Proposal details", () => {
             .findElement(By.className("alert-danger"))
             .getText();
         expect(pageTitle).toEqual("Access Not Authorized");
-    });
+    }, 20000);
 
     test("Should show Proposal not found", async () => {
         await doLogin("john.smith@example.com", "S001");
@@ -138,7 +154,9 @@ describe("End to end tests for Proposal details", () => {
             .getText();
 
         expect(pageTitle).toEqual("The proposal has not been found!");
-    }, 10000);
+
+        await doLogout();
+    }, 20000);
 
     test("Should show Proposal details", async () => {
         await doLogin("john.smith@example.com", "S001");
@@ -147,7 +165,9 @@ describe("End to end tests for Proposal details", () => {
 
         await driver.sleep(500);
         await driver.findElement(By.className("proposal-details-title"));
-    });
+
+        await doLogout();
+    }, 20000);
 });
 
 describe("End to End Tests for Insert Proposal", () => {
@@ -245,7 +265,7 @@ describe("End to End Tests for Insert Proposal", () => {
 
         const textAlert = await h3Alert.getText();
         expect(textAlert).toEqual("Access Not Authorized");
-    }, 10000);
+    }, 20000);
 
     test("T2.2 - Should not post a new proposal if title is empty", async () => {
         await doLogin("sarah.anderson@example.com", "T001");
@@ -269,7 +289,9 @@ describe("End to End Tests for Insert Proposal", () => {
 
         const currentUrl = await driver.getCurrentUrl();
         expect(currentUrl).toEqual(baseURL + "/proposals/new"); // expect to not be redirected
-    }, 10000);
+
+        await doLogout();
+    }, 20000);
 
     test("T2.3 - Should insert a new proposal", async () => {
         await doLogin("sarah.anderson@example.com", "T001");
@@ -291,10 +313,12 @@ describe("End to End Tests for Insert Proposal", () => {
         const currentUrl = await driver.getCurrentUrl();
         const idRegex = "0(0[1-9]|[1-9][0-9])|[1-9][0-9]{2}[0-9]*";
         expect(currentUrl).toMatch(new RegExp(baseURL + "/proposals/P" + idRegex));
-    }, 10000);
+
+        await doLogout();
+    }, 20000);
 });
 
-describe("End to end test for professor proposals", () =>{
+describe("End to end test for professor proposals", () => {
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
     });
@@ -312,18 +336,20 @@ describe("End to end test for professor proposals", () =>{
             .findElement(By.className("alert-danger"))
             .getText();
         expect(pageTitle).toEqual("Access Not Authorized");
-    });
+    }, 20000);
 
-    test("Should show the proposals list if logged", async () =>{
+    test("Should show the proposals list if logged", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals");
 
         await driver.sleep(500);
         await driver.findElement(By.className("bg-white rounded-bottom py-4 container"));
-    });
 
-    test("Should see the details of a proposal", async()=>{
+        await doLogout();
+    }, 20000);
+
+    test("Should see the details of a proposal", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals/P002");
@@ -332,9 +358,11 @@ describe("End to end test for professor proposals", () =>{
         let pageTitle = await driver.findElement(By.className("proposal-details-title")).getText();
 
         expect(pageTitle).toEqual("Machine Learning");
-    });
 
-    test("Should see proposal not found alert", async() =>{
+        await doLogout();
+    }, 20000);
+
+    test("Should see proposal not found alert", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals/P0066");
@@ -343,6 +371,8 @@ describe("End to end test for professor proposals", () =>{
 
         let alertText = await driver.findElement(By.className("lead")).getText();
         expect(alertText).toEqual("The proposal has not been found!");
-    });
+
+        await doLogout();
+    }, 20000);
 
 })

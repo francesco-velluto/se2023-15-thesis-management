@@ -274,7 +274,7 @@ function ProposalDetailsPage({ mode }) {
                                         <>
                                             <Row>
                                                 <Col className={"proposal-details-keyword"}>
-                                                    {keywords.map((keyword) => <Badge bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>)}
+                                                    {keywords.map((keyword, index) => <Badge key={index} bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>)}
                                                 </Col>
                                             </Row>
                                             <Row>
@@ -401,7 +401,7 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>CdS / Programmes:</Card.Title>
                                                     {mode === 0 ?
                                                         <Card.Text>
-                                                            {programmes.map((programme) => <Badge bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >{programme.title_degree}</Badge>)}
+                                                            {programmes.map((programme, index) => <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >{programme.title_degree}</Badge>)}
                                                         </Card.Text>
                                                         :
                                                         <div>
@@ -459,7 +459,7 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>Groups:</Card.Title>
                                                     {mode === 0 ?
                                                         <Card.Text>
-                                                            {groups.map((group) => <Badge bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
+                                                            {groups.map((group, index) => <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
                                                         </Card.Text>
                                                         :
                                                         <Form.Group className="h-100" >

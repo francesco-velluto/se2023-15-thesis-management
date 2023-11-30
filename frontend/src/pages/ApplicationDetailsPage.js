@@ -105,8 +105,8 @@ function ApplicationDetails() {
                                 <Button variant="outline-secondary" onClick={() => navigate("/applications")}> Go back</Button>
                             </Col>
                             <Col className="text-end" >
-                                <Button className="mx-2" variant="outline-success" onClick={() => handleButton("Accepted")}>Accept</Button>
-                                <Button variant="outline-danger" onClick={() => handleButton("Rejected")}>Reject</Button>
+                                <Button id="accept-application" className="mx-2" variant="outline-success" onClick={() => handleButton("Accepted")}>Accept</Button>
+                                <Button id="reject-application" variant="outline-danger" onClick={() => handleButton("Rejected")}>Reject</Button>
                             </Col>
                         </Row>
 
@@ -116,10 +116,10 @@ function ApplicationDetails() {
                             </Modal.Header>
                             <Modal.Body>You are <strong>{choice === "Accepted" ? "accepting" : "rejecting"}</strong> this application!</Modal.Body>
                             <Modal.Footer>
-                                <Button variant="danger" onClick={handleClose}>
+                                <Button id="cancel-reject-application" variant="danger" onClick={handleClose}>
                                     Cancel
                                 </Button>
-                                <Button variant="success" onClick={() => handleSetStatus(choice)}>
+                                <Button id="confirm-reject-application" variant="success" onClick={() => handleSetStatus(choice)}>
                                     Confirm
                                 </Button>
                             </Modal.Footer>
