@@ -28,12 +28,12 @@ function NavbarContainer() {
             <Navbar expand="md" className='px-3 navbar-dark d-flex justify-content-between' style={{ backgroundColor: "#393646" }} >
                 <Navbar.Brand as={Link} to={"/"}>
                     <div>
-                        <img src={Logo} alt="Logo" width="70" height="auto" className="bi bi-mortarboard-fill me-2" />
-                        <span style={{ fontSize: '20px', fontWeight: "bold" }}> THESIS MANAGEMENT </span>
+                        <img src={Logo} alt="Logo" width="60" height="auto" className="bi bi-mortarboard-fill me-2" />
+                        <span style={{ fontSize: '18px', fontWeight: "bold" }}> THESIS MANAGEMENT </span>
                     </div>
                 </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ backgroundColor: '#393646' }} />
                 <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                     <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                         <Col className='me-3 d-flex justify-content-center'>
@@ -76,7 +76,7 @@ function NavbarContainer() {
                                     style={{ backgroundColor: 'white', color: '#393646', height: '50px', borderColor: 'white', justifySelf: 'center', display: 'flex', alignItems: 'center', fontSize: '16px' }}
                                 >
                                     <svg
-                                        onClick={() => navigate("/")}
+                                        // onClick={() => navigate("/")}
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="20"
                                         height="40"
