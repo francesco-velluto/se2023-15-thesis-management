@@ -48,14 +48,15 @@ module.exports = {
     inializeAuthentication: (app) => {
         const samlStrategy = new SamlStrategy(
             {
-                issuer: `http://localhost:${process.env.FRONTEND_PORT}`,
-                protocol: "http://",
-                path: "/api/authentication/login/callback",
-                entryPoint: config.saml.entryPoint,
-                logoutUrl: config.saml.logoutUrl,
-                cert: config.saml.cert,
-                wantAssertionsSigned: false,
-                wantAuthnResponseSigned: false
+            issuer: `http://localhost:${process.env.FRONTEND_PORT}`,
+            protocol: "http://",
+            path: "/api/authentication/login/callback",
+            entryPoint: config.saml.entryPoint,
+            logoutUrl: config.saml.logoutUrl,
+            cert: config.saml.cert,
+            wantAssertionsSigned: false,
+            wantAuthnResponseSigned: false,
+            acceptedClockSkewMs: -1
             },
             (expressUser, done) => {
                 // rename of nameID property
@@ -98,8 +99,6 @@ module.exports = {
      * @returns {undefined}
      */
     isLoggedIn: (req, res, next) => {
-        console.log(req.user, "is logged in");
-
         if (req.isAuthenticated()) return next();
         return res.status(401).json({ errors: ['Must be authenticated to make this request!'] });
     },

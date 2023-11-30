@@ -576,7 +576,6 @@ function ProposalDetailsPage({ mode }) {
                                                                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                     {keyword}
                                                                     <Button
-                                                                        style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                                         variant="danger"
                                                                         size="sm"
                                                                         onClick={() => {

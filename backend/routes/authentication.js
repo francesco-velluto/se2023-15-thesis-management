@@ -24,13 +24,8 @@ router.post('/login/callback', passport.authenticate('saml', config.saml.options
 
 router.get('/whoami', (req, res, next) => {
   if (!req.isAuthenticated()) {
-    console.log('User not authenticated');
-
     return res.status(401).json({ errors: ['Not authorized'] });
   } else {
-    console.log('User authenticated');
-    console.log(req.user);
-
     return res.status(200).json({ user: req.user });
   }
 });
