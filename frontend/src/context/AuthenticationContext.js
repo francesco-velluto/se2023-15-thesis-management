@@ -39,7 +39,7 @@ export const LoggedUserProvider = ({ children }) => {
             setErrors(err);
         }
         setLoggedUser(null);        // delete the state for the logged user
-        navigate('/login');
+        navigate('/');
     };
 
     return (

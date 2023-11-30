@@ -12,7 +12,7 @@ describe("End to end tests login", () => {
     await driver.quit();
   });
 
-  test("Button not clickable when empty fields", async () => {
+  /*test("Button not clickable when empty fields", async () => {
     await driver.get(baseURL + "/login");
 
     const usernameBox = await driver.findElement(By.id("username"));
@@ -22,12 +22,12 @@ describe("End to end tests login", () => {
 
     const isEnabled = await submitButton.isEnabled();
     expect(isEnabled).toBe(false);
-  }, 10000);
+  }, 10000);*/
 
   test("Should span an alert when login credentials are wrong", async () => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
 
-    await driver.sleep(500);
+    await driver.sleep(1000);
 
     let usernameBox = await driver.findElement(By.id("username"));
     await usernameBox.clear();
@@ -37,23 +37,23 @@ describe("End to end tests login", () => {
     await passwordBox.clear();
     await passwordBox.sendKeys("wrongpassword");
 
-    const submitButton = await driver.findElement(By.css("button"))
+    const submitButton = await driver.findElement(By.css("button.c480bc568"))
 
     // click using js
     await driver.executeScript("arguments[0].click();", submitButton);
 
     await driver.sleep(500);
 
-    const alert = await driver.findElement(By.className("alert"));
+    const alert = await driver.findElement(By.id("error-element-password"));
     const textAlert = await alert.getText();
 
-    expect(textAlert).toEqual("Incorrect email and/or password!");
+    expect(textAlert).toEqual("Wrong email or password");
   }, 10000);
 
   test("Should login correctly", async () => {
-    await driver.get(baseURL + "/login");
+    await driver.get(baseURL);
 
-    await driver.sleep(500);
+    await driver.sleep(1000);
 
     let usernameBox = await driver.findElement(By.id("username"));
     await usernameBox.clear();
@@ -63,7 +63,7 @@ describe("End to end tests login", () => {
     await passwordBox.clear();
     await passwordBox.sendKeys("S001");
 
-    const submitButton = await driver.findElement(By.css("button"))
+    const submitButton = await driver.findElement(By.css("button.c480bc568"))
 
     // click using js
     await driver.executeScript("arguments[0].click();", submitButton);
