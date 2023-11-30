@@ -29,7 +29,9 @@ module.exports = {
       */
     currentUser: async (req, res) => {
         try {
-            const user = await getUserById(req?.user?.id);
+            console.log(req.user, "current user");
+
+            const user = await getUser(req?.user?.nameID);
             return res.json(user);
         } catch (err) {
             res.status(500).json({ errors: ["Database error"] });
@@ -46,39 +48,32 @@ module.exports = {
      * @returns {undefined}
      */
     inializeAuthentication: (app) => {
-
         const samlStrategy = new SamlStrategy(
             {
-            issuer: `http://localhost:${process.env.FRONTEND_PORT}`,
-            protocol: "http://",
-            path: "/api/authentication/login/callback",
-            entryPoint: config.saml.entryPoint,
-            logoutUrl: config.saml.logoutUrl,
-            cert: config.saml.cert,
-            wantAssertionsSigned: false,
-            wantAuthnResponseSigned: false
+                issuer: `http://localhost:${process.env.FRONTEND_PORT}`,
+                protocol: "http://",
+                path: "/api/authentication/login/callback",
+                entryPoint: config.saml.entryPoint,
+                logoutUrl: config.saml.logoutUrl,
+                cert: config.saml.cert,
+                wantAssertionsSigned: false,
+                wantAuthnResponseSigned: false
             },
             (expressUser, done) => {
-            console.log("Authentication");
-            console.log(expressUser);
-        
-            // rename of nameID property
-            //expressUser.id = expressUser.nameID;
-            //delete expressUser.nameID;
-        
-            return done(null, expressUser);
+                // rename of nameID property
+                //expressUser.id = expressUser.nameID;
+                //delete expressUser.nameID;
+                return done(null, expressUser);
             }
         );
         passport.use(samlStrategy);
 
         // Serialization and deserialization of the user to and from a cookie
         passport.serializeUser((user, done) => {
-            console.log("serializzazione", user);
             done(null, user.nameID);
         });
 
         passport.deserializeUser((id, done) => {
-            console.log("deserializzazione", id);
             getUser(id)
                 .then(user => done(null, user))
                 .catch(e => done(e, null));
@@ -105,6 +100,8 @@ module.exports = {
      * @returns {undefined}
      */
     isLoggedIn: (req, res, next) => {
+        console.log(req.user, "is logged in");
+
         if (req.isAuthenticated()) return next();
         return res.status(401).json({ errors: ['Must be authenticated to make this request!'] });
     },
