@@ -37,7 +37,6 @@ sections:
 |   5    |6 (this sprint)|   2    | 9h | 13h 20m |
 |   6    |5 (this sprint)|   3    | 7h 30m | 8h 10m |
 |   7    |   6    |   3    | 11h | 6h 10m |
-| TOTAL |   48   |   11   | 96h | 90h 40m |
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
