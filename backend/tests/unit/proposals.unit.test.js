@@ -77,8 +77,6 @@ describe("T1 - Get all proposals Unit Tests", () => {
   });
 
   test("T1.3 ERROR 500 | Internal server error", (done) => {
-    const mockedStudentDegree = "MC001";
-
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user.cod_degree = "MC001";
       next(); // Authenticated

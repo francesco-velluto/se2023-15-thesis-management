@@ -1,8 +1,6 @@
 "use strict";
 
-const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
-const Application = require("../model/Application");
 const applicationsService = require("../service/applications.service");
 const proposalsService = require("../service/proposals.service");
 
@@ -151,7 +149,7 @@ module.exports = {
 
                 const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
 
-                if (!archivedProposal || !archivedProposal.archived)
+                if (!archivedProposal?.archived)
                     throw Error("Some error occurred in the database: proposal not archived");
             }
 

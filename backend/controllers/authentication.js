@@ -4,7 +4,7 @@ const passport = require('passport');
 const session = require('express-session');
 const LocalStrategy = require('passport-local').Strategy;
 
-const { getUserById, getUser } = require('../service/authentication');
+const { getUser } = require('../service/authentication');
 const Teacher = require('../model/Teacher');
 const Student = require('../model/Student');
 

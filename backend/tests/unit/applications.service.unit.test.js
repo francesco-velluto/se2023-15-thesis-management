@@ -155,6 +155,8 @@ describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   });
 
   it("should handle no applications found", async () => {
+    const teacherId = "teacher";
+
     db.query.mockResolvedValue({ rows: [] });
 
     const res = await applicationService.getAllApplicationsByTeacherId(
@@ -167,6 +169,8 @@ describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   });
 
   it("should handle internal server error", async () => {
+    const teacherId = "teacher";
+
     db.query.mockRejectedValue(new Error("Database error"));
 
     await expect(

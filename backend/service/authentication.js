@@ -41,7 +41,7 @@ const mapObjToTeacher = (teacher) => {
  */
 exports.authUser = async (email, password) => {
     try {
-        let user = undefined;
+        let user;
 
         let students = await db.query('SELECT * FROM student WHERE email = $1 and id = $2;', [email, password]);        // it gets the user from the db
         if (students.rows.length > 0) {
@@ -98,7 +98,7 @@ exports.getUserById = async (id) => {
  */
 exports.getUserByEmail = async (id) => {
     try {
-        let user = undefined;
+        let user;
 
         let students = await db.query('SELECT * FROM student WHERE email = $1;', [id]);        // it gets the user from the db
         if (students.rows.length > 0) {

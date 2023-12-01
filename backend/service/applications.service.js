@@ -1,7 +1,6 @@
 "use strict";
 
 const Application = require("../model/Application");
-const Teacher = require("../model/Teacher");
 const db = require("./db");
 const { rowToProposal } = require("./proposals.service");
 
