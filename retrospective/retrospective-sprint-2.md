@@ -78,7 +78,7 @@ sections:
     - good 😌 Sonarcloud is very useful to maintain a working "main", each time you commit a test is runned.
     - good 😌 Assign a user story to more than 3 people reduce the efficiency since each person depend on the other one.
     - good 😌 Put two people on a long task such as login make it softer.
-    - bad  :( We have to test everything more frequently to avoid breaking the app.
+    - bad  😕 We have to test everything more frequently to avoid breaking the app.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
     - We kept the frontend coherent from the beginning, since we assigned before the task to a person.
@@ -87,9 +87,7 @@ sections:
     - We were not able to achieve a better estimation of task (we overestimated), because we did not want to underestimate as the previous sprint. But we failed AGAIN.
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-    - Find a better way of performing the estimation in order to be more precise in the planning.
-    - Prepare test data at the beginning of the sprint in order to develop more coherent functionnalities, work with correct test data and show all funtionnalities during the demo.
-    - Consider the technical debt during the implementation phase in order to avoid future fixes.
+    - Prepare data at the beginning of the sprint in order to develop more coherent functionnalities, work with correct test data and show all funtionnalities during the demo.
     - Do black box testing to find other possible bugs.
 
 - One thing you are proud of as a Team!!
