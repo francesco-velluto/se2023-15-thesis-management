@@ -719,7 +719,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
         expect(res.body.error).toEqual("Not authorized, must be a Teacher");
         expect(getAllProfessorProposals).not.toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
-        expect(isStudent).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));
@@ -776,7 +776,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       expect(res.body).toEqual({proposals: mockProposals});
       expect(getAllProfessorProposals).toHaveBeenCalled();
       expect(isLoggedIn).toHaveBeenCalled();
-      expect(isStudent).toHaveBeenCalled();
+      expect(isTeacher).toHaveBeenCalled();
       done();
     })
     .catch((err) => done(err));
@@ -784,7 +784,6 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
 
   test("T4.4 ERROR 404 | Proposals not found", (done)=>{
     const mockedTeacherId = "T000";
-    const mockedProposals = [];
 
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: mockedTeacherId };
@@ -809,7 +808,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       expect(res.body).toEqual({error: "Proposals not found"});
       expect(getAllProfessorProposals).toHaveBeenCalled();
       expect(isLoggedIn).toHaveBeenCalled();
-      expect(isStudent).toHaveBeenCalled();
+      expect(isTeacher).toHaveBeenCalled();
       done();
     })
     .catch((err) => done(err));
