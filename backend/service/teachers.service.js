@@ -6,7 +6,7 @@ const Teacher = require("../model/Teacher");
 /**
  * Get the list of all teachers from the database
  *
- * @returns {Teacher[]} Array of Teacher objects
+ * @returns {Promise<Teacher[]>} Array of Teacher objects
  *
  * @throws {Error} - If there was some error in the database.
  */

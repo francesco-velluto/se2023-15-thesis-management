@@ -6,7 +6,7 @@ const Degree = require("../model/Degree");
 /**
  * Get the list of all degrees from the database
  *
- * @returns {Degree[]} Array of Degree objects
+ * @returns {Promise<Degree[]>} Array of Degree objects
  *
  * @throws {Error} - If there was some error in the database.
  */
