@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-      - fix-code-smells
+      - branch-fix-code-smells
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
