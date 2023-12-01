@@ -70,7 +70,7 @@ describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
 
 describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   it("should return all applications for thesis proposals supervised by a teacher", async () => {
-    teacherId = "teacher";
+    const teacherId = "teacher";
     db.query.mockResolvedValue({
       rows: [
         {

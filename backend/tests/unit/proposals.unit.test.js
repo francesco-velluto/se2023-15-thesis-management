@@ -20,19 +20,14 @@ jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 beforeEach(() => {
-  //jest.clearAllMocks();
-  getMaxProposalIdNumber.mockClear();
-  insertProposal.mockClear();
-  getAllProposals.mockClear();
-  isLoggedIn.mockClear();
-  isTeacher.mockClear();
-  getProposalById.mockClear();
+  jest.clearAllMocks();
+  // comment these lines if you want to see console prints during tests
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterAll(() => {
