@@ -1,9 +1,9 @@
-const applicationService = require("../service/applications.service");
-const db = require("../service/db");
-const Application = require("../model/Application");
-const Proposal = require("../model/Proposal");
+const applicationService = require("../../service/applications.service");
+const db = require("../../service/db");
+const Application = require("../../model/Application");
+const Proposal = require("../../model/Proposal");
 
-jest.mock("../service/db", () => ({
+jest.mock("../../service/db", () => ({
   query: jest.fn(),
 }));
 

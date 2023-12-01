@@ -5,18 +5,18 @@ const {
   isLoggedIn,
   isTeacher,
   isStudent,
-} = require("../controllers/authentication");
+} = require("../../controllers/authentication");
 const {
   getMaxProposalIdNumber,
   insertProposal,
   getProposalById,
   getAllProposals,
   getAllProfessorProposals,
-} = require("../service/proposals.service");
-const app = require("../app");
+} = require("../../service/proposals.service");
+const app = require("../../app");
 
-jest.mock("../service/proposals.service");
-jest.mock("../controllers/authentication");
+jest.mock("../../service/proposals.service");
+jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();

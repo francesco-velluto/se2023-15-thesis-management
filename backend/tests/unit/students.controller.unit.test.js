@@ -1,8 +1,8 @@
-const { getStudentById } = require("../service/students.service");
-const controller = require("../controllers/students");
-const Student = require("../model/Student");
+const { getStudentById } = require("../../service/students.service");
+const controller = require("../../controllers/students");
+const Student = require("../../model/Student");
 
-jest.mock("../service/students.service");
+jest.mock("../../service/students.service");
 
 describe("UNIT-CONTROLLER: getStudentById", () => {
   it("ERROR 404 | Should return error if the student doesn't exist", async () => {

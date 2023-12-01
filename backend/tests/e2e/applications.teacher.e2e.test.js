@@ -1,4 +1,4 @@
-const app = require("../app");
+const app = require("../../app");
 const { Builder, By, until } = require("selenium-webdriver");
 
 describe("End to end tests for browse applications", () => {
@@ -70,19 +70,19 @@ describe("End to end tests for browse applications", () => {
       // Verifica l'header
       const accordionHeader = await accordionItem.findElement(By.className("accordion-header"));
       expect(accordionHeader !== undefined).toEqual(true);
-    
+
       // Clicca sull'header per aprire il body
       await accordionHeader.click();
-    
+
       // Verifica il body
       const accordionBody = await accordionItem.findElement(By.className("accordion-body"));
       expect(accordionBody !== undefined).toEqual(true);
-    
+
       // Assicurati che ci siano applicazioni nell'Accordion-Body
       const applications = await accordionBody.findElements(By.className('my-3 card'));
       expect(applications.length > 0).toEqual(true);
     }
-    
+
     await doLogout();
   }, 20000);
 });

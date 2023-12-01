@@ -1,12 +1,12 @@
 "use strict";
 
 const request = require("supertest");
-const { getTeachers } = require("../service/teachers.service");
-const { isLoggedIn } = require("../controllers/authentication");
-const app = require("../app");
+const { getDegrees } = require("../../service/degrees.service");
+const { isLoggedIn } = require("../../controllers/authentication");
+const app = require("../../app");
 
-jest.mock("../service/teachers.service");
-jest.mock("../controllers/authentication");
+jest.mock("../../service/degrees.service");
+jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -17,47 +17,39 @@ beforeAll(() => {
 
 beforeEach(() => {
   //jest.clearAllMocks();
-  getTeachers.mockClear();
+  getDegrees.mockClear();
 });
 
 afterAll(() => {
   jest.restoreAllMocks();
 });
 
-describe("T1 - Get teachers unit tests", () => {
+describe("T1 - Get degrees unit tests", () => {
   test("T2.1 - ERROR 401 | Not authenticated", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       return res.status(401).json({ error: "Not authenticated" });
     });
 
     request(app)
-      .get("/api/teachers")
+      .get("/api/degrees")
       .then((res) => {
         expect(res.status).toBe(401);
         expect(res.body).toEqual({ error: "Not authenticated" });
-        expect(getTeachers).not.toHaveBeenCalled();
+        expect(getDegrees).not.toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));
   });
 
-  test("T2.2 - SUCCESS 200 | Get list of teachers", (done) => {
+  test("T2.2 - SUCCESS 200 | Get list of degrees", (done) => {
     const mockList = [
       {
-        id: "T001",
-        surname: "Smith",
-        name: "John",
-        email: "john.smith@polito.it",
-        cod_group: "G001",
-        cod_department: "D001",
+        cod_degree: "D001",
+        title_degree: "Computer Engineering"
       },
       {
-        id: "T002",
-        surname: "Doe",
-        name: "John",
-        email: "john.doe@polito.it",
-        cod_group: "G002",
-        cod_department: "D002",
+        cod_degree: "D002",
+        title_degree: "Some other Engineering"
       },
     ];
 
@@ -65,34 +57,34 @@ describe("T1 - Get teachers unit tests", () => {
       next(); // authenticated
     });
 
-    getTeachers.mockResolvedValue(mockList);
+    getDegrees.mockResolvedValue(mockList);
 
     request(app)
-      .get("/api/teachers")
+      .get("/api/degrees")
       .then((res) => {
         expect(res.status).toBe(200);
-        expect(res.body).toEqual({ teachers: mockList });
-        expect(getTeachers).toHaveBeenCalled();
+        expect(res.body).toEqual({ degrees: mockList });
+        expect(getDegrees).toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));
   });
 
-  test("T2.2 - SUCCESS 200 | Get empty list of teachers", (done) => {
+  test("T2.2 - SUCCESS 200 | Get empty list of degrees", (done) => {
     const mockList = [];
 
     isLoggedIn.mockImplementation((req, res, next) => {
       next(); // authenticated
     });
 
-    getTeachers.mockResolvedValue(mockList);
+    getDegrees.mockResolvedValue(mockList);
 
     request(app)
-      .get("/api/teachers")
+      .get("/api/degrees")
       .then((res) => {
         expect(res.status).toBe(200);
-        expect(res.body).toEqual({ teachers: [] });
-        expect(getTeachers).toHaveBeenCalled();
+        expect(res.body).toEqual({ degrees: [] });
+        expect(getDegrees).toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));

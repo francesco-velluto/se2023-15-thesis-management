@@ -5,30 +5,30 @@ const {
   isLoggedIn,
   isTeacher,
   isStudent,
-} = require("../controllers/authentication");
+} = require("../../controllers/authentication");
 const {
   getAllApplicationsByStudentId,
   setApplicationStatus,
   getApplicationById,
   cancelPendingApplicationsByProposalId,
-} = require("../service/applications.service");
+} = require("../../service/applications.service");
 const {
   getAllApplicationsByTeacherId,
-} = require("../service/applications.service");
+} = require("../../service/applications.service");
 
 
-const controller = require("../controllers/applications");
-const app = require("../app");
-const Student = require("../model/Student");
-const Teacher = require("../model/Teacher");
-const Application = require("../model/Application");
-const { setProposalArchived } = require("../service/proposals.service");
-const Proposal = require("../model/Proposal");
+const controller = require("../../controllers/applications");
+const app = require("../../app");
+const Student = require("../../model/Student");
+const Teacher = require("../../model/Teacher");
+const Application = require("../../model/Application");
+const { setProposalArchived } = require("../../service/proposals.service");
+const Proposal = require("../../model/Proposal");
 const { is } = require("date-fns/locale");
 
-jest.mock("../service/applications.service");
-jest.mock("../service/proposals.service");
-jest.mock("../controllers/authentication");
+jest.mock("../../service/applications.service");
+jest.mock("../../service/proposals.service");
+jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -115,7 +115,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
         expect(isStudent).toHaveBeenCalled();
         done();
       });
-  
+
   });
 
   it("should handle service layer error", (done) => {
@@ -162,7 +162,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
         "group 1",
         "dep 1"
       ) // Simulate authenticated teacher user
-  
+
 
     const expectedApplications = {
       1: [

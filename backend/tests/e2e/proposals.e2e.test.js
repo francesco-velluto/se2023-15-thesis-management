@@ -1,6 +1,6 @@
 const dayjs = require("dayjs");
 const { Builder, By, Select } = require("selenium-webdriver");
-const app = require("../app");
+const app = require("../../app");
 
 /*
  * Template for insert proposal request body,

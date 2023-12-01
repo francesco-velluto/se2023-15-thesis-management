@@ -1,12 +1,12 @@
 "use strict";
 
 const request = require("supertest");
-const app = require("../app");
+const app = require("../../app");
 
-const { getUserById, authUser } = require("../service/authentication");
-const Teacher = require("../model/Teacher");
+const { getUserById, authUser } = require("../../service/authentication");
+const Teacher = require("../../model/Teacher");
 
-jest.mock("../service/authentication");
+jest.mock("../../service/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
