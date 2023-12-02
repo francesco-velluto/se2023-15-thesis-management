@@ -82,10 +82,7 @@ function ProposalDetailsPage({ mode }) {
         if (level === levelEnum.BACHELOR && program[0].toUpperCase() === "B") {
             return true;
         }
-        if (level === levelEnum.MASTER && (program[0].toUpperCase() === "M" || program[0].toUpperCase() === "D")) {
-            return true;
-        }
-        return false;
+        return (level === levelEnum.MASTER && (program[0].toUpperCase() === "M" || program[0].toUpperCase() === "D"));
     }
 
     const handleCreateProposal = async (event) => {

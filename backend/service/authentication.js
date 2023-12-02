@@ -69,7 +69,7 @@ exports.authUser = async (email, password) => {
  */
 exports.getUserById = async (id) => {
     try {
-        let user = undefined;
+        let user;
 
         let students = await db.query('SELECT * FROM student WHERE id = $1;', [id]);        // it gets the user from the db
         if (students.rows.length > 0) {
