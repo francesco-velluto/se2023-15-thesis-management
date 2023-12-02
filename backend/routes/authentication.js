@@ -33,7 +33,6 @@ router.get('/whoami', (req, res, next) => {
 router.post("/logout", isLoggedIn, (req, res, next) => {
   res.clearCookie("connect.sid");
   req.logout(function (err) {
-    console.log(err);
     req.session.destroy(function (err) {
       res.send();
     });
