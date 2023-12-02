@@ -19,9 +19,7 @@ function ProfessorProposalsPage() {
                         You cannot take a look at thesis proposals
                     </Alert>
                     :
-                    <>
-                        <ProfessorProposalsList />
-                    </>
+                    <ProfessorProposalsList />
             }
         </>
     );

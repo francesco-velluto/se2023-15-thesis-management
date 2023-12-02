@@ -248,7 +248,6 @@ function ProposalsSearchArea(props) {
                 </Container>
                 :
                 searchPossibleValues &&
-                <>
                     <div className="container-fluid bg-light p-3 d-flex flex-column align-items-center">
                         {error &&
                             <Alert variant={"danger"}>
@@ -339,7 +338,6 @@ function ProposalsSearchArea(props) {
                         </Row>
 
                     </div>
-                </>
         )
     );
 }
@@ -361,24 +359,21 @@ function FilterElement(props) {
 
 
     return (
-        <>
-            <Col xs lg="3">
-                <div className='mx-3 my-1 p-1 border border-2 border-dark rounded d-flex align-items-center justify-content-between'>
-                    <span className='filterCardContainer'>
-                        <strong>{userfriendly_field}</strong>: {props.fltr.value}
-                    </span>
+        <Col xs lg="3">
+            <div className='mx-3 my-1 p-1 border border-2 border-dark rounded d-flex align-items-center justify-content-between'>
+                <span className='filterCardContainer'>
+                    <strong>{userfriendly_field}</strong>: {props.fltr.value}
+                </span>
 
-                    <FaTimesCircle
-                        style={{ cursor: 'pointer', fontSize: '1.1rem' }}
-                        onClick={() => {
-                            props.setSearchData((sd) => sd.filter((elem) => elem.field !== props.fltr.field));
-                        }}
-                    />
-                </div>
+                <FaTimesCircle
+                    style={{ cursor: 'pointer', fontSize: '1.1rem' }}
+                    onClick={() => {
+                        props.setSearchData((sd) => sd.filter((elem) => elem.field !== props.fltr.field));
+                    }}
+                />
+            </div>
 
-            </Col>
-
-        </>
+        </Col>
     );
 }
 

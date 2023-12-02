@@ -108,8 +108,7 @@ function StudentProposalsList(props) {
                 </Row>
             }
             {
-                !errorMessage && filteredProposals.length > 0 && <>
-
+                !errorMessage && filteredProposals.length > 0 &&
                     <Row className='mt-1 mb-4 mx-2 p-2' >
                         <Col xs={12} md={3} className="text-center text-md-start">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-alphabet d-xs-block d-md-none me-2" viewBox="0 0 16 16">
@@ -139,8 +138,6 @@ function StudentProposalsList(props) {
 
                         </Col>
                     </Row>
-
-                </>
             }
 
             {!errorMessage && filteredProposals.length > 0 ?
