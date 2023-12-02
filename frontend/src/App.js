@@ -1,6 +1,5 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import SamlRedirect from "./pages/Auth";
 
 
@@ -33,7 +32,7 @@ function App() {
 }
 
 function Main() {
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user  
+    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user
 
     useEffect(() => {
         fetchCurrentUser()                        // reload current session, it gets the user information from the server

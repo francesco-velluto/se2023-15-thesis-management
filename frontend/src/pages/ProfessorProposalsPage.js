@@ -1,15 +1,12 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { Alert, Button, Col, Row } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import ProfessorProposalsList from "../components/ProfessorProposalsList";
-import { useNavigate } from "react-router-dom";
 
 function ProfessorProposalsPage() {
     const { loggedUser } = useContext(LoggedUserContext);
-
-    const navigate = useNavigate();
 
     return (
         <>
@@ -31,4 +28,3 @@ function ProfessorProposalsPage() {
 }
 
 export default ProfessorProposalsPage;
-

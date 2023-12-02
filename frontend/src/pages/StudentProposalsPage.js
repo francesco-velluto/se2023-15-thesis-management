@@ -3,7 +3,7 @@ import NavbarContainer from "../components/Navbar";
 import ProposalsSearchArea from "../components/ProposalsSearchArea";
 import TitleBar from "../components/TitleBar";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { Alert, Button, Col, Container, Row } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import StudentProposalsList from "../components/StudentProposalsList";
 
 function StudentProposalsPage() {
@@ -15,7 +15,7 @@ function StudentProposalsPage() {
             <NavbarContainer />
             <TitleBar title={"Browse Proposals"} />
 
-            
+
 
             {
                 loggedUser.role === 0 ?
@@ -24,7 +24,7 @@ function StudentProposalsPage() {
                     </Alert>
                     :
                     <>
-                        <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />                        
+                        <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
 
                         <StudentProposalsList searchData={searchData} />
                     </>

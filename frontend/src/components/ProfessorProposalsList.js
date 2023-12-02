@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from "react";
 import { Alert, Button, Col, Container, Row } from "react-bootstrap";
-import { getAllProfessorProposals, getAllProposals } from "../api/ProposalsAPI";
+import { getAllProfessorProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
-import { format, isSameDay, parseISO, parse } from "date-fns"
+import { format, parseISO } from "date-fns"
 import { VirtualClockContext } from '../context/VirtualClockContext';
 
 function ProfessorProposalsList() {
@@ -16,11 +16,11 @@ function ProfessorProposalsList() {
     const { currentDate } = useContext(VirtualClockContext);
     /**
      * ! ONLY FOR DEV SIMULATIONS
-     * 
+     *
      * Function to use an extra filter on the proposals list,
      * to exclude those who are expired in the current date
      * set by the virtual clock.
-     * 
+     *
      * ! If the virtual clock in on:
      * !    every time you call the setProposals, you should call this
      * !    function right after that, so you apply an extra filter on the already filtered proposals.

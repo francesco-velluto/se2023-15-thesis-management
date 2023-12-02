@@ -1,4 +1,4 @@
-import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup, FormControl, Row } from 'react-bootstrap';
+import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup } from 'react-bootstrap';
 import { FaCalendar, FaHome } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
@@ -76,7 +76,6 @@ function NavbarContainer() {
                                     style={{ backgroundColor: 'white', color: '#393646', height: '50px', borderColor: 'white', justifySelf: 'center', display: 'flex', alignItems: 'center', fontSize: '16px' }}
                                 >
                                     <svg
-                                        // onClick={() => navigate("/")}
                                         xmlns="http://www.w3.org/2000/svg"
                                         width="20"
                                         height="40"
