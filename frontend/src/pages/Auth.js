@@ -8,7 +8,7 @@ const APIConfig = require('../api/api.config.js');
 const AuthenticationAPIURL = APIConfig.API_URL + '/authentication';
 
 function SamlRedirect() {
-    const [errors] = useState(undefined);
+    const [errors, setErrors] = useState(undefined);
 
     const { setLoggedUser } = useContext(LoggedUserContext);
     const navigate = useNavigate();

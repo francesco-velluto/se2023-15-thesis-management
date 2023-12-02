@@ -58,16 +58,13 @@ module.exports = {
      * @throws {Promise<{status: number, data: string}>} - A promise that rejects with an object containing the HTTP status code and an error message.
      */
     getAllApplicationsByTeacherId: async (id) => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                const { rows, rowCount } = await db.query(
-                    "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, " +
-                        "a.id as application_id, a.status as application_status, a.application_date, " +
-                        "s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
-                    "FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.student_id " +
-                    "WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'",
-                    [id]);
-
+        return new Promise((resolve, reject) => {
+            const query = "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, " +
+                "a.id as application_id, a.status as application_status, a.application_date, " +
+                "s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
+                "FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.student_id " +
+                "WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'";
+            db.query(query, [id]).then(({ rows, rowCount }) => {
                 if (rowCount === 0) {
                     resolve({ status: 200, data: [] });
                 }
@@ -104,10 +101,10 @@ module.exports = {
                 }, {});
 
                 resolve({ status: 200, data: Object.values(applications) });
-            } catch (err) {
+            }).catch((err) => {
                 console.error('[BACKEND-SERVER] Error in getAllApplicationsByTeacherId', err);
                 reject({ status: 500, data: 'Internal server error' });
-            }
+            });
         });
     },
 
