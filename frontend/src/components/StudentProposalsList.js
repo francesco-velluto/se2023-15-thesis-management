@@ -141,8 +141,8 @@ function StudentProposalsList(props) {
             }
 
             {!errorMessage && filteredProposals.length > 0 ?
-                filteredProposals.map((fp, index) => (
-                    <ProposalRow key={index} data={fp} />
+                filteredProposals.map((proposal) => (
+                    <ProposalRow key={proposal.proposal_id} data={proposal} />
                 )) :
                 <Row>
                     <Col className="d-flex flex-row justify-content-center fw-bold fs-5">

@@ -55,12 +55,13 @@ function ApplicationList() {
                         <>
                             <Accordion alwaysOpen>
                                 {applications && applications.length > 0 &&
-                                    applications.map((proposal, index) => (
-                                        <Accordion.Item key={index} eventKey={index.toString()}>
+                                    applications.map((proposal) => (
+                                        <Accordion.Item key={proposal.proposal_id}
+                                            eventKey={proposal.proposal_id.toString()}>
                                             <Accordion.Header>{proposal.title}</Accordion.Header>
                                             <Accordion.Body>
-                                                {proposal.applications.map((application, index) => (
-                                                    <Card key={index} className='my-3'>
+                                                {proposal.applications.map((application) => (
+                                                    <Card key={application.application_id} className='my-3'>
                                                         <Card.Body>
                                                             <Row className="align-items-center">
                                                                 <Col>

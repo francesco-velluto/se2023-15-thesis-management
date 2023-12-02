@@ -103,8 +103,8 @@ function ProfessorProposalsList() {
             }
 
             {!errorMessage && proposals.length > 0 ?
-                proposals.map((fp, index) => (
-                    <ProposalRow key={index} data={fp} />
+                proposals.map((proposal) => (
+                    <ProposalRow key={proposal.proposal_id} data={proposal} />
                 )) :
                 <Row>
                     <Col xs={12} className="d-flex flex-row justify-content-center">

@@ -55,8 +55,8 @@ function StudentApplicationsPage() {
                                 <Alert variant='danger'>{error}</Alert>
                             </Col>
                         </Row>
-                    ) : applications?.map((application, index) =>
-                            <Row key={index} className={"justify-content-center student-application-row"}>
+                    ) : applications?.map((application) =>
+                            <Row key={application.id} className={"justify-content-center student-application-row"}>
                                 <Col lg={7}>
                                     <Card text={"light"}
                                               id={"student-application-card"}
