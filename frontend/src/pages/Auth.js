@@ -8,7 +8,7 @@ const APIConfig = require('../api/api.config.js');
 const AuthenticationAPIURL = APIConfig.API_URL + '/authentication';
 
 function SamlRedirect() {
-    const [errors, setErrors] = useState(undefined);
+    const [errors] = useState(undefined);
 
     const { setLoggedUser } = useContext(LoggedUserContext);
     const navigate = useNavigate();
@@ -20,7 +20,6 @@ function SamlRedirect() {
             navigate("/");
         } catch (err) {
             console.log(err);
-            setErrors((old) => [ ...old, err.message ]);
             window.location.replace('http://localhost:8080/api/authentication/login');
         }
     }

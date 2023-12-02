@@ -54,6 +54,7 @@ exports.authUser = async (email, password) => {
         }
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in authUser service function: ", err);
         throw err;
     }
 };
@@ -83,6 +84,7 @@ exports.getUserById = async (id) => {
 
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in getUserById service function: ", err);
         throw err;
     }
 };
@@ -112,6 +114,7 @@ exports.getUserByEmail = async (id) => {
 
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in getUserByEmail service function: ", err);
         throw err;
     }
 };
@@ -133,6 +136,7 @@ exports.getUser = async (element) => {
         }
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in getUser service function: ", err);
         throw err;
     }
 };

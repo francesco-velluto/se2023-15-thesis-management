@@ -55,8 +55,7 @@ function StudentApplicationsPage() {
                                 <Alert variant='danger'>{error}</Alert>
                             </Col>
                         </Row>
-                    ) : applications && (
-                        applications.map((application, index) =>
+                    ) : applications?.map((application, index) =>
                             <Row key={index} className={"justify-content-center student-application-row"}>
                                 <Col lg={7}>
                                     <Card text={"light"}
@@ -88,7 +87,7 @@ function StudentApplicationsPage() {
                             </Row>
                         )
                     )
-                )}
+                }
                 <Row className={"justify-content-center student-application-row"}>
                     <Col lg={5}>
                         <Button id='back-to-homepage-button' style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/">
