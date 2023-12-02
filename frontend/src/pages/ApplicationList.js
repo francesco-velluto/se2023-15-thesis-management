@@ -48,7 +48,7 @@ function ApplicationList() {
 
                 <Row className='browse-application' style={{ backgroundColor: "#F4EEE0"}}>
                     {loading ? (
-                        <Spinner animation="border" role="status">
+                        <Spinner animation="border">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
                     ) : (

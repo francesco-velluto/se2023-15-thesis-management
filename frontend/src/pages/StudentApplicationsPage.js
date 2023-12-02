@@ -43,7 +43,7 @@ function StudentApplicationsPage() {
                 {isLoading ? (
                     <Row className={"justify-content-center"}>
                         <Col>
-                            <Spinner animation="border" role="status">
+                            <Spinner animation="border">
                                 <span className="visually-hidden">Loading...</span>
                             </Spinner>
                         </Col>

@@ -115,7 +115,7 @@ function ApplicationDetails() {
                 </Row>
 
                 {isLoading &&
-                    <Spinner animation="border" role="status">
+                    <Spinner animation="border">
                         <span className="visually-hidden">Loading...</span>
                     </Spinner>}
                 {!isLoading && infoApplication &&

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Form, Button, Col, Row, Alert, Container } from 'react-bootstrap';
+import { Form, Button, Col, Row, Alert, Container, Spinner } from 'react-bootstrap';
 import { getAllProposals } from "../api/ProposalsAPI";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { VirtualClockContext } from "../context/VirtualClockContext";
@@ -229,9 +229,9 @@ function ProposalsSearchArea(props) {
             (<Container>
                 <Row className="justify-content-md-center">
                     <Col md="auto">
-                        <div className="spinner-border" role="status">
+                        <Spinner animation="border">
                             <span className="visually-hidden">Loading...</span>
-                        </div>
+                        </Spinner>
                     </Col>
                 </Row>
             </Container>)
