@@ -81,9 +81,6 @@ function ProposalDetailsPage({ mode }) {
     * @returns {boolean} - Returns true if the program meets the filtering criteria, otherwise false.
     */
     const handleFilterDegreeList = (program) => {
-
-        console.log(program);
-
         if (level === levelEnum.BACHELOR && program[0].toUpperCase() === "B") {
             return true;
         }
@@ -374,6 +371,9 @@ function ProposalDetailsPage({ mode }) {
                                                                 whiteSpace: 'pre-line',
                                                                 cursor: 'pointer'
                                                             }}
+                                                            onKeyDown={() => { }}
+                                                            role="button"
+                                                            tabIndex={0}
                                                             onClick={() => setShowFullDescription(!showFullDescription)}>
                                                             <span>
                                                                 {showFullDescription ? description : truncatedDescription}
@@ -522,9 +522,6 @@ function ProposalDetailsPage({ mode }) {
                                                                             let programsList = [...programmes];
                                                                             programsList.push(JSON.parse(e.target.value));
                                                                             setProgrammes(programsList);
-
-                                                                            console.log(programmes.includes(JSON.parse(e.target.value)));
-                                                                            console.log(programsList);
                                                                         }
                                                                     }}
                                                                     disabled={!level}

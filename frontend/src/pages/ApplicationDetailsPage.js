@@ -52,7 +52,6 @@ function ApplicationDetails() {
 
                 if (application) {
                     if (loggedUser.id !== application.proposal.supervisor_id) {
-                        console.log("different teacher")
                         setAuthorized(false);
                         setIsLoading(false);
                         return;

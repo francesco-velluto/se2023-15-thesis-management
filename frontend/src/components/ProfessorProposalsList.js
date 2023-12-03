@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns"
 import { VirtualClockContext } from '../context/VirtualClockContext';
 import { FaBook, FaPen } from "react-icons/fa";
-import { LoggedUserContext } from "../context/AuthenticationContext";
 
 function ProfessorProposalsList() {
     const [proposals, setProposals] = useState([]);
@@ -104,8 +103,8 @@ function ProfessorProposalsList() {
             }
 
             {!errorMessage && proposals.length > 0 ?
-                proposals.map((proposal) => (
-                    <ProposalRow proposal={proposal} />
+                proposals.map((proposal, index) => (
+                    <ProposalRow key={index} proposal={proposal} />
                 )) :
                 <Row>
                     <Col xs={12} className="d-flex flex-row justify-content-center">
