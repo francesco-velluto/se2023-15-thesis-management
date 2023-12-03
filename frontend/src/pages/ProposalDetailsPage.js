@@ -48,34 +48,27 @@ function ProposalDetailsPage({ mode }) {
     const [description, setDescription] = useState("");
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
-    const [rows, setRows] = useState(3);
+
+    const [showFullDescription, setShowFullDescription] = useState(false);
+    const truncatedDescription = description?.slice(0, 90);
+
+    //const [newGroup, setNewGroup] = useState('');
+    const [newKeyword, setNewKeyword] = useState('');
+
+    const targetRef = useRef(null);
 
     const levelEnum = {
         BACHELOR: "Bachelor",
         MASTER: "Master"
     }
-    //const [newGroup, setNewGroup] = useState('');
-    const [newKeyword, setNewKeyword] = useState('');
-
-    const calculateRows = () => {
-        const lineCount = (description.match(/\n/g) || []).length + 1;
-        const minRows = 3;
-        const calculatedRows = Math.max(lineCount, minRows);
-        return calculatedRows;
-    };
-
-    const updateRows = () => {
-        const calculatedRows = calculateRows();
-        setRows(calculatedRows);
-    };
-
 
     // list of useful data
     const proposalLevelsList = [levelEnum.BACHELOR, levelEnum.MASTER];
     const [proposalDegreeList, setProposalDegreeList] = useState([]);
 
-    const targetRef = useRef(null);
-
+    /**
+     * It is used to show a message error in the page to the user
+     */
     const scrollToTarget = () => {
         if (targetRef.current) {
             targetRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -88,6 +81,9 @@ function ProposalDetailsPage({ mode }) {
     * @returns {boolean} - Returns true if the program meets the filtering criteria, otherwise false.
     */
     const handleFilterDegreeList = (program) => {
+
+        console.log(program);
+
         if (level === levelEnum.BACHELOR && program[0].toUpperCase() === "B") {
             return true;
         }
@@ -144,10 +140,12 @@ function ProposalDetailsPage({ mode }) {
         }
 
         // Check if the level and the programmes are compatible
-        if (handleFilterDegreeList(programmes)) {
-            setErrorMessage("Please select programmes compatible with the chosen level.");
-            scrollToTarget();
-            return false;
+        for (let program of programmes) {
+            if (!handleFilterDegreeList(program.title_degree)) {
+                setErrorMessage("Please select programmes compatible with the chosen level.");
+                scrollToTarget();
+                return false;
+            }
         }
 
         return true;
@@ -170,7 +168,7 @@ function ProposalDetailsPage({ mode }) {
             required_knowledge: knowledge,
             notes: notes,
             expiration_date: expDate,
-            programmes: programmes
+            programmes: programmes.map(program => program.cod_degree)   // it takes only the cod degree
         };
 
         try {
@@ -201,7 +199,7 @@ function ProposalDetailsPage({ mode }) {
             required_knowledge: knowledge,
             notes: notes,
             expiration_date: expDate,
-            programmes: programmes
+            programmes: programmes.map(program => program.cod_degree)   // it takes only the cod degree
         };
 
         try {
@@ -225,7 +223,6 @@ function ProposalDetailsPage({ mode }) {
         setUnauthorized(false);
 
         if (mode === 0 || mode === 1) {       // read and update mode
-            updateRows();
             getProposalById(proposal_id)
                 .then(async res => {
                     let data = await res.json()
@@ -256,8 +253,14 @@ function ProposalDetailsPage({ mode }) {
                             setKeywords(data.keywords);
 
                             // must be set in an array of cod_degree
-                            if (mode === 1) {
-                                data.programmes = data.programmes?.map(program => program.cod_degree);
+                            if (mode === 1) { // update mode
+                                // get all degrees list
+                                getAllDegrees()
+                                    .then(list => setProposalDegreeList(list))
+                                    .catch(err => {
+                                        setErrorMessage(err);
+                                        setProposalDegreeList([]);
+                                    });
                             }
 
                             setProgrammes(data.programmes);
@@ -360,28 +363,52 @@ function ProposalDetailsPage({ mode }) {
                                     )}
                                     <Row>
                                         <Col>
-                                            <Card>
-                                                <Card.Body>
-                                                    <Card.Title>Description:</Card.Title>
-                                                    <Form.Group>
-                                                        <Form.Control
-                                                            as={mode === 0 ? 'input' : 'textarea'}  // read mode
-                                                            name='description'
-                                                            aria-label='Enter description'
-                                                            placeholder='Enter description'
-                                                            value={description}
-                                                            onChange={(e) => {
-                                                                setDescription(e.target.value);
+                                            {mode === 0 &&
+                                                <Card>
+                                                    <Card.Body>
+                                                        <Card.Title>Description:</Card.Title>
+                                                        <p
+                                                            style={{
+                                                                maxHeight: !showFullDescription ? 'none' : `${20 * 1.2}em`, // 1.2em is an approximate line height
+                                                                overflowY: !showFullDescription ? 'visible' : 'auto',
+                                                                whiteSpace: 'pre-line',
+                                                                cursor: 'pointer'
                                                             }}
-                                                            readOnly={mode === 0}                   // read mode
-                                                            plaintext={mode === 0}                  // read mode
-                                                            required
-                                                            rows={mode !== 0 ? 8 : rows}
-                                                            style={{ whiteSpace: 'pre-wrap' }}
-                                                        />
-                                                    </Form.Group>
-                                                </Card.Body>
-                                            </Card>
+                                                            onClick={() => setShowFullDescription(!showFullDescription)}>
+                                                            <span>
+                                                                {showFullDescription ? description : truncatedDescription}
+                                                                <span className="text-muted">
+                                                                    {!showFullDescription && description.length > truncatedDescription.length && ' Show more...'}
+                                                                </span>
+                                                            </span>
+                                                        </p>
+                                                    </Card.Body>
+                                                </Card>
+                                            }
+
+                                            {mode !== 0 &&
+                                                <Card>
+                                                    <Card.Body>
+                                                        <Card.Title>Description:</Card.Title>
+                                                        <Form.Group>
+                                                            <Form.Control
+                                                                as='textarea'
+                                                                name='description'
+                                                                aria-label='Enter description'
+                                                                placeholder='Enter description'
+                                                                value={description}
+                                                                onChange={(e) => {
+                                                                    setDescription(e.target.value);
+                                                                }}
+                                                                rows={10}
+                                                                maxLength={10000}
+                                                                style={{ whiteSpace: 'pre-wrap' }}
+                                                                required
+                                                            />
+                                                        </Form.Group>
+                                                    </Card.Body>
+                                                </Card>
+                                            }
                                         </Col>
                                     </Row>
                                 </Container>
@@ -474,7 +501,10 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>CdS / Programmes:</Card.Title>
                                                     {mode === 0 ?
                                                         <Card.Text>
-                                                            {programmes.map((programme, index) => <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >{programme.title_degree}</Badge>)}
+                                                            {programmes.map((programme, index) =>
+                                                                <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >
+                                                                    {programme.title_degree}
+                                                                </Badge>)}
                                                         </Card.Text>
                                                         :
                                                         <div>
@@ -489,16 +519,21 @@ function ProposalDetailsPage({ mode }) {
                                                                     value={""}
                                                                     onChange={(e) => {
                                                                         if (e.target.value?.trim()) {
-                                                                            setProgrammes([...programmes, e.target.value]);
+                                                                            let programsList = [...programmes];
+                                                                            programsList.push(JSON.parse(e.target.value));
+                                                                            setProgrammes(programsList);
+
+                                                                            console.log(programmes.includes(JSON.parse(e.target.value)));
+                                                                            console.log(programsList);
                                                                         }
                                                                     }}
                                                                     disabled={!level}
                                                                 >
                                                                     <option value={""} disabled>Select a program</option>
                                                                     {proposalDegreeList
-                                                                        .filter(program => handleFilterDegreeList(program.title_degree) && !programmes.includes(program.cod_degree))
+                                                                        .filter(program => handleFilterDegreeList(program.title_degree) && programmes.every((p) => p.cod_degree !== program.cod_degree))
                                                                         .map((program, index) => (
-                                                                            <option key={index} value={program.cod_degree}>{program.title_degree}</option>
+                                                                            <option key={index} value={JSON.stringify(program)}>{program.title_degree}</option>
                                                                         ))
                                                                     }
                                                                 </Form.Select>
@@ -506,7 +541,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup className="mt-2">
                                                                 {programmes.map((program, index) => (
                                                                     <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
-                                                                        {program}
+                                                                        {program.title_degree + " - " + program.cod_degree}
                                                                         <Button
                                                                             variant="danger"
                                                                             size="sm"
@@ -748,7 +783,7 @@ function ProposalDetailsPage({ mode }) {
                                                     Save
                                                 </Button>}
 
-                                            {mode === 0 && loggedUser.role === 0 &&
+                                            {mode === 2 && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
                                                     style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
