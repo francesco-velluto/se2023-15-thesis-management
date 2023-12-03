@@ -79,6 +79,7 @@ module.exports = {
       const proposal = await proposalsService.insertProposal({
         ...req.body,
         proposal_id: newId,
+        groups: [req.user.cod_group],
         supervisor_id: req.user.id
       });
       res.status(201).json({ proposal });

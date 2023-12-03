@@ -92,7 +92,6 @@ router.post(
   check("title").isString().notEmpty(),
   check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings), // can the keywords array be empty ??
   check("type").isString().notEmpty(),
-  check("groups").isArray({ min: 1 }).custom(isArrayOfStrings),
   check("description").isString(), // or .optional().isString() if it can be empty
   check("required_knowledge").optional().isString(),
   check("notes").optional().isString(),
