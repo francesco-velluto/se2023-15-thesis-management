@@ -271,7 +271,7 @@ function ProposalsSearchArea(props) {
                                         style={{ maxWidth: "100%" }}>
                                         <option value="" disabled={true}>Field</option>
                                         {
-                                            FIELDS.flatMap(obj => Object.entries(obj)).filter((key) => !props.searchData.find(el => el.field === key)).map(([key, value], index) => (
+                                            FIELDS.flatMap(obj => Object.entries(obj)).filter(([key]) => !props.searchData.find(el => el.field === key)).map(([key, value], index) => (
                                                 <option key={index} value={key}>
                                                     {value}
                                                 </option>
