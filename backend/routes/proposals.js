@@ -117,6 +117,22 @@ router.post(
  */
 router.get('/:proposal_id', authenticationController.isLoggedIn, proposalsController.getProposalById);
 
+/**
+ * DELETE /api/proposals/:proposal_id
+ * 
+ * @params proposal_id
+ * @body none
+ * @returns none -> status 204
+ * 
+ * @error 401 Not authenticated or Unauthorized
+ * @error 403 Proposal with accepted application, expired proposal
+ * @error 404 Proposal not found
+ * @error 500 Internal server error
+ * 
+ * 
+ */
+router.delete('/:proposal_id',/* authenticationController.isLoggedIn, authenticationController.isTeacher,*/
+                proposalsController.deleteProposal);
 
 
 module.exports = router;

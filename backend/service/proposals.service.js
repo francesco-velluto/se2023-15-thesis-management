@@ -199,3 +199,37 @@ exports.setProposalArchived = async (proposal_id) => {
     throw error;
   }
 };
+
+/**
+ * Delete a proposal
+ * 
+ * @param {string} proposal_id
+ * 
+ * @returns {data: proposalDeleted}
+ */
+exports.deleteProposal = async(proposal_id) =>{
+  try{
+    // check if the proposal exists
+    let checkProposal = "select * from proposals where proposal_id = $1";
+
+    const rows = await db.query(checkProposal, [proposal_id]);
+    if(rows.rowCount === 0) {
+      return {data: undefined};
+    }
+
+    
+    let queryDelete = "update proposals set deleted = true where proposal_id = $1 RETURNING *";
+    const deletedProposal = await db.query(queryDelete, [proposal_id]);
+
+    let cancelApplicationsQuery = "update applications set status = 'Canceled' where proposal_id = $1 returning *";
+    const canceledApplications = await db.query(cancelApplicationsQuery, [proposal_id]);
+
+
+
+    return {data: deletedProposal.rows[0]};
+
+  }catch (error) {
+    console.log("Error in deleteProposal: ", error);
+    throw error;
+  }
+}
