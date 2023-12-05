@@ -2,11 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
-
 import { useNavigate, useParams } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
-import { Spinner, Row, Col, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
+import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
@@ -96,7 +95,7 @@ function ApplicationDetails() {
             let bufferChoice = choice;
             setChoice(bufferChoice);
 
-            // close the modal
+            // close the modal - this will clear 'choice' state
             handleClose();
 
             // show the updating modal
