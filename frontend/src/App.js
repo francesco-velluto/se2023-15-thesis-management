@@ -58,6 +58,7 @@ function Main() {
                     <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
                     <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={1} /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode={3} /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
 
