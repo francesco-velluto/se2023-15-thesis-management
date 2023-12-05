@@ -7,7 +7,7 @@ import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
 function HomePage() {
-  const { loggedUser, handleLogout } = useContext(LoggedUserContext);
+  const { loggedUser } = useContext(LoggedUserContext);
 
   return (
     <>
@@ -161,12 +161,11 @@ function HomePage() {
                   )}
                 </Form>
 
-                {/* <ul style={{ marginLeft: "20px", fontSize: "20px" }}></ul> */}
               </Card>
               <Card bg="light" className="rounded p-4 mt-3">
                 <Row>
                   {loggedUser.role === 0 && (
-                    <Col> 
+                    <Col>
                       <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
                         My Thesis Applications
                       </Button>
@@ -205,7 +204,7 @@ function HomePage() {
           )}
         </Row>
       </Container>
-      <footer /* className="fixed-bottom" */>
+      <footer>
         <Col  xs={12} sm={2}>
           <img src="logo.svg" alt="logo" />
         </Col>

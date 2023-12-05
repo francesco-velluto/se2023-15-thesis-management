@@ -155,7 +155,7 @@ module.exports = {
 
                 const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
 
-                if (!archivedProposal || !archivedProposal.archived)
+                if (!archivedProposal?.archived)
                     throw Error("Some error occurred in the database: proposal not archived");
             }
 

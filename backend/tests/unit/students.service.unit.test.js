@@ -1,8 +1,8 @@
-const studentService = require("../service/students.service");
-const db = require("../service/db");
-const Student = require("../model/Student");
+const studentService = require("../../service/students.service");
+const db = require("../../service/db");
+const Student = require("../../model/Student");
 
-jest.mock("../service/db", () => ({
+jest.mock("../../service/db", () => ({
   query: jest.fn(),
 }));
 

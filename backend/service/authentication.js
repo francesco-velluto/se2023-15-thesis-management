@@ -41,7 +41,7 @@ const mapObjToTeacher = (teacher) => {
  */
 exports.authUser = async (email, password) => {
     try {
-        let user = undefined;
+        let user;
 
         let students = await db.query('SELECT * FROM student WHERE email = $1 and id = $2;', [email, password]);        // it gets the user from the db
         if (students.rows.length > 0) {
@@ -54,6 +54,7 @@ exports.authUser = async (email, password) => {
         }
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in authUser service function: ", err);
         throw err;
     }
 };
@@ -69,7 +70,7 @@ exports.authUser = async (email, password) => {
  */
 exports.getUserById = async (id) => {
     try {
-        let user = undefined;
+        let user;
 
         let students = await db.query('SELECT * FROM student WHERE id = $1;', [id]);        // it gets the user from the db
         if (students.rows.length > 0) {
@@ -83,6 +84,7 @@ exports.getUserById = async (id) => {
 
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in getUserById service function: ", err);
         throw err;
     }
 };
@@ -98,7 +100,7 @@ exports.getUserById = async (id) => {
  */
 exports.getUserByEmail = async (id) => {
     try {
-        let user = undefined;
+        let user;
 
         let students = await db.query('SELECT * FROM student WHERE email = $1;', [id]);        // it gets the user from the db
         if (students.rows.length > 0) {
@@ -112,6 +114,7 @@ exports.getUserByEmail = async (id) => {
 
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in getUserByEmail service function: ", err);
         throw err;
     }
 };
@@ -133,6 +136,7 @@ exports.getUser = async (element) => {
         }
         return user;
     } catch (err) {
+        console.error("[BACKEND-ERROR] Error in getUser service function: ", err);
         throw err;
     }
 };

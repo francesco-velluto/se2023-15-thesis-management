@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - branch-fix-code-smells
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -28,10 +29,8 @@ jobs:
           cache-dependency-path: './backend/package-lock.json'
       - name: Install Node.js dependencies
         run: npm install
-      - name: Run unit tests
-        run: npm run unit
       - name: Run unit coverage
-        run: npx jest tests/*.unit.test.js --silent --coverage
+        run: npm run coverage
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

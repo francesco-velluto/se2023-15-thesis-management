@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app");
+const app = require("../../app");
 
 const { Builder, By, until } = require("selenium-webdriver");
 
@@ -36,7 +36,7 @@ describe("End to end tests for Apply to proposal", () => {
     await driver.sleep(1000);
 
     await driver.get(baseURL);
-    
+
     await driver.sleep(1000);
   };
 

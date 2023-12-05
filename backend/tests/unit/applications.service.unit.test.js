@@ -1,9 +1,9 @@
-const applicationService = require("../service/applications.service");
-const db = require("../service/db");
-const Application = require("../model/Application");
-const Proposal = require("../model/Proposal");
+const applicationService = require("../../service/applications.service");
+const db = require("../../service/db");
+const Application = require("../../model/Application");
+const Proposal = require("../../model/Proposal");
 
-jest.mock("../service/db", () => ({
+jest.mock("../../service/db", () => ({
   query: jest.fn(),
 }));
 
@@ -70,7 +70,7 @@ describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
 
 describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   it("should return all applications for thesis proposals supervised by a teacher", async () => {
-    teacherId = "teacher";
+    const teacherId = "teacher";
     db.query.mockResolvedValue({
       rows: [
         {
@@ -155,6 +155,8 @@ describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   });
 
   it("should handle no applications found", async () => {
+    const teacherId = "teacher";
+
     db.query.mockResolvedValue({ rows: [] });
 
     const res = await applicationService.getAllApplicationsByTeacherId(
@@ -167,6 +169,8 @@ describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   });
 
   it("should handle internal server error", async () => {
+    const teacherId = "teacher";
+
     db.query.mockRejectedValue(new Error("Database error"));
 
     await expect(

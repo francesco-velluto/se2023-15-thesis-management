@@ -5,34 +5,29 @@ const {
   isLoggedIn,
   isTeacher,
   isStudent,
-} = require("../controllers/authentication");
+} = require("../../controllers/authentication");
 const {
   getMaxProposalIdNumber,
   insertProposal,
   getProposalById,
   getAllProposals,
   getAllProfessorProposals,
-} = require("../service/proposals.service");
-const app = require("../app");
+} = require("../../service/proposals.service");
+const app = require("../../app");
 
-jest.mock("../service/proposals.service");
-jest.mock("../controllers/authentication");
+jest.mock("../../service/proposals.service");
+jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 beforeEach(() => {
-  //jest.clearAllMocks();
-  getMaxProposalIdNumber.mockClear();
-  insertProposal.mockClear();
-  getAllProposals.mockClear();
-  isLoggedIn.mockClear();
-  isTeacher.mockClear();
-  getProposalById.mockClear();
+  jest.clearAllMocks();
+  // comment these lines if you want to see console prints during tests
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterAll(() => {
@@ -82,8 +77,6 @@ describe("T1 - Get all proposals Unit Tests", () => {
   });
 
   test("T1.3 ERROR 500 | Internal server error", (done) => {
-    const mockedStudentDegree = "MC001";
-
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user.cod_degree = "MC001";
       next(); // Authenticated
@@ -726,7 +719,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
         expect(res.body.error).toEqual("Not authorized, must be a Teacher");
         expect(getAllProfessorProposals).not.toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
-        expect(isStudent).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));
@@ -783,7 +776,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       expect(res.body).toEqual({proposals: mockProposals});
       expect(getAllProfessorProposals).toHaveBeenCalled();
       expect(isLoggedIn).toHaveBeenCalled();
-      expect(isStudent).toHaveBeenCalled();
+      expect(isTeacher).toHaveBeenCalled();
       done();
     })
     .catch((err) => done(err));
@@ -791,7 +784,6 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
 
   test("T4.4 ERROR 404 | Proposals not found", (done)=>{
     const mockedTeacherId = "T000";
-    const mockedProposals = [];
 
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: mockedTeacherId };
@@ -816,7 +808,7 @@ describe("T4 - Get proposals by progessor unit test", ()=>{
       expect(res.body).toEqual({error: "Proposals not found"});
       expect(getAllProfessorProposals).toHaveBeenCalled();
       expect(isLoggedIn).toHaveBeenCalled();
-      expect(isStudent).toHaveBeenCalled();
+      expect(isTeacher).toHaveBeenCalled();
       done();
     })
     .catch((err) => done(err));

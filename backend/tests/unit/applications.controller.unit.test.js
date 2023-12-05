@@ -5,30 +5,30 @@ const {
   isLoggedIn,
   isTeacher,
   isStudent,
-} = require("../controllers/authentication");
+} = require("../../controllers/authentication");
 const {
   getAllApplicationsByStudentId,
   setApplicationStatus,
   getApplicationById,
   cancelPendingApplicationsByProposalId,
-} = require("../service/applications.service");
+} = require("../../service/applications.service");
 const {
   getAllApplicationsByTeacherId,
-} = require("../service/applications.service");
+} = require("../../service/applications.service");
 
 
-const controller = require("../controllers/applications");
-const app = require("../app");
-const Student = require("../model/Student");
-const Teacher = require("../model/Teacher");
-const Application = require("../model/Application");
-const { setProposalArchived } = require("../service/proposals.service");
-const Proposal = require("../model/Proposal");
+const controller = require("../../controllers/applications");
+const app = require("../../app");
+const Student = require("../../model/Student");
+const Teacher = require("../../model/Teacher");
+const Application = require("../../model/Application");
+const { setProposalArchived } = require("../../service/proposals.service");
+const Proposal = require("../../model/Proposal");
 const { is } = require("date-fns/locale");
 
-jest.mock("../service/applications.service");
-jest.mock("../service/proposals.service");
-jest.mock("../controllers/authentication");
+jest.mock("../../service/applications.service");
+jest.mock("../../service/proposals.service");
+jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -36,6 +36,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  // comment these lines if you want to see console prints during tests
   jest.spyOn(console, "log").mockImplementation(() => {});
   jest.spyOn(console, "info").mockImplementation(() => {});
   jest.spyOn(console, "error").mockImplementation(() => {});
@@ -115,7 +116,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
         expect(isStudent).toHaveBeenCalled();
         done();
       });
-  
+
   });
 
   it("should handle service layer error", (done) => {
@@ -154,16 +155,6 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
 
 describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
   it("get all applications by teacher id controller", (done) => {
-    const user = new Teacher(
-        "1",
-        "Surname 1",
-        "Name 1",
-        "email 1",
-        "group 1",
-        "dep 1"
-      ) // Simulate authenticated teacher user
-  
-
     const expectedApplications = {
       1: [
         {
@@ -234,16 +225,6 @@ describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
   });
 
   it("should handle service layer error", (done) => {
-    const user = new Teacher(
-        "1",
-        "Surname 1",
-        "Name 1",
-        "email 1",
-        "group 1",
-        "dep 1"
-      ) // Simulate authenticated teacher user
-
-
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = new Teacher(
         "1",
@@ -279,8 +260,6 @@ describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
   });
 
   it("should return 401 if user is not a teacher", (done) => {
-    const user = new Student("S001", "Name", "Surname", "email", 2021, "1");
-
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = new Student("S001", "Name", "Surname", "email", 2021, "1");
       next(); // Authenticated

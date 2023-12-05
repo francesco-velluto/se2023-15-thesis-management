@@ -1,6 +1,5 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import SamlRedirect from "./pages/Auth";
 
 
@@ -33,12 +32,11 @@ function App() {
 }
 
 function Main() {
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user  
+    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user
 
     useEffect(() => {
         fetchCurrentUser()                        // reload current session, it gets the user information from the server
             .then(user => {
-                console.log("utente preso", user);
                 setLoggedUser(user);
             })
             .catch(err => { });
@@ -50,15 +48,16 @@ function Main() {
                 <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect />} />
                 <Route path='/applications'>
                     <Route index element={
-                    	!loggedUser ? <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} /> :
+                    	!loggedUser ? <UnAuthorizationPage /> :
                         	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
                     } />
-                    <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} />} />
+                    <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
-                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"}/>} />
-                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} />} />
-                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage error={"Access Not Authorized"} message={"You are not allowed to access this page"} />} />
+                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
+                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={1} /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
 
@@ -79,12 +78,15 @@ function PageLayout() {
  * Informs the user that he does not have authorization for this page
  */
 export function UnAuthorizationPage({error, message}) {
+    const titleMessage = error ? error : "Access Not Authorized";
+    const bodyMessage = message ? message : "You are not allowed to access this page!";
+    
     return (
-        <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
+        <Container className="text-center" style={{ padding: '10rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">
-                        <h3><strong>{error}</strong></h3>
+                        <h3><strong>{titleMessage}</strong></h3>
                     </Alert>
                 </Col>
             </Row>
@@ -92,7 +94,7 @@ export function UnAuthorizationPage({error, message}) {
                 <Col>
                     <Card bg="light" className="rounded p-3">
                         <p className="lead">
-                            {message}
+                            {bodyMessage}
                         </p>
                     </Card>
                 </Col>
@@ -116,7 +118,7 @@ export function UnAuthorizationPage({error, message}) {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
+        <Container className="text-center" style={{ padding: '7rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -127,7 +129,7 @@ function NotFoundPage() {
             <Row>
                 <Col>
                     <Card bg="light" className="rounded p-3">
-                        <p className="lead fs-4">
+                        <p className="lead">
                             The requested page does not exist, please go back to the{' '}
                             <Link to="/">home</Link>.
                         </p>

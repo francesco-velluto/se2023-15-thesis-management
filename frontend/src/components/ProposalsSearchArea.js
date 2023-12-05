@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Form, Button, Col, Row, Alert, Container } from 'react-bootstrap';
+import { Form, Button, Col, Row, Alert, Container, Spinner } from 'react-bootstrap';
 import { getAllProposals } from "../api/ProposalsAPI";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { VirtualClockContext } from "../context/VirtualClockContext";
@@ -229,9 +229,9 @@ function ProposalsSearchArea(props) {
             (<Container>
                 <Row className="justify-content-md-center">
                     <Col md="auto">
-                        <div className="spinner-border" role="status">
+                        <Spinner animation="border">
                             <span className="visually-hidden">Loading...</span>
-                        </div>
+                        </Spinner>
                     </Col>
                 </Row>
             </Container>)
@@ -248,7 +248,6 @@ function ProposalsSearchArea(props) {
                 </Container>
                 :
                 searchPossibleValues &&
-                <>
                     <div className="container-fluid bg-light p-3 d-flex flex-column align-items-center">
                         {error &&
                             <Alert variant={"danger"}>
@@ -272,7 +271,7 @@ function ProposalsSearchArea(props) {
                                         style={{ maxWidth: "100%" }}>
                                         <option value="" disabled={true}>Field</option>
                                         {
-                                            FIELDS.flatMap(obj => Object.entries(obj)).filter((key) => !props.searchData.find(el => el.field === key)).map(([key, value], index) => (
+                                            FIELDS.flatMap(obj => Object.entries(obj)).filter(([key]) => !props.searchData.find(el => el.field === key)).map(([key, value], index) => (
                                                 <option key={index} value={key}>
                                                     {value}
                                                 </option>
@@ -339,7 +338,6 @@ function ProposalsSearchArea(props) {
                         </Row>
 
                     </div>
-                </>
         )
     );
 }
@@ -361,24 +359,21 @@ function FilterElement(props) {
 
 
     return (
-        <>
-            <Col xs lg="3">
-                <div className='mx-3 my-1 p-1 border border-2 border-dark rounded d-flex align-items-center justify-content-between'>
-                    <span className='filterCardContainer'>
-                        <strong>{userfriendly_field}</strong>: {props.fltr.value}
-                    </span>
+        <Col xs lg="3">
+            <div className='mx-3 my-1 p-1 border border-2 border-dark rounded d-flex align-items-center justify-content-between'>
+                <span className='filterCardContainer'>
+                    <strong>{userfriendly_field}</strong>: {props.fltr.value}
+                </span>
 
-                    <FaTimesCircle
-                        style={{ cursor: 'pointer', fontSize: '1.1rem' }}
-                        onClick={() => {
-                            props.setSearchData((sd) => sd.filter((elem) => elem.field !== props.fltr.field));
-                        }}
-                    />
-                </div>
+                <FaTimesCircle
+                    style={{ cursor: 'pointer', fontSize: '1.1rem' }}
+                    onClick={() => {
+                        props.setSearchData((sd) => sd.filter((elem) => elem.field !== props.fltr.field));
+                    }}
+                />
+            </div>
 
-            </Col>
-
-        </>
+        </Col>
     );
 }
 

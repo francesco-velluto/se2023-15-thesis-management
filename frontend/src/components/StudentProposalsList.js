@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Alert, Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Alert, Card, Col, Container, Row } from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns"
@@ -11,8 +11,6 @@ function StudentProposalsList(props) {
     const [filteredProposals, setFilteredProposals] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
-    const navigate = useNavigate();
 
     const { currentDate } = useContext(VirtualClockContext);
     /**
@@ -110,8 +108,7 @@ function StudentProposalsList(props) {
                 </Row>
             }
             {
-                !errorMessage && filteredProposals.length > 0 && <>
-
+                !errorMessage && filteredProposals.length > 0 &&
                     <Row className='mt-1 mb-4 mx-2 p-2' >
                         <Col xs={12} md={3} className="text-center text-md-start">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-alphabet d-xs-block d-md-none me-2" viewBox="0 0 16 16">
@@ -141,13 +138,11 @@ function StudentProposalsList(props) {
 
                         </Col>
                     </Row>
-
-                </>
             }
 
             {!errorMessage && filteredProposals.length > 0 ?
-                filteredProposals.map((fp, index) => (
-                    <ProposalRow key={index} data={fp} />
+                filteredProposals.map((proposal) => (
+                    <ProposalRow key={proposal.proposal_id} data={proposal} />
                 )) :
                 <Row>
                     <Col className="d-flex flex-row justify-content-center fw-bold fs-5">

@@ -43,7 +43,7 @@ function StudentApplicationsPage() {
                 {isLoading ? (
                     <Row className={"justify-content-center"}>
                         <Col>
-                            <Spinner animation="border" role="status">
+                            <Spinner animation="border">
                                 <span className="visually-hidden">Loading...</span>
                             </Spinner>
                         </Col>
@@ -55,9 +55,8 @@ function StudentApplicationsPage() {
                                 <Alert variant='danger'>{error}</Alert>
                             </Col>
                         </Row>
-                    ) : applications && (
-                        applications.map((application, index) =>
-                            <Row key={index} className={"justify-content-center student-application-row"}>
+                    ) : applications?.map((application) =>
+                            <Row key={application.id} className={"justify-content-center student-application-row"}>
                                 <Col lg={7}>
                                     <Card text={"light"}
                                               id={"student-application-card"}
@@ -88,7 +87,7 @@ function StudentApplicationsPage() {
                             </Row>
                         )
                     )
-                )}
+                }
                 <Row className={"justify-content-center student-application-row"}>
                     <Col lg={5}>
                         <Button id='back-to-homepage-button' style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/">

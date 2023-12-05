@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app");
+const app = require("../../app");
 const { add, min, format, parse, isAfter } = require("date-fns");
 const { Builder, By, until } = require("selenium-webdriver");
 

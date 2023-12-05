@@ -1,24 +1,23 @@
 "use strict";
 
 const request = require("supertest");
-const app = require("../app");
+const app = require("../../app");
 
-const { getUserById, authUser } = require("../service/authentication");
-const Teacher = require("../model/Teacher");
+const { getUserById, authUser } = require("../../service/authentication");
+const Teacher = require("../../model/Teacher");
 
-jest.mock("../service/authentication");
+jest.mock("../../service/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
-  jest.spyOn(console, "log").mockImplementation(() => { });
-  jest.spyOn(console, "info").mockImplementation(() => { });
-  jest.spyOn(console, "error").mockImplementation(() => { });
 });
 
 beforeEach(() => {
-  //jest.clearAllMocks();
-  getUserById.mockClear();
-  authUser.mockClear();
+  jest.clearAllMocks();
+  // comment these lines if you want to see console prints during tests
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 describe.skip("Authentication Unit Tests", () => {

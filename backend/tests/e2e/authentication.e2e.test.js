@@ -12,18 +12,6 @@ describe("End to end tests login", () => {
     await driver.quit();
   });
 
-  /*test("Button not clickable when empty fields", async () => {
-    await driver.get(baseURL + "/login");
-
-    const usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.sendKeys("john.smith@example.com");
-
-    const submitButton = await driver.findElement(By.css("button"));
-
-    const isEnabled = await submitButton.isEnabled();
-    expect(isEnabled).toBe(false);
-  }, 10000);*/
-
   test("Should span an alert when login credentials are wrong", async () => {
     await driver.get(baseURL);
 

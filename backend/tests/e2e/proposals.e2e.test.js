@@ -1,6 +1,6 @@
 const dayjs = require("dayjs");
 const { Builder, By, Select } = require("selenium-webdriver");
-const app = require("../app");
+const app = require("../../app");
 
 /*
  * Template for insert proposal request body,
@@ -192,24 +192,6 @@ describe("End to End Tests for Insert Proposal", () => {
         // Type
         await driver.findElement(By.name("proposal-type")).sendKeys(mockProposalReq.type);
 
-        /**
-         *  Groups is now fixed
-         *
-        // Groups
-        for (const group of mockProposalReq.groups) {
-            const groupField = await driver.findElement(By.name("proposal-groups"));
-            await groupField.sendKeys(group);
-
-            // simulate click with js
-            await driver.executeScript(
-                "document.getElementById('add-group-btn').click()"
-            );
-
-            await driver.sleep(200);
-            await groupField.clear();
-        }
-         **/
-
         // Description
         await driver
             .findElement(By.name("description"))
@@ -237,11 +219,6 @@ describe("End to End Tests for Insert Proposal", () => {
             const selectElement = await driver.findElement(By.name("proposal-programmes"));
             const select = new Select(selectElement);
             await select.selectByValue(programme);
-
-            /* // simulate click with js
-            await driver.executeScript(
-                "document.getElementById('add-programme-btn').click()"
-            ); */
 
             await driver.sleep(200);
         }

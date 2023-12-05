@@ -4,24 +4,26 @@ import TitleBar from "../components/TitleBar";
 
 
 import { useNavigate, useParams } from "react-router-dom";
-import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
-import { Container, Spinner, Row, Col, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
+import { Spinner, Row, Col, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
+import { UnAuthorizationPage } from "../App";
 
 
 function ApplicationDetails() {
 
     let { application_id } = useParams();
+    const { loggedUser } = useContext(LoggedUserContext);
     const navigate = useNavigate();
 
+    const [authorized, setAuthorized] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
-    const [infoProposal, setInfoProposal] = useState({});
-    const [infoStudent, setInfoStudent] = useState({});
-    const [infoApplication, setInfoApplication] = useState({});
+    const [infoProposal, setInfoProposal] = useState(undefined);
+    const [infoStudent, setInfoStudent] = useState(undefined);
+    const [infoApplication, setInfoApplication] = useState(undefined);
 
     const [showModal, setShowModal] = useState(false);
     const [showUpdatingModal, setShowUpdatingModal] = useState(false);
@@ -38,11 +40,30 @@ function ApplicationDetails() {
 
     useEffect(() => {
         const getData = async () => {
+            setIsLoading(true);
+            setInfoApplication(undefined);
+            setInfoProposal(undefined);
+            setInfoStudent(undefined);
+
+            if (!loggedUser.id)
+                navigate("/login");
+
+            if (loggedUser.role !== 0) { // not a teacher
+                setAuthorized(false);
+                setIsLoading(false);
+                return;
+            }
+
             try {
                 const application = await getApplicationById(application_id);
-                setInfoApplication(application);
 
                 if (application) {
+                    if (loggedUser.id !== application.proposal.supervisor_id) {
+                        setAuthorized(false);
+                        setIsLoading(false);
+                        return;
+                    }
+
                     setInfoApplication(application);
                     setInfoProposal(application.proposal);
 
@@ -52,20 +73,19 @@ function ApplicationDetails() {
                 } else {
                     setErrorMessage("Error in the fetching of the application.");
                 }
-                setIsLoading(false);
-
             } catch (error) {
                 setErrorMessage(error.message);
+            } finally {
                 setIsLoading(false);
             }
         }
 
         getData();
 
-    }, []);
+    }, [application_id, loggedUser.id, loggedUser.role, navigate]);
 
     const handleButton = async (status) => {
-        
+
         setChoice(status);
         handleShow();
     }
@@ -89,28 +109,29 @@ function ApplicationDetails() {
 
     return (
         <>
+            {!isLoading && !authorized && <UnAuthorizationPage /> }
+            { (isLoading || authorized) &&
+            <>
             <NavbarContainer />
             <TitleBar title={"Application details"} />
 
-
             <Col md={6} className="text-center mx-auto">
                 <Row className='mt-2'>
-                    {errorMessage ?
+                    {errorMessage &&
                         <Alert variant='danger'
                             dismissible={true}
                             onClose={() => setErrorMessage("")}>
                             {errorMessage}
                         </Alert>
-                        : <></>
                     }
-
                 </Row>
 
-                {isLoading ?
-                    <Spinner animation="border" role="status">
+                {isLoading &&
+                    <Spinner animation="border">
                         <span className="visually-hidden">Loading...</span>
-                    </Spinner>
-                    : <>
+                    </Spinner>}
+                {!isLoading && infoApplication &&
+                    <>
                         <StudentInfo infoStudent={infoStudent} infoApplication={infoApplication} />
 
                         <ProposalInfo infoProposal={infoProposal} />
@@ -195,10 +216,10 @@ function ApplicationDetails() {
                             }
                         </Modal>
                     </>
-
                 }
 
             </Col>
+            </>}
         </>
     )
 }
