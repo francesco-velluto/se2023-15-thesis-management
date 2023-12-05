@@ -31,7 +31,7 @@ function ApplicationDetails() {
     const [emailSent, setEmailSent] = useState(undefined);
 
     const handleShow = () => setShowModal(true);
-    const handleClose = () => {setShowModal(false); setChoice("");}
+    const handleClose = () => setShowModal(false);
 
     const handleShowUpdatingModal = () => setShowUpdatingModal(true);
 
@@ -91,11 +91,7 @@ function ApplicationDetails() {
 
     const handleSetStatus = async (status) => {
         try {
-            // save the choice
-            let bufferChoice = choice;
-            setChoice(bufferChoice);
-
-            // close the modal - this will clear 'choice' state
+            // close the modal
             handleClose();
 
             // show the updating modal
@@ -194,17 +190,18 @@ function ApplicationDetails() {
                                                 <>
                                                     You have <b>{choice === "Accepted" ? "accepted" : "rejected"}</b> this application!<br/>
                                                     <i>We are updating the status of the application and sending an email notification to the student.</i>
+                                                    {choice === "Accepted" && <><br/><i>All other students who applied will receive the notification that their application has been canceled.</i></>}
                                                 </>
                                                 :
                                                 <>
                                                     The application status has been updated successfully!<br/>
                                                     {emailSent ?
                                                         <i>
-                                                            An email notification has been correctly sent to the student.
+                                                            An email notification has been correctly sent to the student{choice === "Accepted" && 's'}.
                                                         </i>
                                                         :
                                                         <i>
-                                                            Unfortunately an error occurred while sending the email notification to the student,
+                                                            Unfortunately an error occurred while sending the email notification to the student{choice === "Accepted" && 's'},
                                                             the application is still {choice === "Accepted" ? "accepted" : "rejected"} anyways
                                                         </i>
                                                     }
