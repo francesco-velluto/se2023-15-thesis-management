@@ -230,8 +230,8 @@ INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type,
   ('P023', 'E-commerce Strategies', 'T001', ARRAY['E-commerce', 'Strategies'], 'Theoretical', ARRAY['G003'], 'A thesis on e-commerce strategies and online business.', 'E-commerce, Marketing', 'N/A', '2023-11-05', 'Bachelor', ARRAY['BSC001'], false),
   ('P024', 'Natural Language Processing', 'T002', ARRAY['NLP', 'Language Processing'], 'Research', ARRAY['G001'], 'A thesis on natural language processing and language analysis.', 'Python, NLP', 'N/A', '2024-03-20', 'Bachelor', ARRAY['BSC001'], false),
   ('P025', 'Global Marketing Trends', 'T003', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G004'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2023-10-30', 'Bachelor', ARRAY['BSC001'], false),
-  ('P026', 'Software Testing', 'T001', ARRAY['Software Testing', 'Quality Assurance'], 'Theoretical', ARRAY['Group A'], 'A thesis on software testing and quality assurance.', 'Software Testing, Quality Assurance', 'N/A', '2024-04-15', 'Master', ARRAY['MSC001'], false),
-  ('P027', 'Computer Vision Art', 'T002', ARRAY['Computer Vision', 'Image Processing', 'Art'], 'Research', ARRAY['Group B'], 'A thesis on computer vision and image processing and the art a computer can create', 'Python, Computer Vision, Art History, Art Critique', 'N/A', '2024-05-05', 'Master', ARRAY['MSC002'], false);
+  ('P026', 'Software Testing', 'T001', ARRAY['Software Testing', 'Quality Assurance'], 'Theoretical', ARRAY['G001'], 'A thesis on software testing and quality assurance.', 'Software Testing, Quality Assurance', 'N/A', '2024-04-15', 'Master', ARRAY['MSC001'], false),
+  ('P027', 'Computer Vision Art', 'T002', ARRAY['Computer Vision', 'Image Processing', 'Art'], 'Research', ARRAY['G002'], 'A thesis on computer vision and image processing and the art a computer can create', 'Python, Computer Vision, Art History, Art Critique', 'N/A', '2024-05-05', 'Master', ARRAY['MSC002'], false);
 
 ALTER TABLE public.proposals OWNER TO postgres;
 
