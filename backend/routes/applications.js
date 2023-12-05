@@ -22,8 +22,9 @@ const applicationsController = require("../controllers/applications");
  * @error 500 Internal Server Error - if something went wrong
  */
 router.get(
-  "/:student_id", //TODO: change this to use a query ?student_id=...
+  "/:student_id",
   authenticationController.isLoggedIn,
+  authenticationController.isStudent,
   applicationsController.getAllApplicationsByStudentId
 );
 
@@ -74,7 +75,7 @@ router.put(
  *
  */
 router.get(
-  "/application/:application_id", //TODO: change this to /:application_id
+  "/application/:application_id",
   authenticationController.isLoggedIn,
   authenticationController.isTeacher,
   applicationsController.getApplicationById

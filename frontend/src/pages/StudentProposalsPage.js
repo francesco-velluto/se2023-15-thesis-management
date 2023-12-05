@@ -15,6 +15,8 @@ function StudentProposalsPage() {
             <NavbarContainer />
             <TitleBar title={"Browse Proposals"} />
 
+
+
             {
                 loggedUser.role === 0 ?
                     <Alert variant="danger" className="mt-2">
@@ -23,6 +25,7 @@ function StudentProposalsPage() {
                     :
                     <>
                         <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
+
                         <StudentProposalsList searchData={searchData} />
                     </>
             }

@@ -7,9 +7,9 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "jest --silent",
-    "coverage": "jest --coverage",
-    "unit": "jest tests/*.unit.test.js --silent",
-    "integration": "jest tests/*.integration.test.js"
+    "coverage": "jest tests/unit --silent --coverage",
+    "unit": "jest tests/unit --silent",
+    "e2e": "jest tests/unit"
   },
   "author": "SE2 2023 Group 15",
   "license": "ISC",
@@ -25,11 +25,11 @@
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
+    "passport-saml": "^3.2.4",
     "pg": "^8.11.3",
     "selenium-webdriver": "^4.15.0"
   },
   "devDependencies": {
-    "@testcontainers/postgresql": "^10.2.2",
     "jest": "^29.7.0",
     "supertest": "^6.3.3"
   }

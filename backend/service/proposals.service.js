@@ -3,7 +3,7 @@
 const db = require("./db");
 const Proposal = require("../model/Proposal");
 
-exports.rowToProposal = (row) => {
+ exports.rowToProposal = (row) => {
   return new Proposal(
     row.proposal_id,
     row.title,
@@ -24,10 +24,10 @@ exports.rowToProposal = (row) => {
 exports.insertProposal = async (proposal) => {
   try {
     const result = await db.query(
-      `INSERT INTO proposals 
+      `INSERT INTO proposals
         (proposal_id, title, supervisor_id, keywords, type,
         groups, description, required_knowledge, notes,
-        expiration_date, level, programmes, status)
+        expiration_date, level, programmes, archived)
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         RETURNING *;`,
       [
@@ -46,7 +46,7 @@ exports.insertProposal = async (proposal) => {
         false,
       ]
     );
-    return rowToProposal(result.rows[0]);
+    return this.rowToProposal(result.rows[0]);
   } catch (err) {
     console.log(err);
     throw err;
@@ -75,6 +75,7 @@ exports.getAllProposals = async (cod_degree) => {
       "JOIN unnest(p.programmes) AS prog ON true " +
       "JOIN degree d ON prog = d.cod_degree " +
       "WHERE cod_degree = '" + cod_degree + "' AND p.expiration_date >= current_date " +
+      "AND p.archived = false " +
       "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
       "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
       "ORDER BY p.proposal_id")
@@ -104,7 +105,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
                 "JOIN unnest(p.programmes) AS prog ON true " +
                 "JOIN degree d ON prog = d.cod_degree " +
 
-                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.status = 'active'" +
+                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.archived = false " +
 
                 "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
                 "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
@@ -142,7 +143,7 @@ exports.getProposalById = (proposal_id) => {
           console.error(
             `Error in getProposalById - proposal_id: ${proposal_id} not found`
           );
-          reject({ status: 404, data: "Proposal not found" });
+          reject({ status: 404, data: "The proposal has not been found!" });
         } else {
           let proposal = result.rows[0];
 

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 import { LoggedUserContext } from "../context/AuthenticationContext";
@@ -19,13 +19,10 @@ function ProfessorProposalsPage() {
                         You cannot take a look at thesis proposals
                     </Alert>
                     :
-                    <>
-                        <ProfessorProposalsList />
-                    </>
+                    <ProfessorProposalsList />
             }
         </>
     );
 }
 
 export default ProfessorProposalsPage;
-

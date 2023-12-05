@@ -14,7 +14,7 @@ export const LoggedUserProvider = ({ children }) => {
 
     /**
      * Perform the login
-     * 
+     *
      * @param username username of the user
      * @param password password of the user
      */
@@ -32,14 +32,14 @@ export const LoggedUserProvider = ({ children }) => {
     /**
      * Perform the logout
      */
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
-            logout();
+            await logout();
         } catch (err) {
             setErrors(err);
         }
         setLoggedUser(null);        // delete the state for the logged user
-        navigate('/login');
+        navigate('/');
     };
 
     return (

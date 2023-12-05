@@ -46,21 +46,22 @@ function ApplicationList() {
                     ))}
                 </Row>
 
-                <Row className='browse-application'>
+                <Row className='browse-application' style={{ backgroundColor: "#F4EEE0"}}>
                     {loading ? (
-                        <Spinner animation="border" role="status">
+                        <Spinner animation="border">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>
                     ) : (
                         <>
                             <Accordion alwaysOpen>
                                 {applications && applications.length > 0 &&
-                                    applications.map((proposal, index) => (
-                                        <Accordion.Item key={index} eventKey={index.toString()}>
+                                    applications.map((proposal) => (
+                                        <Accordion.Item key={proposal.proposal_id}
+                                            eventKey={proposal.proposal_id.toString()}>
                                             <Accordion.Header>{proposal.title}</Accordion.Header>
                                             <Accordion.Body>
-                                                {proposal.applications.map((application, index) => (
-                                                    <Card key={index} className='my-3'>
+                                                {proposal.applications.map((application) => (
+                                                    <Card key={application.application_id} className='my-3'>
                                                         <Card.Body>
                                                             <Row className="align-items-center">
                                                                 <Col>
@@ -83,7 +84,7 @@ function ApplicationList() {
                                     ))}
                             </Accordion>
                             {(applications === undefined || Object.keys(applications).length === 0) &&
-                                <Card className='my-3 fs-5'>
+                                <Card className='my-3 fs-5' >
                                     <Card.Body>
                                         No applications were found for your thesis proposals!
                                     </Card.Body>

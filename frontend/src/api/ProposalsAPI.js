@@ -1,4 +1,5 @@
-const APIConfig = require("./config.json");
+const { APICall } = require("./GenericAPI.js");
+const APIConfig = require("./api.config.js");
 
 const ProposalsAPIURL = APIConfig.API_URL + "/proposals";
 const TeachersAPIURL = APIConfig.API_URL + "/teachers";
@@ -71,7 +72,7 @@ module.exports = {
    * POST /api/proposals
    *
    * @params: none
-   * @body: {c}
+   * @body: {proposal}
    */
 
   insertNewProposal: async (newProposal) => {
@@ -90,6 +91,27 @@ module.exports = {
         const res = await response.json();
         throw new Error(res.error);
       }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  /**
+   * Update an existent proposal
+   *
+   * POST .....
+   *
+   * @params: none
+   * @body: {proposal}
+   */
+
+  updateProposalApi: async (proposal) => {
+    try {
+      // ! check if it's correct when the backend is ready
+      const ProposalURL = ProposalsAPIURL + proposal.proposal_id + '/update';
+      const response = await APICall(ProposalURL, "POST", JSON.stringify(proposal));
+
+      console.log(response);
     } catch (err) {
       throw new Error(err);
     }

@@ -10,9 +10,9 @@ This will install all the dependencies and start the server on port 8080.
 
 ### Configuration
 
-A configuration file is present in `src/config.json`. 
+A configuration file is present in `src/config.json`.
 Currently it contains the following configuration options:
-- `BACKEND_SERVER_PORT`: Port on which the backend server will run
+- `REACT_APP_BACKEND_SERVER_PORT`: Port on which the backend server will run
 
 ### Starting the server in development mode
 ```bash
@@ -63,7 +63,7 @@ POST `/api/authentication/login`
 **GET** `/api/proposals`
 - Get all the thesis proposals related to the same degree of the student
 - Authentication: required
-- Authorization: only a student can see all the proposals related to his degree 
+- Authorization: only a student can see all the proposals related to his degree
 - Request Query Parameters: _none_
 - Request Body: _none_
 - `SUCCESS 200` Response Body:
@@ -121,28 +121,58 @@ POST `/api/authentication/login`
 - Retrieve a proposal by its id
 - Authentication: required
 - Authorization: both students and professors can access this endpoint
-- Request Query Parameters: 
+- Request Query Parameters:
   - `proposal_id`: id of the proposal
 - Request Body: _none_
 - `SUCCESS 200` Response Body:
 
-  | Field name           | Type | Required* | Description                                                             |
-  |----------------------| ----------- | ----------- |-------------------------------------------------------------------------|
-  | `title`              | _string_ | Yes | Title of the proposal                                                   |
-  | `supervisor_name`    | _string_ | Yes | Name of the supervisor of the proposal                                  |
-  | `supervisor_surname` | _string_ | Yes | Surname of the supervisor of the proposal                               |
-  | `keywords`           | _string[]_ | Yes | Keywords related to the proposal                                        |
-  | `type`               | _string_ | Yes | Type of thesis (e.g. research, experimental...)                         |
-  | `groups`             | _string[]_ | Yes | List of research groups related to the thesis proposal                  |
-  | `description`        | _string_ | Yes | Description of the activities of the thesis                             |
-  | `required_knowledge` | _string_ | No | Description of the knowledge required for the thesis                    |
-  | `notes`              | _string_ | No | Additional notes by the professor                                       |
-  | `expiration_date`    | _string_ | Yes | Date in ISO 8601 format YYYY-MM-DD                                      |
-  | `level`              | _string_ | Yes | Level of the thesis (e.g. Bachelor, Master)                             |
-  | `programmes`         | _[]_ | Yes | Programmes related to the thesis, both with cod_degree and degree_title |
+  | Field name           | Type | Description                                                             |
+  |----------------------| ----------- |-------------------------------------------------------------------------|
+  | `title`              | _string_ | Title of the proposal                                                   |
+  | `supervisor_name`    | _string_ | Name of the supervisor of the proposal                                  |
+  | `supervisor_surname` | _string_ | Surname of the supervisor of the proposal                               |
+  | `keywords`           | _string[]_ | Keywords related to the proposal                                        |
+  | `type`               | _string_ | Type of thesis (e.g. research, experimental...)                         |
+  | `groups`             | _string[]_ | List of research groups related to the thesis proposal                  |
+  | `description`        | _string_ | Description of the activities of the thesis                             |
+  | `required_knowledge` | _string_ | Description of the knowledge required for the thesis                    |
+  | `notes`              | _string_ | Additional notes by the professor                                       |
+  | `expiration_date`    | _string_ | Date in ISO 8601 format YYYY-MM-DD                                      |
+  | `level`              | _string_ | Level of the thesis (e.g. Bachelor, Master)                             |
+  | `programmes`         | _[]_ | Programmes related to the thesis, both with cod_degree and degree_title |
 - Errors:
   - `ERROR 401` Response Body: `{ "error": "Not authenticated" }`
   - `ERROR 404` Response Body: `{ "error": "Proposal not found" }`
+  - `ERROR 500` Response Body: `{ "error": "Internal Server Error" }`
+
+**GET** `/api/proposals/professor`
+- Retrieve a proposal belonging to the authenticated professor
+- Authentication: required
+- Authorization: only professors can access this endpoint
+- Request Query Parameters: none
+- Request Body: _none_
+- `SUCCESS 200` Response Body: Array of proposal objects with the following fields
+
+  | Field name           | Type | Description                                                             |
+  |----------------------| ----------- |-------------------------------------------------------------------------|
+  | `proposal_id`        | _string_ | Id of the proposal                                                   |
+  | `title`              | _string_ | Title of the proposal                                                   |
+  | `supervisor_name`    | _string_ | Name of the supervisor of the proposal                                  |
+  | `supervisor_surname` | _string_ | Surname of the supervisor of the proposal                               |
+  | `keywords`           | _string[]_ | Keywords related to the proposal                                        |
+  | `type`               | _string_ | Type of thesis (e.g. research, experimental...)                         |
+  | `groups`             | _string[]_ | List of research groups related to the thesis proposal                  |
+  | `description`        | _string_ | Description of the activities of the thesis                             |
+  | `required_knowledge` | _string_ | Description of the knowledge required for the thesis                    |
+  | `notes`              | _string_ | Additional notes by the professor                                       |
+  | `expiration_date`    | _string_ | Date in ISO 8601 format YYYY-MM-DD                                      |
+  | `level`              | _string_ | Level of the thesis (e.g. Bachelor, Master)                             |
+  | `degrees`         | _[]_ | Programmes related to the thesis, both with cod_degree and degree_title |
+
+- Errors:
+  - `ERROR 401` Response Body: `{ errors: ['Must be authenticated to make this request!'] }`
+  - `ERROR 401` Response Body: `{ errors: ["Not authorized"] }`
+  - `ERROR 404` Response Body: `{ "error": "Proposals not found" }`
   - `ERROR 500` Response Body: `{ "error": "Internal Server Error" }`
 
 
@@ -195,25 +225,7 @@ POST `/api/authentication/login`
 
 ### Applications
 
-**POST** `/api/applications`
-- Insert a new application
-- Authentication: required
-- Authorization: only a student can access this endpoint
-- Request Query Parameters: _none_
-- Request Body:
-
-  | Field name | Type | Required* | Description |
-  | ----------- | ----------- | ----------- | ----------- |
-  | `proposal_id` | _string_ | Yes | ID of the proposal |
-
-- `SUCCESS 200`
-- Errors:
- - `ERROR 500` Response Body: `{"error": "Student/Proposal not found or already applied" }`
-
-
-### Applications
-
-#### Get all applications by student id
+#### For a student get all applications
 
 **GET** `/api/applications/:student_id`
 
@@ -237,7 +249,9 @@ POST `/api/authentication/login`
   - `ERROR 401` Response Body: `{"error": "Must be a student to make this request!"}`
   - `ERROR 401` Response Body: `{"error": "You cannot get applications of another student"}`
   - `ERROR 404` Response Body: `{"error": "Student not found"}`
-  
+
+#### Accept or reject applications
+
 **PUT** `/api/applications/:application_id`
 - Set the status of an application to "Accepted" or "Rejected".
 The others pending applications relative to the same proposal are set to "Canceled".
@@ -267,6 +281,8 @@ The proposal is archived.
   - `401`: Not authenticated or not authorized
   - `500`: Internal server error
 
+####  Browse a specific application to the teacher's proposals
+
 **GET** `api/applications/application/:application_id`
 - Get an application given its id
 
@@ -287,6 +303,66 @@ The proposal is archived.
   - `404`: Application not found
   - `401`: Not authenticated or not authorized
   - `500`: Internal server error
+
+
+#### For a teacher get all applications
+
+***GET*** `api/applications`
+- Get all aplications to his thesis proposals for a teacher
+
+- Authentication: required
+- Authorization: must be a teacher
+- Request query parameters: _none_
+- Request body: _none_
+
+- `Success 200`  Response body:
+  - `proposal_id`
+  - `title`
+  - `type`
+  - `description`,
+  - `expiration_date`,
+  - `level`: level of the thesis,
+  - applications:
+    - `application_id`: number,
+    - `status`: status of the application,
+    - `application_date`,
+    - `student_id`: is of the student who applied,
+    - `surname`: surname of the student,
+    - `name`: name of the student,
+    - `email`: email of the student,
+    - `enrollment_year`: year of enrollment of the student,
+    - `cod_degree`: degree of the student
+
+- `Error`
+  - `401`: Not authenticated or not authorized
+  - `404` Applications not found
+  - `500` Internal Server Error
+
+#### For a student apply to a thesis proposal
+
+***POST*** `api/applications`
+- Insert a new application for a thesis proposal
+
+- Authentication: required
+- Authorization: must be a student
+- Request query parameters: _none_
+- Request body:
+    - proposal_id: number (ID of the thesis proposal)
+
+- `Success 200` Response body:
+  - `proposal_id`: id of the thesis
+  - `student_id`: id of the student
+  - `status`: status updated
+  - `application_date`: date of the application
+  - `title`: title of the thesis
+  - `supervisor_name`: name of the supervisor
+  - `supervisor_surname`
+
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized (only students are authorized)
+  - `500`: Internal Server Error
 
 ### Students
 
@@ -316,4 +392,3 @@ The proposal is archived.
   - `404`: Student not found
   - `401`: Not authenticated or not authorized
   - `500`: Internal server error
-

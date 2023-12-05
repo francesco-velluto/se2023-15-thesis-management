@@ -1,23 +1,24 @@
 "use strict";
 
 const request = require("supertest");
-const { getDegrees } = require("../service/degrees.service");
-const { isLoggedIn } = require("../controllers/authentication");
-const app = require("../app");
+const { getDegrees } = require("../../service/degrees.service");
+const { isLoggedIn } = require("../../controllers/authentication");
+const app = require("../../app");
 
-jest.mock("../service/degrees.service");
-jest.mock("../controllers/authentication");
+jest.mock("../../service/degrees.service");
+jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
   jest.clearAllMocks();
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 beforeEach(() => {
-  //jest.clearAllMocks();
-  getDegrees.mockClear();
+  jest.clearAllMocks();
+  // comment these lines if you want to see console prints during tests
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
+
 });
 
 afterAll(() => {

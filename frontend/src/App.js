@@ -1,6 +1,7 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
+import SamlRedirect from "./pages/Auth";
+
 
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage";
@@ -31,7 +32,7 @@ function App() {
 }
 
 function Main() {
-    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user  
+    const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user
 
     useEffect(() => {
         fetchCurrentUser()                        // reload current session, it gets the user information from the server
@@ -44,8 +45,7 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={loggedUser ? <HomePage /> : <LoginPage />} />
-                <Route path='/login' element={<LoginPage />} />
+                <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect />} />
                 <Route path='/applications'>
                     <Route index element={
                     	!loggedUser ? <UnAuthorizationPage /> :
@@ -54,9 +54,10 @@ function Main() {
                     <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
-                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage/>} />
+                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
                     <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={1} /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
 
@@ -76,21 +77,33 @@ function PageLayout() {
 /**
  * Informs the user that he does not have authorization for this page
  */
-function UnAuthorizationPage() {
+export function UnAuthorizationPage({error, message}) {
+    const titleMessage = error ? error : "Access Not Authorized";
+    const bodyMessage = message ? message : "You are not allowed to access this page!";
+    
     return (
-        <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
+        <Container className="text-center" style={{ padding: '10rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">
-                        <h3><strong>Access Not Authorized</strong></h3>
+                        <h3><strong>{titleMessage}</strong></h3>
                     </Alert>
                 </Col>
             </Row>
             <Row>
                 <Col>
                     <Card bg="light" className="rounded p-3">
-                        <p className="lead fs-4">
-                            You are not allowed to access this page, please go back to the{' '}
+                        <p className="lead">
+                            {bodyMessage}
+                        </p>
+                    </Card>
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Card bg="light" className="rounded p-3 mt-2">
+                        <p className="lead">
+                            Please go back to the{' '}
                             <Link to="/">home</Link>.
                         </p>
                     </Card>
@@ -105,7 +118,7 @@ function UnAuthorizationPage() {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor:"#F4EEE0"}}>
+        <Container className="text-center" style={{ padding: '7rem', backgroundColor:"#F4EEE0"}}>
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -116,7 +129,7 @@ function NotFoundPage() {
             <Row>
                 <Col>
                     <Card bg="light" className="rounded p-3">
-                        <p className="lead fs-4">
+                        <p className="lead">
                             The requested page does not exist, please go back to the{' '}
                             <Link to="/">home</Link>.
                         </p>
