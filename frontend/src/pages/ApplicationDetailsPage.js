@@ -94,7 +94,7 @@ function ApplicationDetails() {
         try {
             // save the choice
             let bufferChoice = choice;
-            setChoice(choice);
+            setChoice(bufferChoice);
 
             // close the modal
             handleClose();
