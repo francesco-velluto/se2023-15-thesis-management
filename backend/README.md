@@ -8,12 +8,6 @@ npm start
 ```
 This will install all the dependencies and start the server on port 8080.
 
-### Configuration
-
-A configuration file is present in `src/config.json`.
-Currently it contains the following configuration options:
-- `REACT_APP_BACKEND_SERVER_PORT`: Port on which the backend server will run
-
 ### Starting the server in development mode
 ```bash
 npm run dev
@@ -37,8 +31,26 @@ npm run coverage
 ```
 This will generate a code coverage report in the `coverage` folder.
 
+## Email Notifications Integration
+
+### Configuration
+
+The email notifications are sent using the SMTP protocol.
+
+The application sends an SMTP request to the SMTP server and provides information about the email to be sent, in particular:
+
+- the sender address
+- the recipient address
+- the subject
+- the html content
+
+The SMTP server is configured in the `.env` file.
+
+In particular, the SMTP Username is also used as the sender address.
+
+The SMTP server used for testing is [Elastic Email](https://elasticemail.com/).
+
 ## API Documentation
-_TODO:_ Please note that the following documentation is just an example, change if needed.
 
 ### Authentication
 

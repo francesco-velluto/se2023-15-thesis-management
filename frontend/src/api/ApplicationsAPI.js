@@ -81,7 +81,7 @@ module.exports = {
 
             if (response.ok) {
                 const resObject = await response.json();
-                return resObject.application;
+                return resObject;
             } else {
                 const res = await response.json();
                 throw new Error(res.error);

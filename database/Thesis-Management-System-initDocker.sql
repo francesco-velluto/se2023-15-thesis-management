@@ -111,7 +111,9 @@ INSERT INTO public.student (id, surname, name, gender, nationality, email, cod_d
   ('S007', 'Brown', 'Michael', 'M', 'UK', 'michael.brown@example.com', 'MSC002', 2022),
   ('S008', 'Nguyen', 'Linh', 'F', 'Vietnam', 'linh.nguyen@example.com', 'MSC002', 2020),
   ('S009', 'Martinez', 'Carlos', 'M', 'Mexico', 'carlos.martinez@example.com', 'PHD001', 2021),
-  ('S010', 'Wang', 'Xiaoyun', 'F', 'China', 'xiaoyun.wang@example.com', 'PHD001', 2020);
+  ('S010', 'Wang', 'Xiaoyun', 'F', 'China', 'xiaoyun.wang@example.com', 'PHD001', 2020),
+  ('S011', 'John', 'Martinez', 'M', 'Italy', 'studentofpolito@gmail.com', 'MSC002', 2021),
+  ('S012', 'Francesco', 'Velluto', 'M', 'Italy', 's317549@studenti.polito.it', 'MSC001', 2021);
 
 ALTER TABLE public.student OWNER TO postgres;
 
@@ -227,7 +229,9 @@ INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type,
   ('P022', 'Renewable Energy', 'T003', ARRAY['Renewable Energy', 'Sustainability'], 'Research', ARRAY['Group B'], 'A thesis on renewable energy and sustainability.', 'Environmental Science, Renewable Energy', 'N/A', '2024-02-10', 'Bachelor', ARRAY['BSC001'], false),
   ('P023', 'E-commerce Strategies', 'T001', ARRAY['E-commerce', 'Strategies'], 'Theoretical', ARRAY['Group C'], 'A thesis on e-commerce strategies and online business.', 'E-commerce, Marketing', 'N/A', '2023-11-05', 'Bachelor', ARRAY['BSC001'], false),
   ('P024', 'Natural Language Processing', 'T002', ARRAY['NLP', 'Language Processing'], 'Research', ARRAY['Group A'], 'A thesis on natural language processing and language analysis.', 'Python, NLP', 'N/A', '2024-03-20', 'Bachelor', ARRAY['BSC001'], false),
-  ('P025', 'Global Marketing Trends', 'T003', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['Group D'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2023-10-30', 'Bachelor', ARRAY['BSC001'], false);
+  ('P025', 'Global Marketing Trends', 'T003', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['Group D'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2023-10-30', 'Bachelor', ARRAY['BSC001'], false),
+  ('P026', 'Software Testing', 'T001', ARRAY['Software Testing', 'Quality Assurance'], 'Theoretical', ARRAY['Group A'], 'A thesis on software testing and quality assurance.', 'Software Testing, Quality Assurance', 'N/A', '2024-04-15', 'Master', ARRAY['MSC001'], false),
+  ('P027', 'Computer Vision Art', 'T002', ARRAY['Computer Vision', 'Image Processing', 'Art'], 'Research', ARRAY['Group B'], 'A thesis on computer vision and image processing and the art a computer can create', 'Python, Computer Vision, Art History, Art Critique', 'N/A', '2024-05-05', 'Master', ARRAY['MSC002'], false);
 
 ALTER TABLE public.proposals OWNER TO postgres;
 
@@ -256,7 +260,8 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P024', 'S007', 'Pending', '2023-11-15'),
   ('P008', 'S008', 'Accepted', '2023-10-10'),
   ('P009', 'S009', 'Pending', '2023-11-18'),
-  ('P010', 'S010', 'Accepted', '2023-10-05');
+  ('P010', 'S010', 'Accepted', '2023-10-05'),
+  ('P002', 'S012', 'Rejected', '2023-10-10');
 
 ALTER TABLE public.applications OWNER TO postgres;
 
@@ -265,6 +270,23 @@ ALTER TABLE ONLY public.applications
 
 ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_fk_proposals FOREIGN KEY (proposal_id) REFERENCES public.proposals(proposal_id);
+
+CREATE TABLE public.studentnotifs (
+    id         SERIAL PRIMARY KEY,
+    channel    VARCHAR(30) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
+    campaign   VARCHAR(30) NOT NULL,
+    subject    TEXT        NOT NULL,
+    content    JSON        NOT NULL,
+    creation   TIMESTAMP   NOT NULL DEFAULT NOW(),
+    status     VARCHAR(30) NOT NULL,
+    lastupdate TIMESTAMP   NOT NULL
+);
+
+ALTER TABLE public.studentnotifs OWNER TO postgres;
+
+ALTER TABLE ONLY public.studentnotifs
+    ADD CONSTRAINT studentnotifs_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
 
 --
 -- PostgreSQL database dump complete

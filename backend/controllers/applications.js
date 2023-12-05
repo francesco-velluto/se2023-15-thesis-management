@@ -1,10 +1,14 @@
 "use strict";
 
-const Student = require("../model/Student");
 const Teacher = require("../model/Teacher");
-const Application = require("../model/Application");
 const applicationsService = require("../service/applications.service");
 const proposalsService = require("../service/proposals.service");
+const studentsService = require("../service/students.service");
+const teachersService = require("../service/teachers.service");
+const emailNotifier = require("../notifiers/email.notifier");
+const applicationDecisionEmailTemplate = require("../notifiers/templates/application.decision.template");
+const studentnotifsService = require("../service/studentnotifs.service");
+const dayjs = require("dayjs");
 
 module.exports = {
     /**
@@ -155,7 +159,51 @@ module.exports = {
                     throw Error("Some error occurred in the database: proposal not archived");
             }
 
-            return res.status(200).json({ application: updatedApplication });
+            /**
+             * Notify the student that his application has been accepted/rejected
+             */
+            let emailNotificationSent = false;
+
+            try {
+                const studentId = updatedApplication.student_id;
+
+                const student = (await studentsService.getStudentById(studentId)).data;
+                const teacher = (await teachersService.getTeacherById(teacher_id)).data;
+
+                const destinationEmail = student.email;
+                const studentFullName = student.surname + " " + student.name;
+                const teacherFullName = teacher.surname + " " + teacher.name;
+
+                const proposalId = proposal.proposal_id;
+                const proposalTitle = proposal.title;
+                const applicationId = updatedApplication.id;
+                const applicationDate = dayjs(updatedApplication.application_date).format("dddd, DD/MM/YYYY");
+
+                const emailSubject = applicationDecisionEmailTemplate.getEmailSubject(status);
+                const contentData = { application_id: applicationId, application_decision: status, proposal_id: proposalId, proposal_title: proposalTitle, application_date: applicationDate, student: studentFullName, supervisor: teacherFullName }
+                const emailBody = applicationDecisionEmailTemplate.getEmailBody(status, proposalId, proposalTitle, applicationDate, studentFullName, teacherFullName);
+
+                // Memorize in the database the notification to be sent to the student, it is still not sent
+                const { notificationId } = await studentnotifsService.createNewStudentNotification(studentId, "Application Decision", emailSubject, contentData);
+
+                // Send the email to the student
+                let emailNotifierResponse = await emailNotifier.sendEmailNotification(notificationId, destinationEmail, emailSubject, emailBody);
+
+                if (emailNotifierResponse) {
+                    // The email has been sent, update the status of the notification in the database
+                    await studentnotifsService.updateStudentNotificationStatus(notificationId, "SMTP Accepted");
+                    emailNotificationSent = true;
+                } else {
+                    // The email has not been sent, update the status of the notification in the database
+                    await studentnotifsService.updateStudentNotificationStatus(notificationId, "SMTP Rejected");
+                    throw Error("Error occurred in email notifier");
+                }
+            } catch (e) {
+                console.error("[BACKEND-SERVER] Cannot send application decision email to student: ", e);
+            }
+
+            // Even if the email cannot be sent, at this point the application has still been correctly accepted/rejected
+            return res.status(200).json({ application: updatedApplication, emailNotificationSent });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ error: "Internal server error" });
