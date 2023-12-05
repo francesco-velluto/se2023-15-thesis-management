@@ -17,11 +17,13 @@ import dayjs from "dayjs";
  *  - Read Mode: Displaying a proposal in read-only format.
  *  - Update Mode: Editing an existing proposal.
  *  - Add Mode: Adding a new proposal.
+ *  - Copy Mode: Copying an existing proposal.
  *
  * @param {number} mode - An integer indicating the mode:
  *  - 0: Read Mode
  *  - 1: Update Mode
  *  - 2: Add Mode
+ *  - 3: Copy Mode
  */
 function ProposalDetailsPage({ mode }) {
     const navigate = useNavigate();
@@ -217,7 +219,7 @@ function ProposalDetailsPage({ mode }) {
         setErrorMessage(null); // reset error message when component is re-rendered
         setUnauthorized(false);
 
-        if (mode === 0 || mode === 1) {       // read and update mode
+        if (mode === 0 || mode === 1 ||  mode === 3) {       // read, update and copy mode
             getProposalById(proposal_id)
                 .then(async res => {
                     let data = await res.json()
@@ -244,11 +246,11 @@ function ProposalDetailsPage({ mode }) {
                             setSupervisor(data.supervisor_name + " " + data.supervisor_surname);
                             setLevel(data.level);
                             setType(data.type);
-                            setExpDate(data.expiration_date);
+                            setExpDate(dayjs(data.expiration_date).format("YYYY-MM-DD"));
                             setKeywords(data.keywords);
 
                             // must be set in an array of cod_degree
-                            if (mode === 1) { // update mode
+                            if (mode === 1 || mode === 3) { // update mode or copy mode
                                 // get all degrees list
                                 getAllDegrees()
                                     .then(list => setProposalDegreeList(list))
@@ -310,7 +312,7 @@ function ProposalDetailsPage({ mode }) {
                                         }
                                         {successMessage &&
                                             <Row>
-                                                {mode === 2 && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been created!</Alert>}
+                                                {(mode === 2 || mode === 3) && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been created!</Alert>}
                                                 {mode === 1 && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been updated!</Alert>}
                                             </Row>
                                         }
@@ -778,13 +780,14 @@ function ProposalDetailsPage({ mode }) {
                                                     Save
                                                 </Button>}
 
-                                            {mode === 2 && loggedUser.role === 0 &&
+                                            {(mode === 2 || mode === 3) && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
                                                     style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                     onClick={handleCreateProposal}>
                                                     Create Proposal
                                                 </Button>}
+                                            
                                         </Col>
                                     </Row>
                                 </Container>
