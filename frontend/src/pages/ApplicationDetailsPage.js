@@ -90,20 +90,27 @@ function ApplicationDetails() {
         handleShow();
     }
 
-    const handleSetStatus = async (status) =>{
-        // save the choice
-        let bufferChoice = choice;
-        setChoice(choice);
+    const handleSetStatus = async (status) => {
+        try {
+            // save the choice
+            let bufferChoice = choice;
+            setChoice(choice);
 
-        // close the modal
-        handleClose();
+            // close the modal
+            handleClose();
 
-        // show the updating modal
-        handleShowUpdatingModal();
+            // show the updating modal
+            handleShowUpdatingModal();
 
-        const applicationModified = await acceptOrRejectApplication(status, application_id);
+            const applicationModified = await acceptOrRejectApplication(status, application_id);
 
-        setEmailSent(applicationModified.emailNotificationSent);
+            setEmailSent(applicationModified.emailNotificationSent);
+        } catch (e) {
+            console.error("Error in the updating of the application status: ", e);
+            setErrorMessage("An error occurred in the updating of the application status.");
+            handleClose();
+            handleCloseUpdatingModal();
+        }
     }
 
 
