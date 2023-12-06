@@ -185,7 +185,7 @@ function ApplicationDetails() {
                                                 </>
                                             }
                                         </Col>
-                                        <Col>
+                                        <Col id={"email-sending-message"}>
                                             {emailSent === undefined ?
                                                 <>
                                                     You have <b>{choice === "Accepted" ? "accepted" : "rejected"}</b> this application!<br/>
@@ -214,7 +214,7 @@ function ApplicationDetails() {
                             {
                                 emailSent !== undefined &&
                                 <Modal.Footer>
-                                    <Button variant="outline-secondary" onClick={() => navigate("/applications")}>Go back</Button>
+                                    <Button id="email-message-back-btn" variant="outline-secondary" onClick={() => navigate("/applications")}>Go back</Button>
                                 </Modal.Footer>
                             }
                         </Modal>

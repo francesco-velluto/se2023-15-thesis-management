@@ -19,7 +19,7 @@ describe("End to end tests for browse applications", () => {
     passwordBox.clear();
     passwordBox.sendKeys("T002");
 
-    const submitButton = await driver.findElement(By.css("button.c480bc568"))
+    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"))
 
     // remove disabled property from button
     await driver.executeScript(

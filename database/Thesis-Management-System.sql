@@ -255,8 +255,7 @@ CREATE TABLE public.applications (
 );
 
 INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
-  ('P001', 'S001', 'Pending', '2023-11-01'),
-  ('P012', 'S002', 'Rejected', '2023-10-15'),
+  ('P001', 'S001', 'Canceled', '2023-11-01'),
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),
@@ -267,7 +266,8 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P010', 'S010', 'Accepted', '2023-10-05'),
   ('P002', 'S012', 'Rejected', '2023-10-10'),
   ('P027', 'S011', 'Pending', '2023-10-20'),
-  ('P027', 'S012', 'Pending', '2023-10-25');
+  ('P027', 'S012', 'Pending', '2023-10-25'),
+  ('P003', 'S003', 'Pending', '2023-10-30');
 
 ALTER TABLE public.applications OWNER TO postgres;
 
