@@ -37,7 +37,7 @@ const doLogin = async (username, password) => {
     passwordBox.clear();
     passwordBox.sendKeys(password);
 
-    const submitButton = await driver.findElement(By.css("button.c480bc568"))
+    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"))
 
     // remove disabled property from button
     await driver.executeScript(
