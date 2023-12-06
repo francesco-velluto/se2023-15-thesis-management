@@ -539,6 +539,7 @@ describe("T2 - Insert proposals unit tests", () => {
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "T002", cod_group: "G001" };
       next(); // Authenticated
     });
 
