@@ -15,14 +15,14 @@ describe("End to end tests for Apply to proposal", () => {
     // perform login
     let usernameBox = await driver.findElement(By.id("username"));
     usernameBox.clear();
-    usernameBox.sendKeys("john.smith@example.com");
+    usernameBox.sendKeys("emily.johnson@example.com");
     let passwordBox = await driver.findElement(By.id("password"));
     passwordBox.clear();
-    passwordBox.sendKeys("S001");
+    passwordBox.sendKeys("S002");
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.css("button.c480bc568"));
+    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
 
     // remove disabled property from button
     await driver.executeScript(
@@ -89,6 +89,7 @@ describe("End to end tests for Apply to proposal", () => {
         .findElement(By.id("apply-button"))
         .getText();
 
+
       expect(applyButtonTextBefore).toEqual("Apply");
       expect(applyButtonText).toEqual("Applied");
 
@@ -119,7 +120,9 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.css("button.c480bc568"));
+    // find all buttons elements
+    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
+
 
     // remove disabled property from button
     await driver.executeScript(
@@ -230,6 +233,23 @@ describe("End to end tests for Accept or Reject Application", () => {
     // click submit button with js
     await driver.executeScript("arguments[0].click();", confirmButton);
 
+    await driver.sleep(100);
+
+    const emailMessageBefore = await driver.findElement(By.id("email-sending-message")).getText();
+
+    expect(emailMessageBefore.includes("We are updating the status of the application and sending an email notification")).toBeTruthy();
+
+    await driver.sleep(2000);
+
+    const emailMessageAfter = await driver.findElement(By.id("email-sending-message")).getText();
+
+    expect(emailMessageAfter.includes("An email notification has been correctly sent")).toBeTruthy();
+
+    const backButton = await driver.findElement(By.id("email-message-back-btn"));
+
+    // click submit button with js
+    await driver.executeScript("arguments[0].click();", backButton);
+
     await driver.sleep(500);
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
@@ -242,7 +262,7 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     await driver.sleep(500);
 
-    await driver.get(baseURL + "/applications/3");
+    await driver.get(baseURL + "/applications/13");
 
     await driver.sleep(1000);
 
@@ -257,6 +277,23 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     // click submit button with js
     await driver.executeScript("arguments[0].click();", confirmButton);
+
+    await driver.sleep(100);
+
+    const emailMessageBefore = await driver.findElement(By.id("email-sending-message")).getText();
+
+    expect(emailMessageBefore.includes("We are updating the status of the application and sending an email notification")).toBeTruthy();
+
+    await driver.sleep(2000);
+
+    const emailMessageAfter = await driver.findElement(By.id("email-sending-message")).getText();
+
+    expect(emailMessageAfter.includes("An email notification has been correctly sent")).toBeTruthy();
+
+    const backButton = await driver.findElement(By.id("email-message-back-btn"));
+
+    // click submit button with js
+    await driver.executeScript("arguments[0].click();", backButton);
 
     await driver.sleep(500);
 
@@ -286,7 +323,7 @@ describe("End to end tests for Browse applications decisions", () => {
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.css("button.c480bc568"));
+    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
 
     // remove disabled property from button
     await driver.executeScript(

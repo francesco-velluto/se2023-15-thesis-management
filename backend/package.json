@@ -9,7 +9,7 @@
     "test": "jest --silent",
     "coverage": "jest tests/unit --silent --coverage",
     "unit": "jest tests/unit --silent",
-    "e2e": "jest tests/unit"
+    "e2e": "jest tests/e2e --silent"
   },
   "author": "SE2 2023 Group 15",
   "license": "ISC",
