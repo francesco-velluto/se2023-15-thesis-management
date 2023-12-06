@@ -214,7 +214,7 @@ describe("T2 - Insert proposals unit tests", () => {
       title: "test proposal",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "some notes",
@@ -228,14 +228,14 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      req.user = { id: "T001" };
+      req.user = { id: "T001", cod_group: "G001" };
       next(); // Authenticated
     });
 
     const mockProposalRes = {
       ...mockProposalReq,
       proposal_id: "P011",
-      supervisor_id: "T001",
+      supervisor_id: "T001"
     };
 
     getMaxProposalIdNumber.mockResolvedValue(10);
@@ -260,7 +260,7 @@ describe("T2 - Insert proposals unit tests", () => {
       title: "",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "test notes",
@@ -295,7 +295,7 @@ describe("T2 - Insert proposals unit tests", () => {
       title: "TEST",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: undefined,
@@ -309,14 +309,14 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      req.user = { id: "T001" };
+      req.user = { id: "T001", cod_group: "G001" };
       next(); // Authenticated
     });
 
     const mockProposalRes = {
       ...mockProposalReq,
       proposal_id: "P011",
-      supervisor_id: "T001",
+      supervisor_id: "T001"
     };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
@@ -340,7 +340,7 @@ describe("T2 - Insert proposals unit tests", () => {
       title: "TEST",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A"],
+      groups: ["G001"],
       description: "Test description",
       required_knowledge: undefined,
       notes: "notes",
@@ -354,14 +354,14 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      req.user = { id: "T001" };
+      req.user = { id: "T001", cod_group: "G001" };
       next(); // Authenticated
     });
 
     const mockProposalRes = {
       ...mockProposalReq,
       proposal_id: "P011",
-      supervisor_id: "T001",
+      supervisor_id: "T001"
     };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
@@ -385,7 +385,7 @@ describe("T2 - Insert proposals unit tests", () => {
       title: "TEST",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "notes",
@@ -421,7 +421,7 @@ describe("T2 - Insert proposals unit tests", () => {
       supervisor_id: "T002",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "notes",
@@ -457,7 +457,7 @@ describe("T2 - Insert proposals unit tests", () => {
       supervisor_id: "T002",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "notes",
@@ -493,7 +493,7 @@ describe("T2 - Insert proposals unit tests", () => {
       supervisor_id: "T002",
       keywords: ["k1", 123],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "notes",
@@ -564,7 +564,7 @@ describe("T2 - Insert proposals unit tests", () => {
       title: "TEST",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "notes",
@@ -584,7 +584,7 @@ describe("T2 - Insert proposals unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      req.user = { id: "T001" };
+      req.user = { id: "T001", cod_group: "G001" };
       next(); // Authenticated
     });
 
@@ -651,10 +651,10 @@ describe("T3 - Get proposal by Id unit test", () => {
     const mockProposalRes = {
       proposal_id: "P001",
       title: "Test proposal",
-      supervisor_id: "T001",
+      supervisor_id: "T001", cod_group: "G001",
       keywords: ["k1", "k2"],
       type: "Master",
-      groups: ["Group A", "Group B"],
+      groups: ["G001", "G002"],
       description: "Test description",
       required_knowledge: "Node.js, PostgreSQL, React.js",
       notes: "some notes",
