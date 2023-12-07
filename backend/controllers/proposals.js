@@ -122,51 +122,60 @@ module.exports = {
    * 
    */
   deleteProposal: async (req, res) => {
-    const proposal_id = req.params.proposal_id;
-    //const teacher_id = req.user.id;
+
     try {
+      const proposal_id = req.params.proposal_id;
+      const teacher_id = req.user.id;
 
       // check if the proposal belong to the teacher
       const proposal = await proposalsService.getProposalById(proposal_id);
 
-      
+
       if (proposal.data.supervisor_id !== teacher_id && req.user instanceof Teacher) {
         return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
       }
 
       // check if the proposal is expired
-      if(dayjs(proposal.data.expiration_date).format('YYYY-MM-DD') < dayjs().format('YYYY-MM-DD')){
-        return res.status(403).json({error: "Cannot delete an expired proposal"});
+      if (dayjs(proposal.data.expiration_date).format('YYYY-MM-DD') < dayjs().format('YYYY-MM-DD')) {
+        return res.status(403).json({ error: "Cannot delete an expired proposal" });
       }
 
-     
+      console.log(proposal);
+
+     // check if the proposal is archived
+     if (proposal.data.archived == true){
+        return res.status(403).json({ error: "Cannot delete an archived proposal" });
+     }
+
+     // check if the proposal is already deleted
+     if (proposal.data.deleted == true){
+      return res.status(403).json({ error: "Cannot delete an already deleted proposal" });
+     }
 
       //check if there is an accepted application related to the proposal
       const { data: applications } = await applicationsService.getAllApplicationsByProposalId(proposal_id);
 
-     
+
 
       if (applications && applications.some((a) => a.status === "Accepted"))
         return res.status(403).json({ error: "Cannot delete a proposal with an accepted application" });
 
-        console.log("PROVA");
-      
+
       const deletedProposal = await proposalsService.deleteProposal(proposal_id);
 
-      console.log(deletedProposal);
-      if(!deletedProposal.data)
-        return res.status(404).json({error: "Proposal not found"});
+      if (!deletedProposal.data)
+        return res.status(404).json({ error: "Proposal not found" });
 
-        return res.status(204).json();
+      return res.status(204).json();
 
-    }catch (err) {
+    } catch (err) {
       console.error("[BACKEND-SERVER] Cannot delete the proposal", err);
-      if(err.status && err.status === 404)
-        return res.status(404).json({error: err.data});
+      if (err.status && err.status === 404)
+        return res.status(404).json({ error: err.data });
       res.status(500).json({ error: "Internal server error has occurred" });
     }
-    
 
-    
+
+
   }
 };

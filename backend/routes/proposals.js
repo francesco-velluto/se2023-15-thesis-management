@@ -131,7 +131,7 @@ router.get('/:proposal_id', authenticationController.isLoggedIn, proposalsContro
  * 
  * 
  */
-router.delete('/:proposal_id',/* authenticationController.isLoggedIn, authenticationController.isTeacher,*/
+router.delete('/:proposal_id', authenticationController.isLoggedIn, authenticationController.isTeacher,
                 proposalsController.deleteProposal);
 
 

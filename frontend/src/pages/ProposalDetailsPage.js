@@ -3,8 +3,8 @@ import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllDegrees, getProposalById, insertNewProposal, updateProposalApi } from "../api/ProposalsAPI";
-import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
+import { getAllDegrees, getProposalById, insertNewProposal, updateProposalApi, deleteProposal } from "../api/ProposalsAPI";
+import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row, Modal } from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
 import { VirtualClockContext } from "../context/VirtualClockContext";
@@ -49,6 +49,8 @@ function ProposalDetailsPage({ mode }) {
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
 
+    const [showModal, setShowModal] = useState(false);
+
     const [showFullDescription, setShowFullDescription] = useState(false);
     const truncatedDescription = description?.slice(0, 90);
 
@@ -56,6 +58,20 @@ function ProposalDetailsPage({ mode }) {
     const [newKeyword, setNewKeyword] = useState('');
 
     const targetRef = useRef(null);
+
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => {setShowModal(false);}
+
+    const handleDeleteProposal = async() =>{
+        var result = await deleteProposal(proposal_id);
+
+        if (!(result instanceof Error)){
+            navigate("/proposals");
+        }else{
+            setErrorMessage(result.message);
+            handleClose();
+        }
+    }
 
     const levelEnum = {
         BACHELOR: "Bachelor",
@@ -767,6 +783,10 @@ function ProposalDetailsPage({ mode }) {
                                         }
 
                                         <Col className={"d-flex flex-row-reverse"}>
+                                            {mode === 0 && loggedUser.role === 0 &&
+                                                <Button id="delete-proposal-btn" variant="outline-danger" onClick={handleShow}>
+                                                    Delete proposal
+                                                </Button>}
                                             {mode === 0 && loggedUser.role === 1 &&
                                                 <ApplicationButton setErrMsg={setErrorMessage} proposalID={proposal_id} />}
 
@@ -787,6 +807,20 @@ function ProposalDetailsPage({ mode }) {
                                                 </Button>}
                                         </Col>
                                     </Row>
+                                    <Modal show={showModal} onHide={handleClose} backdrop="static">
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Are you sure?</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>You are <strong>deleting</strong> this application!</Modal.Body>
+                                        <Modal.Footer>
+                                            <Button id="cancel-delete-proposal" variant="danger" onClick={handleClose}>
+                                                Cancel
+                                            </Button>
+                                            <Button id="confirm-delete-proposal" variant="success" onClick={handleDeleteProposal}>
+                                                Confirm
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
                                 </Container>
                             </Form>
                         </Container>
