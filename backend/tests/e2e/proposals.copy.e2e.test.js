@@ -224,16 +224,20 @@ const fillProposalForm = async (proposal) => {
 
     // Expiration date
     const date = await driver.findElement(By.id("expiration-date"));
-    await driver.executeScript(`arguments[0].value='${proposal.expiration_date}';`, date);
+    await driver.executeScript(`arguments[0].value='${dayjs(proposal.expiration_date).format("DD/MM/YYYY")}'`, date);
+    //await driver.findElement(By.id("expiration-date")).sendKeys(proposal.expiration_date);
 
     // Keywords
-    /*const listItems = await driver.findElements(By.css('#proposal-keywords-list .list-group-item'));
-    for (const listItem of listItems) {
-        await driver.executeScript(
-            "arguments[0].querySelector('.btn-danger').click()",
-            listItem
-        );
-    }*/
+    const listItems = await driver.findElement(By.id('proposal-keywords-list'));
+    let items = await listItems.findElements(By.className('list-group-item'));
+    while (items?.length > 0) {
+        items = await listItems.findElements(By.className('list-group-item'));
+        if (items.length === 0) break;
+
+        const deleteButton = await items[0].findElement(By.className('btn btn-danger btn-sm'));
+        await driver.executeScript("arguments[0].scrollIntoView();", deleteButton);
+        await driver.executeScript("arguments[0].click();", deleteButton);
+    }
     for (const keyword of proposal.keywords) {
         await driver.findElement(By.name("proposal-keywords")).sendKeys(keyword);
 
@@ -261,10 +265,10 @@ describe("End to end tests for Copy Proposal", () => {
     });
 
     afterAll(async () => {
-        //await driver.quit();
+        await driver.quit();
     });
 
-    /*test("Click on 'copy proposal' button from the proposals list", async () => {
+    test("Click on 'copy proposal' button from the proposals list", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals");
@@ -296,7 +300,7 @@ describe("End to end tests for Copy Proposal", () => {
         assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
 
         await doLogout();
-    }, 20000);*/
+    }, 20000);
 
     test("Try to modify the fields of a proposal and checks if they are changed", async () => {
         await doLogin("michael.wilson@example.com", "T002");
@@ -322,11 +326,12 @@ describe("End to end tests for Copy Proposal", () => {
         copiedProposal.description = "This is a new test description";
         copiedProposal.required_knowledge = "These are the requirements: 1. requirement 1; 2. requirement 2;";
         copiedProposal.notes = "Any notes";
-        copiedProposal.expiration_date = "2024-02-20";
+        copiedProposal.expiration_date = "10/02/2024";
         copiedProposal.level = "Bachelor";
         copiedProposal.programmes = ["Bachelor of Science", "Bachelor of Business"];
-        //copiedProposal.groups = ["G001"];
-        //copiedProposal.supervisor_id = "",
+
+        copiedProposal.groups = ["G002"];
+        copiedProposal.supervisor_id = "Michael Wilson";
 
         await fillProposalForm(copiedProposal);
 
@@ -335,7 +340,10 @@ describe("End to end tests for Copy Proposal", () => {
         await driver.executeScript("document.getElementById('add-proposal-btn').click()");
         await driver.sleep(1000);
 
-        const resultSavedCopiedProposal = copyFromViewProposalPage();
+        const resultSavedCopiedProposal = await copyFromViewProposalPage();
+
+        console.log(copiedProposal);
+        console.log(resultSavedCopiedProposal);
 
         await doLogout();
 

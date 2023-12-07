@@ -163,7 +163,6 @@ function ProposalDetailsPage({ mode }) {
             keywords: keywords,
             type: type,
             description: description,
-            groups: groups,
             required_knowledge: knowledge,
             notes: notes,
             expiration_date: expDate,

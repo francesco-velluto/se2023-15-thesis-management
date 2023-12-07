@@ -101,7 +101,6 @@ router.post(
     .isLength({ min: 10, max: 10 }), // only YYYY-MM-DD
   check("level").isString().notEmpty(),
   check("programmes").isArray({ min: 1 }).custom(isArrayOfStrings),
-    check("groups").isArray({ min: 1 }).custom(isArrayOfStrings),
   validate,
   proposalsController.insertProposal
 );
