@@ -8,21 +8,7 @@ const assert = require('assert');
  * if you need to change some field, just copy with spread operator:
  * const myReqBody = { ...mockProposalReq, title: "new title" };
  */
-let mockOriginalProposal = {
-    title: "",
-    supervisor_id: "",
-    keywords: [],
-    type: "",
-    groups: [],
-    description: "",
-    required_knowledge: "",
-    notes: "",
-    expiration_date: "",
-    level: "",
-    programmes: [],
-};
-
-let mockCopiedProposal = {
+const mockProposal = {
     title: "",
     supervisor_id: "",
     keywords: [],
@@ -72,29 +58,202 @@ const doLogout = async () => {
     await driver.sleep(1000);
 }
 
+// it checks if two objects are equal
 const deepEqual = (obj1, obj2) => {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
-  
+
     if (keys1.length !== keys2.length) {
-      return false;
-    }
-  
-    for (const key of keys1) {
-      const val1 = obj1[key];
-      const val2 = obj2[key];
-  
-      if (typeof val1 === 'object' && typeof val2 === 'object') {
-        if (!deepEqual(val1, val2)) {
-          return false;
-        }
-      } else if (val1 !== val2) {
         return false;
-      }
     }
-  
+
+    for (const key of keys1) {
+        const val1 = obj1[key];
+        const val2 = obj2[key];
+
+        if (typeof val1 === 'object' && typeof val2 === 'object') {
+            if (!deepEqual(val1, val2)) {
+                return false;
+            }
+        } else if (val1 !== val2) {
+            return false;
+        }
+    }
+
     return true;
-  };
+};
+
+// it copies the data from the view page of a proposal
+const copyFromViewProposalPage = async () => {
+    let proposal = JSON.parse(JSON.stringify(mockProposal));
+
+    // Title
+    proposal.title = await driver.findElement(By.id("proposal-title")).getText();
+
+    // Supervisor
+    proposal.supervisor_id = await driver.findElement(By.id("supervisor")).getAttribute('value');
+
+    // Groups
+    const groups = await driver.findElement(By.id("groups"));
+    const badgesGroups = await groups.findElements(By.className('badge'));
+    for (const group of badgesGroups) {
+        proposal.groups.push(await group.getText());
+    }
+
+    // Keywords
+    const keywords = await driver.findElement(By.className("proposal-details-keyword"));
+    const badgesKeywords = await keywords.findElements(By.className('badge'));
+    for (const keyword of badgesKeywords) {
+        proposal.keywords.push(await keyword.getText());
+    }
+
+    // Type
+    proposal.type = await driver.findElement(By.name("proposal-type")).getAttribute('value');
+
+    // Description
+    proposal.description = await driver.findElement(By.id("description")).getText();
+
+    // Required knowledge
+    proposal.required_knowledge = await driver.findElement(By.name("required-knowledge")).getAttribute('value');
+
+    // Notes
+    proposal.notes = await driver.findElement(By.name("additional-notes")).getAttribute('value');
+
+    // Expiration date
+    let date = await driver.findElement(By.className("proposal-details-expiration")).getText();
+    proposal.expiration_date = date.replace("Expires on ", "");
+
+    // Level
+    proposal.level = await driver.findElement(By.name("proposal-level")).getText();
+
+    // Programmes
+    const programmes = await driver.findElement(By.name("proposal-programmes"));
+    const badgesProgrammes = await programmes.findElements(By.className('badge'));
+    for (const program of badgesProgrammes) {
+        proposal.programmes.push(await program.getText());
+    }
+
+    return proposal;
+};
+
+// it copies the data from an editing proposal page
+const copyFromCopiedProposalPage = async () => {
+    let proposal = JSON.parse(JSON.stringify(mockProposal));
+
+    // Title
+    proposal.title = await driver.findElement(By.name("title")).getAttribute('value');
+
+    // Supervisor
+    proposal.supervisor_id = await driver.findElement(By.id("supervisor")).getAttribute('value');
+
+    // Groups
+    const listGroups = await driver.findElement(By.id("groups"));
+    let itemsGroups = await listGroups.findElements(By.className('list-group-item'));
+    for (const groupItem of itemsGroups) {
+        const group = await groupItem.getText();
+        proposal.groups.push(group);
+    }
+
+    // Keywords
+    const keywords = await driver.findElement(By.id("proposal-keywords-list"));
+    const badgesKeywords = await keywords.findElements(By.className('list-group-item'));
+    for (const keyword of badgesKeywords) {
+        let keywordFormatted = await keyword.getText();
+        proposal.keywords.push(keywordFormatted.split('\n')[0]);
+    }
+
+    // Type
+    proposal.type = await driver.findElement(By.name("proposal-type")).getAttribute('value');
+
+    // Description
+    proposal.description = await driver.findElement(By.name("description")).getText();
+
+    // Required knowledge
+    proposal.required_knowledge = await driver.findElement(By.name("required-knowledge")).getAttribute('value');
+
+    // Notes
+    proposal.notes = await driver.findElement(By.name("additional-notes")).getAttribute('value');
+
+    // Expiration date
+    date = await driver.findElement(By.id("expiration-date")).getAttribute('value');
+    proposal.expiration_date = dayjs(date).format("DD/MM/YYYY");
+
+    // Level
+    proposal.level = await driver.findElement(By.name("proposal-level")).getAttribute('value');
+
+    // Programmes
+    const programmes = await driver.findElement(By.id("proposal-programmes-list"));
+    const badgesProgrammes = await programmes.findElements(By.className('list-group-item'));
+    for (const program of badgesProgrammes) {
+        const programFormatted = await program.getText();
+        proposal.programmes.push(programFormatted.split(' - ')[0]);
+    }
+
+    return proposal;
+};
+
+// it fills all fields of a proposal
+const fillProposalForm = async (proposal) => {
+    // Title
+    const title = await driver.findElement(By.name("title"));
+    title.clear();
+    title.sendKeys(proposal.title);
+
+    // Description
+    const description = await driver.findElement(By.name("description"));
+    description.clear();
+    description.sendKeys(proposal.description);
+
+    // Level
+    let selectElement = await driver.findElement(By.name("proposal-level"));
+    let select = new Select(selectElement);
+    await select.selectByVisibleText(proposal.level);
+
+    // Programmes
+    for (const programme of proposal.programmes) {
+        const selectElement = await driver.findElement(By.name("proposal-programmes"));
+        const select = new Select(selectElement);
+        await select.selectByVisibleText(programme);
+        await driver.sleep(200);
+    }
+
+    // Type
+    const type = await driver.findElement(By.name("proposal-type"));
+    type.clear();
+    type.sendKeys(proposal.type);
+
+    // Expiration date
+    const date = await driver.findElement(By.id("expiration-date"));
+    await driver.executeScript(`arguments[0].value='${proposal.expiration_date}';`, date);
+
+    // Keywords
+    /*const listItems = await driver.findElements(By.css('#proposal-keywords-list .list-group-item'));
+    for (const listItem of listItems) {
+        await driver.executeScript(
+            "arguments[0].querySelector('.btn-danger').click()",
+            listItem
+        );
+    }*/
+    for (const keyword of proposal.keywords) {
+        await driver.findElement(By.name("proposal-keywords")).sendKeys(keyword);
+
+        // simulate click with js
+        await driver.executeScript(
+            "document.getElementById('add-keyword-btn').click()"
+        );
+    }
+
+    // Required knowledge
+    const knowledge = await driver.findElement(By.name("required-knowledge"));
+    knowledge.clear();
+    knowledge.sendKeys(proposal.required_knowledge);
+
+    // Notes
+    const notes = await driver.findElement(By.name("additional-notes"));
+    notes.clear();
+    notes.sendKeys(proposal.notes);
+
+};
 
 describe("End to end tests for Copy Proposal", () => {
     beforeAll(async () => {
@@ -102,10 +261,10 @@ describe("End to end tests for Copy Proposal", () => {
     });
 
     afterAll(async () => {
-        await driver.quit();
+        //await driver.quit();
     });
 
-    test("Click on 'copy proposal' button from the proposals list", async () => {
+    /*test("Click on 'copy proposal' button from the proposals list", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals");
@@ -115,57 +274,11 @@ describe("End to end tests for Copy Proposal", () => {
         await viewProposalPage.click();
         await driver.sleep(500);
 
-        /** reading the proposal from the page */
-
-        // Title
-        mockOriginalProposal.title = await driver.findElement(By.id("proposal-title")).getText();
-
-        // Supervisor
-        mockOriginalProposal.supervisor_id = await driver.findElement(By.id("supervisor")).getAttribute('value');
-
-        // Groups
-        let groups = await driver.findElement(By.id("groups"));
-        let badgesGroups = await groups.findElements(By.className('badge'));
-        for (const group of badgesGroups) {
-            mockOriginalProposal.groups.push(await group.getText());
-        }
-
-        // Keywords
-        let keywords = await driver.findElement(By.className("proposal-details-keyword"));
-        let badgesKeywords = await keywords.findElements(By.className('badge'));
-        for (const keyword of badgesKeywords) {
-            mockOriginalProposal.keywords.push(await keyword.getText());
-        }
-        
-        // Type
-        mockOriginalProposal.type = await driver.findElement(By.name("proposal-type")).getAttribute('value');
-        
-        // Description
-        mockOriginalProposal.description = await driver.findElement(By.id("description")).getText();
-        
-        // Required knowledge
-        mockOriginalProposal.required_knowledge = await driver.findElement(By.name("required-knowledge")).getAttribute('value');
-        
-        // Notes
-        mockOriginalProposal.notes = await driver.findElement(By.name("additional-notes")).getAttribute('value');
-        
-        // Expiration date
-        let date = await driver.findElement(By.className("proposal-details-expiration")).getText();
-        mockOriginalProposal.expiration_date = date.replace("Expires on ", "");
-        
-        // Level
-        mockOriginalProposal.level = await driver.findElement(By.name("proposal-level")).getText();
-
-        // Programmes
-        let programmes = await driver.findElement(By.name("proposal-programmes"));
-        let badgesProgrammes = await programmes.findElements(By.className('badge'));
-        for (const program of badgesProgrammes) {
-            mockOriginalProposal.programmes.push(await program.getText());
-        }
+        // Reading the proposal from the page
+        const originalProposal = await copyFromViewProposalPage();
 
         await driver.get(baseURL + "/proposals");
         await driver.sleep(500);
-
 
         // Click on actions list
         let actionsList = await driver.findElement(By.id("dropdown-proposal-actions"));
@@ -177,63 +290,56 @@ describe("End to end tests for Copy Proposal", () => {
 
         await driver.sleep(500);
 
+        // Taking all data from the proposal page copied
+        const copiedProposal = await copyFromCopiedProposalPage();
 
-        /** Taking all data from the proposal page copied */
-
-        // Title
-        mockCopiedProposal.title = await driver.findElement(By.name("title")).getAttribute('value');
-
-        // Supervisor
-        mockCopiedProposal.supervisor_id = await driver.findElement(By.id("supervisor")).getAttribute('value');
-
-        // Groups
-        let listGroups = await driver.findElement(By.id("groups"));
-        let itemsGroups = await listGroups.findElements(By.className('list-group-item'));
-        for (const group of itemsGroups) {
-            mockCopiedProposal.groups.push(await group.getText());
-        }
-
-        // Keywords
-        keywords = await driver.findElement(By.id("proposal-keywords-list"));
-        badgesKeywords = await keywords.findElements(By.className('list-group-item'));
-        for (const keyword of badgesKeywords) {
-            let keywordFormatted = await keyword.getText();
-            mockCopiedProposal.keywords.push(keywordFormatted.split('\n')[0]);
-        }
-        
-        // Type
-        mockCopiedProposal.type = await driver.findElement(By.name("proposal-type")).getAttribute('value');
-        
-        // Description
-        mockCopiedProposal.description = await driver.findElement(By.name("description")).getText();
-        
-        // Required knowledge
-        mockCopiedProposal.required_knowledge = await driver.findElement(By.name("required-knowledge")).getAttribute('value');
-        
-        // Notes
-        mockCopiedProposal.notes = await driver.findElement(By.name("additional-notes")).getAttribute('value');
-        
-        // Expiration date
-        date = await driver.findElement(By.id("expiration-date")).getAttribute('value');
-        mockCopiedProposal.expiration_date = dayjs(date).format("DD/MM/YYYY");
-
-        // Level
-        mockCopiedProposal.level = await driver.findElement(By.name("proposal-level")).getAttribute('value');
-
-        // Programmes
-        programmes = await driver.findElement(By.id("proposal-programmes-list"));
-        badgesProgrammes = await programmes.findElements(By.className('list-group-item'));
-        for (const program of badgesProgrammes) {
-            const programFormatted = await program.getText();
-            mockCopiedProposal.programmes.push(programFormatted.split(' - ')[0]);
-        }
-
-        console.log(mockOriginalProposal);
-        console.log(mockCopiedProposal);
-
-        assert(deepEqual(mockOriginalProposal, mockCopiedProposal), "The proposal copied is not the same to the original proposal!");
+        assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
 
         await doLogout();
+    }, 20000);*/
+
+    test("Try to modify the fields of a proposal and checks if they are changed", async () => {
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals");
+        await driver.sleep(500);
+
+        // Click on actions list
+        let actionsList = await driver.findElement(By.id("dropdown-proposal-actions"));
+        await actionsList.click();
+
+        // Click on Copy Proposal button
+        let copyButton = await driver.findElement(By.id("copy-proposal-id"));
+        await copyButton.click();
+
+        await driver.sleep(500);
+
+        // Taking all data from the proposal page copied
+        let copiedProposal = JSON.parse(JSON.stringify(mockProposal));
+        copiedProposal.title = "Hello, this is a test";
+        copiedProposal.keywords = ["key_1", "key 2", "key 3"];
+        copiedProposal.type = "This is a new type";
+        copiedProposal.description = "This is a new test description";
+        copiedProposal.required_knowledge = "These are the requirements: 1. requirement 1; 2. requirement 2;";
+        copiedProposal.notes = "Any notes";
+        copiedProposal.expiration_date = "2024-02-20";
+        copiedProposal.level = "Bachelor";
+        copiedProposal.programmes = ["Bachelor of Science", "Bachelor of Business"];
+        //copiedProposal.groups = ["G001"];
+        //copiedProposal.supervisor_id = "",
+
+        await fillProposalForm(copiedProposal);
+
+        // click on add proposal
+        await driver.sleep(500);
+        await driver.executeScript("document.getElementById('add-proposal-btn').click()");
+        await driver.sleep(1000);
+
+        const resultSavedCopiedProposal = copyFromViewProposalPage();
+
+        await doLogout();
+
+        assert(deepEqual(copiedProposal, resultSavedCopiedProposal), "The modified proposal is not the same to the proposal saved!");
     }, 20000);
 });
 

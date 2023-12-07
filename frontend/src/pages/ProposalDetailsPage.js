@@ -541,7 +541,9 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup id="proposal-programmes-list" className="mt-2">
                                                                 {programmes.map((program, index) => (
                                                                     <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
-                                                                        {program.title_degree + " - " + program.cod_degree}
+                                                                        <span>
+                                                                            {program.title_degree + " - " + program.cod_degree}
+                                                                        </span>
                                                                         <Button
                                                                             variant="danger"
                                                                             size="sm"
