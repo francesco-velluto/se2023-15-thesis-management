@@ -219,7 +219,7 @@ function ProposalDetailsPage({ mode }) {
         setErrorMessage(null); // reset error message when component is re-rendered
         setUnauthorized(false);
 
-        if (mode === 0 || mode === 1 ||  mode === 3) {       // read, update and copy mode
+        if (mode === 0 || mode === 1 || mode === 3) {       // read, update and copy mode
             getProposalById(proposal_id)
                 .then(async res => {
                     let data = await res.json()
@@ -320,7 +320,7 @@ function ProposalDetailsPage({ mode }) {
                                     <Row>
                                         <Col>
                                             {mode === 0 ?
-                                                <h2 className={"proposal-details-title"}>{title}</h2>
+                                                <h2 id="proposal-title" className={"proposal-details-title"}>{title}</h2>
                                                 :
                                                 <Form.Group>
                                                     <Card className="h-100">
@@ -348,12 +348,14 @@ function ProposalDetailsPage({ mode }) {
                                         <>
                                             <Row>
                                                 <Col className={"proposal-details-keyword"}>
-                                                    {keywords.map((keyword, index) => <Badge key={index} bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>)}
+                                                    {keywords.map((keyword, index) =>
+                                                        <Badge key={index} bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>
+                                                    )}
                                                 </Col>
                                             </Row>
                                             <Row>
                                                 <Col className={"proposal-details-expiration my-2"}>
-                                                    <Badge bg={"danger"}>Expires on {new Date(expDate).toLocaleDateString("it-IT")}</Badge>
+                                                    <Badge bg={"danger"}>Expires on {dayjs(expDate).format("DD/MM/YYYY")}</Badge>
                                                 </Col>
                                             </Row>
                                         </>
@@ -365,6 +367,7 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Body>
                                                         <Card.Title>Description:</Card.Title>
                                                         <p
+                                                            id="description"
                                                             style={{
                                                                 maxHeight: !showFullDescription ? 'none' : `${20 * 1.2}em`, // 1.2em is an approximate line height
                                                                 overflowY: !showFullDescription ? 'visible' : 'auto',
@@ -447,7 +450,7 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Body>
                                                     <Card.Title>Level:</Card.Title>
                                                     {mode === 0 ?
-                                                        <Card.Text>{level}</Card.Text>
+                                                        <Card.Text name="proposal-level">{level}</Card.Text>
                                                         :
                                                         <Form.Group>
                                                             <Form.Select
@@ -500,7 +503,7 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Body>
                                                     <Card.Title>CdS / Programmes:</Card.Title>
                                                     {mode === 0 ?
-                                                        <Card.Text>
+                                                        <Card.Text name="proposal-programmes">
                                                             {programmes.map((programme, index) =>
                                                                 <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >
                                                                     {programme.title_degree}
@@ -535,7 +538,7 @@ function ProposalDetailsPage({ mode }) {
                                                                     }
                                                                 </Form.Select>
                                                             </Form.Group>
-                                                            <ListGroup className="mt-2">
+                                                            <ListGroup id="proposal-programmes-list" className="mt-2">
                                                                 {programmes.map((program, index) => (
                                                                     <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                         {program.title_degree + " - " + program.cod_degree}
@@ -563,8 +566,10 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Body >
                                                     <Card.Title>Groups:</Card.Title>
                                                     {mode === 0 ?
-                                                        <Card.Text>
-                                                            {groups.map((group, index) => <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>)}
+                                                        <Card.Text id="groups">
+                                                            {groups.map((group, index) =>
+                                                                <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>
+                                                            )}
                                                         </Card.Text>
                                                         :
                                                         <Form.Group className="h-100" >
@@ -599,7 +604,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 </Col>
                                                             </div>
                                                             */}
-                                                            <ListGroup className="mt-2">
+                                                            <ListGroup id="groups" className="mt-2">
                                                                 {groups.map((group, index) => (
                                                                     <ListGroup.Item key={index} disabled className="d-flex justify-content-between align-items-center my-1">
                                                                         {group}
@@ -680,7 +685,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 </Col>
                                                             </div>
                                                         </Form.Group>
-                                                        <ListGroup className="mt-2">
+                                                        <ListGroup id="proposal-keywords-list" className="mt-2">
                                                             {keywords.map((keyword, index) => (
                                                                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                     {keyword}
@@ -787,7 +792,7 @@ function ProposalDetailsPage({ mode }) {
                                                     onClick={handleCreateProposal}>
                                                     Create Proposal
                                                 </Button>}
-                                            
+
                                         </Col>
                                     </Row>
                                 </Container>

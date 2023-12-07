@@ -163,12 +163,12 @@ function ProposalRow({ proposal }) {
             <Col md={2} xxl={1} className="d-none d-md-block">
             
                 <Dropdown>
-                    <Dropdown.Toggle variant="outline-dark" id="dropdown-basic" className="w-100">
+                    <Dropdown.Toggle variant="outline-dark" id="dropdown-proposal-actions" className="w-100">
                         Actions
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}><FaCopy className="me-1" /> Copy</Dropdown.Item>
+                        <Dropdown.Item id="copy-proposal-id" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}><FaCopy className="me-1" /> Copy</Dropdown.Item>
                         <Dropdown.Item onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/update') }}> <FaPen className="me-1" /> Update</Dropdown.Item>
                     </Dropdown.Menu>
 
@@ -189,7 +189,7 @@ function ProposalRow({ proposal }) {
                 </span>
             </Col>
             <Col xs={12} md={1} xxl={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" style={{ marginTop: '-2px', cursor: 'pointer', color: '#393646', fontWeight: "bold" }} onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
-                <span className="d-flex align-items-center">
+                <span id="show-details-proposal" className="d-flex align-items-center">
                     <FaBook className="me-1" />
                     Show details
                 </span>
