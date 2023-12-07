@@ -11,11 +11,14 @@ const {
   setApplicationStatus,
   getApplicationById,
   cancelPendingApplicationsByProposalId,
+  getAllPendingApplicationsByProposalId
 } = require("../../service/applications.service");
 const {
   getAllApplicationsByTeacherId,
 } = require("../../service/applications.service");
-
+const {
+  sendUpdateApplicationStatusEmail
+} = require("../../controllers/email.notifier");
 
 const controller = require("../../controllers/applications");
 const app = require("../../app");
@@ -29,6 +32,7 @@ const { is } = require("date-fns/locale");
 jest.mock("../../service/applications.service");
 jest.mock("../../service/proposals.service");
 jest.mock("../../controllers/authentication");
+jest.mock("../../controllers/email.notifier");
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -549,11 +553,13 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
       data: updatedApplication,
     });
 
+    sendUpdateApplicationStatusEmail.mockResolvedValue({ data: [] });
+
     await controller.acceptOrRejectApplication(mockReq, mockRes);
 
     expect(mockRes.status).toHaveBeenCalledWith(200);
     expect(mockRes.json).toHaveBeenCalledWith({
-      application: updatedApplication,
+      application: updatedApplication, emailNotificationSent: true
     });
   });
 
@@ -566,7 +572,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
 
     const mockRes = {
       status: jest.fn().mockReturnThis(),
-      json: jest.fn(),
+      json: jest.fn()
     };
 
     getApplicationById.mockResolvedValue({
@@ -609,12 +615,14 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
         true
       ),
     });
+
+    getAllPendingApplicationsByProposalId.mockResolvedValue({ data: [] });
+    sendUpdateApplicationStatusEmail.mockResolvedValue({ data: [] });
+
     await controller.acceptOrRejectApplication(mockReq, mockRes);
 
     expect(mockRes.status).toHaveBeenCalledWith(200);
-    expect(mockRes.json).toHaveBeenCalledWith({
-      application: updatedApplication,
-    });
+    expect(mockRes.json).toHaveBeenCalledWith({ application: updatedApplication, emailNotificationSent: true });
   });
 });
 
