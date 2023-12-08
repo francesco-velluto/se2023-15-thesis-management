@@ -34,7 +34,7 @@ module.exports = {
             transporter.sendMail(mailOptions, (err, info) => {
                 if (err) {
                     console.error("[EMAIL-NOTIFIER]: Error sending email notification with id " + notificationId + " to " + destination + ": " + err);
-
+                    
                     // resolve with null value instead of rejecting, so that the promise is not rejected and the application can continue
                     resolve(null);
                 } else {
