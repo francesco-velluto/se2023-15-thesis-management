@@ -33,7 +33,7 @@ function ProposalDetailsPage({ mode }) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [unauthorized, setUnauthorized] = useState(false);    // it is useful to hide fields in the page if there is some issues (for example, proposal expired or proposal not found ...)
-    const [successMessage, setSuccessMessage] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
     const { currentDate } = useContext(VirtualClockContext);
     const { loggedUser } = useContext(LoggedUserContext);
@@ -171,11 +171,11 @@ function ProposalDetailsPage({ mode }) {
 
         try {
             const proposal = await insertNewProposal(newProposal);
-            setSuccessMessage(true);
+            setSuccessMessage("The thesis proposal has been added correctly!");
             scrollToTarget();
             navigate("/proposals/" + proposal.proposal_id);
         } catch (err) {
-            setSuccessMessage(false);
+            setSuccessMessage("");
             setErrorMessage(err.message);
         }
     }
@@ -187,7 +187,8 @@ function ProposalDetailsPage({ mode }) {
             return;
         }
 
-        const updateProposal = {
+        const updatedProposal = {
+            proposal_id: proposal_id,
             title: title,
             level: level,
             keywords: keywords,
@@ -200,16 +201,13 @@ function ProposalDetailsPage({ mode }) {
         };
 
         try {
-            //! it can be implemented when the backend is ready
-            //const proposal = await updateProposalApi(updateProposal);
+            const proposal = await updateProposalApi(updatedProposal);
 
-            setErrorMessage("Backend not implemented yet"); //! remove it when the backend is ready
-
-            setSuccessMessage(true);
-            //navigate("/proposals/" + proposal.proposal_id);
+            setSuccessMessage("The thesis proposal has been updated correctly!");
+            navigate("/proposals/" + proposal.proposal_id);
             scrollToTarget();
         } catch (err) {
-            setSuccessMessage(false);
+            setSuccessMessage("");
             setErrorMessage(err.message);
         }
     }
@@ -312,8 +310,7 @@ function ProposalDetailsPage({ mode }) {
                                         }
                                         {successMessage &&
                                             <Row>
-                                                {(mode === 2 || mode === 3) && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been created!</Alert>}
-                                                {mode === 1 && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been updated!</Alert>}
+                                                <Alert variant="success" dismissible onClose={() => setSuccessMessage("")}>{successMessage}</Alert>
                                             </Row>
                                         }
                                     </div>
@@ -584,7 +581,7 @@ function ProposalDetailsPage({ mode }) {
                                                         </Card.Text>
                                                         :
                                                         <Form.Group className="h-100" >
-                                                            {/* 
+                                                            {/*
                                                             <div className="text-plus ">
                                                                 <Col xs={8}>
                                                                     <Form.Control
