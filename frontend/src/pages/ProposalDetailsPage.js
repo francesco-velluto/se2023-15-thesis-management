@@ -320,7 +320,16 @@ function ProposalDetailsPage({ mode }) {
                                     <Row>
                                         <Col>
                                             {mode === 0 ?
-                                                <h2 id="proposal-title" className={"proposal-details-title"}>{title}</h2>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        id="proposal-title"
+                                                        type='text'
+                                                        className="proposal-details-title"
+                                                        value={title}
+                                                        plaintext
+                                                        readOnly
+                                                    />
+                                                </Form.Group>
                                                 :
                                                 <Form.Group>
                                                     <Card className="h-100">
