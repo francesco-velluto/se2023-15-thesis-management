@@ -52,7 +52,7 @@ function ProposalDetailsPage({ mode }) {
     const [notes, setNotes] = useState("");
 
     const [showFullDescription, setShowFullDescription] = useState(false);
-    const truncatedDescription = description?.slice(0, 90);
+    const truncatedDescription = description?.slice(0, 1500);
 
     //const [newGroup, setNewGroup] = useState('');
     const [newKeyword, setNewKeyword] = useState('');
