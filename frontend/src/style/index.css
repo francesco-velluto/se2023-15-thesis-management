@@ -91,50 +91,6 @@ body {
     margin: 0;
 }
 
-
-/* PROPOSAL PAGE DETAILS */
-.proposal-details-container {
-    background: #EEE2DE;
-    padding: 9px;
-}
-
-.proposal-details-container h2 {
-    font-weight: bold;
-}
-
-.proposal-details-container .card .card-title {
-    font-size: 14px;
-}
-
-.proposal-details-title {
-    text-align: center;
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.proposal-details-container .row {
-    margin: 5px;
-}
-
-.proposal-details-keyword {
-    text-align: center;
-}
-
-.proposal-details-keyword .badge {
-    margin: 3px;
-    padding: 10px;
-    font-size: small;
-}
-
-.proposal-details-expiration {
-    text-align: center;
-}
-
-.proposal-details-expiration .badge {
-    margin: 3px;
-    font-size: 15px;
-}
-
 .text-plus {
     display: flex;
     flex-direction: row;
@@ -229,9 +185,3 @@ footer img {
     }
 }
 
-@media (min-width: 768px) {
-    .proposal-details-container {
-        padding-left: 3rem;
-        padding-right: 3rem;
-    }
-}

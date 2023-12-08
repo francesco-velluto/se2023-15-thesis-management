@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState} from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
@@ -11,6 +11,7 @@ import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { UnAuthorizationPage } from "../App";
 import dayjs from "dayjs";
+import "../style/ProposalDetails.css"
 
 /**
  * This page supports three modes:
@@ -301,7 +302,7 @@ function ProposalDetailsPage({ mode }) {
                     unauthorized ?
                         (<UnAuthorizationPage error={"Error"} message={errorMessage} />)
                         :
-                        (<Container style={{ backgroundColor: "#F4EEE0" }} className={"proposal-details-container"} fluid>
+                        (<Container className={"proposal-details-container"} fluid>
                             <Form>
                                 <Container>
                                     <div ref={targetRef}>
@@ -358,7 +359,7 @@ function ProposalDetailsPage({ mode }) {
                                             <Row>
                                                 <Col className={"proposal-details-keyword"}>
                                                     {keywords.map((keyword, index) =>
-                                                        <Badge key={index} bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>
+                                                        <Badge className={"proposal-details-keyword"} bg="" key={index} >{keyword}</Badge>
                                                     )}
                                                 </Col>
                                             </Row>
@@ -378,7 +379,7 @@ function ProposalDetailsPage({ mode }) {
                                                         <p
                                                             id="description"
                                                             style={{
-                                                                maxHeight: !showFullDescription ? 'none' : `${20 * 1.2}em`, // 1.2em is an approximate line height
+                                                                maxHeight: !showFullDescription ? 'none' : `${50 * 1.2}em`, // 1.2em is an approximate line height
                                                                 overflowY: !showFullDescription ? 'visible' : 'auto',
                                                                 whiteSpace: 'pre-line',
                                                                 cursor: 'pointer'
@@ -389,7 +390,7 @@ function ProposalDetailsPage({ mode }) {
                                                             onClick={() => setShowFullDescription(!showFullDescription)}>
                                                             <span>
                                                                 {showFullDescription ? description : truncatedDescription}
-                                                                <span className="text-muted">
+                                                                <span id="show-more" >
                                                                     {!showFullDescription && description.length > truncatedDescription.length && ' Show more...'}
                                                                 </span>
                                                             </span>
@@ -414,7 +415,6 @@ function ProposalDetailsPage({ mode }) {
                                                                 }}
                                                                 rows={10}
                                                                 maxLength={10000}
-                                                                style={{ whiteSpace: 'pre-wrap' }}
                                                                 required
                                                             />
                                                         </Form.Group>
@@ -512,17 +512,17 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Body>
                                                     <Card.Title>CdS / Programmes:</Card.Title>
                                                     {mode === 0 ?
-                                                        <Card.Text name="proposal-programmes">
+                                                        <Card.Text className={"proposal-badge"} name="proposal-programmes">
                                                             {programmes.map((programme, index) =>
-                                                                <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >
+                                                                <Badge key={index} bg=""   >
                                                                     {programme.title_degree}
                                                                 </Badge>)}
                                                         </Card.Text>
                                                         :
                                                         <div>
-                                                            <Form.Group>
+                                                            <Form.Group >
                                                                 {!level &&
-                                                                    <div className="disabled-message text-muted" style={{ fontSize: "14px", marginBottom: "10px" }}>
+                                                                    <div id="programmes-notes" >
                                                                         Please select a proposal level before choosing a program.
                                                                     </div>
                                                                 }
@@ -577,9 +577,9 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Body >
                                                     <Card.Title>Groups:</Card.Title>
                                                     {mode === 0 ?
-                                                        <Card.Text id="groups">
+                                                        <Card.Text id="groups" className={"proposal-badge"}>
                                                             {groups.map((group, index) =>
-                                                                <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>
+                                                                <Badge key={index} bg=""  >{group}</Badge>
                                                             )}
                                                         </Card.Text>
                                                         :
@@ -600,7 +600,7 @@ function ProposalDetailsPage({ mode }) {
                                                                     />
                                                                 </Col>
                                                                 <Col >
-                                                                    <Button id="add-group-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} disabled onClick={() => {
+                                                                    <Button id="add-group-btn" } disabled onClick={() => {
                                                                         if (!newGroup.trim()) {
                                                                             return;
                                                                         } else if (!groups.includes(newGroup)) {
@@ -665,7 +665,7 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card className="h-100">
                                                     <Card.Body >
                                                         <Card.Title>Keywords</Card.Title>
-                                                        <Form.Group>
+                                                        <Form.Group >
                                                             <div className="text-plus">
                                                                 <Col xs={10} >
                                                                     <Form.Control
@@ -679,8 +679,8 @@ function ProposalDetailsPage({ mode }) {
                                                                         }}
                                                                     />
                                                                 </Col>
-                                                                <Col >
-                                                                    <Button id="add-keyword-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                <Col id="purple-button" >
+                                                                    <Button id="add-keyword-btn"  onClick={() => {
                                                                         if (!newKeyword.trim()) {
                                                                             return;
                                                                         } else if (!keywords.includes(newKeyword)) {
@@ -768,7 +768,7 @@ function ProposalDetailsPage({ mode }) {
                                     <Row>
                                         {mode === 0 &&
                                             <Col>
-                                                <Button style={{ backgroundColor: "#6D5D6E", borderColor: "#6D5D6E" }}
+                                                <Button id="go-back"
                                                     onClick={() => { navigate('/proposals') }}>
                                                     {loggedUser.role === 1 ? "Back to Search Proposal" : "Back to Browse Proposals"}
                                                 </Button>
@@ -777,7 +777,7 @@ function ProposalDetailsPage({ mode }) {
 
                                         {mode !== 0 &&
                                             <Col>
-                                                <Button style={{ backgroundColor: "#6D5D6E", borderColor: "#6D5D6E" }}
+                                                <Button id="go-back"
                                                     onClick={() => { navigate('/proposals') }}>
                                                     Back to Browse Proposals
                                                 </Button>
@@ -791,7 +791,6 @@ function ProposalDetailsPage({ mode }) {
                                             {mode === 1 && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
-                                                    style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                     onClick={handleUpdateProposal}>
                                                     Save
                                                 </Button>}
@@ -799,7 +798,6 @@ function ProposalDetailsPage({ mode }) {
                                             {(mode === 2 || mode === 3) && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
-                                                    style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                     onClick={handleCreateProposal}>
                                                     Create Proposal
                                                 </Button>}
