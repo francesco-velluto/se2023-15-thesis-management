@@ -2,50 +2,11 @@ const request = require("supertest");
 const app = require("../../app");
 const { add, min, format, parse, isAfter } = require("date-fns");
 const { Builder, By, until } = require("selenium-webdriver");
+const { doLogin, doLogout } = require("./utils");
 
 const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
 let driver;
-
-const doLogin = async (username, password) => {
-  await driver.get(baseURL);
-
-  await driver.sleep(1000);
-
-  // perform login
-  const usernameBox = await driver.findElement(By.id("username"));
-  usernameBox.clear();
-  usernameBox.sendKeys(username);
-
-  const passwordBox = await driver.findElement(By.id("password"));
-  passwordBox.clear();
-  passwordBox.sendKeys(password);
-
-  const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
-
-  // remove disabled property from button
-  await driver.executeScript(
-    "arguments[0].removeAttribute('disabled')",
-    submitButton
-  );
-
-  // click submit button with js
-  await submitButton.click();
-
-  await driver.sleep(500);
-};
-
-const doLogout = async () => {
-  // click on the drop menu
-  const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-  await logoutDropdown.click();
-
-  // click on logout
-  const logout = await driver.findElement(By.id("logout-id"));
-  await logout.click();
-
-  await driver.sleep(1000);
-}
 
 beforeAll(async () => {
   driver = await new Builder().forBrowser("chrome").build();
@@ -57,7 +18,7 @@ afterAll(async () => {
 
 describe("End to end tests for virtual clock", () => {
   it("Should update the proposals list when virtual clock date changes", async () => {
-    await doLogin("john.smith@example.com", "S001");
+    await doLogin("john.smith@example.com", "S001", driver);
 
     await driver.get(baseURL + "/proposals");
 
@@ -103,6 +64,6 @@ describe("End to end tests for virtual clock", () => {
       expect(isAfter(date, virtualClockDate)).toBe(true);
     }
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 });

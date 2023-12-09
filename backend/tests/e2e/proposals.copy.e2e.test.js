@@ -4,6 +4,7 @@ const app = require("../../app");
 const assert = require('assert');
 const { parse } = require("date-fns");
 const { format } = require("date-fns");
+const { doLogin, doLogout } = require("./utils");
 
 /*
  * Template of a proposal,
@@ -26,42 +27,6 @@ const mockProposal = {
 
 const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 let driver;
-
-const doLogin = async (username, password) => {
-    await driver.get(baseURL);
-
-    await driver.sleep(2000);
-
-    // perform login
-    const usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys(username);
-
-    const passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys(password);
-
-    // click submit button
-    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
-    await submitButton.click();
-
-    await driver.sleep(500);
-};
-
-const doLogout = async () => {
-    await driver.get(baseURL);
-    await driver.sleep(1000);
-
-    // click on the drop menu
-    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-    await logoutDropdown.click();
-
-    // click on logout
-    const logout = await driver.findElement(By.id("logout-id"));
-    await logout.click();
-
-    await driver.sleep(1000);
-}
 
 // it checks if two objects are equal
 const deepEqual = (obj1, obj2) => {
@@ -347,7 +312,7 @@ describe("End to end tests for Copy Proposal", () => {
     }, 20000);
 
     test("Click on 'copy proposal' button from the proposals list", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals");
         await driver.sleep(500);
@@ -375,13 +340,13 @@ describe("End to end tests for Copy Proposal", () => {
         // Taking all data from the proposal page copied
         const copiedProposal = await copyFromCopiedProposalPage();
 
-        await doLogout();
+        await doLogout(driver);
         
         assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
     }, 20000);
 
     test("Try to modify the fields of a proposal and checks if they are changed", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals");
         await driver.sleep(500);
@@ -430,13 +395,13 @@ describe("End to end tests for Copy Proposal", () => {
         // Copy the data from the view proposal page
         const resultSavedCopiedProposal = await copyFromViewProposalPage();
 
-        await doLogout();
+        await doLogout(driver);
 
         assert(deepEqual(copiedProposal, resultSavedCopiedProposal), "The modified proposal is not the same to the proposal saved!");
     }, 30000);
 
     test("Should not allow to save an empty proposal", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals");
         await driver.sleep(500);
@@ -462,13 +427,13 @@ describe("End to end tests for Copy Proposal", () => {
             alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
         } catch (e) { }
         
-        await doLogout();
+        await doLogout(driver);
         
         expect(alert !== undefined).toEqual(true);
     }, 20000);
 
     test("Should not allow to save a proposal with an empty title", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals");
         await driver.sleep(500);
@@ -497,7 +462,7 @@ describe("End to end tests for Copy Proposal", () => {
             alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
         } catch (e) { }
 
-        await doLogout();
+        await doLogout(driver);
         
         expect(alert !== undefined).toEqual(true);
     }, 20000);
