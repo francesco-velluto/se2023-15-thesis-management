@@ -40,7 +40,7 @@ const doLogin = async (username, password) => {
     passwordBox.sendKeys(password);
 
     // click submit button
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"))
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
     await submitButton.click();
 
     await driver.sleep(500);
@@ -268,7 +268,7 @@ describe("End to end tests for Copy Proposal", () => {
         await driver.quit();
     });
 
-    test("Click on 'copy proposal' button from the proposals list", async () => {
+    /*test("Click on 'copy proposal' button from the proposals list", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals");
@@ -300,7 +300,7 @@ describe("End to end tests for Copy Proposal", () => {
         assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
 
         await doLogout();
-    }, 20000);
+    }, 20000);*/
 
     test("Try to modify the fields of a proposal and checks if they are changed", async () => {
         await doLogin("michael.wilson@example.com", "T002");

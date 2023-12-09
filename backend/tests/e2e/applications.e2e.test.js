@@ -22,7 +22,7 @@ describe("End to end tests for Apply to proposal", () => {
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"));
 
     // remove disabled property from button
     await driver.executeScript(
@@ -121,7 +121,7 @@ describe("End to end tests for Accept or Reject Application", () => {
     await driver.sleep(1000);
 
     // find all buttons elements
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"));
 
 
     // remove disabled property from button
@@ -323,7 +323,7 @@ describe("End to end tests for Browse applications decisions", () => {
 
     await driver.sleep(1000);
 
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"));
 
     // remove disabled property from button
     await driver.executeScript(

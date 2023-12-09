@@ -25,7 +25,7 @@ describe("End to end tests login", () => {
     await passwordBox.clear();
     await passwordBox.sendKeys("wrongpassword");
 
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"))
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
 
     // click using js
     await driver.executeScript("arguments[0].click();", submitButton);
@@ -51,7 +51,7 @@ describe("End to end tests login", () => {
     await passwordBox.clear();
     await passwordBox.sendKeys("S001");
 
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"))
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
 
     // click using js
     await driver.executeScript("arguments[0].click();", submitButton);
