@@ -17,18 +17,21 @@ describe("End to end tests login", () => {
 
     await driver.sleep(1000);
 
-    let usernameBox = await driver.findElement(By.id("username"));
-    await usernameBox.clear();
-    await usernameBox.sendKeys("john.smith@example.com");
+    const username = "john.smith@example.com";
+    const password = "wrongpassword";
 
-    let passwordBox = await driver.findElement(By.id("password"));
-    await passwordBox.clear();
-    await passwordBox.sendKeys("wrongpassword");
+    // perform login
+    const usernameBox = await driver.findElement(By.id("username"));
+    usernameBox.clear();
+    usernameBox.sendKeys(username);
 
+    const passwordBox = await driver.findElement(By.id("password"));
+    passwordBox.clear();
+    passwordBox.sendKeys(password);
+
+    // click submit button
     const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
-
-    // click using js
-    await driver.executeScript("arguments[0].click();", submitButton);
+    await submitButton.click();
 
     await driver.sleep(500);
 
@@ -43,18 +46,21 @@ describe("End to end tests login", () => {
 
     await driver.sleep(1000);
 
-    let usernameBox = await driver.findElement(By.id("username"));
-    await usernameBox.clear();
-    await usernameBox.sendKeys("john.smith@example.com");
+    const username = "john.smith@example.com";
+    const password = "S001";
 
-    let passwordBox = await driver.findElement(By.id("password"));
-    await passwordBox.clear();
-    await passwordBox.sendKeys("S001");
+    // perform login
+    const usernameBox = await driver.findElement(By.id("username"));
+    usernameBox.clear();
+    usernameBox.sendKeys(username);
 
+    const passwordBox = await driver.findElement(By.id("password"));
+    passwordBox.clear();
+    passwordBox.sendKeys(password);
+
+    // click submit button
     const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
-
-    // click using js
-    await driver.executeScript("arguments[0].click();", submitButton);
+    await submitButton.click();
 
     await driver.sleep(500);
 

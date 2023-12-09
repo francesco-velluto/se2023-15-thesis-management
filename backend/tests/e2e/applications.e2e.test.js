@@ -1,7 +1,7 @@
 const request = require("supertest");
 const app = require("../../app");
 
-const { Builder, By, until } = require("selenium-webdriver");
+const { Builder, By } = require("selenium-webdriver");
 const { doLogout, doLogin } = require("./utils");
 
 describe("End to end tests for Apply to proposal", () => {
@@ -57,40 +57,6 @@ describe("End to end tests for Apply to proposal", () => {
 describe("End to end tests for Accept or Reject Application", () => {
   let driver;
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
-
-  const doCustomLogin = async (isTeacherOne = true) => {
-    await driver.get(baseURL);
-
-    await driver.sleep(2000);
-
-    // perform login
-    let usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys(
-      isTeacherOne ? "sarah.anderson@example.com" : "ana.gomez@example.com"
-    );
-
-    let passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys(isTeacherOne ? "T001" : "T003");
-
-    await driver.sleep(1000);
-
-    // find all buttons elements
-    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"));
-
-
-    // remove disabled property from button
-    await driver.executeScript(
-      "arguments[0].removeAttribute('disabled')",
-      submitButton
-    );
-
-    // click submit button with js
-    await submitButton.click();
-
-    await driver.sleep(1000);
-  };
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
