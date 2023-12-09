@@ -18,7 +18,7 @@ const mockProposalReq = {
     notes: "These are the notes...",
     expiration_date: "2024-06-30",
     level: "Master",
-    programmes: ["MSC001"],
+    programmes: ["Master of Science"],
 };
 const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 let driver;
@@ -218,7 +218,7 @@ describe("End to End Tests for Insert Proposal", () => {
         for (const programme of mockProposalReq.programmes) {
             const selectElement = await driver.findElement(By.name("proposal-programmes"));
             const select = new Select(selectElement);
-            await select.selectByValue(programme);
+            await select.selectByVisibleText(programme);
 
             await driver.sleep(200);
         }

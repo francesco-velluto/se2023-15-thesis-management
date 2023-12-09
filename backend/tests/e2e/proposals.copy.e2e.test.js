@@ -2,6 +2,8 @@ const dayjs = require("dayjs");
 const { Builder, By, Select } = require("selenium-webdriver");
 const app = require("../../app");
 const assert = require('assert');
+const { parse } = require("date-fns");
+const { format } = require("date-fns");
 
 /*
  * Template of a proposal,
@@ -47,6 +49,9 @@ const doLogin = async (username, password) => {
 };
 
 const doLogout = async () => {
+    await driver.get(baseURL);
+    await driver.sleep(1000);
+
     // click on the drop menu
     const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
     await logoutDropdown.click();
@@ -88,7 +93,7 @@ const copyFromViewProposalPage = async () => {
     let proposal = JSON.parse(JSON.stringify(mockProposal));
 
     // Title
-    proposal.title = await driver.findElement(By.id("proposal-title")).getText();
+    proposal.title = await driver.findElement(By.id("proposal-title")).getAttribute('value');
 
     // Supervisor
     proposal.supervisor_id = await driver.findElement(By.id("supervisor")).getAttribute('value');
@@ -122,6 +127,8 @@ const copyFromViewProposalPage = async () => {
     // Expiration date
     let date = await driver.findElement(By.className("proposal-details-expiration")).getText();
     proposal.expiration_date = date.replace("Expires on ", "");
+    const parsedDate = parse(proposal.expiration_date, 'dd/MM/yyyy', new Date());
+    proposal.expiration_date = format(parsedDate, 'yyyy-MM-dd');
 
     // Level
     proposal.level = await driver.findElement(By.name("proposal-level")).getText();
@@ -176,8 +183,8 @@ const copyFromCopiedProposalPage = async () => {
 
     // Expiration date
     date = await driver.findElement(By.id("expiration-date")).getAttribute('value');
-    proposal.expiration_date = dayjs(date).format("DD/MM/YYYY");
-
+    proposal.expiration_date = dayjs(date).format("YYYY-MM-DD");
+    
     // Level
     proposal.level = await driver.findElement(By.name("proposal-level")).getAttribute('value');
 
@@ -223,9 +230,20 @@ const fillProposalForm = async (proposal) => {
     type.sendKeys(proposal.type);
 
     // Expiration date
-    const date = await driver.findElement(By.id("expiration-date"));
-    await driver.executeScript(`arguments[0].value='${dayjs(proposal.expiration_date).format("DD/MM/YYYY")}'`, date);
-    //await driver.findElement(By.id("expiration-date")).sendKeys(proposal.expiration_date);
+    /*const date = await driver.findElement(By.id("expiration-date"));
+    //await date.clear();
+    await driver.executeScript("arguments[0].scrollIntoView();", date);
+    
+    driver.sleep(1000);
+    await date.click();
+    await date.sendKeys(proposal.expiration_date, Key.RETURN);
+    console.log(await date.getAttribute('value'));
+
+    await driver.executeScript((element, value) => {
+        element.value = value;
+        const event = new Event('input', { bubbles: true });
+        element.dispatchEvent(event);
+    }, date, proposal.expiration_date);*/
 
     // Keywords
     const listItems = await driver.findElement(By.id('proposal-keywords-list'));
@@ -256,7 +274,55 @@ const fillProposalForm = async (proposal) => {
     const notes = await driver.findElement(By.name("additional-notes"));
     notes.clear();
     notes.sendKeys(proposal.notes);
+};
 
+const emptyProposalForm = async () => {
+    // Title
+    const title = await driver.findElement(By.name("title"));
+    title.clear();
+    title.sendKeys(' ');
+
+    // Description
+    const description = await driver.findElement(By.name("description"));
+    description.clear();
+    description.sendKeys(' ');
+
+    // Level
+    let selectElement = await driver.findElement(By.name("proposal-level"));
+    let select = new Select(selectElement);
+    await select.selectByIndex(1);
+    await select.selectByIndex(2);
+
+    // Type
+    const type = await driver.findElement(By.name("proposal-type"));
+    type.clear();
+    type.sendKeys(' ');
+
+    // Expiration date
+    const date = await driver.findElement(By.id("expiration-date"));
+    await date.clear();
+
+    // Keywords
+    const listItems = await driver.findElement(By.id('proposal-keywords-list'));
+    let items = await listItems.findElements(By.className('list-group-item'));
+    while (items?.length > 0) {
+        items = await listItems.findElements(By.className('list-group-item'));
+        if (items.length === 0) break;
+
+        const deleteButton = await items[0].findElement(By.className('btn btn-danger btn-sm'));
+        await driver.executeScript("arguments[0].scrollIntoView();", deleteButton);
+        await driver.executeScript("arguments[0].click();", deleteButton);
+    }
+
+    // Required knowledge
+    const knowledge = await driver.findElement(By.name("required-knowledge"));
+    knowledge.clear();
+    knowledge.sendKeys(' ');
+
+    // Notes
+    const notes = await driver.findElement(By.name("additional-notes"));
+    notes.clear();
+    notes.sendKeys(' ');
 };
 
 describe("End to end tests for Copy Proposal", () => {
@@ -268,7 +334,19 @@ describe("End to end tests for Copy Proposal", () => {
         await driver.quit();
     });
 
-    /*test("Click on 'copy proposal' button from the proposals list", async () => {
+    test("Should show (or redirect to) not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals/P002/copy");
+
+        const alert = await driver.findElement(By.className("alert"));
+
+        // Find the h3 element within the div
+        const h3Alert = await alert.findElement(By.css("h3"));
+
+        const textAlert = await h3Alert.getText();
+        expect(textAlert).toEqual("Access Not Authorized");
+    }, 20000);
+
+    test("Click on 'copy proposal' button from the proposals list", async () => {
         await doLogin("michael.wilson@example.com", "T002");
 
         await driver.get(baseURL + "/proposals");
@@ -297,10 +375,10 @@ describe("End to end tests for Copy Proposal", () => {
         // Taking all data from the proposal page copied
         const copiedProposal = await copyFromCopiedProposalPage();
 
-        assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
-
         await doLogout();
-    }, 20000);*/
+        
+        assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
+    }, 20000);
 
     test("Try to modify the fields of a proposal and checks if they are changed", async () => {
         await doLogin("michael.wilson@example.com", "T002");
@@ -326,7 +404,7 @@ describe("End to end tests for Copy Proposal", () => {
         copiedProposal.description = "This is a new test description";
         copiedProposal.required_knowledge = "These are the requirements: 1. requirement 1; 2. requirement 2;";
         copiedProposal.notes = "Any notes";
-        copiedProposal.expiration_date = "10/02/2024";
+        copiedProposal.expiration_date = "2024-06-30";
         copiedProposal.level = "Bachelor";
         copiedProposal.programmes = ["Bachelor of Science", "Bachelor of Business"];
 
@@ -335,22 +413,92 @@ describe("End to end tests for Copy Proposal", () => {
 
         await fillProposalForm(copiedProposal);
 
-        // click on add proposal
+        // Click on add proposal
         await driver.sleep(500);
         await driver.executeScript("document.getElementById('add-proposal-btn').click()");
         await driver.sleep(1000);
 
-        const resultSavedCopiedProposal = await copyFromViewProposalPage();
+        // Check if the save message is present
+        let alert = undefined;
+        try {
+            alert = await driver.findElement(By.className('fade alert alert-success alert-dismissible show'));
+        } catch (e) { }
 
-        console.log(copiedProposal);
-        console.log(resultSavedCopiedProposal);
+        expect(alert !== undefined).toEqual(true);
+        expect(await alert.getText()).toEqual("The thesis proposal has been added correctly!");
+
+        // Copy the data from the view proposal page
+        const resultSavedCopiedProposal = await copyFromViewProposalPage();
 
         await doLogout();
 
         assert(deepEqual(copiedProposal, resultSavedCopiedProposal), "The modified proposal is not the same to the proposal saved!");
+    }, 30000);
+
+    test("Should not allow to save an empty proposal", async () => {
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals");
+        await driver.sleep(500);
+
+        // Click on actions list
+        let actionsList = await driver.findElement(By.id("dropdown-proposal-actions"));
+        await actionsList.click();
+
+        // Click on Copy Proposal button
+        let copyButton = await driver.findElement(By.id("copy-proposal-id"));
+        await copyButton.click();
+
+        // Emptying the proposal fields
+        await driver.sleep(500);
+        await emptyProposalForm();
+
+        // click on add proposal
+        await driver.executeScript("document.getElementById('add-proposal-btn').click()");
+        await driver.sleep(1000);
+
+        let alert = undefined;
+        try {
+            alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
+        } catch (e) { }
+        
+        await doLogout();
+        
+        expect(alert !== undefined).toEqual(true);
+    }, 20000);
+
+    test("Should not allow to save a proposal with an empty title", async () => {
+        await doLogin("michael.wilson@example.com", "T002");
+
+        await driver.get(baseURL + "/proposals");
+        await driver.sleep(500);
+
+        // Click on actions list
+        let actionsList = await driver.findElement(By.id("dropdown-proposal-actions"));
+        await actionsList.click();
+
+        // Click on Copy Proposal button
+        let copyButton = await driver.findElement(By.id("copy-proposal-id"));
+        await copyButton.click();
+
+        // Emptying the proposal title
+        await driver.sleep(500);
+        const title = await driver.findElement(By.name("title"));
+        title.clear();
+        title.sendKeys(' ');
+
+        // click on add proposal
+        await driver.sleep(1000);
+        await driver.executeScript("document.getElementById('add-proposal-btn').click()");
+        await driver.sleep(1000);
+
+        let alert = undefined;
+        try {
+            alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
+        } catch (e) { }
+
+        await doLogout();
+        
+        expect(alert !== undefined).toEqual(true);
     }, 20000);
 });
-
-
-
-
