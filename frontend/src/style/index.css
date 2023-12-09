@@ -108,6 +108,8 @@ body {
 
 .proposal-details-title {
     text-align: center;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .proposal-details-container .row {

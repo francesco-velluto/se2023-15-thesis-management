@@ -199,3 +199,30 @@ exports.setProposalArchived = async (proposal_id) => {
     throw error;
   }
 };
+
+exports.updateProposal = async (proposal) => {
+  try {
+    const result = await db.query(
+      "UPDATE proposals SET title = $1, level = $2, keywords = $3, type = $4, " +
+        "description = $5, required_knowledge = $6, notes = $7, expiration_date = $8, programmes = $9 " +
+        "WHERE proposal_id = $10 RETURNING *;",
+      [
+        proposal.title,
+        proposal.level,
+        proposal.keywords,
+        proposal.type,
+        proposal.description,
+        proposal.required_knowledge,
+        proposal.notes || "",
+        proposal.expiration_date,
+        proposal.programmes,
+        proposal.proposal_id
+      ]
+    );
+
+    return { data: this.rowToProposal(result.rows[0]) };
+  } catch (error) {
+    console.error("Error in updateProposal: ", error);
+    throw error;
+  }
+};

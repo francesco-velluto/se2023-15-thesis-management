@@ -34,7 +34,7 @@ exports.sendUpdateApplicationStatusEmail = async (updatedApplication, teacher_id
     // Send the email to the student
     let emailNotifierResponse = await emailNotifier.sendEmailNotification(notificationId, destinationEmail, emailSubject, emailBody);
 
-    if (emailNotifierResponse) {
+    if (emailNotifierResponse) { 
         // The email has been sent, update the status of the notification in the database
         await studentnotifsService.updateStudentNotificationStatus(notificationId, "SMTP Accepted");
     } else {
