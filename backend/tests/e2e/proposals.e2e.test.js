@@ -37,7 +37,8 @@ const doLogin = async (username, password) => {
     passwordBox.clear();
     passwordBox.sendKeys(password);
 
-    const submitButton = await driver.findElement(By.css("button.c480bc568"))
+    //const submitButton = await driver.findElement(By.css("button.c480bc568"));
+    const submitButton = await driver.findElement(By.className("cb8dcbc41 c5fa977b5 c3419c4cf cf576c2dc cdb91ebae"));
 
     // remove disabled property from button
     await driver.executeScript(
@@ -351,5 +352,40 @@ describe("End to end test for professor proposals", () => {
 
         await doLogout();
     }, 20000);
+
+});
+
+describe("End to end test for delete proposal", () => {
+    beforeAll(async () => {
+        driver = await new Builder().forBrowser("chrome").build();
+    });
+
+    afterAll(async () => {
+        await driver.quit();
+    });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals/P019");
+
+        await driver.sleep(500);
+
+        let pageTitle = await driver
+            .findElement(By.className("alert-danger"))
+            .getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+    }, 20000);
+
+    test("Shouldn't show the delete button if logged as a student", async() => {
+        await doLogin("john.smith@example.com", "S001");
+
+        await driver.sleep(500);
+
+        let applyButton = await driver.findElement(By.className("btn btn-secondary")).getText();
+
+        expect(applyButton).toEqual("Apply");
+
+        
+    }, 20000);
+
 
 })
