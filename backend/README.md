@@ -14,6 +14,12 @@ npm run dev
 ```
 This will start the server in development mode using _nodemon_, which will automatically restart the server when any changes are made to the source code.
 
+## Local database rebuild
+To rebuild your local database and align it to the one defined in the .sql file with the updated data, run the following command:
+```bash
+npm run dbrebuild
+```
+
 ## Testing
 To run the tests, run the following command:
 ```bash

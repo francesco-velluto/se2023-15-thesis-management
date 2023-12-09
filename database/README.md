@@ -1,5 +1,18 @@
 # Thesis Management System
 
+## Update database model, data and rebuild your local database
+
+When adding new tables, altering existing tables or modifying data, you need to update the Thesis-Management-System.sql file.
+
+Do this by adding the SQL Query to the Thesis-Management-System.sql file, then push the changes to the repository so that everyone can benefit from the changes.
+
+To rebuild your local database and align it, run the following commands :
+
+```bash
+cd backend
+npm run rbrebuild
+```
+
 ## Conceptual design
 
 The goal is to implement Thesis Management System for PoliTO. The primary entities include "Degree," representing different academic degrees they can be followed my 0 or many students. A student is always associated to one or many degrees.
