@@ -260,8 +260,6 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P009', 'S009', 'Pending', '2023-11-18'),
   ('P010', 'S010', 'Accepted', '2023-10-05'),
   ('P002', 'S012', 'Rejected', '2023-10-10'),
-  ('P027', 'S011', 'Pending', '2023-10-20'),
-  ('P027', 'S012', 'Pending', '2023-10-25'),
   ('P003', 'S003', 'Pending', '2023-10-30');
 
 ALTER TABLE public.applications OWNER TO postgres;

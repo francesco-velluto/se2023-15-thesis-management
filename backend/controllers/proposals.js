@@ -180,7 +180,7 @@ module.exports = {
         return res.status(403).json({ error: "Cannot delete an expired proposal" });
       }
 
-      console.log(proposal);
+      
 
      // check if the proposal is archived
      if (proposal.data.archived == true){

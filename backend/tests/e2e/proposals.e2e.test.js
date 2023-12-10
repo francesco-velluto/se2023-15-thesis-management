@@ -323,7 +323,7 @@ describe("End to end test for professor proposals", () => {
 describe("End to end test for delete proposal", () => {
 
     //function to create a fake proposal to delete in the test
-    const fakeInsert = async() =>{
+    /*const fakeInsert = async() =>{
         const fakeProposalToDelete = {
             title: "test",
             supervisor_id: "T003",
@@ -354,7 +354,7 @@ describe("End to end test for delete proposal", () => {
 
         await driver.sleep(500);
 
-    };
+    };*/
 
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
@@ -373,10 +373,11 @@ describe("End to end test for delete proposal", () => {
             .findElement(By.className("alert-danger"))
             .getText();
         expect(pageTitle).toEqual("Access Not Authorized");
+
     }, 20000);
 
     test("Shouldn't show the delete button if logged as a student", async() => {
-        await doLogin("john.smith@example.com", "S001");
+        await doLogin("john.smith@example.com", "S001", driver);
 
         await driver.sleep(500);
 
@@ -388,13 +389,13 @@ describe("End to end test for delete proposal", () => {
 
         expect(button).toEqual("Apply");
 
-        await doLogout();
+        await doLogout(driver);
 
         
     }, 20000);
 
     test("Shouldn't delete the proposal if cancel the action", async() =>{
-        await doLogin("ana.gomez@example.com", "T003");
+        await doLogin("ana.gomez@example.com", "T003", driver);
 
         await driver.sleep(500);
 
@@ -430,22 +431,19 @@ describe("End to end test for delete proposal", () => {
         const currentUrl = await driver.getCurrentUrl();
         expect(currentUrl).toEqual(baseURL + "/proposals/P019"); // expect to not be redirected
 
-        await doLogout();
+        await doLogout(driver);
     
     }, 20000);
 
     test("Should delete the proposal", async ()=>{
 
-        
+        //await fakeInsert();
 
-        await fakeInsert();
-        
-
-        await doLogin("ana.gomez@example.com", "T003");
+        await doLogin("ana.gomez@example.com", "T003", driver);
 
         await driver.sleep(500);
 
-        await driver.get(baseURL + "/proposals/P100");
+        await driver.get(baseURL + "/proposals/P019");
         await driver.sleep(500);
 
         const deleteButton = await driver.findElement(By.css('#delete-proposal-btn'));
@@ -481,7 +479,7 @@ describe("End to end test for delete proposal", () => {
         await driver.sleep(500);
         expect(currentUrl).toEqual(baseURL + "/proposals"); // expect to be redirected
     
-        await doLogout();
+        await doLogout(driver);
 
     }, 20000);
 
