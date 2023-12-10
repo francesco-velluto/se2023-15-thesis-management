@@ -18,7 +18,7 @@ function HomePage() {
     {loggedUser.role === 1 && (
       <TitleBar title={"STUDENT"} />
     )}
-      <Container fluid className="home-page" style={{backgroundColor: "#F4EEE0"}}>
+      <Container fluid className="home-page" >
         <Row className="home-page-content p-3">
           {loggedUser && (
             <>
@@ -160,35 +160,6 @@ function HomePage() {
                     </Form.Group>
                   )}
                 </Form>
-
-              </Card>
-              <Card bg="light" className="rounded p-4 mt-3">
-                <Row>
-                  {loggedUser.role === 0 && (
-                    <Col>
-                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
-                        My Thesis Applications
-                      </Button>
-                    </Col>
-                  )}
-                  {loggedUser.role === 0 && (
-                    <Col>
-                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
-                        My Thesis Proposals
-                      </Button>
-                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals/new">
-                        Add a New Proposal
-                      </Button>
-                    </Col>
-                  )}
-                  {loggedUser.role === 1 && (
-                    <Col>
-                      <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
-                        Thesis Proposals
-                      </Button>
-                    </Col>
-                  )}
-                </Row>
               </Card>
             </>
           )}

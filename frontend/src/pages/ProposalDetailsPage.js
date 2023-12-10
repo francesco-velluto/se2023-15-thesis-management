@@ -296,7 +296,7 @@ function ProposalDetailsPage({ mode }) {
     return (
         <>
             <NavbarContainer />
-            <TitleBar title={"Proposal Details"} />
+            <TitleBar/>
             {
                 isLoading ? (<Alert variant="info" className="d-flex justify-content-center">Loading...</Alert>) : (
                     unauthorized ?
@@ -319,7 +319,7 @@ function ProposalDetailsPage({ mode }) {
                                         }
                                     </div>
                                     <Row>
-                                        <Col>
+                                        <Col >
                                             {mode === 0 ?
                                                 <Form.Group>
                                                     <Form.Control

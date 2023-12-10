@@ -69,7 +69,7 @@ function Main() {
 
 function PageLayout() {
     return (
-        <Row style={{backgroundColor:"#F4EEE0"}} className="page-content w-100 m-0">
+        <Row style={{backgroundColor:"whitesmoke"}} className="page-content w-100 m-0">
             <Outlet />
         </Row>
     );

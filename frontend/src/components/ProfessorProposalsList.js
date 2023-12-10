@@ -59,7 +59,7 @@ function ProfessorProposalsList() {
     }, [currentDate])
 
     return (
-        <Container className="bg-white rounded-bottom py-4">
+        <Container className="rounded-bottom py-4">
             {
                 isLoading &&
                 <Row>
@@ -176,19 +176,19 @@ function ProposalRow({ proposal }) {
             
             </Col>
 
-            <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0 d-md-none" style={{ marginTop: '-2px', cursor: 'pointer', color: '#393646', fontWeight: "bold" }} onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}>
+            <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0 d-md-none" id="proposal-detail-actions" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}>
                 <span className="d-flex align-items-center">
                     <FaCopy className="me-1" />
                     Copy
                 </span>
             </Col>
-            <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0  d-md-none" style={{ marginTop: '-2px', cursor: 'pointer', color: '#393646', fontWeight: "bold" }} onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/update') }}>
+            <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0  d-md-none" id="proposal-detail-actions" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/update') }}>
                 <span className="d-flex align-items-center">
                     <FaPen className="me-1" />
                     Update
                 </span>
             </Col>
-            <Col xs={12} md={1} xxl={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" style={{ marginTop: '-2px', cursor: 'pointer', color: '#393646', fontWeight: "bold" }} onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
+            <Col xs={12} md={1} xxl={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" id="proposal-detail-actions" onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
                 <span id="show-details-proposal" className="d-flex align-items-center">
                     <FaBook className="me-1" />
                     Show details

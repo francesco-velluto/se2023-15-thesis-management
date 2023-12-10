@@ -1,14 +1,17 @@
 .student-applications-container {
     padding: 9px;
+    background-color: whitesmoke;
 }
 
 .student-application-row {
     margin: 5px;
+    background-color: whitesmoke;
 }
 
 .student-application-card-body {
-    background-color: #eeeeee;
     color: #282828 !important;
+    background-color: whitesmoke;
+
 }
 
 .student-application-card-body .card-title,

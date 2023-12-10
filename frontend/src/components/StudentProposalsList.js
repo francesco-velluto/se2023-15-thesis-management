@@ -169,7 +169,7 @@ function ProposalRow(props) {
     const navigate = useNavigate();
 
     return (
-        <Card className='my-4 mx-2 border border-2 rounded border-dark bg-light p-3 my-md-1'>
+        <Card className='my-4 mx-2 border border-2 rounded border-dark bg-light p-3 my-md-1' id="card-border">
             <Row  >
                 <Col xs={12} md={3} className="text-center text-md-start">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-alphabet d-xs-block d-md-none me-2" viewBox="0 0 16 16">
@@ -195,8 +195,8 @@ function ProposalRow(props) {
                     </svg>
                     {format(parseISO(props.data.expiration_date), 'dd/MM/yyyy')}
                 </Col>
-                <Col xs={12} md={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0 show-details-link" style={{ marginTop: '-2px', cursor: 'pointer', color: '#393646', fontWeight: "bold" }} onClick={() => { navigate('/proposals/' + props.data.proposal_id) }}>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-text me-1" viewBox="0 0 16 16" style={{ marginTop: "6px" }}>
+                <Col xs={12} md={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0 show-details-link" id="show-proposal-detail" onClick={() => { navigate('/proposals/' + props.data.proposal_id) }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-journal-text me-1" viewBox="0 0 16 16" >
                         <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z" />
                         <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z" />
                         <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z" />

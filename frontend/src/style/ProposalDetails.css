@@ -1,5 +1,5 @@
 .proposal-details-container {
-    background-color: #F4EEE0 ;
+    background-color: whitesmoke ;
     padding: 6px ;
 }
 
@@ -18,7 +18,7 @@
     margin: 3px;
 }
 .proposal-details-keyword .badge {
-    background: #917FB3 ;
+    background: rgb(252, 122, 8) ;
     margin: 3px;
     font-size: 14px;
 }
@@ -33,8 +33,9 @@
 }
 
 .proposal-badge .badge {
-    background-color: #917FB3;
+    background-color: rgb(252, 122, 8);
     font-size: 14px;
+    margin: 3px;
 }
 
 
@@ -50,13 +51,13 @@
 
 
 #add-proposal-btn, #add-keyword-btn, #add-group-btn {
-    background-color:#4F4557 ;
-    border-color: #4F4557;
+    background-color:rgb(252, 122, 8) ;
+    border-color: rgb(252, 122, 8);
 }
 
 #go-back {
-    background-color:#6D5D6E ;
-    border-color: #6D5D6E;
+    background-color:rgb(242, 154, 77) ;
+    border-color: rgb(242, 154, 77);
 }
 
 #show-more {
