@@ -29,3 +29,20 @@ exports.getTeachers = async () => {
     throw err;
   }
 };
+
+/**
+ * Get a teacher by its id
+ */
+exports.getTeacherById = async (id) => {
+    try {
+        const teacher = await db.query("SELECT * FROM teacher WHERE id = $1", [id]);
+
+        if (teacher.rows.length === 0)
+            return { data: undefined };
+
+        return { data: teacher.rows[0] };
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}

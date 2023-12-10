@@ -55,9 +55,10 @@ function Main() {
                 </Route>
                 <Route path="/proposals">
                     <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
-                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode={0} /> : <UnAuthorizationPage />} />
-                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={2} /> : <UnAuthorizationPage />} />
-                    <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode={1} /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode="read" /> : <UnAuthorizationPage />} />
+                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="add" /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage />} />
+                    <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
 
@@ -80,7 +81,7 @@ function PageLayout() {
 export function UnAuthorizationPage({error, message}) {
     const titleMessage = error ? error : "Access Not Authorized";
     const bodyMessage = message ? message : "You are not allowed to access this page!";
-    
+
     return (
         <Container className="text-center" style={{ padding: '10rem', backgroundColor:"#F4EEE0"}}>
             <Row>

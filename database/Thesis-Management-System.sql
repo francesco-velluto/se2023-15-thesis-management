@@ -17,8 +17,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE "Thesis-Management-System";
-
 --
 -- TOC entry 3380 (class 1262 OID 16771)
 -- Name: Theis-Management-System; Type: DATABASE; Schema: -; Owner: postgres
@@ -45,8 +43,6 @@ SET row_security = off;
 -- TOC entry 4 (class 2615 OID 2200)
 -- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
 --
-
-CREATE SCHEMA public;
 
 ALTER SCHEMA public OWNER TO pg_database_owner;
 
@@ -115,7 +111,9 @@ INSERT INTO public.student (id, surname, name, gender, nationality, email, cod_d
   ('S007', 'Brown', 'Michael', 'M', 'UK', 'michael.brown@example.com', 'MSC002', 2022),
   ('S008', 'Nguyen', 'Linh', 'F', 'Vietnam', 'linh.nguyen@example.com', 'MSC002', 2020),
   ('S009', 'Martinez', 'Carlos', 'M', 'Mexico', 'carlos.martinez@example.com', 'PHD001', 2021),
-  ('S010', 'Wang', 'Xiaoyun', 'F', 'China', 'xiaoyun.wang@example.com', 'PHD001', 2020);
+  ('S010', 'Wang', 'Xiaoyun', 'F', 'China', 'xiaoyun.wang@example.com', 'PHD001', 2020),
+  ('S011', 'John', 'Martinez', 'M', 'Italy', 'studentofpolito@gmail.com', 'MSC002', 2021),
+  ('S012', 'Francesco', 'Velluto', 'M', 'Italy', 's317549@studenti.polito.it', 'MSC001', 2021);
 
 ALTER TABLE public.student OWNER TO postgres;
 
@@ -252,8 +250,7 @@ CREATE TABLE public.applications (
 );
 
 INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
-  ('P001', 'S001', 'Pending', '2023-11-01'),
-  ('P012', 'S002', 'Rejected', '2023-10-15'),
+  ('P001', 'S001', 'Canceled', '2023-11-01'),
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),
@@ -261,7 +258,11 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P024', 'S007', 'Pending', '2023-11-15'),
   ('P008', 'S008', 'Accepted', '2023-10-10'),
   ('P009', 'S009', 'Pending', '2023-11-18'),
-  ('P010', 'S010', 'Accepted', '2023-10-05');
+  ('P010', 'S010', 'Accepted', '2023-10-05'),
+  ('P002', 'S012', 'Rejected', '2023-10-10'),
+  ('P027', 'S011', 'Pending', '2023-10-20'),
+  ('P027', 'S012', 'Pending', '2023-10-25'),
+  ('P003', 'S003', 'Pending', '2023-10-30');
 
 ALTER TABLE public.applications OWNER TO postgres;
 
@@ -270,6 +271,23 @@ ALTER TABLE ONLY public.applications
 
 ALTER TABLE ONLY public.applications
     ADD CONSTRAINT applications_fk_proposals FOREIGN KEY (proposal_id) REFERENCES public.proposals(proposal_id);
+
+CREATE TABLE public.studentnotifs (
+    id SERIAL PRIMARY KEY,
+    channel VARCHAR(30) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
+    campaign VARCHAR(30) NOT NULL,
+    subject TEXT NOT NULL,
+    content JSON NOT NULL,
+    creation TIMESTAMP NOT NULL DEFAULT NOW(),
+    status VARCHAR(30) NOT NULL,
+    lastupdate TIMESTAMP NOT NULL
+);
+
+ALTER TABLE public.studentnotifs OWNER TO postgres;
+
+ALTER TABLE ONLY public.studentnotifs
+    ADD CONSTRAINT studentnotifs_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
 
 --
 -- PostgreSQL database dump complete

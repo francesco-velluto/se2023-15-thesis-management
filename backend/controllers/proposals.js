@@ -110,6 +110,46 @@ module.exports = {
       });
   },
 
+  /**
+   * Update an existing proposal
+   *
+   * @params proposal_id
+   * @body {
+   *  title : string,
+   *  keywords : string[],
+   *  type : string,
+   *  description : string,
+   *  required_knowledge : string,
+   *  notes : string,
+   *  expiration_date : string,
+   *  level : string,
+   *  programmes : string[],
+   * }
+   * @returns { proposal: { id: number, title: string, ... } }
+   * @error 404 Not Found - if the proposal does not exist
+   * @error 500 Internal Server Error - if something went wrong
+   *
+   * Refer to the official documentation for more details
+   */
+  updateProposal: async (req, res) => {
+    try {
+      const { data: proposal } = await proposalsService.getProposalById(req.params.proposal_id);
+
+      if (proposal.supervisor_id !== req.user?.id) {
+        return res.status(403).json({ error: "Not authorized!" });
+      }
+
+      const { data } = await proposalsService.updateProposal({ ...req.body });
+      res.status(200).json({ proposal: data });
+    } catch (err) {
+      if (err.status === 404)
+        return res.status(404).json({ error: "Proposal not found!" });
+
+      console.error("[BACKEND-SERVER] Cannot update proposal", err);
+      res.status(500).json({ error: "Internal server error has occurred" });
+    }
+  },
+
 
   /**
    * Delete a proposal given its id.

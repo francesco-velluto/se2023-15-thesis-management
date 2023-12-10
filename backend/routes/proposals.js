@@ -39,7 +39,7 @@ const isArrayOfStrings = (array) => {
  *
  * @params none
  * @body none
- * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string, 
+ * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string,
  *                              supervisor_surname: string, ... } ] }
  * @error 401 Unauthorized - if the user is not logged in
  * @error 500 Internal Server Error - if something went wrong
@@ -53,7 +53,7 @@ router.get("/", authenticationController.isLoggedIn, authenticationController.is
  *
  * @params none
  * @body none
- * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string, 
+ * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string,
 *                              supervisor_surname: string, ... } ] }
 * @error 401 Unauthorized - if the user is not logged in
 * @error 500 Internal Server Error - if something went wrong
@@ -90,9 +90,9 @@ router.post(
   isLoggedIn,
   isTeacher,
   check("title").isString().notEmpty(),
-  check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings), // can the keywords array be empty ??
+  check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings),
   check("type").isString().notEmpty(),
-  check("description").isString(), // or .optional().isString() if it can be empty
+  check("description").isString(),
   check("required_knowledge").optional().isString(),
   check("notes").optional().isString(),
   check("expiration_date")
@@ -117,6 +117,49 @@ router.post(
  */
 router.get('/:proposal_id', authenticationController.isLoggedIn, proposalsController.getProposalById);
 
+/**
+ * PUT /api/proposals/:proposal_id
+ *
+ * @params none
+ * @body {
+ *  title : string,
+ *  keywords : string[],
+ *  type : string,
+ *  groups : string[],
+ *  description : string,
+ *  required_knowledge : string,
+ *  notes : string,
+ *  expiration_date : string,
+ *  level : string,
+ *  programmes : string[],
+ * }
+ * @returns { proposal: { id: number, title: string, ... } }
+ * @error 401 Unauthorized - if the user is not logged in
+ * @error 403 Unauthorized - if the thesis proposal does not belong to the current logged in teacher
+ * @error 422 Invalid body - invalid fields in request body
+ * @error 500 Internal Server Error - if something went wrong
+ *
+ * Refer to the official documentation for more details
+ */
+router.put(
+  "/:proposal_id",
+  isLoggedIn,
+  isTeacher,
+  check("title").isString().notEmpty(),
+  check("keywords").isArray({ min: 1 }).custom(isArrayOfStrings),
+  check("type").isString().notEmpty(),
+  check("description").isString(),
+  check("required_knowledge").optional().isString(),
+  check("notes").optional().isString(),
+  check("expiration_date")
+    .isDate()
+    .isISO8601({ strict: true })
+    .isLength({ min: 10, max: 10 }), // only YYYY-MM-DD
+  check("level").isString().notEmpty(),
+  check("programmes").isArray({ min: 1 }).custom(isArrayOfStrings),
+  validate,
+  proposalsController.updateProposal
+);
 /**
  * DELETE /api/proposals/:proposal_id
  * 

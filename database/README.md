@@ -1,5 +1,18 @@
 # Thesis Management System
 
+## Update database model, data and rebuild your local database
+
+When adding new tables, altering existing tables or modifying data, you need to update the Thesis-Management-System.sql file.
+
+Do this by adding the SQL Query to the Thesis-Management-System.sql file, then push the changes to the repository so that everyone can benefit from the changes.
+
+To rebuild your local database and align it, run the following commands :
+
+```bash
+cd backend
+npm run rbrebuild
+```
+
 ## Conceptual design
 
 The goal is to implement Thesis Management System for PoliTO. The primary entities include "Degree," representing different academic degrees they can be followed my 0 or many students. A student is always associated to one or many degrees.
@@ -7,6 +20,7 @@ The goal is to implement Thesis Management System for PoliTO. The primary entiti
 "Career" contains information about exams taken by a student (cfu, grade, date).
 The "Proposals" entity list thesis projects, proposed by teachers.
 "Applications" entity tracks student applications for thesis proposals. A student can applied to as many proposal as he wants. A proposal can be applied by 0 or many students.
+"StudentNotifs" (Student Notifications) entity contains all the notifications sent to the students.
 
 ![Diagram](db-diagram.png)
 
@@ -27,6 +41,7 @@ In this design 4 tables can NOT be modified :
 - Career: [**id** (PK), **cod_course** (PK), **title_course**, **cfu**, **grade**, **date**]
 - Proposals: [**proposal_id** (PK), **title**, *supervisor_id*, **keywords**, **type**, **groups**, **description**, **required_knowledge**, **notes**, **expiration_date**, **level**, **programmes**, **archived**]
 - Applications: [**id** (PK), *proposal_id*, *student_id*, **status**, **application_date**]
+- StudentNotifs: [**id** (PK), *channel*, *student_id*, *campaign*, *subject*, *content*, *creation*, *status*, *lastupdate*]
 
 ## Tables details
 
@@ -107,6 +122,24 @@ The status of an application can be : `Pending, Accepted, Refused`
 | student_id |  VARCHAR(10) NOT NULL | Student ID (FOREIGN KEY) |
 | status | VARCHAR(255) NOT NULL | Status of the application. Pending, Accepted, Refused |
 | application_date | DATE NOT NULL | Date of the application. |
+
+### StudentNotifs
+
+This table contains all the notifications sent to the students.
+
+The data stored in this table are the same that will be sent as notification to the student but doesn't mean it has been sent (see status field).
+
+| Attribute | Typology                         | Description                                                            |
+| --- |----------------------------------|------------------------------------------------------------------------|
+| id | SERIAL                           | ID, auto increment                                                     |
+| channel | VARCHAR(30) NOT NULL             | Channel of the notification. (Email, ...)                              |
+| student_id | VARCHAR(10) NOT NULL             | Student ID (FOREIGN KEY)                                               |
+| campaign | VARCHAR(30) NOT NULL             | Campaign of the notification (Application Decision, ...)               |
+| subject | TEXT NOT NULL                    | Subject of the notification                                            |
+| content | JSON NOT NULL                    | JSON data content of the notification                                  |
+| creation | TIMESTAMP NOT NULL DEFAULT NOW() | Creation date of the notification                                      |
+| status | VARCHAR(30) NOT NULL             | Status of the notification. SMTP Pending, SMTP Accepted, SMTP Rejected |
+| lastupdate | TIMESTAMP NOT NULL               | Last update date of the notification status                            |
 
 ## How to install ?
 

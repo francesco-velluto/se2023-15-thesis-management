@@ -4,6 +4,8 @@ const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 const proposalsService = require("../service/proposals.service");
 
+const { sendUpdateApplicationStatusEmail } = require("./email.notifier");
+
 module.exports = {
     /**
      * Get all applications of a student by its id
@@ -97,7 +99,6 @@ module.exports = {
 
     },
 
-
     /**
      * Accept/Reject an application
      *
@@ -143,8 +144,13 @@ module.exports = {
              *  - cancel all other pending applications for the same thesis proposal
              *  - archive the thesis proposal related to that application
              */
+            let canceledApplications = [];
             if (status === "Accepted") {
                 const { proposal_id } = updatedApplication;
+
+                // get the list of all pending applications for the same thesis proposal before canceling them
+                canceledApplications = (await applicationsService.getAllPendingApplicationsByProposalId(proposal_id)).data;
+
                 await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
 
                 const { data: archivedProposal } = await proposalsService.setProposalArchived(proposal_id);
@@ -153,7 +159,27 @@ module.exports = {
                     throw Error("Some error occurred in the database: proposal not archived");
             }
 
-            return res.status(200).json({ application: updatedApplication });
+            /**
+             * Notify the student that his application has been accepted/rejected
+             */
+            let emailNotificationSent = false;
+
+            try {
+                // send email to the main student
+                await sendUpdateApplicationStatusEmail(updatedApplication, teacher_id, proposal, status);
+
+                // send email to all other students whose application has been canceled
+                for (const canceledApplication of canceledApplications)
+                    await sendUpdateApplicationStatusEmail(canceledApplication, teacher_id, proposal, "Canceled");
+
+                // if all emails have been sent correctly, set the flag to true
+                emailNotificationSent = true;
+            } catch (e) {
+                console.error("[BACKEND-SERVER] Cannot send application decision email to students: ", e);
+            }
+
+            // Even if the email cannot be sent, at this point the application has still been correctly accepted/rejected
+            return res.status(200).json({ application: updatedApplication, emailNotificationSent });
         } catch (error) {
             console.log(error);
             return res.status(500).json({ error: "Internal server error" });

@@ -1,8 +1,10 @@
-const { Builder, By, until } = require("selenium-webdriver");
+const app = require("../../app");
+const { Builder, By } = require("selenium-webdriver");
+const { doLogin, doLogout } = require("./utils");
 
 describe("End to end tests login", () => {
   let driver;
-  let baseURL = `http://localhost:3000`;
+  const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -12,23 +14,8 @@ describe("End to end tests login", () => {
     await driver.quit();
   });
 
-  test("Should span an alert when login credentials are wrong", async () => {
-    await driver.get(baseURL);
-
-    await driver.sleep(1000);
-
-    let usernameBox = await driver.findElement(By.id("username"));
-    await usernameBox.clear();
-    await usernameBox.sendKeys("john.smith@example.com");
-
-    let passwordBox = await driver.findElement(By.id("password"));
-    await passwordBox.clear();
-    await passwordBox.sendKeys("wrongpassword");
-
-    const submitButton = await driver.findElement(By.css("button.c480bc568"))
-
-    // click using js
-    await driver.executeScript("arguments[0].click();", submitButton);
+  test("Should display an alert when login credentials are wrong", async () => {
+    await doLogin("john.smith@example.com", "wrongpassword", driver);
 
     await driver.sleep(500);
 
@@ -38,27 +25,42 @@ describe("End to end tests login", () => {
     expect(textAlert).toEqual("Wrong email or password");
   }, 10000);
 
-  test("Should login correctly", async () => {
-    await driver.get(baseURL);
-
-    await driver.sleep(1000);
-
-    let usernameBox = await driver.findElement(By.id("username"));
-    await usernameBox.clear();
-    await usernameBox.sendKeys("john.smith@example.com");
-
-    let passwordBox = await driver.findElement(By.id("password"));
-    await passwordBox.clear();
-    await passwordBox.sendKeys("S001");
-
-    const submitButton = await driver.findElement(By.css("button.c480bc568"))
-
-    // click using js
-    await driver.executeScript("arguments[0].click();", submitButton);
+  test("Should not access when the confirm button is clicked and the password is not entered", async () => {
+    await doLogin("john.smith@example.com", "", driver);
 
     await driver.sleep(500);
 
     const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).not.toEqual(baseURL + "/");
+  }, 10000);
+
+  test("Should not access when the confirm button is clicked and the email is not entered", async () => {
+    await doLogin("", "wrongpassword", driver);
+
+    await driver.sleep(500);
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).not.toEqual(baseURL + "/");
+  }, 10000);
+
+  test("Should not access when the confirm button is clicked and the email and password are not entered", async () => {
+    await doLogin("", "", driver);
+
+    await driver.sleep(500);
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).not.toEqual(baseURL + "/");
+  }, 10000);
+
+  test("Should access correctly", async () => {
+    await doLogin("john.smith@example.com", "S001", driver);
+
+    await driver.sleep(500);
+
+    const currentUrl = await driver.getCurrentUrl();
+
+    await doLogout(driver);
+
     expect(currentUrl).toEqual(baseURL + "/");
   }, 10000);
 });

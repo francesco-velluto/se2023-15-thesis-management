@@ -175,6 +175,25 @@ module.exports = {
             throw error;
         }
     },
+
+    /**
+     * Get all applications for a given proposal whose status is Pending
+     * @param proposal_id
+     * @returns {Promise<{data: *}>}
+     */
+    getAllPendingApplicationsByProposalId: async (proposal_id) => {
+        try {
+            const query = "SELECT * FROM applications WHERE proposal_id = $1 AND status = 'Pending';";
+
+            const { rows } = await db.query(query, [proposal_id]);
+
+            return { data: rows };
+        } catch (error) {
+            console.error('[BACKEND-SERVER] Error in getAllCanceledApplicationsByProposalId service: ', error);
+            throw error;
+        }
+    },
+
     /**
      * Set the status of the applications of a certain proposal identified by its id as Canceled if they are Pending
      *

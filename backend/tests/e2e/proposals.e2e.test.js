@@ -1,6 +1,7 @@
 const dayjs = require("dayjs");
 const { Builder, By, Select, Button, until } = require("selenium-webdriver");
 const app = require("../../app");
+const { doLogin, doLogout } = require("./utils");
 const db = require("../../service/db");
 
 /*
@@ -19,52 +20,10 @@ const mockProposalReq = {
     notes: "These are the notes...",
     expiration_date: "2024-06-30",
     level: "Master",
-    programmes: ["MSC001"],
+    programmes: ["Master of Science"],
 };
 const baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
 let driver;
-
-const doLogin = async (username, password) => {
-    await driver.get(baseURL);
-
-    await driver.sleep(2000);
-
-    // perform login
-    const usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys(username);
-
-    const passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys(password);
-
-    
-    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
-    
-
-    // remove disabled property from button
-    await driver.executeScript(
-        "arguments[0].removeAttribute('disabled')",
-        submitButton
-    );
-
-    // click submit button with js
-    await submitButton.click();
-
-    await driver.sleep(500);
-};
-
-const doLogout = async () => {
-    // click on the drop menu
-    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-    await logoutDropdown.click();
-
-    // click on logout
-    const logout = await driver.findElement(By.id("logout-id"));
-    await logout.click();
-
-    await driver.sleep(1000);
-}
 
 
 describe("End to end tests for Search proposals", () => {
@@ -88,18 +47,18 @@ describe("End to end tests for Search proposals", () => {
     }, 20000);
 
     test("Should show proposals list", async () => {
-        await doLogin("john.smith@example.com", "S001");
+        await doLogin("john.smith@example.com", "S001", driver);
 
         await driver.get(baseURL + "/proposals");
 
         await driver.sleep(500);
         await driver.findElement(By.className("border-dark"));
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 
     test("Should show proposals list filtered by description", async () => {
-        await doLogin("john.smith@example.com", "S001");
+        await doLogin("john.smith@example.com", "S001", driver);
 
         await driver.get(baseURL + "/proposals");
 
@@ -122,7 +81,7 @@ describe("End to end tests for Search proposals", () => {
 
         await driver.findElement(By.className("border-dark"));
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 });
 
@@ -148,7 +107,7 @@ describe("End to end tests for Proposal details", () => {
     }, 20000);
 
     test("Should show Proposal not found", async () => {
-        await doLogin("john.smith@example.com", "S001");
+        await doLogin("john.smith@example.com", "S001", driver);
 
         await driver.get(baseURL + "/proposals/ABC0");
 
@@ -160,18 +119,18 @@ describe("End to end tests for Proposal details", () => {
 
         expect(pageTitle).toEqual("The proposal has not been found!");
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 
     test("Should show Proposal details", async () => {
-        await doLogin("john.smith@example.com", "S001");
+        await doLogin("john.smith@example.com", "S001", driver);
 
         await driver.get(baseURL + "/proposals/P001");
 
         await driver.sleep(500);
         await driver.findElement(By.className("proposal-details-title"));
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 });
 
@@ -224,7 +183,7 @@ describe("End to End Tests for Insert Proposal", () => {
         for (const programme of mockProposalReq.programmes) {
             const selectElement = await driver.findElement(By.name("proposal-programmes"));
             const select = new Select(selectElement);
-            await select.selectByValue(programme);
+            await select.selectByVisibleText(programme);
 
             await driver.sleep(200);
         }
@@ -251,7 +210,7 @@ describe("End to End Tests for Insert Proposal", () => {
     }, 20000);
 
     test("T2.2 - Should not post a new proposal if title is empty", async () => {
-        await doLogin("sarah.anderson@example.com", "T001");
+        await doLogin("sarah.anderson@example.com", "T001", driver);
 
         await driver.get(baseURL + "/proposals/new");
 
@@ -273,11 +232,11 @@ describe("End to End Tests for Insert Proposal", () => {
         const currentUrl = await driver.getCurrentUrl();
         expect(currentUrl).toEqual(baseURL + "/proposals/new"); // expect to not be redirected
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 
     test("T2.3 - Should insert a new proposal", async () => {
-        await doLogin("sarah.anderson@example.com", "T001");
+        await doLogin("sarah.anderson@example.com", "T001", driver);
 
         await driver.get(baseURL + "/proposals/new");
 
@@ -297,7 +256,7 @@ describe("End to End Tests for Insert Proposal", () => {
         const idRegex = "0(0[1-9]|[1-9][0-9])|[1-9][0-9]{2}[0-9]*";
         expect(currentUrl).toMatch(new RegExp(baseURL + "/proposals/P" + idRegex));
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 });
 
@@ -323,31 +282,31 @@ describe("End to end test for professor proposals", () => {
     }, 20000);
 
     test("Should show the proposals list if logged", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals");
 
         await driver.sleep(500);
         await driver.findElement(By.className("bg-white rounded-bottom py-4 container"));
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 
     test("Should see the details of a proposal", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals/P002");
 
         await driver.sleep(500);
-        let pageTitle = await driver.findElement(By.className("proposal-details-title")).getText();
+        let pageTitle = await driver.findElement(By.className("proposal-details-title")).getAttribute('value');
 
         expect(pageTitle).toEqual("Machine Learning");
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 
     test("Should see proposal not found alert", async () => {
-        await doLogin("michael.wilson@example.com", "T002");
+        await doLogin("michael.wilson@example.com", "T002", driver);
 
         await driver.get(baseURL + "/proposals/P0066");
 
@@ -356,7 +315,7 @@ describe("End to end test for professor proposals", () => {
         let alertText = await driver.findElement(By.className("lead")).getText();
         expect(alertText).toEqual("The proposal has not been found!");
 
-        await doLogout();
+        await doLogout(driver);
     }, 20000);
 
 });

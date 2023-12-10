@@ -1,49 +1,10 @@
 const app = require("../../app");
 const { Builder, By, until } = require("selenium-webdriver");
+const { doLogin, doLogout } = require("./utils");
 
 describe("End to end tests for browse applications", () => {
   let driver;
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
-
-  const doLogin = async () => {
-    await driver.get(baseURL);
-
-    await driver.sleep(1000);
-
-    // perform login
-    const usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys("michael.wilson@example.com");
-
-    const passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys("T002");
-
-    const submitButton = await driver.findElement(By.css("button.c480bc568"))
-
-    // remove disabled property from button
-    await driver.executeScript(
-      "arguments[0].removeAttribute('disabled')",
-      submitButton
-    );
-
-    // click submit button with js
-    await submitButton.click();
-
-    await driver.sleep(500);
-  };
-
-  const doLogout = async () => {
-    // click on the drop menu
-    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-    await logoutDropdown.click();
-
-    // click on logout
-    const logout = await driver.findElement(By.id("logout-id"));
-    await logout.click();
-
-    await driver.sleep(1000);
-  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -54,7 +15,7 @@ describe("End to end tests for browse applications", () => {
   });
 
   test("Should show at least an application in the page", async () => {
-    await doLogin();
+    await doLogin("michael.wilson@example.com", "T002", driver);
 
     await driver.get(baseURL + "/applications");
 
@@ -83,6 +44,6 @@ describe("End to end tests for browse applications", () => {
       expect(applications.length > 0).toEqual(true);
     }
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 });

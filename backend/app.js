@@ -16,7 +16,7 @@ const corsOptions = {
 console.info('[BACKEND-SERVER] Allowing CORS requests from http://localhost:' + process.env.FRONTEND_PORT);
 app.use(cors(corsOptions));
 
-app.use(morgan('dev'));
+app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

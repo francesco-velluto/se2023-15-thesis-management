@@ -108,6 +108,8 @@ body {
 
 .proposal-details-title {
     text-align: center;
+    font-size: 30px;
+    font-weight: bold;
 }
 
 .proposal-details-container .row {
@@ -143,6 +145,13 @@ body {
 .text-plus>* {
     margin-right: 10px;
 }
+
+.text-with-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
 
 .text-plus> :last-child {
     margin-right: 0;

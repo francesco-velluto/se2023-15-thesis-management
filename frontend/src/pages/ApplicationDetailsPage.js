@@ -2,11 +2,10 @@ import { useContext, useEffect, useState } from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
-
 import { useNavigate, useParams } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
-import { Spinner, Row, Col, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
+import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
@@ -26,10 +25,17 @@ function ApplicationDetails() {
     const [infoApplication, setInfoApplication] = useState(undefined);
 
     const [showModal, setShowModal] = useState(false);
+    const [showUpdatingModal, setShowUpdatingModal] = useState(false);
     const [choice, setChoice] = useState("");
 
+    const [emailSent, setEmailSent] = useState(undefined);
+
     const handleShow = () => setShowModal(true);
-    const handleClose = () => {setShowModal(false); setChoice("");}
+    const handleClose = () => setShowModal(false);
+
+    const handleShowUpdatingModal = () => setShowUpdatingModal(true);
+
+    const handleCloseUpdatingModal = () => setShowUpdatingModal(false);
 
     useEffect(() => {
         const getData = async () => {
@@ -83,13 +89,22 @@ function ApplicationDetails() {
         handleShow();
     }
 
-    const handleSetStatus = async (status) =>{
-
+    const handleSetStatus = async (status) => {
         try {
-            await acceptOrRejectApplication(status, application_id);
-            navigate("/applications");
-        } catch (error) {
-            setErrorMessage("Some error occurred during the operation!");
+            // close the modal
+            handleClose();
+
+            // show the updating modal
+            handleShowUpdatingModal();
+
+            const applicationModified = await acceptOrRejectApplication(status, application_id);
+
+            setEmailSent(applicationModified.emailNotificationSent);
+        } catch (e) {
+            console.error("Error in the updating of the application status: ", e);
+            setErrorMessage("An error occurred in the updating of the application status.");
+            handleClose();
+            handleCloseUpdatingModal();
         }
     }
 
@@ -146,6 +161,62 @@ function ApplicationDetails() {
                                     Confirm
                                 </Button>
                             </Modal.Footer>
+                        </Modal>
+
+                        <Modal show={showUpdatingModal}>
+                            <Modal.Header>
+                                <Modal.Title>Updating application status</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body className={"align-content-center align-items-center"}>
+                                <Container>
+                                    <Row className={"align-items-center align-content-center"}>
+                                        <Col lg={3}>
+                                            {emailSent === undefined ?
+                                                <Spinner animation="border" role="status" style={{margin: "auto"}}/> :
+                                                <>
+                                                    <svg className="svg-icon" width={50} height={50} viewBox="0 0 20 20">
+                                                        <path d="M17.388,4.751H2.613c-0.213,0-0.389,0.175-0.389,0.389v9.72c0,0.216,0.175,0.389,0.389,0.389h14.775c0.214,0,0.389-0.173,0.389-0.389v-9.72C17.776,4.926,17.602,4.751,17.388,4.751 M16.448,5.53L10,11.984L3.552,5.53H16.448zM3.002,6.081l3.921,3.925l-3.921,3.925V6.081z M3.56,14.471l3.914-3.916l2.253,2.253c0.153,0.153,0.395,0.153,0.548,0l2.253-2.253l3.913,3.916H3.56z M16.999,13.931l-3.921-3.925l3.921-3.925V13.931z"></path>
+                                                    </svg>
+                                                    {
+                                                        emailSent ?
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> :
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                                    }
+                                                </>
+                                            }
+                                        </Col>
+                                        <Col id={"email-sending-message"}>
+                                            {emailSent === undefined ?
+                                                <>
+                                                    You have <b>{choice === "Accepted" ? "accepted" : "rejected"}</b> this application!<br/>
+                                                    <i>We are updating the status of the application and sending an email notification to the student.</i>
+                                                    {choice === "Accepted" && <><br/><i>All other students who applied will receive the notification that their application has been canceled.</i></>}
+                                                </>
+                                                :
+                                                <>
+                                                    The application status has been updated successfully!<br/>
+                                                    {emailSent ?
+                                                        <i>
+                                                            An email notification has been correctly sent to the student{choice === "Accepted" && 's'}.
+                                                        </i>
+                                                        :
+                                                        <i>
+                                                            Unfortunately an error occurred while sending the email notification to the student{choice === "Accepted" && 's'},
+                                                            the application is still {choice === "Accepted" ? "accepted" : "rejected"} anyways
+                                                        </i>
+                                                    }
+                                                </>
+                                            }
+                                        </Col>
+                                    </Row>
+                                </Container>
+                            </Modal.Body>
+                            {
+                                emailSent !== undefined &&
+                                <Modal.Footer>
+                                    <Button id="email-message-back-btn" variant="outline-secondary" onClick={() => navigate("/applications")}>Go back</Button>
+                                </Modal.Footer>
+                            }
                         </Modal>
                     </>
                 }

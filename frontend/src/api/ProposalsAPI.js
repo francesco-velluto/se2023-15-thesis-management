@@ -107,11 +107,10 @@ module.exports = {
 
   updateProposalApi: async (proposal) => {
     try {
-      // ! check if it's correct when the backend is ready
-      const ProposalURL = ProposalsAPIURL + proposal.proposal_id + '/update';
-      const response = await APICall(ProposalURL, "POST", JSON.stringify(proposal));
+      const ProposalURL = ProposalsAPIURL + "/" + proposal.proposal_id;
+      const result = await APICall(ProposalURL, "PUT", JSON.stringify(proposal));
 
-      console.log(response);
+      return result.proposal;
     } catch (err) {
       throw new Error(err);
     }
