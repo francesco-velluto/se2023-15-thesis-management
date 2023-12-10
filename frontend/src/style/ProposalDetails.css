@@ -18,7 +18,7 @@
     margin: 3px;
 }
 .proposal-details-keyword .badge {
-    background: rgb(252, 122, 8) ;
+    background: orange ;
     margin: 3px;
     font-size: 14px;
 }
@@ -33,7 +33,7 @@
 }
 
 .proposal-badge .badge {
-    background-color: rgb(252, 122, 8);
+    background-color: orange;
     font-size: 14px;
     margin: 3px;
 }
@@ -51,13 +51,14 @@
 
 
 #add-proposal-btn, #add-keyword-btn, #add-group-btn {
-    background-color:rgb(252, 122, 8) ;
-    border-color: rgb(252, 122, 8);
+    background-color:orange ;
+    border-color: orange;
 }
 
 #go-back {
-    background-color:rgb(242, 154, 77) ;
-    border-color: rgb(242, 154, 77);
+    color:rgb(226, 169, 119);
+    border-color: rgb(226, 169, 119);
+    background-color: whitesmoke;
 }
 
 #show-more {

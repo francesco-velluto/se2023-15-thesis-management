@@ -763,24 +763,12 @@ function ProposalDetailsPage({ mode }) {
                                     </Row>
 
                                     <Row>
-                                        {mode === "read" &&
-                                            <Col>
-                                                <Button id="go-back"
-                                                    onClick={() => { navigate('/proposals') }}>
-                                                    {loggedUser.role === 1 ? "Back to Search Proposal" : "Back to Browse Proposals"}
-                                                </Button>
-                                            </Col>
-                                        }
-
-                                        {mode !== "read" &&
-                                            <Col>
-                                                <Button id="go-back"
-                                                    onClick={() => { navigate('/proposals') }}>
-                                                    Back to Browse Proposals
-                                                </Button>
-                                            </Col>
-                                        }
-
+                                        <Col>
+                                            <Button id="go-back"
+                                                onClick={() => { navigate('/proposals') }}>
+                                                Return
+                                            </Button>
+                                        </Col>
                                         <Col className={"d-flex flex-row-reverse"}>
                                             {mode === "read" && loggedUser.role === 1 &&
                                                 <ApplicationButton setErrMsg={setErrorMessage} proposalID={proposal_id} />}

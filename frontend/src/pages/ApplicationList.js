@@ -33,7 +33,7 @@ function ApplicationList() {
         <>
             <NavbarContainer />
 
-            <TitleBar title={"Browse Applications"} />
+            <TitleBar/>
             <Container >
                 <Row >
                     {errors?.map((error, index) => (

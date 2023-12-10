@@ -30,16 +30,25 @@ body {
     background-color: whitesmoke;
 }
 
+.home-page-content {
+    max-width: 1024px;
+}
+
 /*************************/
 
 #card-border{
     border-color: #003576 !important; 
 }
 
+#card-header{
+    border-color: #003576 !important; 
+    color: orange;
+}
 
 /*************************/
 /* NAV BAR ***************/
 /*************************/
+
 .navbar {
     display: flex;
     justify-content: center;
@@ -91,8 +100,9 @@ body {
     display: flex;
     align-items: center;
 }
+
 /*************************/
-/* PROPOSAL LIST*/
+/* PROPOSAL LIST**********/
 /*************************/
 
 #show-proposal-detail, #proposal-detail-actions {
@@ -105,7 +115,7 @@ body {
 #copy-proposal-id, #update-proposal-id {
     margin-top: -2px; 
     cursor: 'pointer';
-    color:  rgb(252, 122, 8);
+    color:  orange;
     font-weight: bold;
     
 }
@@ -123,6 +133,7 @@ body {
     border-radius: 0.25rem;
     padding: 1rem; 
   }
+
   @media (min-width: 768px) {
     .proposal-row {
       margin-top: 0.25rem;
@@ -157,7 +168,7 @@ body {
   }
   
   @media (min-width: 768px) {
-    .student-proposal-card t {
+    .student-proposal-card {
       margin-top: 0.25rem; /* Equivalent to my-md-1 */
       margin-bottom: 0.25rem; /* Equivalent to my-md-1 */
     }
@@ -204,31 +215,35 @@ body {
     margin: 0;
 }
 
-.text-plus {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 6px;
+.student-applications-container {
+    padding: 9px;
+    background-color: whitesmoke;
 }
 
-.text-plus>* {
-    margin-right: 10px;
+.student-application-row {
+    margin: 5px;
+    background-color: whitesmoke;
 }
 
-.text-with-ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
+.student-application-card-body {
+    color: #282828 !important;
+    background-color: whitesmoke;
 
-.text-plus> :last-child {
-    margin-right: 0;
+}
+#back-to-homepage-button {
+    background-color:#4F4557;
+    border-color: #4F4557,
 }
 
 /*************************/
 
+
+
+
 /*************************/
+/* TITLE BAR *************/
+/*************************/
+
 .row-bar {
     background-color: white;
     display: flex;
@@ -262,19 +277,8 @@ body {
 }
 
 /*************************/
-
-.home-page-content {
-    max-width: 1024px;
-}
-
-.filterCardContainer {
-    display: inline-block;
-    width: 75%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-left: 3px;
-}
+/* FOOTER ****************/
+/*************************/
 
 footer {
     padding: 1.5rem;

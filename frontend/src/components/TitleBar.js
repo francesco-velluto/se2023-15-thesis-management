@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { BiPlus } from "react-icons/bi";
 
-function TitleBar({ title }) {
+function TitleBar() {
   const { loggedUser } = useContext(LoggedUserContext);
 
   return (
