@@ -69,7 +69,7 @@ function Main() {
 
 function PageLayout() {
     return (
-        <Row style={{backgroundColor:"whitesmoke"}} className="page-content w-100 m-0">
+        <Row  className="page-content w-100 m-0">
             <Outlet />
         </Row>
     );
@@ -83,7 +83,7 @@ export function UnAuthorizationPage({error, message}) {
     const bodyMessage = message ? message : "You are not allowed to access this page!";
 
     return (
-        <Container className="text-center" style={{ padding: '10rem', backgroundColor:"#F4EEE0"}}>
+        <Container className="text-center" >
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -119,7 +119,7 @@ export function UnAuthorizationPage({error, message}) {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center" style={{ padding: '7rem', backgroundColor:"#F4EEE0"}}>
+        <Container className="text-center" >
             <Row>
                 <Col>
                     <Alert variant="danger">

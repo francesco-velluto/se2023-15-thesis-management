@@ -248,7 +248,7 @@ function ProposalsSearchArea(props) {
                 </Container>
                 :
                 searchPossibleValues &&
-                    <div className="container-fluid bg-light p-3 d-flex flex-column align-items-center">
+                    <div className={"search-area"} >
                         {error &&
                             <Alert variant={"danger"}>
                                 Wrong filtering parameters! Retry!
