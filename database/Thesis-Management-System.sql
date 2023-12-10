@@ -246,7 +246,7 @@ CREATE TABLE public.applications (
     id SERIAL PRIMARY KEY,
     proposal_id VARCHAR(10) NOT NULL,
     student_id VARCHAR(10) NOT NULL,
-    status VARCHAR(255) NOT NULL, 
+    status VARCHAR(255) NOT NULL,
     application_date DATE NOT NULL
 );
 
@@ -291,6 +291,17 @@ ALTER TABLE ONLY public.studentnotifs
     ADD CONSTRAINT studentnotifs_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
 
 --
--- PostgreSQL database dump complete
+-- Name: virtual_clock; Type: TABLE; Schema: public; Owner: postgres
 --
 
+CREATE TABLE public.virtual_clock (
+    virtual_date DATE PRIMARY KEY,
+);
+
+INSERT INTO public.virtual_clock (virtual_date) VALUES ('2023-12-10');
+
+ALTER TABLE public.applications OWNER TO postgres;
+
+--
+-- PostgreSQL database dump complete
+--
