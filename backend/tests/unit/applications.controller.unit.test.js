@@ -124,7 +124,7 @@ describe("T1 - getAllApplicationsByStudentId", () => {
 
   });
 
-  it("T1.3 ERROR 500 | Internal server error", (done) => {
+  test("T1.3 ERROR 500 | Internal server error", (done) => {
     const student_id = "authenticatedStudentId";
 
     isLoggedIn.mockImplementation((req, res, next) => {
