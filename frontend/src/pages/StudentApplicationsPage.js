@@ -37,7 +37,7 @@ function StudentApplicationsPage() {
     return (
         <>
             <NavbarContainer />
-            <TitleBar title={"Student's Applications"} />
+            <TitleBar/>
             <Container className={"justify-content-center student-applications-container"}>
                 {isLoading ? (
                     <Row className={"justify-content-center"}>

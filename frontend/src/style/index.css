@@ -31,7 +31,8 @@ body {
 }
 
 .home-page-content {
-    max-width: 1024px;
+    max-width: 512px;
+    width: 100%;
 }
 
 /*************************/
