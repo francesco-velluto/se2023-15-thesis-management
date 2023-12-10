@@ -112,7 +112,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
 
                 "ORDER BY p.proposal_id", [prof_id])
           .then((rows) => {
-              if (rows.lenght == 0) {
+              if (rows.length == 0) {
                   console.error('[BACKEND-SERVER] Error in getAllProposals');
                   reject({ status: 404, data: 'proposals not found' });
               }
