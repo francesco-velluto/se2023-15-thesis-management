@@ -72,3 +72,25 @@
         padding-right: 3rem;
     }
 }
+
+.text-plus{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px; 
+}
+
+.text-plus>* {
+    margin-right: 10px;
+}
+
+.text-with-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+.text-plus> :last-child {
+    margin-right: 0;
+}

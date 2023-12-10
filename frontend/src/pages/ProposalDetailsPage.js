@@ -676,7 +676,7 @@ function ProposalDetailsPage({ mode }) {
                                                                         }}
                                                                     />
                                                                 </Col>
-                                                                <Col id="purple-button" >
+                                                                <Col>
                                                                     <Button id="add-keyword-btn"  onClick={() => {
                                                                         if (!newKeyword.trim()) {
                                                                             return;
