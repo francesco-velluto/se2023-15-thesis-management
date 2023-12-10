@@ -1,56 +1,12 @@
 const request = require("supertest");
 const app = require("../../app");
 
-const { Builder, By, until } = require("selenium-webdriver");
+const { Builder, By } = require("selenium-webdriver");
+const { doLogout, doLogin } = require("./utils");
 
 describe("End to end tests for Apply to proposal", () => {
   let driver;
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
-
-  const doLogin = async () => {
-    await driver.get(baseURL);
-
-    await driver.sleep(1000);
-
-    // perform login
-    let usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys("emily.johnson@example.com");
-    let passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys("S002");
-
-    await driver.sleep(1000);
-
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
-
-    // remove disabled property from button
-    await driver.executeScript(
-      "arguments[0].removeAttribute('disabled')",
-      submitButton
-    );
-
-    // click submit button with js
-    await submitButton.click();
-
-    await driver.sleep(1000);
-
-    await driver.get(baseURL);
-
-    await driver.sleep(1000);
-  };
-
-  const doLogout = async () => {
-    // click on the drop menu
-    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-    await logoutDropdown.click();
-
-    // click on logout
-    const logout = await driver.findElement(By.id("logout-id"));
-    await logout.click();
-
-    await driver.sleep(1000);
-  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -61,7 +17,7 @@ describe("End to end tests for Apply to proposal", () => {
   });
 
   test("Should show apply or applied button - if apply it becomes applied after click", async () => {
-    await doLogin();
+    await doLogin("emily.johnson@example.com", "S002", driver);
 
     await driver.get(baseURL + "/proposals/P015");
 
@@ -93,7 +49,7 @@ describe("End to end tests for Apply to proposal", () => {
       expect(applyButtonTextBefore).toEqual("Apply");
       expect(applyButtonText).toEqual("Applied");
 
-      await doLogout();
+      await doLogout(driver);
     }
   }, 20000);
 });
@@ -101,52 +57,6 @@ describe("End to end tests for Apply to proposal", () => {
 describe("End to end tests for Accept or Reject Application", () => {
   let driver;
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
-
-  const doLogin = async (isTeacherOne = true) => {
-    await driver.get(baseURL);
-
-    await driver.sleep(2000);
-
-    // perform login
-    let usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys(
-      isTeacherOne ? "sarah.anderson@example.com" : "ana.gomez@example.com"
-    );
-
-    let passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys(isTeacherOne ? "T001" : "T003");
-
-    await driver.sleep(1000);
-
-    // find all buttons elements
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
-
-
-    // remove disabled property from button
-    await driver.executeScript(
-      "arguments[0].removeAttribute('disabled')",
-      submitButton
-    );
-
-    // click submit button with js
-    await submitButton.click();
-
-    await driver.sleep(1000);
-  };
-
-  const doLogout = async () => {
-    // click on the drop menu
-    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-    await logoutDropdown.click();
-
-    // click on logout
-    const logout = await driver.findElement(By.id("logout-id"));
-    await logout.click();
-
-    await driver.sleep(1000);
-  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -157,7 +67,7 @@ describe("End to end tests for Accept or Reject Application", () => {
   });
 
   test("Should cancel the accept of an application", async () => {
-    await doLogin();
+    await doLogin("sarah.anderson@example.com", "T001", driver);
 
     await driver.sleep(500);
 
@@ -181,11 +91,11 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications/1");
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 
   test("Should cancel the reject of an application", async () => {
-    await doLogin();
+    await doLogin("sarah.anderson@example.com", "T001", driver);
 
     await driver.sleep(500);
 
@@ -209,11 +119,11 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications/1");
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 
   test("Should accept an application", async () => {
-    await doLogin();
+    await doLogin("sarah.anderson@example.com", "T001", driver);
 
     await driver.sleep(500);
 
@@ -254,11 +164,11 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 
   test("Should reject an application", async () => {
-    await doLogin(false);
+    await doLogin("ana.gomez@example.com", "T003", driver);
 
     await driver.sleep(500);
 
@@ -299,55 +209,13 @@ describe("End to end tests for Accept or Reject Application", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/applications");
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 });
 
 describe("End to end tests for Browse applications decisions", () => {
   let driver;
   let baseURL = `http://localhost:${process.env.FRONTEND_PORT}`;
-
-  const doLogin = async () => {
-    await driver.get(baseURL);
-
-    await driver.sleep(1000);
-
-    // perform login
-    let usernameBox = await driver.findElement(By.id("username"));
-    usernameBox.clear();
-    usernameBox.sendKeys("john.smith@example.com");
-
-    let passwordBox = await driver.findElement(By.id("password"));
-    passwordBox.clear();
-    passwordBox.sendKeys("S001");
-
-    await driver.sleep(1000);
-
-    const submitButton = await driver.findElement(By.css("div.ca8d7aabd button"));
-
-    // remove disabled property from button
-    await driver.executeScript(
-      "arguments[0].removeAttribute('disabled')",
-      submitButton
-    );
-
-    // click submit button with js
-    await submitButton.click();
-
-    await driver.sleep(1000);
-  };
-
-  const doLogout = async () => {
-    // click on the drop menu
-    const logoutDropdown = await driver.findElement(By.id("dropdown-basic"));
-    await logoutDropdown.click();
-
-    // click on logout
-    const logout = await driver.findElement(By.id("logout-id"));
-    await logout.click();
-
-    await driver.sleep(1000);
-  }
 
   beforeAll(async () => {
     driver = await new Builder().forBrowser("chrome").build();
@@ -358,7 +226,7 @@ describe("End to end tests for Browse applications decisions", () => {
   });
 
   test("Should show the application decision", async () => {
-    await doLogin();
+    await doLogin("john.smith@example.com", "S001", driver);
 
     await driver.sleep(500);
 
@@ -390,11 +258,11 @@ describe("End to end tests for Browse applications decisions", () => {
 
     expect(await driver.getCurrentUrl()).toEqual(baseURL + "/");
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 
   test("Should show the new application decision if the student applies to a new proposal", async () => {
-    await doLogin();
+    await doLogin("john.smith@example.com", "S001", driver);
 
     await driver.sleep(500);
 
@@ -443,6 +311,6 @@ describe("End to end tests for Browse applications decisions", () => {
       }
     }
 
-    await doLogout();
+    await doLogout(driver);
   }, 20000);
 });
