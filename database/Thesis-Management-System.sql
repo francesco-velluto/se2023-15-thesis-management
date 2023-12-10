@@ -298,7 +298,7 @@ CREATE TABLE public.virtual_clock (
     virtual_date DATE PRIMARY KEY,
 );
 
-INSERT INTO public.virtual_clock (virtual_date) VALUES ('2023-12-10');
+INSERT INTO public.virtual_clock (virtual_date) VALUES (CURRENT_DATE);
 
 ALTER TABLE public.applications OWNER TO postgres;
 
