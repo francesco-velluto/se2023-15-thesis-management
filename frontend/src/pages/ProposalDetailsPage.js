@@ -60,14 +60,14 @@ function ProposalDetailsPage({ mode }) {
     const targetRef = useRef(null);
 
     const handleShow = () => setShowModal(true);
-    const handleClose = () => {setShowModal(false);}
+    const handleClose = () => { setShowModal(false); }
 
-    const handleDeleteProposal = async() =>{
+    const handleDeleteProposal = async () => {
         var result = await deleteProposal(proposal_id);
-
-        if (!(result instanceof Error)){
+        
+        if (!(result instanceof Error)) {
             navigate("/proposals");
-        }else{
+        } else {
             setErrorMessage(result.message);
             handleClose();
         }

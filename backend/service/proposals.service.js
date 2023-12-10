@@ -17,7 +17,8 @@ const Proposal = require("../model/Proposal");
     row.expiration_date,
     row.level,
     row.programmes,
-    row.archived
+    row.archived,
+    row.deleted
   );
 };
 
@@ -27,8 +28,8 @@ exports.insertProposal = async (proposal) => {
       `INSERT INTO proposals
         (proposal_id, title, supervisor_id, keywords, type,
         groups, description, required_knowledge, notes,
-        expiration_date, level, programmes, archived)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        expiration_date, level, programmes, archived, deleted)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         RETURNING *;`,
       [
         proposal.proposal_id,
@@ -44,6 +45,7 @@ exports.insertProposal = async (proposal) => {
         proposal.level,
         proposal.programmes,
         false,
+        false
       ]
     );
     return this.rowToProposal(result.rows[0]);
@@ -75,7 +77,7 @@ exports.getAllProposals = async (cod_degree) => {
       "JOIN unnest(p.programmes) AS prog ON true " +
       "JOIN degree d ON prog = d.cod_degree " +
       "WHERE cod_degree = '" + cod_degree + "' AND p.expiration_date >= current_date " +
-      "AND p.archived = false " +
+      "AND p.archived = false AND p.deleted = false " +
       "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
       "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
       "ORDER BY p.proposal_id")
@@ -105,7 +107,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
                 "JOIN unnest(p.programmes) AS prog ON true " +
                 "JOIN degree d ON prog = d.cod_degree " +
 
-                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.archived = false " +
+                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.archived = false AND p.deleted = false " +
 
                 "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
                 "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
@@ -120,7 +122,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
         resolve({ status: 200, data: rows.rows });
       })
       .catch((err) => {
-        console.error("[BACKEND-SERVER] Error in getAllProposals", err);
+        console.error("[BACKEND-SERVER] Error in getAllProfessorProposals", err);
         reject({ status: 500, data: "Internal server error" });
       });
   });

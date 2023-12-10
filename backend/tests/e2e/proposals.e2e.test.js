@@ -1,6 +1,7 @@
 const dayjs = require("dayjs");
-const { Builder, By, Select } = require("selenium-webdriver");
+const { Builder, By, Select, Button, until } = require("selenium-webdriver");
 const app = require("../../app");
+const db = require("../../service/db");
 
 /*
  * Template for insert proposal request body,
@@ -37,8 +38,9 @@ const doLogin = async (username, password) => {
     passwordBox.clear();
     passwordBox.sendKeys(password);
 
-    //const submitButton = await driver.findElement(By.css("button.c480bc568"));
-    const submitButton = await driver.findElement(By.className("cb8dcbc41 c5fa977b5 c3419c4cf cf576c2dc cdb91ebae"));
+    
+    const submitButton = await driver.findElement(By.css("div.cdc80f5fa button"))
+    
 
     // remove disabled property from button
     await driver.executeScript(
@@ -63,6 +65,7 @@ const doLogout = async () => {
 
     await driver.sleep(1000);
 }
+
 
 describe("End to end tests for Search proposals", () => {
     beforeAll(async () => {
@@ -123,6 +126,7 @@ describe("End to end tests for Search proposals", () => {
     }, 20000);
 });
 
+
 describe("End to end tests for Proposal details", () => {
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
@@ -170,6 +174,7 @@ describe("End to end tests for Proposal details", () => {
         await doLogout();
     }, 20000);
 });
+
 
 describe("End to End Tests for Insert Proposal", () => {
     const fillProposalForm = async () => {
@@ -296,6 +301,7 @@ describe("End to End Tests for Insert Proposal", () => {
     }, 20000);
 });
 
+
 describe("End to end test for professor proposals", () => {
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
@@ -356,6 +362,41 @@ describe("End to end test for professor proposals", () => {
 });
 
 describe("End to end test for delete proposal", () => {
+
+    //function to create a fake proposal to delete in the test
+    const fakeInsert = async() =>{
+        const fakeProposalToDelete = {
+            title: "test",
+            supervisor_id: "T003",
+            keywords: ["keyword1", "keyword2"],
+            type: "Research",
+            groups: ["Group A", "Group B"],
+            description: "A master thesis just to test the insert API call",
+            required_knowledge: "Node.js, PostgreSQL, React.js",
+            notes: "These are the notes...",
+            expiration_date: "2024-06-30",
+            level: "Master",
+            programmes: ["MSC001"],
+        };
+
+        const query = `INSERT INTO proposals
+        (proposal_id, title, supervisor_id, keywords, type,
+        groups, description, required_knowledge, notes,
+        expiration_date, level, programmes, archived, deleted)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+        RETURNING *;`
+
+        await db.query(query, ['P100', fakeProposalToDelete.title, fakeProposalToDelete.supervisor_id,
+            fakeProposalToDelete.keywords, fakeProposalToDelete.type, fakeProposalToDelete.groups,
+            fakeProposalToDelete.description, fakeProposalToDelete.required_knowledge, fakeProposalToDelete.notes,
+            fakeProposalToDelete.expiration_date, fakeProposalToDelete.level, fakeProposalToDelete.programmes,
+            false, false
+        ]);
+
+        await driver.sleep(500);
+
+    };
+
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
     });
@@ -380,11 +421,109 @@ describe("End to end test for delete proposal", () => {
 
         await driver.sleep(500);
 
-        let applyButton = await driver.findElement(By.className("btn btn-secondary")).getText();
+        await driver.get(baseURL + "/proposals/P019");
 
-        expect(applyButton).toEqual("Apply");
+        await driver.sleep(1000);
+
+        let button = await driver.findElement(By.css('#apply-button')).getText();
+
+        expect(button).toEqual("Apply");
+
+        await doLogout();
 
         
+    }, 20000);
+
+    test("Shouldn't delete the proposal if cancel the action", async() =>{
+        await doLogin("ana.gomez@example.com", "T003");
+
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/P019");
+        await driver.sleep(500);
+
+        const deleteButton = await driver.findElement(By.css('#delete-proposal-btn'));
+        
+
+        expect(await deleteButton.getText()).toEqual("Delete proposal");
+        
+
+        await driver.executeScript(
+            "arguments[0].removeAttribute('disabled')",
+            deleteButton
+        );
+
+        await driver.executeScript(
+            "document.getElementById('delete-proposal-btn').click()"
+        );
+
+        await driver.sleep(500);
+
+        let cancelButton = await driver.findElement(By.css('#cancel-delete-proposal'));
+        await driver.sleep(500);
+
+        expect(await cancelButton.getText()).toEqual('Cancel');
+
+        await driver.executeScript(
+            "document.getElementById('cancel-delete-proposal').click()"
+        );
+
+        const currentUrl = await driver.getCurrentUrl();
+        expect(currentUrl).toEqual(baseURL + "/proposals/P019"); // expect to not be redirected
+
+        await doLogout();
+    
+    }, 20000);
+
+    test("Should delete the proposal", async ()=>{
+
+        
+
+        await fakeInsert();
+        
+
+        await doLogin("ana.gomez@example.com", "T003");
+
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/P100");
+        await driver.sleep(500);
+
+        const deleteButton = await driver.findElement(By.css('#delete-proposal-btn'));
+        
+
+        expect(await deleteButton.getText()).toEqual("Delete proposal");
+        
+
+        await driver.executeScript(
+            "arguments[0].removeAttribute('disabled')",
+            deleteButton
+        );
+
+        await driver.executeScript(
+            "document.getElementById('delete-proposal-btn').click()"
+        );
+
+        await driver.sleep(500);
+
+        let confirmButton = await driver.findElement(By.css('#confirm-delete-proposal'));
+        await driver.sleep(500);
+
+        expect(await confirmButton.getText()).toEqual('Confirm');
+
+        await driver.executeScript(
+            "document.getElementById('confirm-delete-proposal').click()"
+        );
+
+        await driver.sleep(500);
+
+        const currentUrl = await driver.getCurrentUrl();
+
+        await driver.sleep(500);
+        expect(currentUrl).toEqual(baseURL + "/proposals"); // expect to be redirected
+    
+        await doLogout();
+
     }, 20000);
 
 
