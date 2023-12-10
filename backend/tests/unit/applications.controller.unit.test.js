@@ -10,6 +10,7 @@ const {
   getAllApplicationsByStudentId,
   setApplicationStatus,
   getApplicationById,
+  insertNewApplication,
   cancelPendingApplicationsByProposalId,
   getAllPendingApplicationsByProposalId
 } = require("../../service/applications.service");
@@ -50,8 +51,8 @@ afterAll(() => {
   jest.restoreAllMocks();
 });
 
-describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
-  it("get all application controller", (done) => {
+describe("T1 - getAllApplicationsByStudentId", () => {
+  test("T1.1 SUCCESS 200 | Get all applications by student ID", (done) => {
 
     const student_id = "authenticatedStudentId";
 
@@ -96,7 +97,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
       });
   });
 
-  it("should handle unauthorized access", (done) => {
+  test("T1.2 ERROR 401 | Not authorized", (done) => {
 
     const student_id = "authenticatedStudentId";
 
@@ -123,7 +124,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
 
   });
 
-  it("should handle service layer error", (done) => {
+  it("T1.3 ERROR 500 | Internal server error", (done) => {
     const student_id = "authenticatedStudentId";
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -157,8 +158,8 @@ describe("UNIT-CONTROLLER: getAllApplicationsByStudentId", () => {
   });
 });
 
-describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
-  it("get all applications by teacher id controller", (done) => {
+describe("T2 - getAllApplicationsByTeacherId", () => {
+  test("T2.1 SUCCESS 200 | Get all applications by teacher ID", (done) => {
     const expectedApplications = {
       1: [
         {
@@ -228,7 +229,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
       });
   });
 
-  it("should handle service layer error", (done) => {
+  test("T2.2 ERROR 500 | Internal server error", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = new Teacher(
         "1",
@@ -263,7 +264,7 @@ describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
       });
   });
 
-  it("should return 401 if user is not a teacher", (done) => {
+  test("T2.3 ERROR 401 | Not Authorized", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = new Student("S001", "Name", "Surname", "email", 2021, "1");
       next(); // Authenticated
@@ -288,8 +289,8 @@ describe("UNIT-CONTROLLER: getAllApplicationsByTeacherId", () => {
   });
 });
 
-describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
-  it("ERROR 400 | Should return error if status isn't valid", async () => {
+describe("T3 - acceptOrRejectApplication", () => {
+  test("T3.1.1 ERROR 400 | Should return error if status isn't valid", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "invalid status" },
@@ -306,7 +307,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     expect(mockRes.status).toHaveBeenCalledWith(400);
   });
 
-  it("ERROR 400 | Should return error if application_id parameter is not defined", async () => {
+  test("T3.1.2 ERROR 400 | Should return error if application_id parameter is not defined", async () => {
     const mockReq = {
       params: { application_id: "" },
       body: { status: "Accepted" },
@@ -323,7 +324,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     expect(mockRes.status).toHaveBeenCalledWith(400);
   });
 
-  it("ERROR 404 | Should return error if the application doesn't exist", async () => {
+  test("T3.2 ERROR 404 | Page not Found", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Accepted" },
@@ -345,7 +346,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("ERROR 403 | Should return error if the proposal doesn't belong to the teacher making the request", async () => {
+  test("T3.3 ERROR 403 | Should return error if the proposal doesn't belong to the teacher making the request", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Accepted" },
@@ -377,7 +378,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("ERROR 500 | Should return error if there is a database error during set application status", async () => {
+  test("T3.4.1 ERROR 500 | Should return error if there is a database error during set application status", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Accepted" },
@@ -411,7 +412,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("ERROR 500 | Should return error if the proposal to archive is not found while updating the status", async () => {
+  test("T3.4.2 ERROR 500 | Should return error if the proposal to archive is not found while updating the status", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Accepted" },
@@ -456,7 +457,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("ERROR 500 | Should return error if the proposal archived status is not udpated", async () => {
+  test(" T3.4.3 ERROR 500 | Should return error if the proposal archived status is not udpated", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Accepted" },
@@ -518,7 +519,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("SUCCESS 200 | Should set application status to rejected", async () => {
+  test("T3.5.1 SUCCESS 200 | Should set application status to rejected", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Rejected" },
@@ -563,7 +564,7 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
     });
   });
 
-  it("SUCCESS 200 | Should accept the application, cancel all the other applications and archive the proposal", async () => {
+  test("T3.5.2 SUCCESS 200 | Should accept the application, cancel all the other applications and archive the proposal", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       body: { status: "Accepted" },
@@ -626,8 +627,8 @@ describe("UNIT-CONTROLLER: acceptOrRejectApplication", () => {
   });
 });
 
-describe("UNIT-CONTROLLER: getApplicationById", () => {
-  it("ERROR 400 | Should return error if application_id param is invalid", async () => {
+describe("T4 - getApplicationById", () => {
+  test("T4.1 ERROR 400 | Invalid status", async () => {
     const mockReq = {
       params: { application_id: "" },
       user: { id: "T001" },
@@ -646,7 +647,7 @@ describe("UNIT-CONTROLLER: getApplicationById", () => {
     });
   });
 
-  it("ERROR 404 | Should return error if the application doesn't exist", async () => {
+  test("T4.2 ERROR 404 | Page Not Found", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       user: { id: "T001" },
@@ -664,7 +665,7 @@ describe("UNIT-CONTROLLER: getApplicationById", () => {
     expect(mockRes.status).toHaveBeenCalledWith(404);
   });
 
-  it("ERROR 403 | Should return error if the application doesn't belong to the teacher logged in", async () => {
+  test("T4.3 ERROR 403 | Should return error if the application doesn't belong to the teacher logged in", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       user: { id: "T001" },
@@ -684,7 +685,7 @@ describe("UNIT-CONTROLLER: getApplicationById", () => {
     expect(mockRes.status).toHaveBeenCalledWith(403);
   });
 
-  it("ERROR 500 | Should return error if an internal error occurred", async () => {
+  test("T4.5 ERROR 500 | Internal Server Error", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       user: { id: "T001" },
@@ -704,7 +705,7 @@ describe("UNIT-CONTROLLER: getApplicationById", () => {
     expect(mockRes.status).toHaveBeenCalledWith(500);
   });
 
-  it("SUCCESS 200 | Should return the corresponding application", async () => {
+  test("T4.6 SUCCESS 200 | Should return the corresponding application", async () => {
     const mockReq = {
       params: { application_id: "A001" },
       user: { id: "T001" },
@@ -726,4 +727,91 @@ describe("UNIT-CONTROLLER: getApplicationById", () => {
       application: { id: "A001", proposal: { supervisor_id: "T001" } },
     });
   });
+});
+
+describe("T5 - insertNewApplication", () => {
+  test("T5.1 SUCCESS 200 | Insert New Application", (done) => {
+    const mockReq = {
+      proposal_id: "P011",
+    };
+  
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" }; 
+      next(); 
+    });
+  
+    const mockRes = {
+      data: {
+        application_id: "A001",
+        proposal_id: mockReq.proposal_id,
+        student_id: "S001",
+    }};
+  
+    insertNewApplication.mockResolvedValue(mockRes);
+  
+    request(app)
+      .post("/api/applications")
+      .send(mockReq)
+      .then((res) => {
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual(mockRes.data);
+        expect(insertNewApplication).toHaveBeenCalledWith(
+          mockReq.proposal_id,
+          "S001"
+        );
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+
+  test("T5.2 ERROR 500 | Internal Server Error", (done) => {
+    const mockApplicationReq = {
+      proposal_id: "P011",
+    };
+  
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" }; 
+      next(); 
+    });
+  
+    const errorMessage = "An error occurred during application insertion";
+    insertNewApplication.mockRejectedValue(new Error(errorMessage));
+  
+    request(app)
+      .post("/api/applications")
+      .send(mockApplicationReq)
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body.errors).toEqual([errorMessage]);
+        expect(insertNewApplication).toHaveBeenCalledWith(
+          mockApplicationReq.proposal_id,
+          "S001"
+        );
+        done();
+      })
+      .catch((err) => done(err));
+  });
+  
+  test("T5.3 - ERROR 400 | Missing parameters in insert new application controller", (done) => {
+    const mockApplicationReq = {}; // Empty request body
+  
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" }; 
+      next(); 
+    });
+  
+    request(app)
+      .post("/api/applications")
+      .send(mockApplicationReq)
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.text).toBe("Parameters not found in insert new application controller");
+        expect(insertNewApplication).not.toHaveBeenCalled(); 
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+
 });
