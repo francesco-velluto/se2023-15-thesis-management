@@ -14,6 +14,12 @@ npm run dev
 ```
 This will start the server in development mode using _nodemon_, which will automatically restart the server when any changes are made to the source code.
 
+## Local database rebuild
+To rebuild your local database and align it to the one defined in the .sql file with the updated data, run the following command:
+```bash
+npm run dbrebuild
+```
+
 ## Testing
 To run the tests, run the following command:
 ```bash
@@ -117,9 +123,9 @@ POST `/api/authentication/login`
 
   \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
 
-- `SUCCESS 200` Response Body:
+- `SUCCESS 201` Response Body:
   - `proposal`: Object representing the inserted proposal. All the fields are the same of the request body, but there is an additional field which represents the id of the proposal and the supervisor_id field which represents the id of the teacher supervisor of the thesis.\
-    - `id` | string: ID of the proposal
+    - `proposal_id` | string: ID of the proposal
     - `supervisor_id` | string: ID of the teacher supervisor
     - ...
 
@@ -187,6 +193,39 @@ POST `/api/authentication/login`
   - `ERROR 404` Response Body: `{ "error": "Proposals not found" }`
   - `ERROR 500` Response Body: `{ "error": "Internal Server Error" }`
 
+**PUT** `/api/proposals/:proposal_id`
+- Update an existing thesis proposal
+- Authentication: required
+- Authorization: only the teacher supervisor of the thesis can access this endpoint
+- Request Query Parameters: proposal_id
+- Request Body:
+
+  | Field name | Type | Required* | Description |
+  | ----------- | ----------- | ----------- | ----------- |
+  | `title` | _string_ | Yes | Title of the proposal |
+  | `keywords` | _string[]_ | Yes | Keywords related to the proposal |
+  | `type` | _string_ | Yes | Type of thesis (e.g. research, experimental...) |
+  | `description` | _string_ | Yes | Description of the activities of the thesis |
+  | `required_knowledge` | _string_ | No | Description of the knowledge required for the thesis |
+  | `notes` | _string_ | No | Additional notes by the professor |
+  | `expiration_date` | _string_ | Yes | Date in ISO 8601 format YYYY-MM-DD |
+  | `level` | _string_ | Yes | Level of the thesis (e.g. Bachelor, Master) |
+  | `programmes` | _string[]_ | Yes | Programmes related to the thesis |
+
+  \* ***Required*** means that the field cannot be undefined or empty (e.g. empty array or empty string)
+
+- `SUCCESS 200` Response Body:
+  - `proposal`: Object representing the inserted proposal.
+    - `proposal_id` | string: ID of the proposal
+    - `supervisor_id` | string: ID of the teacher supervisor
+    - ...
+
+- Errors:
+  - `ERROR 401` If the user is not authenticated or not a teacher
+  - `ERROR 403` If the user is a teacher but the proposal does not belong to them
+  - `ERROR 404` If the proposal with the specified proposal_id does not exist
+  - `ERROR 422` If the is an error in the validation of the request body fields
+  - `ERROR 500` Internal Server Error
 
 ### Teachers
 

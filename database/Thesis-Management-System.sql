@@ -17,8 +17,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE "Thesis-Management-System";
-
 --
 -- TOC entry 3380 (class 1262 OID 16771)
 -- Name: Theis-Management-System; Type: DATABASE; Schema: -; Owner: postgres
@@ -45,8 +43,6 @@ SET row_security = off;
 -- TOC entry 4 (class 2615 OID 2200)
 -- Name: public; Type: SCHEMA; Schema: -; Owner: pg_database_owner
 --
-
-CREATE SCHEMA public;
 
 ALTER SCHEMA public OWNER TO pg_database_owner;
 

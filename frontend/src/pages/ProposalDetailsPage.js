@@ -20,11 +20,11 @@ import "../style/ProposalDetails.css"
  *  - Add Mode: Adding a new proposal.
  *  - Copy Mode: Copying an existing proposal.
  *
- * @param {number} mode - An integer indicating the mode:
- *  - 0: Read Mode
- *  - 1: Update Mode
- *  - 2: Add Mode
- *  - 3: Copy Mode
+ * @param {string} mode - A string indicating the mode:
+ *  - "read"
+ *  - "update"
+ *  - "add"
+ *  - "copy"
  */
 function ProposalDetailsPage({ mode }) {
     const navigate = useNavigate();
@@ -34,7 +34,7 @@ function ProposalDetailsPage({ mode }) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState(null);
     const [unauthorized, setUnauthorized] = useState(false);    // it is useful to hide fields in the page if there is some issues (for example, proposal expired or proposal not found ...)
-    const [successMessage, setSuccessMessage] = useState(false);
+    const [successMessage, setSuccessMessage] = useState("");
 
     const { currentDate } = useContext(VirtualClockContext);
     const { loggedUser } = useContext(LoggedUserContext);
@@ -172,11 +172,11 @@ function ProposalDetailsPage({ mode }) {
 
         try {
             const proposal = await insertNewProposal(newProposal);
-            setSuccessMessage(true);
+            setSuccessMessage("The thesis proposal has been added correctly!");
             scrollToTarget();
             navigate("/proposals/" + proposal.proposal_id);
         } catch (err) {
-            setSuccessMessage(false);
+            setSuccessMessage("");
             setErrorMessage(err.message);
         }
     }
@@ -188,7 +188,8 @@ function ProposalDetailsPage({ mode }) {
             return;
         }
 
-        const updateProposal = {
+        const updatedProposal = {
+            proposal_id: proposal_id,
             title: title,
             level: level,
             keywords: keywords,
@@ -201,16 +202,13 @@ function ProposalDetailsPage({ mode }) {
         };
 
         try {
-            //! it can be implemented when the backend is ready
-            //const proposal = await updateProposalApi(updateProposal);
+            const proposal = await updateProposalApi(updatedProposal);
 
-            setErrorMessage("Backend not implemented yet"); //! remove it when the backend is ready
-
-            setSuccessMessage(true);
-            //navigate("/proposals/" + proposal.proposal_id);
+            setSuccessMessage("The thesis proposal has been updated correctly!");
+            navigate("/proposals/" + proposal.proposal_id);
             scrollToTarget();
         } catch (err) {
-            setSuccessMessage(false);
+            setSuccessMessage("");
             setErrorMessage(err.message);
         }
     }
@@ -220,7 +218,7 @@ function ProposalDetailsPage({ mode }) {
         setErrorMessage(null); // reset error message when component is re-rendered
         setUnauthorized(false);
 
-        if (mode === 0 || mode === 1 || mode === 3) {       // read, update and copy mode
+        if (mode === "read" || mode === "update" || mode === "copy") {       // read, update and copy mode
             getProposalById(proposal_id)
                 .then(async res => {
                     let data = await res.json()
@@ -251,7 +249,7 @@ function ProposalDetailsPage({ mode }) {
                             setKeywords(data.keywords);
 
                             // must be set in an array of cod_degree
-                            if (mode === 1 || mode === 3) { // update mode or copy mode
+                            if (mode === "update" || mode === "copy") {
                                 // get all degrees list
                                 getAllDegrees()
                                     .then(list => setProposalDegreeList(list))
@@ -281,7 +279,7 @@ function ProposalDetailsPage({ mode }) {
                     scrollToTarget();
                 });
 
-        } else if (mode === 2) {    // add mode
+        } else if (mode === "add") {
             setIsLoading(false);
             setSupervisor(loggedUser.name + " " + loggedUser.surname);
             getAllDegrees()
@@ -313,14 +311,13 @@ function ProposalDetailsPage({ mode }) {
                                         }
                                         {successMessage &&
                                             <Row>
-                                                {(mode === 2 || mode === 3) && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been created!</Alert>}
-                                                {mode === 1 && <Alert variant="success" dismissible onClose={() => setSuccessMessage(false)}>The thesis proposal has been updated!</Alert>}
+                                                <Alert variant="success" dismissible onClose={() => setSuccessMessage("")}>{successMessage}</Alert>
                                             </Row>
                                         }
                                     </div>
                                     <Row>
-                                        <Col >
-                                            {mode === 0 ?
+                                        <Col>
+                                            {mode === "read" ?
                                                 <Form.Group>
                                                     <Form.Control
                                                         id="proposal-title"
@@ -354,7 +351,7 @@ function ProposalDetailsPage({ mode }) {
                                             }
                                         </Col>
                                     </Row>
-                                    {mode === 0 && (
+                                    {mode === "read" && (
                                         <>
                                             <Row>
                                                 <Col className={"proposal-details-keyword"}>
@@ -372,7 +369,7 @@ function ProposalDetailsPage({ mode }) {
                                     )}
                                     <Row>
                                         <Col>
-                                            {mode === 0 &&
+                                            {mode === "read" &&
                                                 <Card>
                                                     <Card.Body>
                                                         <Card.Title>Description:</Card.Title>
@@ -399,7 +396,7 @@ function ProposalDetailsPage({ mode }) {
                                                 </Card>
                                             }
 
-                                            {mode !== 0 &&
+                                            {mode !== "read" &&
                                                 <Card>
                                                     <Card.Body>
                                                         <Card.Title>Description:</Card.Title>
@@ -458,7 +455,7 @@ function ProposalDetailsPage({ mode }) {
                                             <Card className="h-100">
                                                 <Card.Body>
                                                     <Card.Title>Level:</Card.Title>
-                                                    {mode === 0 ?
+                                                    {mode === "read" ?
                                                         <Card.Text name="proposal-level">{level}</Card.Text>
                                                         :
                                                         <Form.Group>
@@ -488,7 +485,7 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>Type:</Card.Title>
                                                     <Form.Group>
                                                         <Form.Control
-                                                            as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                            as={mode === "read" ? 'input' : 'textarea'}
                                                             name='proposal-type'
                                                             rows={1}
                                                             aria-label='Enter the type'
@@ -497,8 +494,8 @@ function ProposalDetailsPage({ mode }) {
                                                             onChange={(e) => {
                                                                 setType(e.target.value);
                                                             }}
-                                                            readOnly={mode === 0}                   // read mode
-                                                            plaintext={mode === 0}                  // read mode
+                                                            readOnly={mode === "read"}
+                                                            plaintext={mode === "read"}
                                                             required
                                                         />
                                                     </Form.Group>
@@ -511,9 +508,9 @@ function ProposalDetailsPage({ mode }) {
                                             <Card className="h-100">
                                                 <Card.Body>
                                                     <Card.Title>CdS / Programmes:</Card.Title>
-                                                    {mode === 0 ?
+                                                    {mode === "read" ?
                                                         <Card.Text className={"proposal-badge"} name="proposal-programmes">
-                                                            {programmes.map((programme, index) =>
+                                                        {programmes.map((programme, index) =>
                                                                 <Badge key={index} bg=""   >
                                                                     {programme.title_degree}
                                                                 </Badge>)}
@@ -576,15 +573,15 @@ function ProposalDetailsPage({ mode }) {
                                             <Card className="h-100">
                                                 <Card.Body >
                                                     <Card.Title>Groups:</Card.Title>
-                                                    {mode === 0 ?
-                                                        <Card.Text id="groups" className={"proposal-badge"}>
-                                                            {groups.map((group, index) =>
+                                                {mode === "read" ?
+                                                    <Card.Text id="groups" className={"proposal-badge"}>
+                                                    {groups.map((group, index) =>
                                                                 <Badge key={index} bg=""  >{group}</Badge>
                                                             )}
                                                         </Card.Text>
                                                         :
                                                         <Form.Group className="h-100" >
-                                                            {/* 
+                                                            {/*
                                                             <div className="text-plus ">
                                                                 <Col xs={8}>
                                                                     <Form.Control
@@ -640,7 +637,7 @@ function ProposalDetailsPage({ mode }) {
                                             </Card>
                                         </Col>
                                     </Row>
-                                    {mode !== 0 &&
+                                    {mode !== "read" &&
                                         <Row>
                                             <Col xs={12} md={6} className="mb-1 mb-md-0">
                                                 <Card className="h-100">
@@ -725,17 +722,17 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>Required Knowledge:</Card.Title>
                                                     <Form.Group>
                                                         <Form.Control
-                                                            as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                            as={mode === "read" ? 'input' : 'textarea'}
                                                             name='required-knowledge'
-                                                            rows={mode === 0 ? 1 : 4}               // read mode
+                                                            rows={mode === "read" ? 1 : 4}
                                                             aria-label='Enter required knowledge'
-                                                            placeholder={mode === 0 ? "Not specified" : 'Enter required knowledge'}
+                                                            placeholder={mode === "read" ? "Not specified" : 'Enter required knowledge'}
                                                             value={knowledge}
                                                             onChange={(e) => {
                                                                 setKnowledge(e.target.value);
                                                             }}
-                                                            readOnly={mode === 0}                   // read mode
-                                                            plaintext={mode === 0}                  // read mode
+                                                            readOnly={mode === "read"}
+                                                            plaintext={mode === "read"}
                                                         />
                                                     </Form.Group>
                                                 </Card.Body>
@@ -747,17 +744,17 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>Notes:</Card.Title>
                                                     <Form.Group>
                                                         <Form.Control
-                                                            as={mode === 0 ? 'input' : 'textarea'}  // read mode
+                                                            as={mode === "read" ? 'input' : 'textarea'}
                                                             name='additional-notes'
-                                                            rows={mode === 0 ? 1 : 4}               // read mode
+                                                            rows={mode === "read" ? 1 : 4}
                                                             aria-label='Enter notes'
-                                                            placeholder={mode === 0 ? "Not specified" : 'Enter notes'}
+                                                            placeholder={mode === "read" ? "Not specified" : 'Enter notes'}
                                                             value={notes}
                                                             onChange={(e) => {
                                                                 setNotes(e.target.value);
                                                             }}
-                                                            readOnly={mode === 0}                   // read mode
-                                                            plaintext={mode === 0}                  // read mode
+                                                            readOnly={mode === "read"}
+                                                            plaintext={mode === "read"}
                                                         />
                                                     </Form.Group>
                                                 </Card.Body>
@@ -766,7 +763,7 @@ function ProposalDetailsPage({ mode }) {
                                     </Row>
 
                                     <Row>
-                                        {mode === 0 &&
+                                        {mode === "read" &&
                                             <Col>
                                                 <Button id="go-back"
                                                     onClick={() => { navigate('/proposals') }}>
@@ -775,7 +772,7 @@ function ProposalDetailsPage({ mode }) {
                                             </Col>
                                         }
 
-                                        {mode !== 0 &&
+                                        {mode !== "read" &&
                                             <Col>
                                                 <Button id="go-back"
                                                     onClick={() => { navigate('/proposals') }}>
@@ -785,17 +782,17 @@ function ProposalDetailsPage({ mode }) {
                                         }
 
                                         <Col className={"d-flex flex-row-reverse"}>
-                                            {mode === 0 && loggedUser.role === 1 &&
+                                            {mode === "read" && loggedUser.role === 1 &&
                                                 <ApplicationButton setErrMsg={setErrorMessage} proposalID={proposal_id} />}
 
-                                            {mode === 1 && loggedUser.role === 0 &&
+                                            {mode === "update" && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
                                                     onClick={handleUpdateProposal}>
                                                     Save
                                                 </Button>}
 
-                                            {(mode === 2 || mode === 3) && loggedUser.role === 0 &&
+                                            {(mode === "add" || mode === "copy") && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
                                                     onClick={handleCreateProposal}>
