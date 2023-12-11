@@ -9,14 +9,13 @@ const studentnotifsService = require("../../service/studentnotifs.service");
 beforeEach(() => {
     jest.resetAllMocks();
     // comment these lines if you want to see console prints during tests
-    jest.spyOn(console, "log").mockImplementation(() => {});
-    jest.spyOn(console, "info").mockImplementation(() => {});
-    jest.spyOn(console, "error").mockImplementation(() => {});
+    //jest.spyOn(console, "log").mockImplementation(() => {});
+    //jest.spyOn(console, "info").mockImplementation(() => {});
+    //jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 
 describe('Email Notifier', () => {
-    /**
     it('Should send an updated application status email', async () => {
 
         const mockStudentData = {
@@ -56,7 +55,7 @@ describe('Email Notifier', () => {
         expect(studentnotifsService.updateStudentNotificationStatus).toHaveBeenCalledTimes(1);
 
     } );
-    */
+
     it('Should throw an error if the mail cannot be sent', async () => {
 
         const mockStudentData = {
