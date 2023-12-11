@@ -42,7 +42,7 @@ describe('Email Notifier', () => {
         applicationDecisionEmailTemplate.getEmailSubject = jest.fn().mockReturnValue('Your application for the thesis proposal has been accepted!');
         applicationDecisionEmailTemplate.getEmailBody = jest.fn().mockReturnValue('Email body in html!');
         studentnotifsService.createNewStudentNotification = jest.fn().mockResolvedValue({ notificationId: '1' });
-        emailNotifier.sendEmailNotification = jest.fn().mockImplementation(() => { return true; });
+        emailNotifier.sendEmailNotification = jest.fn().mockResolvedValueOnce(true);
         studentnotifsService.updateStudentNotificationStatus = jest.fn().mockImplementation(() => {});
 
         await emailNotifier.sendUpdateApplicationStatusEmail(updatedApplication, 'teacher1', { proposal_id: '1', title: 'test' }, 'accepted');
