@@ -1,5 +1,5 @@
 import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup } from 'react-bootstrap';
-import { FaCalendar, FaHome } from 'react-icons/fa';
+import { FaCalendar } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
 import { VirtualClockContext } from '../context/VirtualClockContext';
@@ -24,34 +24,22 @@ function NavbarContainer() {
     };
 
     return (
-        <Navbar expand="md" className='px-3 navbar-dark d-flex justify-content-between' style={{ backgroundColor: "#393646" }} >
+        <Navbar expand="md" className='px-3 navbar-dark d-flex'>
             <Navbar.Brand as={Link} to={"/"}>
                 <div>
                     <img src={Logo} alt="Logo" width="60" height="auto" className="bi bi-mortarboard-fill me-2" />
-                    <span style={{ fontSize: '18px', fontWeight: "bold" }}> THESIS MANAGEMENT </span>
+                    <span id="navbar-title"> THESIS MANAGEMENT </span>
                 </div>
             </Navbar.Brand>
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav" style={{ backgroundColor: '#393646' }} />
+            <Navbar.Toggle aria-controls="basic-navbar-nav" id="basic-navbar-toggle"/>
             <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
-                <Nav className="mr-auto" style={{ color: 'whitesmoke', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                    <Col className='me-3 d-flex justify-content-center'>
-                        <Button variant={"secondary"} onClick={() => { navigate('/') }} style={{height: '50px', color: '#393646',}}>
-                            <div className='d-flex align-items-center'>
-                                <span className='me-2 fs-5 d-flex align-items-center'>
-                                    <FaHome />
-                                </span>
-                                <span>
-                                    Home
-                                </span>
-                            </div>
-                        </Button>
-                    </Col>
-                    <Col className='me-0 me-md-3 my-3 my-md-0'>
-                            <InputGroup className='d-flex justify-content-center'>
+                <Nav className="mr-auto" id="navbar-toggle">
+                    <Col className='me-0 me-md-3 my-3 my-md-0 d-flex justify-content-center'>
+                            <InputGroup className='d-flex justify-content-center me-2'>
 
                                 {!showFormControl && (
-                                    <Button id="show-virtual-clock-btn" onClick={handleButtonClick} style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '50px' }}>
+                                    <Button id="show-virtual-clock-btn" onClick={handleButtonClick} >
                                         <FaCalendar />
                                     </Button>
                                 )}
@@ -62,17 +50,13 @@ function NavbarContainer() {
                                     min={dayjs().format("YYYY-MM-DD")}
                                     value={currentDate}
                                     onChange={(ev) => setCurrentDate(ev.target.value)}
-                                    style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '135px', lineHeight: '37px' }}
                                 />
                             )}
                         </InputGroup>
-                    </Col>
-                    <Col className='me-0 me-md-3 my-3 my-md-0'>
                         <Dropdown show={showDropdown} onToggle={toggleDropdown} className='d-flex flex-column justify-content-center align-items-center' >
                             <Dropdown.Toggle
                                 variant="danger"
                                 id="dropdown-basic"
-                                style={{ backgroundColor: 'white', color: '#393646', height: '50px', borderColor: 'white', justifySelf: 'center', display: 'flex', alignItems: 'center', fontSize: '16px' }}
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -86,8 +70,8 @@ function NavbarContainer() {
                                 </svg>
                                 {' ' + (loggedUser.name || 'Guest')}
                             </Dropdown.Toggle>
-                            <Dropdown.Menu style={{ minWidth: "120px" }}>
-                                <Dropdown.Item id="logout-id" onClick={handleLogout} style={{ backgroundColor: 'white', color: '#393646', fontSize: "16px" }}>Logout</Dropdown.Item>
+                            <Dropdown.Menu >
+                                <Dropdown.Item id="logout-id" onClick={handleLogout} >Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </Col>

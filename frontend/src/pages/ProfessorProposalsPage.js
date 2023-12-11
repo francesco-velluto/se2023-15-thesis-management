@@ -11,7 +11,7 @@ function ProfessorProposalsPage() {
     return (
         <>
             <NavbarContainer />
-            <TitleBar title={"Browse Proposals"} />
+            <TitleBar/>
 
             {
                 loggedUser.role === 1 ?

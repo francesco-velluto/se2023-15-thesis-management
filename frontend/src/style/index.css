@@ -4,11 +4,10 @@ body,
     height: auto;
     min-height: 100vh;
     margin: 0;
-    background-color: #F4EEE0;
+    background-color: whitesmoke;
     width: 100%;
     display: flex;
     flex-direction: column;
-
     --anthracite: #393646;
     --medium-slate-gray: #6D5D6E;
 }
@@ -23,43 +22,169 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.login-page {
-    background-color: #DBECFF;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.login-section {
-    margin-top: 10rem;
-    background-color: white;
-    padding: 15px 45px 45px 45px;
-    border-radius: 10px;
-    max-width: 500px;
-}
-
 .home-page {
     min-height: 88.8vh;
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: whitesmoke;
 }
+
+.home-page-content {
+    max-width: 512px;
+    width: 100%;
+}
+
+/*************************/
+
+#card-border{
+    border-color: #003576 !important; 
+}
+
+#card-header{
+    border-color: #003576 !important; 
+    color: orange;
+}
+
+/*************************/
+/* NAV BAR ***************/
+/*************************/
 
 .navbar {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #003576;
 }
 
-.navbar button {
-    background-color: white;
-    color: black;
+#show-virtual-clock-btn{
+    background-color: whitesmoke;
+    color: #003576;
+    border-color: whitesmoke;
+    height: 50px;
+    width: 50px;
+
 }
+
+#dropdown-basic{
+    background-color: whitesmoke;
+    color: #003576;
+    border-color: whitesmoke;
+    height: 50px;
+    width: 155px;
+}
+
+#virtual-clock-form {
+    background-color: whitesmoke;
+    color: #003576;
+    border-color: whitesmoke;
+    height: 50px;
+    width: 120px;
+    line-height: 37px;
+}
+
+#logout-id {
+    background-color: whitesmoke;
+    color: #003576;
+    font-size: 16px;
+}
+
+#navbar-title{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#navbar-toggle {
+    color: whitesmoke;
+    border-color: whitesmoke;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/*************************/
+/* PROPOSAL LIST**********/
+/*************************/
+
+#show-proposal-detail, #proposal-detail-actions {
+    margin-top: -2px; 
+    cursor: 'pointer';
+    color:  #003576;
+    font-weight: bold;
+}
+
+#copy-proposal-id, #update-proposal-id {
+    margin-top: -2px; 
+    cursor: 'pointer';
+    color:  orange;
+    font-weight: bold;
+    
+}
+
+.proposal-row {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem 0.5rem;
+    border-width: 2px; 
+    border-style: solid;
+    border-color: #003576 ;
+    border-radius: 0.25rem;
+    padding: 1rem; 
+  }
+
+  @media (min-width: 768px) {
+    .proposal-row {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem; 
+    }
+  }
+
+  .student-proposal-container {
+    background-color: whitesmoke; 
+    border-bottom-left-radius: 0.25rem; 
+    border-bottom-right-radius: 0.25rem; 
+    padding-top: 1rem; 
+    padding-bottom: 1rem; 
+  }
+
+  .search-area{
+    width: 100%; 
+    padding: 1rem; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+  }
+
+  .student-proposal-card {
+    margin: 0.5rem 0.5rem;
+    border-width: 2px; 
+    border-style: solid;
+    border-color: #003576 ;
+    border-radius: 0.25rem;
+    background-color: white;
+    padding: 1rem; 
+  }
+  
+  @media (min-width: 768px) {
+    .student-proposal-card {
+      margin-top: 0.25rem; /* Equivalent to my-md-1 */
+      margin-bottom: 0.25rem; /* Equivalent to my-md-1 */
+    }
+  }
+  
+
+/*************************/
+/* APPLICATION ***********/
+/*************************/
 
 .browse-application {
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: whitesmoke;
 }
 
 .browse-application h2 {
@@ -91,102 +216,70 @@ body {
     margin: 0;
 }
 
-
-/* PROPOSAL PAGE DETAILS */
-.proposal-details-container {
-    background: #EEE2DE;
+.student-applications-container {
     padding: 9px;
+    background-color: whitesmoke;
 }
 
-.proposal-details-container h2 {
-    font-weight: bold;
-}
-
-.proposal-details-container .card .card-title {
-    font-size: 14px;
-}
-
-.proposal-details-title {
-    text-align: center;
-    font-size: 30px;
-    font-weight: bold;
-}
-
-.proposal-details-container .row {
+.student-application-row {
     margin: 5px;
+    background-color: whitesmoke;
 }
 
-.proposal-details-keyword {
-    text-align: center;
+.student-application-card-body {
+    color: #282828 !important;
+    background-color: whitesmoke;
+
 }
-
-.proposal-details-keyword .badge {
-    margin: 3px;
-    padding: 10px;
-    font-size: small;
-}
-
-.proposal-details-expiration {
-    text-align: center;
-}
-
-.proposal-details-expiration .badge {
-    margin: 3px;
-    font-size: 15px;
-}
-
-.text-plus {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 6px;
-}
-
-.text-plus>* {
-    margin-right: 10px;
-}
-
-.text-with-ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-
-.text-plus> :last-child {
-    margin-right: 0;
+#back-to-homepage-button {
+    background-color:#4F4557;
+    border-color: #4F4557,
 }
 
 /*************************/
 
+
+
+
 /*************************/
+/* TITLE BAR *************/
+/*************************/
+
 .row-bar {
-    background-color: var(--medium-slate-gray);
-    color: whitesmoke;
-    font-size: 18px;
+    background-color: white;
     display: flex;
-    align-items: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     margin: 0;
-    font-weight: bold;
+    align-items: center; 
     justify-content: center;
+
+}
+
+#title-btn {
+    background-color: white;
+    height: 40px;
+    padding: 6.4px 20px;
+    font-size: 16px;
+    border-radius: 40px;
+    color: #003576;
+    font-weight: bold;
+    align-items: center;
+    border-color: #003576;
+    box-shadow: 0 2px 0 rgba(0,0,0,.045);
+
+}
+#title-add-btn {
+    background-color: #003576;
+    color: white;
+    border-color: #003576;
+    border-radius: 50%;
+
 }
 
 /*************************/
-
-.home-page-content {
-    max-width: 1024px;
-}
-
-.filterCardContainer {
-    display: inline-block;
-    width: 75%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    margin-left: 3px;
-}
+/* FOOTER ****************/
+/*************************/
 
 footer {
     padding: 1.5rem;
@@ -229,9 +322,3 @@ footer img {
     }
 }
 
-@media (min-width: 768px) {
-    .proposal-details-container {
-        padding-left: 3rem;
-        padding-right: 3rem;
-    }
-}
