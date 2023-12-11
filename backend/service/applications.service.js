@@ -16,7 +16,12 @@ module.exports = {
                         reject({ status: 404, data: 'Student not found' });
                     }
 
-                    return db.query('SELECT a.*, p.title, t.name as supervisor_name, t.surname as supervisor_surname FROM applications a JOIN proposals p ON a.proposal_id = p.proposal_id JOIN teacher t ON p.supervisor_id = t.id WHERE a.student_id = $1;', [student_id]);
+                    return db.query(
+                        'SELECT a.*, p.title, t.name as supervisor_name, t.surname as supervisor_surname ' +
+                            'FROM applications a JOIN proposals p ON a.proposal_id = p.proposal_id ' +
+                            'JOIN teacher t ON p.supervisor_id = t.id WHERE a.student_id = $1;',
+                        [student_id]
+                    );
                 })
                 .then((rows) => {
                     resolve({ status: 200, data: rows.rows });
@@ -62,8 +67,11 @@ module.exports = {
             const query = "SELECT p.proposal_id, p.title, p.type, p.description, p.expiration_date, p.level, " +
                 "a.id as application_id, a.status as application_status, a.application_date, " +
                 "s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
-                "FROM proposals p join applications a on a.proposal_id = p.proposal_id join student s ON s.id = a.student_id " +
-                "WHERE p.supervisor_id = $1 and p.expiration_date >= current_date and a.status = 'Pending'";
+                "FROM proposals p JOIN applications a ON a.proposal_id = p.proposal_id JOIN student s ON s.id = a.student_id " +
+                "JOIN virtual_clock vc ON vc.name = 'virtual_date' AND p.expiration_date >= vc.value" + //! VIRTUAL_CLOCK: remove line this in production
+                "WHERE p.supervisor_id = $1 and " +
+                // "p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: decomment this line in production
+                "and a.status = 'Pending'";
             db.query(query, [id]).then(({ rows, rowCount }) => {
                 if (rowCount === 0) {
                     resolve({ status: 200, data: [] });
@@ -109,7 +117,7 @@ module.exports = {
     },
 
     insertNewApplication: async(proposal_id, student_id) => {
-
+        // TODO: change this implementation to use the current date from the server or the db and not the date passed from above
         const status = 'Pending'
         const application_date = new Date().toISOString()
 
