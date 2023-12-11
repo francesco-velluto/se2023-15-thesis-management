@@ -1,22 +1,26 @@
 .proposal-details-container {
-    background: #C9E2EA;
-    padding: 9px;
+    background-color: whitesmoke ;
+    padding: 6px ;
+}
+
+.proposal-details-title {
+    text-align: center;
+    font-weight: bold;
+
 }
 
 .proposal-details-container .row {
     margin: 5px;
 }
 
-.proposal-details-title {
-    text-align: center;
-}
-
 .proposal-details-keyword {
     text-align: center;
-}
-
-.proposal-details-keyword .badge {
     margin: 3px;
+}
+.proposal-details-keyword .badge {
+    background: orange ;
+    margin: 3px;
+    font-size: 14px;
 }
 
 .proposal-details-expiration {
@@ -25,5 +29,68 @@
 
 .proposal-details-expiration .badge {
     margin: 3px;
-    font-size: 15px;
+    font-size: 18px;
+}
+
+.proposal-badge .badge {
+    background-color: orange;
+    font-size: 14px;
+    margin: 3px;
+}
+
+
+.proposal-details-container .card .card-title {
+    font-size: 14px;
+}
+
+#programmes-notes {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: gray;
+}
+
+
+#add-proposal-btn, #add-keyword-btn, #add-group-btn {
+    background-color:orange ;
+    border-color: orange;
+}
+
+#go-back {
+    color:rgb(226, 169, 119);
+    border-color: rgb(226, 169, 119);
+    background-color: whitesmoke;
+}
+
+#show-more {
+    color: darkgray;
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .proposal-details-container {
+        padding-left: 3rem;
+        padding-right: 3rem;
+    }
+}
+
+.text-plus{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 6px; 
+}
+
+.text-plus>* {
+    margin-right: 10px;
+}
+
+.text-with-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+.text-plus> :last-child {
+    margin-right: 0;
 }

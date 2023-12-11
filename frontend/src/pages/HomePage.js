@@ -18,17 +18,17 @@ function HomePage() {
     {loggedUser.role === 1 && (
       <TitleBar title={"STUDENT"} />
     )}
-      <Container fluid className="home-page" style={{backgroundColor: "#F4EEE0"}}>
-        <Row className="home-page-content p-3">
+      <Container fluid className="home-page" >
+        <Row className="home-page-content p-3" >
           {loggedUser && (
             <>
               <Card bg="light" className="rounded p-4">
                 <h2>
                   Hi <b>{loggedUser.name + " " + loggedUser.surname}</b>
                 </h2>
-                <Form>
+                <Form >
                   <Form.Group as={Row} className="mt-2">
-                    <Col sm={3}>
+                    <Col sm={4}>
                       <Form.Label column>
                         <b>ID:</b>
                       </Form.Label>
@@ -43,7 +43,7 @@ function HomePage() {
                     </Col>
                   </Form.Group>
                   <Form.Group as={Row} className="mt-2">
-                    <Col sm={3}>
+                    <Col sm={4}>
                       <Form.Label column>
                         <b>Email:</b>
                       </Form.Label>
@@ -59,7 +59,7 @@ function HomePage() {
                   </Form.Group>
                   {loggedUser.cod_group && (
                     <Form.Group as={Row} className="mt-2">
-                      <Col sm={3}>
+                      <Col sm={4}>
                         <Form.Label column>
                           <b>Group:</b>
                         </Form.Label>
@@ -76,7 +76,7 @@ function HomePage() {
                   )}
                   {loggedUser.cod_department && (
                     <Form.Group as={Row} className="mt-2">
-                      <Col sm={3}>
+                      <Col sm={4}>
                         <Form.Label column>
                           <b>Department:</b>
                         </Form.Label>
@@ -93,7 +93,7 @@ function HomePage() {
                   )}
                   {loggedUser.gender && (
                     <Form.Group as={Row} className="mt-2">
-                      <Col sm={3}>
+                      <Col sm={4}>
                         <Form.Label column>
                           <b>Gender:</b>
                         </Form.Label>
@@ -110,7 +110,7 @@ function HomePage() {
                   )}
                   {loggedUser.nationality && (
                     <Form.Group as={Row} className="mt-2">
-                      <Col sm={3}>
+                      <Col sm={4}>
                         <Form.Label column>
                           <b>Nationality:</b>
                         </Form.Label>
@@ -127,7 +127,7 @@ function HomePage() {
                   )}
                   {loggedUser.cod_degree && (
                     <Form.Group as={Row} className="mt-2">
-                      <Col sm={3}>
+                      <Col sm={4}>
                         <Form.Label column>
                           <b>Code Degree:</b>
                         </Form.Label>
@@ -144,7 +144,7 @@ function HomePage() {
                   )}
                   {loggedUser.enrollment_year && (
                     <Form.Group as={Row} className="mt-2">
-                      <Col sm={3}>
+                      <Col sm={4}>
                         <Form.Label column>
                           <b>Enrollment Year:</b>
                         </Form.Label>
@@ -160,35 +160,6 @@ function HomePage() {
                     </Form.Group>
                   )}
                 </Form>
-
-              </Card>
-              <Card bg="light" className="rounded p-4 mt-3">
-                <Row>
-                  {loggedUser.role === 0 && (
-                    <Col>
-                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/applications">
-                        My Thesis Applications
-                      </Button>
-                    </Col>
-                  )}
-                  {loggedUser.role === 0 && (
-                    <Col>
-                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
-                        My Thesis Proposals
-                      </Button>
-                      <Button style={{ backgroundColor: "#4F4557", borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals/new">
-                        Add a New Proposal
-                      </Button>
-                    </Col>
-                  )}
-                  {loggedUser.role === 1 && (
-                    <Col>
-                      <Button style={{ backgroundColor: "#4F4557",  borderColor: "#4F4557"}} className="w-100 my-3" as={Link} to="/proposals">
-                        Thesis Proposals
-                      </Button>
-                    </Col>
-                  )}
-                </Row>
               </Card>
             </>
           )}

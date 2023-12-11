@@ -13,7 +13,7 @@ function StudentProposalsPage() {
     return (
         <>
             <NavbarContainer />
-            <TitleBar title={"Browse Proposals"} />
+            <TitleBar/>
 
 
 

@@ -33,8 +33,8 @@ function ApplicationList() {
         <>
             <NavbarContainer />
 
-            <TitleBar title={"Browse Applications"} />
-            <Container>
+            <TitleBar/>
+            <Container >
                 <Row >
                     {errors?.map((error, index) => (
                         <Alert variant='danger'
@@ -46,7 +46,7 @@ function ApplicationList() {
                     ))}
                 </Row>
 
-                <Row className='browse-application' style={{ backgroundColor: "#F4EEE0"}}>
+                <Row className='browse-application'>
                     {loading ? (
                         <Spinner animation="border">
                             <span className="visually-hidden">Loading...</span>
