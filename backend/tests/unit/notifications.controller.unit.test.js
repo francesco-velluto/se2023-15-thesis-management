@@ -1,17 +1,18 @@
 "use strict";
 
-const emailNotifier = require('../../controllers/email.notifier');
+const emailNotifierController = require('../../controllers/email.notifier');
 const studentsService = require("../../service/students.service");
 const teachersService = require("../../service/teachers.service");
 const applicationDecisionEmailTemplate = require("../../notifiers/templates/application.decision.template");
 const studentnotifsService = require("../../service/studentnotifs.service");
+const emailNotifier = require("../../notifiers/email.notifier");
 
 beforeEach(() => {
     jest.resetAllMocks();
     // comment these lines if you want to see console prints during tests
-    //jest.spyOn(console, "log").mockImplementation(() => {});
-    //jest.spyOn(console, "info").mockImplementation(() => {});
-    //jest.spyOn(console, "error").mockImplementation(() => {});
+    jest.spyOn(console, "log").mockImplementation(() => {});
+    jest.spyOn(console, "info").mockImplementation(() => {});
+    jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 
@@ -42,10 +43,10 @@ describe('Email Notifier', () => {
         applicationDecisionEmailTemplate.getEmailSubject = jest.fn().mockReturnValue('Your application for the thesis proposal has been accepted!');
         applicationDecisionEmailTemplate.getEmailBody = jest.fn().mockReturnValue('Email body in html!');
         studentnotifsService.createNewStudentNotification = jest.fn().mockResolvedValue({ notificationId: '1' });
-        emailNotifier.sendEmailNotification = jest.fn().mockResolvedValueOnce(true);
         studentnotifsService.updateStudentNotificationStatus = jest.fn().mockImplementation(() => {});
+        emailNotifier.sendEmailNotification = jest.fn().mockResolvedValue(true);
 
-        await emailNotifier.sendUpdateApplicationStatusEmail(updatedApplication, 'teacher1', { proposal_id: '1', title: 'test' }, 'accepted');
+        await emailNotifierController.sendUpdateApplicationStatusEmail(updatedApplication, 'teacher1', { proposal_id: '1', title: 'test' }, 'accepted');
 
         expect(studentsService.getStudentById).toHaveBeenCalledTimes(1);
         expect(teachersService.getTeacherById).toHaveBeenCalledTimes(1);
@@ -82,11 +83,11 @@ describe('Email Notifier', () => {
         applicationDecisionEmailTemplate.getEmailSubject = jest.fn().mockReturnValue('Your application for the thesis proposal has been accepted!');
         applicationDecisionEmailTemplate.getEmailBody = jest.fn().mockReturnValue('Email body in html!');
         studentnotifsService.createNewStudentNotification = jest.fn().mockResolvedValue({ notificationId: '1' });
-        emailNotifier.sendEmailNotification = jest.fn().mockImplementation(() => { return false; });
+        emailNotifierController.sendEmailNotification = jest.fn().mockImplementation(() => { return false; });
         studentnotifsService.updateStudentNotificationStatus = jest.fn().mockImplementation(() => {});
 
         try{
-            await emailNotifier.sendUpdateApplicationStatusEmail(updatedApplication, 'teacher1', { proposal_id: '1', title: 'test' }, 'accepted');
+            await emailNotifierController.sendUpdateApplicationStatusEmail(updatedApplication, 'teacher1', { proposal_id: '1', title: 'test' }, 'accepted');
         } catch(err){
             expect(err).toEqual(Error("Error occurred in email notifier"));
         }
