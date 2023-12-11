@@ -67,18 +67,23 @@ exports.getMaxProposalIdNumber = async () => {
 
 exports.getAllProposals = async (cod_degree) => {
   return new Promise((resolve, reject) => {
-    db.query("SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
-      "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
-      "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
-      "FROM proposals p " +
-      "JOIN teacher t ON p.supervisor_id = t.id " +
-      "JOIN unnest(p.programmes) AS prog ON true " +
-      "JOIN degree d ON prog = d.cod_degree " +
-      "WHERE cod_degree = '" + cod_degree + "' AND p.expiration_date >= current_date " +
-      "AND p.archived = false " +
-      "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
-      "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
-      "ORDER BY p.proposal_id")
+    db.query(
+      'SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t."name" as supervisor_name, ' +
+        'p.keywords, p."type", p."groups", p.description, p.required_knowledge, p.notes, ' +
+        'p.expiration_date, p."level", array_agg(d.title_degree) as "degrees" ' +
+        "FROM proposals p " +
+        "JOIN teacher t ON p.supervisor_id = t.id " +
+        "JOIN unnest(p.programmes) AS prog ON true " +
+        "JOIN degree d ON prog = d.cod_degree " +
+        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove line this in production
+        "WHERE cod_degree = $1 " +
+        // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
+        "AND p.archived = false " +
+        'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
+        'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
+        "ORDER BY p.proposal_id",
+      [cod_degree]
+    )
       .then((rows) => {
         if (rows.length == 0) {
           console.error("[BACKEND-SERVER] Error in getAllProposals");
@@ -96,26 +101,28 @@ exports.getAllProposals = async (cod_degree) => {
 
 exports.getAllProfessorProposals = async (prof_id) => {
   return new Promise((resolve, reject) => {
-      db.query( "SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t.\"name\" as supervisor_name, " +
-                "p.keywords, p.\"type\", p.\"groups\", p.description, p.required_knowledge, p.notes, " +
-                "p.expiration_date, p.\"level\", array_agg(d.title_degree) as \"degrees\" " +
-
-                "FROM proposals p " +
-                "JOIN teacher t ON p.supervisor_id = t.id " +
-                "JOIN unnest(p.programmes) AS prog ON true " +
-                "JOIN degree d ON prog = d.cod_degree " +
-
-                "WHERE p.supervisor_id = $1 AND p.expiration_date >= current_date AND p.archived = false " +
-
-                "GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p.\"type\", p.\"groups\", " +
-                "p.description, p.required_knowledge, p.notes, p.expiration_date, p.\"level\" " +
-
-                "ORDER BY p.proposal_id", [prof_id])
-          .then((rows) => {
-              if (rows.length == 0) {
-                  console.error('[BACKEND-SERVER] Error in getAllProposals');
-                  reject({ status: 404, data: 'proposals not found' });
-              }
+    db.query(
+      'SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t."name" as supervisor_name, ' +
+        'p.keywords, p."type", p."groups", p.description, p.required_knowledge, p.notes, ' +
+        'p.expiration_date, p."level", array_agg(d.title_degree) as "degrees" ' +
+        "FROM proposals p " +
+        "JOIN teacher t ON p.supervisor_id = t.id " +
+        "JOIN unnest(p.programmes) AS prog ON true " +
+        "JOIN degree d ON prog = d.cod_degree " +
+        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove line this in production
+        "WHERE p.supervisor_id = $1 " +
+        // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
+        "AND p.archived = false " +
+        'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
+        'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
+        "ORDER BY p.proposal_id",
+      [prof_id]
+    )
+      .then((rows) => {
+        if (rows.length == 0) {
+          console.error("[BACKEND-SERVER] Error in getAllProposals");
+          reject({ status: 404, data: "proposals not found" });
+        }
 
         resolve({ status: 200, data: rows.rows });
       })
