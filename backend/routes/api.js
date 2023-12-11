@@ -15,6 +15,7 @@ const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
 const { getStudentById } = require("../controllers/students");
 const { isLoggedIn, isTeacher } = require("../controllers/authentication");
+const { getVirtualDate, updateVirtualDate } = require("../controllers/virtualclock"); //! VIRTUAL_CLOCK: remove this line in production
 
 /**
  * Authentication routes
@@ -36,13 +37,13 @@ router.use("/proposals", proposals);
 
 /**
  * GET /api/teachers
- * 
+ *
  * Retrieve the list of all teachers.
  * Authentication: Required
  *
  * @param {Object} res HTTP Response Object
  * response body contains an array of teachers
- * 
+ *
  * @error 401 - Not Authenticated
  * @error 500 - Internal Server Error
  *
@@ -52,13 +53,13 @@ router.get("/teachers", isLoggedIn, getTeachers);
 
 /**
  * GET /api/degrees
- * 
+ *
  * Retrieve the list of all degrees.
  * Authentication: Required
  *
  * @param {Object} res HTTP Response Object
  * response body contains an array of degrees
- * 
+ *
  * @error 401 - Not Authenticated
  * @error 500 - Internal Server Error
  *
@@ -77,14 +78,14 @@ router.use('/applications', applications);
 
 /**
  * GET /api/students/:student_id
- * 
+ *
  * Retrieve the lstudent given his id
  * Authentication: Required
  * Authorization required: Teacher
  *
  * @param {Object} res HTTP Response Object
  * response body contains an array of degrees
- * 
+ *
  * @error 401 - Not Authenticated, Not Authorized
  * @error 404 - Student not found
  * @error 500 - Internal Server Error
@@ -92,5 +93,8 @@ router.use('/applications', applications);
  */
 router.get("/students/:student_id", isLoggedIn, isTeacher, getStudentById);
 
+
+router.get("/virtualclock", isLoggedIn, getVirtualDate); //! VIRTUAL_CLOCK: remove this line in production
+router.put("/virtualclock", isLoggedIn, updateVirtualDate); //! VIRTUAL_CLOCK: remove this line in production
 
 module.exports = router;

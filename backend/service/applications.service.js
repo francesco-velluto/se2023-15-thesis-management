@@ -69,7 +69,7 @@ module.exports = {
                 "a.id as application_id, a.status as application_status, a.application_date, " +
                 "s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
                 "FROM proposals p JOIN applications a ON a.proposal_id = p.proposal_id JOIN student s ON s.id = a.student_id " +
-                "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove line this in production
+                "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove this line in production
                 "WHERE p.supervisor_id = $1 " +
                 // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
                 "AND a.status = 'Pending'";
@@ -138,7 +138,7 @@ module.exports = {
                 throw new Error(`Student with id ${student_id} currently already has pending or accepted applications.`);
             } else {
                 // okay it's another call to the DB but it will be removed in production so...
-                const { data: application_date } = getVirtualDate();  //! VIRTUAL_CLOCK: remove line this in production
+                const { data: application_date } = getVirtualDate();  //! VIRTUAL_CLOCK: remove this line in production
                 const query = "INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
                 const res = await db.query(query, [proposal_id, student_id, status, application_date])
                 return res;
