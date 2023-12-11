@@ -69,9 +69,9 @@ module.exports = {
                 "s.id as student_id, s.surname, s.name, s.email, s.enrollment_year, s.cod_degree " +
                 "FROM proposals p JOIN applications a ON a.proposal_id = p.proposal_id JOIN student s ON s.id = a.student_id " +
                 "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove line this in production
-                "WHERE p.supervisor_id = $1 and " +
-                // "p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: decomment this line in production
-                "and a.status = 'Pending'";
+                "WHERE p.supervisor_id = $1 " +
+                // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
+                "AND a.status = 'Pending'";
             db.query(query, [id]).then(({ rows, rowCount }) => {
                 if (rowCount === 0) {
                     resolve({ status: 200, data: [] });
