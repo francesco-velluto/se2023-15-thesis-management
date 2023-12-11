@@ -295,13 +295,13 @@ ALTER TABLE ONLY public.studentnotifs
 --
 
 CREATE TABLE public.virtual_clock (
-    name VARCHAR(20) PRIMARY KEY
-    value DATE NOT NULL,
+    prop_name VARCHAR(20) PRIMARY KEY
+    prop_value DATE NOT NULL,
 );
 
-INSERT INTO public.virtual_clock (name, value) VALUES ('virtual_date', CURRENT_DATE);
+INSERT INTO public.virtual_clock (prop_name, prop_value) VALUES ('virtual_date', CURRENT_DATE);
 
-ALTER TABLE public.applications OWNER TO postgres;
+ALTER TABLE public.virtual_clock OWNER TO postgres;
 
 --
 -- PostgreSQL database dump complete
