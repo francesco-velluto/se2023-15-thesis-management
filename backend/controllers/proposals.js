@@ -171,7 +171,7 @@ module.exports = {
       const proposal = await proposalsService.getProposalById(proposal_id);
 
 
-      if (proposal.data.supervisor_id !== teacher_id && req.user instanceof Teacher) {
+      if (proposal.data.supervisor_id !== teacher_id) {
         return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
       }
 
