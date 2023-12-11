@@ -3,6 +3,7 @@
 const Application = require("../model/Application");
 const db = require("./db");
 const { rowToProposal } = require("./proposals.service");
+const { getVirtualDate } = require("./virtualclock.service");
 
 module.exports = {
     getAllApplicationsByStudentId: (student_id) => {
@@ -117,9 +118,8 @@ module.exports = {
     },
 
     insertNewApplication: async(proposal_id, student_id) => {
-        // TODO: change this implementation to use the current date from the server or the db and not the date passed from above
         const status = 'Pending'
-        const application_date = new Date().toISOString()
+        // const application_date = new Date().toISOString() //! VIRTUAL_CLOCK: uncomment this line in production
 
         try {
 
@@ -127,22 +127,24 @@ module.exports = {
             const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
 
             // Check that the student doesn't have any application pending or accepted
-            const applicationCheck = await db.query('SELECT * FROM applications WHERE student_id = $1 AND status != $2', [student_id, "Rejected"]);
+            const applicationCheck = await db.query(
+                "SELECT * FROM applications WHERE student_id = $1 AND status != $2",
+                [student_id, "Rejected"]
+            );
 
             if (studentCheck.rows.length === 0 || proposalCheck.rows.length === 0 ) {
-              throw new Error(`Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`);
+                throw new Error(`Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`);
             } else if (applicationCheck.rows.length !== 0) {
                 throw new Error(`Student with id ${student_id} currently already has pending or accepted applications.`);
-            }
-            else {
+            } else {
+                // okay it's another call to the DB but it will be removed in production so...
+                const { data: application_date } = getVirtualDate();  //! VIRTUAL_CLOCK: remove line this in production
                 const query = "INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
                 const res = await db.query(query, [proposal_id, student_id, status, application_date])
                 return res;
-
             }
 
-        }
-        catch (error) {
+        } catch (error) {
             console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error);
             throw error;
         }
