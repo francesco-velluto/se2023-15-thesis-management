@@ -14,7 +14,9 @@ const formatString = "YYYY-MM-DD";
  */
 exports.getVirtualDate = async () => {
   try {
-    const { rows } = await db.query("SELECT virtual_date FROM virtual_clock;");
+    const { rows } = await db.query(
+      "SELECT value FROM virtual_clock WHERE name = 'virtual_date';"
+    );
     return { data: dayjs(rows[0]).format(formatString) };
   } catch (err) {
     console.error(
@@ -41,7 +43,7 @@ exports.getVirtualDate = async () => {
 exports.updateVirtualDate = async (newDate) => {
   try {
     const { rows, rowCount } = await db.query(
-      "UPDATE virtual_clock SET virtual_date = $1 WHERE virtual_date < $1 RETURNING *;",
+      "UPDATE virtual_clock SET value = $1 WHERE name = 'virtual_date' AND value < $1 RETURNING value;",
       [dayjs(newDate).format(formatString)]
     );
     if (rowCount === 0)
