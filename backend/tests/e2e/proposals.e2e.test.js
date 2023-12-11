@@ -532,6 +532,8 @@ describe("End to end test for update proposal", () => {
 
             doLogout(driver);
 
+
+
         }
 
     }, 20000);
@@ -543,7 +545,7 @@ describe("End to end test for update proposal", () => {
 
         await driver.get(baseURL + "/proposals");
 
-        await driver.sleep(500);
+        await driver.sleep(1000);
 
         const firstProposal = await driver.findElement(By.className('proposal-row'));
 
@@ -575,12 +577,7 @@ describe("End to end test for update proposal", () => {
 
         expect(await cancelButton.getText()).toEqual("Return");
 
-        //rimuovere disabled con executeScript
-
-        await executeScript(
-            "arguments[0].removeAttribute('disabled')",
-            cancelButton
-        );
+        
 
         await cancelButton.click();
 
