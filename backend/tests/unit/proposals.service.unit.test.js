@@ -475,7 +475,7 @@ describe("T7 - deleteProposal", () => {
   test("T6.2 Return undefined - rowCount: 0", (done) => {
     const mockProposalId = "P012";
     db.query.mockResolvedValue({
-      rows: [{proposal_id: mockProposalId,}],
+      rows: [],
       rowCount: 0,
     });
 
