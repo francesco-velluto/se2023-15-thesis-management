@@ -2,10 +2,12 @@ const applicationService = require("../../service/applications.service");
 const db = require("../../service/db");
 const Application = require("../../model/Application");
 const Proposal = require("../../model/Proposal");
+const virtualClockService = require("../../service/virtualclock.service");
 
 jest.mock("../../service/db", () => ({
   query: jest.fn(),
 }));
+jest.mock("../../service/virtualclock.service");
 
 beforeEach(() => {
   jest.resetAllMocks();
@@ -181,7 +183,7 @@ describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
         expect(result.data).toEqual([]);
         expect(db.query).toHaveBeenCalledTimes(1);
       })
-      
+
   });
 
   it("should handle internal server error", async () => {
@@ -221,6 +223,8 @@ describe("UNIT-SERVICE: insertNewApplication", () => {
         },
       ],
     });
+
+    virtualClockService.getVirtualDate.mockResolvedValue("2023-01-01");
 
     const res = await applicationService.insertNewApplication(
       proposalId,
@@ -442,4 +446,3 @@ describe("UNIT-SERVICE: getAllApplicationsByProposalId", () => {
     );
   });
 });
-
