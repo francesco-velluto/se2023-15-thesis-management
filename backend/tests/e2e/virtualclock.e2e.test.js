@@ -25,24 +25,24 @@ describe("End to end tests for virtual clock", () => {
     await driver.sleep(1000);
 
     // expiration dates of proposal before using the virtual clock
-    const exp_dates_unfiltered_elements = await driver.findElements(
+    const exp_dates_elements_before = await driver.findElements(
       By.className("expiration-date")
     );
 
-    const exp_dates_unfiltered = await Promise.all(exp_dates_unfiltered_elements.map(
-      async (elem) => {
+    const exp_dates_before = await Promise.all(
+      exp_dates_elements_before.map(async (elem) => {
         const date = await elem.getText();
         return parse(date, "dd/MM/yyyy", new Date());
-      }
-    ));
+      })
+    );
 
-    const min_exp_date = min(exp_dates_unfiltered);
+    const min_exp_date = min(exp_dates_before);
 
     // set virtual clock to be two days after the expiration date of the min exp date
     // to be sure that at least one proposal will be filtered out
     const virtualClockDate = add(min_exp_date, { days: 2 });
 
-    await driver.sleep(500)
+    await driver.sleep(500);
 
     await driver.findElement(By.id("show-virtual-clock-btn")).click();
 
@@ -50,15 +50,17 @@ describe("End to end tests for virtual clock", () => {
       .findElement(By.id("virtual-clock-form"))
       .sendKeys(format(virtualClockDate, "dd/MM/yyyy"));
 
+    await driver.findElement(By.id("apply-new-date")).click();
+
     await driver.sleep(1000);
 
-    const exp_dates_filtered = await driver.findElements(
+    const exp_dates_after = await driver.findElements(
       By.className("expiration-date")
     );
 
-    expect(exp_dates_filtered.length).toBeLessThan(exp_dates_unfiltered.length);
+    expect(exp_dates_after.length).toBeLessThan(exp_dates_before.length);
 
-    for (const date_element of exp_dates_filtered) {
+    for (const date_element of exp_dates_after) {
       const date_text = await date_element.getText();
       const date = parse(date_text, "dd/MM/yyyy", new Date());
       expect(isAfter(date, virtualClockDate)).toBe(true);
