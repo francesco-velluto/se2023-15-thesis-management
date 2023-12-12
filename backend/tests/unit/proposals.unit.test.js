@@ -1216,7 +1216,152 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.5 - SUCCESS 200  | Proposal updated", (done) => {
+  test("T6.5 - ERROR 422    | Empty title field", (done) => {
+    let mockProposal = {
+      ...mockProposalReq,
+      title: ""
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposal)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).not.toBeFalsy();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).not.toHaveBeenCalled();
+        expect(updateProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T6.6 - ERROR 422    | Missing date field", (done) => {
+    let mockProposal = {
+      ...mockProposalReq,
+    };
+    delete mockProposal.expiration_date;
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposal)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).not.toBeFalsy();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).not.toHaveBeenCalled();
+        expect(updateProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T6.7 - ERROR 422    | Invalid date format", (done) => {
+    let mockProposal = {
+      ...mockProposalReq,
+    };
+    mockProposal.expiration_date = "20-10-2023";
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposal)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).not.toBeFalsy();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).not.toHaveBeenCalled();
+        expect(updateProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T6.8 - ERROR 422    | Invalid date", (done) => {
+    let mockProposal = {
+      ...mockProposalReq,
+    };
+    mockProposal.expiration_date = "2023-02-29",
+
+      isLoggedIn.mockImplementation((req, res, next) => {
+        next(); // Authenticated
+      });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposal)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).not.toBeFalsy();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).not.toHaveBeenCalled();
+        expect(updateProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T6.9 - ERROR 422    | Array of strings contains some elements which are not strings", (done) => {
+    let mockProposal = {
+      ...mockProposalReq,
+    };
+    mockProposal.keywords = ["k1", 123];
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposal)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).not.toBeFalsy();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).not.toHaveBeenCalled();
+        expect(updateProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T6.10 - SUCCESS 200 | Proposal updated", (done) => {
     const mockProposalRes = {
       ...mockProposalReq,
     };
@@ -1254,10 +1399,10 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.6 - ERROR 422    | Empty title field", (done) => {
+  test("T6.11 - SUCCESS 200 | Undefined required knowledge field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
-      title: ""
+      required_knowledge: undefined
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -1265,25 +1410,42 @@ describe("T6 - Update proposals unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
       next(); // Authenticated
     });
+
+    const mockProposalInDb = {
+      data: {
+        supervisor_id: 'T001'
+      },
+    };
+
+    const mockProposalRes = {
+      ...mockProposal,
+      proposal_id: "P001",
+      supervisor_id: "T001",
+      cod_group: "G001"
+    };
+
+    getProposalById.mockResolvedValue(mockProposalInDb);
+    updateProposal.mockResolvedValue(mockProposalRes);
 
     request(app)
       .put("/api/proposals/" + "P001")
       .send(mockProposal)
       .then((res) => {
-        expect(res.body).not.toBeFalsy();
-        expect(res.status).toBe(422);
+        expect(res.status).toBe(200);
+        expect(res.body).toEqual({});
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
-        expect(getProposalById).not.toHaveBeenCalled();
-        expect(updateProposal).not.toHaveBeenCalled();
+        expect(getProposalById).toHaveBeenCalled();
+        expect(updateProposal).toHaveBeenCalledWith({ ...mockProposal });
         done();
       })
       .catch((err) => done(err));
   });
 
-  test("T6.7 - SUCCESS 200  | Undefined notes field", (done) => {
+  test("T6.12 - SUCCESS 200 | Undefined notes field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
       notes: undefined
@@ -1329,4 +1491,41 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
+  test("T6.13 - ERROR 500   | Database error", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next(); // Authenticated
+    });
+
+    const mockProposalInDb = {
+      data: {
+        supervisor_id: 'T001'
+      },
+    };
+
+    getProposalById.mockResolvedValue(mockProposalInDb);
+    updateProposal.mockImplementation(() => {
+      throw Error("Internal Database Error");
+    });
+
+    const message = {"error": "Internal server error has occurred"};
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposalReq)
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual(message);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).toHaveBeenCalled();
+        expect(updateProposal).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
 });
