@@ -87,8 +87,8 @@ function StudentApplicationsPage() {
                         )
                     )
                 }
-                <Row className={"justify-content-center student-application-row"}>
-                    <Col lg={5}>
+                <Row className={"justify-content-center"}>
+                    <Col lg={2}>
                         <Button id='back-to-homepage-button' className="w-100 my-3" as={Link} to="/">
                             Return
                         </Button>

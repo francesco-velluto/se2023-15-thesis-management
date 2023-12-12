@@ -60,6 +60,11 @@
     border-color: rgb(226, 169, 119);
     background-color: whitesmoke;
 }
+#go-back:hover{
+    color:white;
+    border-color: rgb(226, 169, 119);
+    background-color: rgb(226, 169, 119);
+}
 
 #show-more {
     color: darkgray;

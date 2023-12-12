@@ -9,17 +9,17 @@ function TitleBar() {
 
   return (
     <div className="row-bar">
-      {loggedUser.role === 0 && (
-        <Row xs={12} className="justify-content-md-center">
-          <Col xs={12} md="auto" >
+      <Row xs={12} className="justify-content-md-center">
+          <Col xs={12} md="auto" className="my-1">
             <Button type="button" id="title-btn" as={Link} to="/" className="w-100">
-              Teacher
+              Home
             </Button>
           </Col>
-          <Col xs={12} md="auto" className="d-flex justify-content-center" >
-              <Button type="button" id="title-btn" as={Link} to="/proposals" className="w-100">
+          <Col xs={12} md="auto" className="d-flex justify-content-center my-1" >
+              <Button type="button" id="title-btn" as={Link} to="/proposals" className="w-100 mx-1">
                 Proposals
               </Button>
+              {loggedUser.role === 0 && (
               <Button type="button" 
                 id="title-add-btn" 
                 as={Link} 
@@ -29,28 +29,14 @@ function TitleBar() {
                 >
                 <BiPlus />
               </Button>
+                )}
           </Col>
-          <Col xs={12} md="auto">
+          <Col xs={12} md="auto" className="my-1">
             <Button type="button" id="title-btn" as={Link} to="/applications" className="w-100">
               Applications
             </Button>
           </Col>
         </Row>
-      )}
-      {loggedUser.role === 1 && (
-        <Row xs={12} className="justify-content-md-center">
-          <Col xs={12} md="auto" className="mb-2 mb-md-0">
-            <Button type="button" id="title-btn" as={Link} to="/" className="w-100">
-              Student
-            </Button>
-          </Col>
-          <Col xs={12} md="auto">
-            <Button type="button" id="title-btn" as={Link} to="/proposals" className="w-100">
-              Proposals
-            </Button>
-          </Col>
-        </Row>
-      )}
     </div>
   );
 }
