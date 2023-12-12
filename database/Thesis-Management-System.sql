@@ -295,8 +295,8 @@ ALTER TABLE ONLY public.studentnotifs
 --
 
 CREATE TABLE public.virtual_clock (
-    prop_name VARCHAR(20) PRIMARY KEY
-    prop_value DATE NOT NULL,
+    prop_name VARCHAR(20) PRIMARY KEY,
+    prop_value DATE NOT NULL
 );
 
 INSERT INTO public.virtual_clock (prop_name, prop_value) VALUES ('virtual_date', CURRENT_DATE);
