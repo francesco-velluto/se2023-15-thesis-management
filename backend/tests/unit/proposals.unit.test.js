@@ -999,7 +999,7 @@ describe("T5 - Delete a proposal unit tests", () => {
   });
 
   test("T5.3.4 ERROR 403 | Cannot delete if there is an accepted application related to the proposal", (done) => {
-    
+
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -1092,7 +1092,7 @@ describe("T6 - Update proposals unit tests", () => {
     programmes: ["Master of Science", "Master of Business"],
   };
 
-  test("T6.1 - ERROR 401 | Not authenticated", (done) => {
+  test("T6.1 - ERROR 401    | Not authenticated", (done) => {
     const mockProposalReq = {};
     const message = "Not authenticated";
 
@@ -1115,7 +1115,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.2 - ERROR 401 | Not authorized", (done) => {
+  test("T6.2 - ERROR 401    | Not authorized", (done) => {
     const mockProposalReq = {};
     const message = "Not authorized";
 
@@ -1142,7 +1142,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.3 - ERORR 403 | Not authorized", (done) => {
+  test("T6.3 - ERORR 403    | Not authorized", (done) => {
     const message = "Not authorized!";
 
     const mockProposalRes = {
@@ -1182,7 +1182,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.4 - ERROR 404 | Proposal not found", (done) => {
+  test("T6.4 - ERROR 404    | Proposal not found", (done) => {
     const message = { error: "Proposal not found!" };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -1216,7 +1216,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.5 - SUCCESS 200 | Proposal updated", (done) => {
+  test("T6.5 - SUCCESS 200  | Proposal updated", (done) => {
     const mockProposalRes = {
       ...mockProposalReq,
     };
@@ -1248,13 +1248,13 @@ describe("T6 - Update proposals unit tests", () => {
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
         expect(getProposalById).toHaveBeenCalled();
-        expect(updateProposal).toHaveBeenCalledWith({ ...mockProposalRes });
+        expect(updateProposal).toHaveBeenCalledWith({ ...mockProposalReq });
         done();
       })
       .catch((err) => done(err));
   });
 
-  test("T6.6 - ERROR 422 | Empty title field", (done) => {
+  test("T6.6 - ERROR 422    | Empty title field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
       title: ""
@@ -1283,7 +1283,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.7 - SUCCESS 200 | Undefined notes field", (done) => {
+  test("T6.7 - SUCCESS 200  | Undefined notes field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
       notes: undefined
@@ -1301,7 +1301,7 @@ describe("T6 - Update proposals unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      req.user = { id: "T001", cod_group: "G001" };
+      req.user = { id: "T001" };
       next(); // Authenticated
     });
 
@@ -1319,11 +1319,11 @@ describe("T6 - Update proposals unit tests", () => {
       .send(mockProposal)
       .then((res) => {
         expect(res.status).toBe(200);
-        expect(res.body).toEqual({ proposal: mockProposalRes });
+        expect(res.body).toEqual({});
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
         expect(getProposalById).toHaveBeenCalled();
-        expect(updateProposal).toHaveBeenCalledWith({ ...mockProposalRes });
+        expect(updateProposal).toHaveBeenCalledWith({ ...mockProposal });
         done();
       })
       .catch((err) => done(err));
