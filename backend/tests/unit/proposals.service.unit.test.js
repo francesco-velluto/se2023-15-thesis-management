@@ -489,8 +489,8 @@ describe("T7 - deleteProposal", () => {
   });
 
 });
-describe("T8 - updateProposal", () => {
 
+describe("T8 - updateProposal", () => {
   test("T8.1 SUCCESS | Update proposal", (done) => {
     const mockProposal = {
       proposal_id: "P001",
@@ -549,7 +549,7 @@ describe("T8 - updateProposal", () => {
       .catch((error) => done(error));
   });
 
-  test("T8.2 ERROR | Throw Error - Database Error", (done) => {
+  test("T8.2 ERROR   | Throw Error - Database Error", (done) => {
     const message = "Database error";
     const mockProposal = {
       proposal_id: "P001",
@@ -577,7 +577,7 @@ describe("T8 - updateProposal", () => {
       });
   });
 
-  test("T8.3 ERROR | Throw Error - Input Undefined", (done) => {
+  test("T8.3 ERROR   | Throw Error - Input Undefined", (done) => {
     const message = "Cannot read properties of undefined (reading 'title')";
 
     db.query.mockRejectedValueOnce(new Error(message));
@@ -590,5 +590,4 @@ describe("T8 - updateProposal", () => {
         done();
       });
   });
-
 });
