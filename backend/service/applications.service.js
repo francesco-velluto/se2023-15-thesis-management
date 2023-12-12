@@ -9,8 +9,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             // check if student exists in student db table
             db.query('SELECT * FROM student WHERE id = $1;', [student_id])
-                .then((rows) => {
-                    if (rows.count === 0) {
+                .then(({rows, rowCount}) => {
+                    if (rowCount === 0) {
                         console.error('[BACKEND-SERVER] Error in getAllApplicationsByStudentId Student with id ' +
                             student_id + ' not found in table student');
                         reject({ status: 404, data: 'Student not found' });

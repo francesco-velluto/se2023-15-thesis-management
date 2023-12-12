@@ -60,10 +60,25 @@ describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
   it("should handle error", async () => {
     db.query.mockRejectedValue();
     try {
-      await applicationService.getAllApplicationsByStudentId("studentId");
+      await applicationService.getAllApplicationsByStudentId("S001");
     } catch (err) {
       expect(err.data).toEqual("Internal server error");
       expect(err.status).toBe(500);
+    }
+  });
+
+  it("error if student not found", async () => {
+    db.query.mockResolvedValue({
+      rows: [],
+      rowCount: 0,
+
+    });
+    try {
+      await applicationService.getAllApplicationsByStudentId("S001");
+    } catch (err) {
+      expect(err.status).toBe(404);
+      expect(err.data).toEqual('Student not found');
+      expect(db.query).toHaveBeenCalled();
     }
   });
 });
@@ -155,17 +170,18 @@ describe("UNIT-SERVICE: getAllApplicationsByTeacherId", () => {
   });
 
   it("should handle no applications found", async () => {
-    const teacherId = "teacher";
+    db.query.mockResolvedValue({
+      rows: [],
+      rowCount: 0,
+    });
 
-    db.query.mockResolvedValue({ rows: [] });
-
-    const res = await applicationService.getAllApplicationsByTeacherId(
-      teacherId
-    );
-
-    expect(res.data).toEqual([]);
-    expect(res.status).toBe(200);
-    expect(db.query).toHaveBeenCalledTimes(1);
+    applicationService.getAllApplicationsByTeacherId('T001')
+      .then((result) => {
+        expect(result.status).toBe(200);
+        expect(result.data).toEqual([]);
+        expect(db.query).toHaveBeenCalledTimes(1);
+      })
+      
   });
 
   it("should handle internal server error", async () => {
@@ -354,3 +370,76 @@ describe("UNIT-SERVICE: getApplicationById", () => {
     );
   });
 });
+
+
+describe("UNIT-SERVICE: getAllPendingApplicationsByProposalId", () => {
+  it("should get all applications for a given proposal whose status is Pending", async () => {
+
+    const queryResult = {
+      id: "A001",
+      student_id: "S001",
+      status: "Pending",
+      application_date: "2023-11-23",
+      proposal_id:'P001'
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [queryResult]});
+
+    const res = await applicationService.getAllPendingApplicationsByProposalId('P001');
+
+    expect(res.data).toEqual([queryResult]);
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    expect(applicationService.getAllPendingApplicationsByProposalId("P001")).rejects.toThrow(
+      "Internal error"
+    );
+  });
+});
+
+
+describe("UNIT-SERVICE: getAllApplicationsByProposalId", () => {
+  it("should return undefined data field if application doesn't exist", async () => {
+    db.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
+
+    const res = await applicationService.getAllApplicationsByProposalId("A001");
+    expect(res.data).toBeUndefined();
+  });
+
+  it("should return all the applications related to a proposal", async () => {
+
+    const queryResult = {
+      id: "A001",
+      student_id: "S001",
+      status: "Pending",
+      application_date: "2023-11-23",
+      proposal_id:"P001"
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [queryResult],
+      rowCount: 1,
+    });
+
+    const res = await applicationService.getAllApplicationsByProposalId("P001");
+
+    expect(res.data[0]).toEqual(queryResult);
+    expect(db.query).toHaveBeenCalled();
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    expect(applicationService.getAllApplicationsByProposalId("P001")).rejects.toThrow(
+      "Internal error"
+    );
+  });
+});
+
