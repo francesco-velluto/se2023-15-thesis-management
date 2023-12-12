@@ -75,7 +75,7 @@ exports.getAllProposals = async (cod_degree) => {
         "JOIN teacher t ON p.supervisor_id = t.id " +
         "JOIN unnest(p.programmes) AS prog ON true " +
         "JOIN degree d ON prog = d.cod_degree " +
-        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove this line in production
+        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
         "WHERE cod_degree = $1 " +
         // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
         "AND p.archived = false " +
@@ -109,7 +109,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
         "JOIN teacher t ON p.supervisor_id = t.id " +
         "JOIN unnest(p.programmes) AS prog ON true " +
         "JOIN degree d ON prog = d.cod_degree " +
-        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value" + //! VIRTUAL_CLOCK: remove this line in production
+        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
         "WHERE p.supervisor_id = $1 " +
         // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
         "AND p.archived = false " +
@@ -120,14 +120,14 @@ exports.getAllProfessorProposals = async (prof_id) => {
     )
       .then((rows) => {
         if (rows.length == 0) {
-          console.error("[BACKEND-SERVER] Error in getAllProposals");
+          console.error("[BACKEND-SERVER] Error in getAllProfessorProposals");
           reject({ status: 404, data: "proposals not found" });
         }
 
         resolve({ status: 200, data: rows.rows });
       })
       .catch((err) => {
-        console.error("[BACKEND-SERVER] Error in getAllProposals", err);
+        console.error("[BACKEND-SERVER] Error in getAllProfessorProposals", err);
         reject({ status: 500, data: "Internal server error" });
       });
   });
