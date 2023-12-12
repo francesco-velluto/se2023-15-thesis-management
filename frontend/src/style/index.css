@@ -106,16 +106,16 @@ body {
 /* PROPOSAL LIST**********/
 /*************************/
 
-#show-proposal-detail, #proposal-detail-actions {
+#show-proposal-detail, #proposal-detail-actions{
     margin-top: -2px; 
-    cursor: 'pointer';
+    cursor: pointer;
     color:  #003576;
     font-weight: bold;
 }
 
 #copy-proposal-id, #update-proposal-id {
     margin-top: -2px; 
-    cursor: 'pointer';
+    cursor: pointer;
     color:  orange;
     font-weight: bold;
     
@@ -269,6 +269,10 @@ body {
     box-shadow: 0 2px 0 rgba(0,0,0,.045);
 
 }
+#title-btn:hover{
+    background-color: lightgray ;
+} 
+
 #title-add-btn {
     background-color: #003576;
     color: white;
@@ -276,6 +280,9 @@ body {
     border-radius: 50%;
 
 }
+#title-add-btn:hover{
+    background-color: lightgray ;
+} 
 
 /*************************/
 /* FOOTER ****************/
