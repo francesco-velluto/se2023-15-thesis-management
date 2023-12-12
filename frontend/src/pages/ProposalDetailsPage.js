@@ -35,7 +35,7 @@ function ProposalDetailsPage({ mode }) {
     const [unauthorized, setUnauthorized] = useState(false);    // it is useful to hide fields in the page if there is some issues (for example, proposal expired or proposal not found ...)
     const [successMessage, setSuccessMessage] = useState("");
 
-    const { currentDate } = useContext(VirtualClockContext);
+    const { currentDate } = useContext(VirtualClockContext);  //! VIRTUAL CLOCK: remove this line in production
     const { loggedUser } = useContext(LoggedUserContext);
 
     const [title, setTitle] = useState("");
@@ -288,7 +288,7 @@ function ProposalDetailsPage({ mode }) {
                     setProposalDegreeList([]);
                 });
         }
-    }, [proposal_id, currentDate, mode]);
+    }, [proposal_id, currentDate, mode]);  //! VIRTUAL CLOCK: re-render component each time the virtual date changes; remove this dependency in production
 
     return (
         <>
@@ -647,7 +647,8 @@ function ProposalDetailsPage({ mode }) {
                                                             <Form.Control
                                                                 id="expiration-date"
                                                                 type="date"
-                                                                min={currentDate}
+                                                                min={currentDate} //! VIRTUAL CLOCK: remove this line in production
+                                                                // min={dayjs().format("YYYY-MM-DD")} //! VIRTUAL CLOCK: uncomment this line in production
                                                                 value={dayjs(expDate).format("YYYY-MM-DD")}
                                                                 onChange={(e) => {
                                                                     setExpDate(e.target.value);

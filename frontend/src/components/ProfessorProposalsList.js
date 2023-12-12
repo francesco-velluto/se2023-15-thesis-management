@@ -13,23 +13,7 @@ function ProfessorProposalsList() {
 
     const navigate = useNavigate();
 
-    const { currentDate } = useContext(VirtualClockContext);
-    /**
-     * ! ONLY FOR DEV SIMULATIONS
-     *
-     * Function to use an extra filter on the proposals list,
-     * to exclude those who are expired in the current date
-     * set by the virtual clock.
-     *
-     * ! If the virtual clock in on:
-     * !    every time you call the setProposals, you should call this
-     * !    function right after that, so you apply an extra filter on the already filtered proposals.
-     */
-    const filterByVirtualClockDate = () => {
-        setProposals((old) => {
-            return old.filter((p) => p.expiration_date > currentDate);
-        });
-    }
+    const { currentDate } = useContext(VirtualClockContext); //! VIRTUAL CLOCK: remove this line in production
 
     useEffect(() => {
         async function loadProposals() {
@@ -45,7 +29,6 @@ function ProfessorProposalsList() {
                     let db_proposals = (await res.json()).proposals;
 
                     setProposals(db_proposals);
-                    filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
                     setIsLoading(false);
                 }).catch((err) => {
                     setErrorMessage(err.message);
@@ -56,7 +39,7 @@ function ProfessorProposalsList() {
 
         loadProposals();
 
-    }, [currentDate])
+    }, [currentDate]); //! VIRTUAL CLOCK: re-render component each time the virtual date changes; remove this dependency in production
 
     return (
         <Container className="bg-white rounded-bottom py-4">
@@ -161,7 +144,7 @@ function ProposalRow({ proposal }) {
             </Col>
 
             <Col md={2} xxl={1} className="d-none d-md-block">
-            
+
                 <Dropdown>
                     <Dropdown.Toggle variant="outline-dark" id="dropdown-proposal-actions" className="w-100">
                         Actions
@@ -173,7 +156,7 @@ function ProposalRow({ proposal }) {
                     </Dropdown.Menu>
 
                 </Dropdown>
-            
+
             </Col>
 
             <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0 d-md-none" style={{ marginTop: '-2px', cursor: 'pointer', color: '#393646', fontWeight: "bold" }} onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}>

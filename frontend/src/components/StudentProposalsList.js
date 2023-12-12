@@ -12,23 +12,7 @@ function StudentProposalsList(props) {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const { currentDate } = useContext(VirtualClockContext);
-    /**
-     * ! ONLY FOR DEV SIMULATIONS
-     *
-     * Function to use an extra filter on the proposals list,
-     * to exclude those who are expired in the current date
-     * set by the virtual clock.
-     *
-     * ! If the virtual clock in on:
-     * !    every time you call the setFilteredProposals, you should call this
-     * !    function right after that, so you apply an extra filter on the already filtered proposals.
-     */
-    const filterByVirtualClockDate = () => {
-        setFilteredProposals((oldFiltered) => {
-            return oldFiltered.filter((p) => p.expiration_date > currentDate);
-        });
-    }
+    const { currentDate } = useContext(VirtualClockContext);  //! VIRTUAL CLOCK: remove this line in production
 
     useEffect(() => {
         async function loadProposals() {
@@ -47,7 +31,6 @@ function StudentProposalsList(props) {
 
                 setProposals(db_proposals);
                 setFilteredProposals(db_proposals);
-                filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
                 setIsLoading(false);
             }).catch((err) => {
                 setErrorMessage(err.message);
@@ -58,7 +41,7 @@ function StudentProposalsList(props) {
         }
         loadProposals();
 
-    }, [currentDate]);
+    }, [currentDate]);  //! VIRTUAL CLOCK: re-render component each time the virtual date changes; remove this dependency in production
 
     useEffect(() => {
 
@@ -92,9 +75,8 @@ function StudentProposalsList(props) {
             }
             return result;
         });
-        filterByVirtualClockDate(); // ! REMOVE IT IN PRODUCTION
 
-    }, [props.searchData.length, currentDate])
+    }, [props.searchData.length, currentDate]);  //! VIRTUAL CLOCK: re-render component each time the virtual date changes; remove this dependency in production
 
 
     return (

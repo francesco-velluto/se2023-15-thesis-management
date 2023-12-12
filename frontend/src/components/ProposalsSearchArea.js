@@ -21,7 +21,7 @@ const FIELDS = [
 
 
 function ProposalsSearchArea(props) {
-    const { currentDate } = useContext(VirtualClockContext);
+    const { currentDate } = useContext(VirtualClockContext); //! VIRTUAL CLOCK: remove this line in production
 
     const [searchField, setSearchField] = useState("");
     const [searchValue, setSearchValue] = useState("");
@@ -43,14 +43,6 @@ function ProposalsSearchArea(props) {
                     setErrorMessage("There was an error in loading filters for searching, please try refreshing the page");
                 } else {
                     let data = (await res.json()).proposals;
-
-                    /**
-                     * DEV Enviroment - Filter the proposals suggestions applying the virtual clock date
-                     */
-                    data = data.filter((proposal) => {
-                        const proposalExpiration = dayjs(proposal.expiration_date).format("YYYY-MM-DD");
-                        return proposalExpiration >= currentDate;
-                    });
 
                     /**
                      * Integrate the search hints with the filtered data
@@ -182,7 +174,7 @@ function ProposalsSearchArea(props) {
                 setIsLoading(false);
             });
 
-    }, [props.searchData.length, currentDate]);
+    }, [props.searchData.length, currentDate]);  //! VIRTUAL CLOCK: re-render component each time the virtual date changes; remove this dependency in production
 
     useEffect(() => {
         setSearchValue("");

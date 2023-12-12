@@ -10,7 +10,7 @@ import Logo from '../images/logo_poli_bianco_260.png'
 
 function NavbarContainer() {
     const navigate = useNavigate();
-    const { currentDate, setCurrentDate } = useContext(VirtualClockContext);
+    const { currentDate, updateCurrentDate } = useContext(VirtualClockContext);
     const [showFormControl, setShowFormControl] = useState(false);
     const { handleLogout } = useContext(LoggedUserContext);
     const { loggedUser } = useContext(LoggedUserContext);
@@ -61,7 +61,7 @@ function NavbarContainer() {
                                     type="date"
                                     min={dayjs().format("YYYY-MM-DD")}
                                     value={currentDate}
-                                    onChange={(ev) => setCurrentDate(ev.target.value)}
+                                    onChange={(ev) => updateCurrentDate(ev.target.value)}
                                     style={{ backgroundColor: 'white', color: '#393646', borderColor: 'white', height: '50px', width: '135px', lineHeight: '37px' }}
                                 />
                             )}
