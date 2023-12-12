@@ -49,6 +49,9 @@ module.exports = {
         if (result.data.deleted === true){
           return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
         }
+        if (result.data.archived === true){
+          return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+        }
         return res.status(result.status).json(result.data);
       })
       .catch((err) => {
