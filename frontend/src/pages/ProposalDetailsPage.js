@@ -501,6 +501,7 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>Type:</Card.Title>
                                                     <Form.Group>
                                                         <Form.Control
+                                                            id="proposal-type"
                                                             as={mode === "read" ? 'input' : 'textarea'}
                                                             name='proposal-type'
                                                             rows={1}
@@ -714,6 +715,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                     {keyword}
                                                                     <Button
+                                                                        className="delete-keyword-btn"
                                                                         variant="danger"
                                                                         size="sm"
                                                                         onClick={() => {

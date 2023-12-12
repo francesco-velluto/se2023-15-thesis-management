@@ -119,7 +119,7 @@ module.exports = {
             const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
 
             // Check that the student doesn't have any application pending or accepted
-            const applicationCheck = await db.query('SELECT * FROM applications WHERE student_id = $1 AND status != $2', [student_id, "Rejected"]);
+            const applicationCheck = await db.query('SELECT * FROM applications WHERE student_id = $1 AND status NOT IN ($2, $3)', [student_id, "Rejected", "Canceled"]);
 
             if (studentCheck.rows.length === 0 || proposalCheck.rows.length === 0 ) {
               throw new Error(`Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`);

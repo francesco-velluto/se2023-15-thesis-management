@@ -895,7 +895,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3 ERROR 403 | Expired proposal", (done) => {
+  test("T5.3.1 ERROR 403 | Expired proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -930,7 +930,7 @@ describe("T5 - Delete a proposal unit tests", () => {
   });
 
 
-  test("T5.4 ERROR 403 | Archived proposal", (done) => {
+  test("T5.3.2 ERROR 403 | Archived proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -964,7 +964,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.5 ERROR 403 | Already deleted proposal", (done) => {
+  test("T5.3.3 ERROR 403 | Already deleted proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -998,8 +998,8 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.6 ERROR 403 | Cannot delete if there is an accepted application related to the proposal", (done) => {
-
+  test("T5.3.4 ERROR 403 | Cannot delete if there is an accepted application related to the proposal", (done) => {
+    
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
