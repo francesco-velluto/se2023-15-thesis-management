@@ -17,7 +17,8 @@ exports.getVirtualDate = async () => {
     const { rows } = await db.query(
       "SELECT prop_value FROM virtual_clock WHERE prop_name = 'virtual_date';"
     );
-    return { data: dayjs(rows[0]).format(formatString) };
+
+    return { data: dayjs(rows[0].prop_value).format(formatString) };
   } catch (err) {
     console.error(
       "[BACK-END ERROR]: Error in service function getVirtualDate.",
@@ -51,7 +52,7 @@ exports.updateVirtualDate = async (newDate) => {
     if (rowCount === 0)
       throw Error("New virtual date can't be before the current one!");
 
-    return { data: dayjs(rows[0]).format(formatString) };
+    return { data: dayjs(rows[0].prop_value).format(formatString) };
   } catch (err) {
     console.error(
       "[BACK-END ERROR]: Error in service function getVirtualDate.",

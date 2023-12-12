@@ -13,7 +13,7 @@ const getVirtualDate = async () => {
 
 const updateVirtualDate = async (newDate) => {
   try {
-    const res = await APICall(API_URL + "/virtualclock", "PUT", { date: newDate });
+    const res = await APICall(API_URL + "/virtualclock", "PUT", JSON.stringify({ date: newDate }));
     return res;
   } catch (error) {
     console.log(error);

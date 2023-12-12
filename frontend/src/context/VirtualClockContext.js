@@ -21,14 +21,12 @@ export const VirtualClockProvider = ({ children }) => {
   }
 
   const updateCurrentDate = async (newDate) => {
-    // TODO: check that new date is after current date
     const res = await updateVirtualDate(newDate);
     !res.error && setCurrentDate(res.date);
   }
 
   useEffect(() => {
-    // fetchVirtualDate();
-    console.log("re-rendering virtual clock");
+    fetchVirtualDate();
   }, [navigate]);
   /*
    * navigate in the dependency list because I want to re-render this component

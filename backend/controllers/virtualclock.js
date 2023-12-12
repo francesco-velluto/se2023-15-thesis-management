@@ -2,7 +2,11 @@
 
 //! VIRTUAL_CLOCK: remove this module in production
 
-const { getVirtualDate, updateVirtualDate } = require("../service/virtualclock.service");
+const dayjs = require("dayjs");
+const {
+  getVirtualDate,
+  updateVirtualDate,
+} = require("../service/virtualclock.service");
 
 module.exports = {
   /**
@@ -26,7 +30,14 @@ module.exports = {
    */
   updateVirtualDate: async (req, res) => {
     try {
-      const newDate = req.body?.date; // TODO: validation on newDate format
+      const newDate = req.body?.date;
+      if (!dayjs(newDate, "YYYY-MM-DD").isValid()) {
+        return res
+          .status(400)
+          .json({
+            error: "The date provided in the request body is not a valid date in ISO format 'YYYY-MM-DD'!",
+          });
+      }
 
       const { data: virtualDate } = await updateVirtualDate(newDate);
       if (!virtualDate) {
