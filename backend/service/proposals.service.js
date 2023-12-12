@@ -17,7 +17,8 @@ const Proposal = require("../model/Proposal");
     row.expiration_date,
     row.level,
     row.programmes,
-    row.archived
+    row.archived,
+    row.deleted
   );
 };
 
@@ -27,8 +28,8 @@ exports.insertProposal = async (proposal) => {
       `INSERT INTO proposals
         (proposal_id, title, supervisor_id, keywords, type,
         groups, description, required_knowledge, notes,
-        expiration_date, level, programmes, archived)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        expiration_date, level, programmes, archived, deleted)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         RETURNING *;`,
       [
         proposal.proposal_id,
@@ -44,6 +45,7 @@ exports.insertProposal = async (proposal) => {
         proposal.level,
         proposal.programmes,
         false,
+        false
       ]
     );
     return this.rowToProposal(result.rows[0]);
@@ -78,7 +80,7 @@ exports.getAllProposals = async (cod_degree) => {
         "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
         "WHERE cod_degree = $1 " +
         // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
-        "AND p.archived = false " +
+        "AND p.archived = false AND p.deleted = false " +
         'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
         'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
         "ORDER BY p.proposal_id",
@@ -112,7 +114,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
         "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
         "WHERE p.supervisor_id = $1 " +
         // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
-        "AND p.archived = false " +
+        "AND p.archived = false AND p.deleted = false " +
         'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
         'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
         "ORDER BY p.proposal_id",
@@ -207,6 +209,39 @@ exports.setProposalArchived = async (proposal_id) => {
   }
 };
 
+/**
+ * Delete a proposal
+ *
+ * @param {string} proposal_id
+ *
+ * @returns {data: proposalDeleted}
+ */
+exports.deleteProposal = async(proposal_id) =>{
+  try{
+    // check if the proposal exists
+    let checkProposal = "select * from proposals where proposal_id = $1";
+
+    const rows = await db.query(checkProposal, [proposal_id]);
+    if(rows.rowCount === 0) {
+      return {data: undefined};
+    }
+
+
+    let queryDelete = "update proposals set deleted = true where proposal_id = $1 RETURNING *";
+    const deletedProposal = await db.query(queryDelete, [proposal_id]);
+
+    let cancelApplicationsQuery = "update applications set status = 'Canceled' where proposal_id = $1 returning *";
+    const canceledApplications = await db.query(cancelApplicationsQuery, [proposal_id]);
+
+
+
+    return {data: deletedProposal.rows[0]};
+
+  }catch (error) {
+    console.log("Error in deleteProposal: ", error);
+    throw error;
+  }
+}
 exports.updateProposal = async (proposal) => {
   try {
     const result = await db.query(

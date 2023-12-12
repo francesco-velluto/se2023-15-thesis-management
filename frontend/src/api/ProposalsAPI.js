@@ -165,4 +165,27 @@ module.exports = {
       throw new Error(err);
     }
   },
+
+  deleteProposal: async(proposal_id) =>{
+    try {
+      const response = await fetch(ProposalsAPIURL + "/" + proposal_id, {
+        method: "DELETE",
+        headers: APIConfig.API_REQUEST_HEADERS,
+        credentials: "include",
+      });
+
+      //console.log(response);
+
+      if (response.ok) {
+        const returnStatus = await response.status;
+        console.log(returnStatus);
+        return true;
+      } else {
+        const res = await response.json();
+        return new Error(res.error);
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
 };

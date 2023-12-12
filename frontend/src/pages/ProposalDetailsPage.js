@@ -1,16 +1,17 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState} from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
 import { useNavigate, useParams } from "react-router-dom";
-import { getAllDegrees, getProposalById, insertNewProposal, updateProposalApi } from "../api/ProposalsAPI";
-import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row } from "react-bootstrap";
+import { getAllDegrees, getProposalById, insertNewProposal, updateProposalApi, deleteProposal } from "../api/ProposalsAPI";
+import { Alert, Badge, Button, Card, Col, Container, Form, ListGroup, Row, Modal } from "react-bootstrap";
 import ApplicationButton from './ApplicationButton';
 
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { UnAuthorizationPage } from "../App";
 import dayjs from "dayjs";
+import "../style/ProposalDetails.css"
 
 /**
  * This page supports three modes:
@@ -51,6 +52,8 @@ function ProposalDetailsPage({ mode }) {
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
 
+    const [showModal, setShowModal] = useState(false);
+
     const [showFullDescription, setShowFullDescription] = useState(false);
     const truncatedDescription = description?.slice(0, 1500);
 
@@ -58,6 +61,20 @@ function ProposalDetailsPage({ mode }) {
     const [newKeyword, setNewKeyword] = useState('');
 
     const targetRef = useRef(null);
+
+    const handleShow = () => setShowModal(true);
+    const handleClose = () => { setShowModal(false); }
+
+    const handleDeleteProposal = async () => {
+        var result = await deleteProposal(proposal_id);
+        
+        if (!(result instanceof Error)) {
+            navigate("/proposals");
+        } else {
+            setErrorMessage(result.message);
+            handleClose();
+        }
+    }
 
     const levelEnum = {
         BACHELOR: "Bachelor",
@@ -293,13 +310,13 @@ function ProposalDetailsPage({ mode }) {
     return (
         <>
             <NavbarContainer />
-            <TitleBar title={"Proposal Details"} />
+            <TitleBar/>
             {
                 isLoading ? (<Alert variant="info" className="d-flex justify-content-center">Loading...</Alert>) : (
                     unauthorized ?
                         (<UnAuthorizationPage error={"Error"} message={errorMessage} />)
                         :
-                        (<Container style={{ backgroundColor: "#F4EEE0" }} className={"proposal-details-container"} fluid>
+                        (<Container className={"proposal-details-container"} fluid>
                             <Form>
                                 <Container>
                                     <div ref={targetRef}>
@@ -355,7 +372,7 @@ function ProposalDetailsPage({ mode }) {
                                             <Row>
                                                 <Col className={"proposal-details-keyword"}>
                                                     {keywords.map((keyword, index) =>
-                                                        <Badge key={index} bg="" style={{ backgroundColor: "#917FB3" }}>{keyword}</Badge>
+                                                        <Badge className={"proposal-details-keyword"} bg="" key={index} >{keyword}</Badge>
                                                     )}
                                                 </Col>
                                             </Row>
@@ -375,7 +392,7 @@ function ProposalDetailsPage({ mode }) {
                                                         <p
                                                             id="description"
                                                             style={{
-                                                                maxHeight: !showFullDescription ? 'none' : `${20 * 1.2}em`, // 1.2em is an approximate line height
+                                                                maxHeight: !showFullDescription ? 'none' : `${50 * 1.2}em`, // 1.2em is an approximate line height
                                                                 overflowY: !showFullDescription ? 'visible' : 'auto',
                                                                 whiteSpace: 'pre-line',
                                                                 cursor: 'pointer'
@@ -386,7 +403,7 @@ function ProposalDetailsPage({ mode }) {
                                                             onClick={() => setShowFullDescription(!showFullDescription)}>
                                                             <span>
                                                                 {showFullDescription ? description : truncatedDescription}
-                                                                <span className="text-muted">
+                                                                <span id="show-more" >
                                                                     {!showFullDescription && description.length > truncatedDescription.length && ' Show more...'}
                                                                 </span>
                                                             </span>
@@ -411,7 +428,6 @@ function ProposalDetailsPage({ mode }) {
                                                                 }}
                                                                 rows={10}
                                                                 maxLength={10000}
-                                                                style={{ whiteSpace: 'pre-wrap' }}
                                                                 required
                                                             />
                                                         </Form.Group>
@@ -509,17 +525,17 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card.Body>
                                                     <Card.Title>CdS / Programmes:</Card.Title>
                                                     {mode === "read" ?
-                                                        <Card.Text name="proposal-programmes">
-                                                            {programmes.map((programme, index) =>
-                                                                <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }} >
+                                                        <Card.Text className={"proposal-badge"} name="proposal-programmes">
+                                                        {programmes.map((programme, index) =>
+                                                                <Badge key={index} bg=""   >
                                                                     {programme.title_degree}
                                                                 </Badge>)}
                                                         </Card.Text>
                                                         :
                                                         <div>
-                                                            <Form.Group>
+                                                            <Form.Group >
                                                                 {!level &&
-                                                                    <div className="disabled-message text-muted" style={{ fontSize: "14px", marginBottom: "10px" }}>
+                                                                    <div id="programmes-notes" >
                                                                         Please select a proposal level before choosing a program.
                                                                     </div>
                                                                 }
@@ -573,10 +589,10 @@ function ProposalDetailsPage({ mode }) {
                                             <Card className="h-100">
                                                 <Card.Body >
                                                     <Card.Title>Groups:</Card.Title>
-                                                    {mode === "read" ?
-                                                        <Card.Text id="groups">
-                                                            {groups.map((group, index) =>
-                                                                <Badge key={index} bg="" className="me-1" style={{ backgroundColor: "#917FB3", fontSize: "14px" }}>{group}</Badge>
+                                                {mode === "read" ?
+                                                    <Card.Text id="groups" className={"proposal-badge"}>
+                                                    {groups.map((group, index) =>
+                                                                <Badge key={index} bg=""  >{group}</Badge>
                                                             )}
                                                         </Card.Text>
                                                         :
@@ -597,7 +613,7 @@ function ProposalDetailsPage({ mode }) {
                                                                     />
                                                                 </Col>
                                                                 <Col >
-                                                                    <Button id="add-group-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} disabled onClick={() => {
+                                                                    <Button id="add-group-btn" } disabled onClick={() => {
                                                                         if (!newGroup.trim()) {
                                                                             return;
                                                                         } else if (!groups.includes(newGroup)) {
@@ -663,7 +679,7 @@ function ProposalDetailsPage({ mode }) {
                                                 <Card className="h-100">
                                                     <Card.Body >
                                                         <Card.Title>Keywords</Card.Title>
-                                                        <Form.Group>
+                                                        <Form.Group >
                                                             <div className="text-plus">
                                                                 <Col xs={10} >
                                                                     <Form.Control
@@ -677,8 +693,8 @@ function ProposalDetailsPage({ mode }) {
                                                                         }}
                                                                     />
                                                                 </Col>
-                                                                <Col >
-                                                                    <Button id="add-keyword-btn" style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }} onClick={() => {
+                                                                <Col>
+                                                                    <Button id="add-keyword-btn"  onClick={() => {
                                                                         if (!newKeyword.trim()) {
                                                                             return;
                                                                         } else if (!keywords.includes(newKeyword)) {
@@ -764,32 +780,23 @@ function ProposalDetailsPage({ mode }) {
                                     </Row>
 
                                     <Row>
-                                        {mode === "read" &&
-                                            <Col>
-                                                <Button style={{ backgroundColor: "#6D5D6E", borderColor: "#6D5D6E" }}
-                                                    onClick={() => { navigate('/proposals') }}>
-                                                    {loggedUser.role === 1 ? "Back to Search Proposal" : "Back to Browse Proposals"}
-                                                </Button>
-                                            </Col>
-                                        }
-
-                                        {mode !== "read" &&
-                                            <Col>
-                                                <Button style={{ backgroundColor: "#6D5D6E", borderColor: "#6D5D6E" }}
-                                                    onClick={() => { navigate('/proposals') }}>
-                                                    Back to Browse Proposals
-                                                </Button>
-                                            </Col>
-                                        }
-
+                                        <Col>
+                                            <Button id="go-back"
+                                                onClick={() => { navigate('/proposals') }}>
+                                                Return
+                                            </Button>
+                                        </Col>
                                         <Col className={"d-flex flex-row-reverse"}>
+                                            {mode === "read" && loggedUser.role === 0 &&
+                                                <Button id="delete-proposal-btn" variant="outline-danger" onClick={handleShow}>
+                                                    Delete proposal
+                                                </Button>}
                                             {mode === "read" && loggedUser.role === 1 &&
                                                 <ApplicationButton setErrMsg={setErrorMessage} proposalID={proposal_id} />}
 
                                             {mode === "update" && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
-                                                    style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                     onClick={handleUpdateProposal}>
                                                     Save
                                                 </Button>}
@@ -797,13 +804,26 @@ function ProposalDetailsPage({ mode }) {
                                             {(mode === "add" || mode === "copy") && loggedUser.role === 0 &&
                                                 <Button
                                                     id="add-proposal-btn"
-                                                    style={{ backgroundColor: "#4F4557", borderColor: "#4F4557" }}
                                                     onClick={handleCreateProposal}>
                                                     Create Proposal
                                                 </Button>}
 
                                         </Col>
                                     </Row>
+                                    <Modal show={showModal} onHide={handleClose} backdrop="static">
+                                        <Modal.Header closeButton>
+                                            <Modal.Title>Are you sure?</Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>You are <strong>deleting</strong> this application!</Modal.Body>
+                                        <Modal.Footer>
+                                            <Button id="cancel-delete-proposal" variant="danger" onClick={handleClose}>
+                                                Cancel
+                                            </Button>
+                                            <Button id="confirm-delete-proposal" variant="success" onClick={handleDeleteProposal}>
+                                                Confirm
+                                            </Button>
+                                        </Modal.Footer>
+                                    </Modal>
                                 </Container>
                             </Form>
                         </Container>

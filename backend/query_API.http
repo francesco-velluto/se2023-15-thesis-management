@@ -9,6 +9,10 @@ content-type: application/json
 }
 ###
 
+## test login saml
+GET http://localhost:8080/api/login HTTP/1.1
+###
+
 ## test login teacher
 POST http://localhost:8080/api/authentication/login HTTP/1.1
 content-type: application/json
@@ -61,4 +65,8 @@ GET http://localhost:8080/api/students/S001
 
 ## test getAllProfessorProposals
 GET http://localhost:8080/api/proposals/professor
+###
+
+## test deleteProposal
+DELETE http://localhost:8080/api/proposals/P005
 ###

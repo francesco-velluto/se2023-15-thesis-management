@@ -267,5 +267,39 @@ module.exports = {
             console.error('[BACKEND-SERVER] Error in getApplicationById: ', error);
             throw error;
         }
+    },
+
+    /**
+     * Get all the applications related to a proposal
+     * 
+     * @parama proposal_id
+     * 
+     * @returns {data: [{id: string, proposal_id: string, student_id: string, status: string, ...}]}
+     * 
+     */
+    getAllApplicationsByProposalId: async (proposal_id) => {
+        try{
+            let query = "select * from applications where proposal_id = $1";
+            let result = await db.query(query, [proposal_id]);
+
+            if (result.rowCount === 0)
+                return {data:undefined};
+
+            const applications = result.rows.map((a)=>{
+                return {
+                    id: a.id,
+                    proposal_id: a.proposal_id,
+                    student_id: a.student_id,
+                    status: a.status,
+                    application_date: a.application_date  
+                }
+            });
+
+            return {data: applications};
+
+        }catch (error) {
+            console.error('[BACKEND-SERVER] Error in getAllApplicationsByProposalId: ', error);
+            throw error;
+        }
     }
 }

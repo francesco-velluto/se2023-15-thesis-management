@@ -2,6 +2,8 @@
 
 const proposalsService = require("../service/proposals.service");
 const Teacher = require("../model/Teacher");
+const applicationsService = require("../service/applications.service");
+const dayjs = require("dayjs");
 
 module.exports = {
   /**
@@ -146,5 +148,74 @@ module.exports = {
       console.error("[BACKEND-SERVER] Cannot update proposal", err);
       res.status(500).json({ error: "Internal server error has occurred" });
     }
+  },
+
+
+  /**
+   * Delete a proposal given its id.
+   * A proposal with an accepted application cannot be removed.
+   * All the applications of the deleted proposal are set to canceled.
+   * 
+   * @params proposal_id
+   * @body none
+   * 
+   * 
+   */
+  deleteProposal: async (req, res) => {
+
+    try {
+      const proposal_id = req.params.proposal_id;
+      const teacher_id = req.user.id;
+
+      // check if the proposal belong to the teacher
+      const proposal = await proposalsService.getProposalById(proposal_id);
+
+
+      if (proposal.data.supervisor_id !== teacher_id) {
+        return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+      }
+
+      // check if the proposal is expired
+      if (dayjs(proposal.data.expiration_date).format('YYYY-MM-DD') < dayjs().format('YYYY-MM-DD')) {
+        return res.status(403).json({ error: "Cannot delete an expired proposal" });
+      }
+
+      
+
+     // check if the proposal is archived
+     if (proposal.data.archived == true){
+        return res.status(403).json({ error: "Cannot delete an archived proposal" });
+     }
+
+     // check if the proposal is already deleted
+     if (proposal.data.deleted == true){
+      return res.status(403).json({ error: "Cannot delete an already deleted proposal" });
+     }
+
+      //check if there is an accepted application related to the proposal
+      const { data: applications } = await applicationsService.getAllApplicationsByProposalId(proposal_id);
+
+
+
+      if (applications && applications.some((a) => a.status === "Accepted"))
+        return res.status(403).json({ error: "Cannot delete a proposal with an accepted application" });
+
+
+      const deletedProposal = await proposalsService.deleteProposal(proposal_id);
+
+      if (!deletedProposal.data)
+        return res.status(404).json({ error: "Proposal not found" });
+
+      return res.status(204).json();
+
+    } catch (err) {
+      console.error("[BACKEND-SERVER] Cannot delete the proposal", err);
+      if (err.status && err.status === 404)
+        return res.status(404).json({ error: err.data });
+      res.status(500).json({ error: "Internal server error has occurred" });
+    }
+
+
+
   }
 };
