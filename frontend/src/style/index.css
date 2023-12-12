@@ -38,11 +38,11 @@ body {
 /*************************/
 
 #card-border{
-    border-color: #003576 !important; 
+    border-color: #003576 !important;
 }
 
 #card-header{
-    border-color: #003576 !important; 
+    border-color: #003576 !important;
     color: orange;
 }
 
@@ -79,8 +79,12 @@ body {
     color: #003576;
     border-color: whitesmoke;
     height: 50px;
-    width: 120px;
+    width: 130px;
     line-height: 37px;
+}
+
+#apply-new-date {
+    width: 40px;
 }
 
 #logout-id {
@@ -107,18 +111,18 @@ body {
 /*************************/
 
 #show-proposal-detail, #proposal-detail-actions{
-    margin-top: -2px; 
+    margin-top: -2px;
     cursor: pointer;
     color:  #003576;
     font-weight: bold;
 }
 
 #copy-proposal-id, #update-proposal-id {
-    margin-top: -2px; 
+    margin-top: -2px;
     cursor: pointer;
     color:  orange;
     font-weight: bold;
-    
+
 }
 
 .proposal-row {
@@ -128,53 +132,53 @@ body {
     justify-content: center;
     align-items: center;
     margin: 0.5rem 0.5rem;
-    border-width: 2px; 
+    border-width: 2px;
     border-style: solid;
     border-color: #003576 ;
     border-radius: 0.25rem;
-    padding: 1rem; 
+    padding: 1rem;
   }
 
   @media (min-width: 768px) {
     .proposal-row {
       margin-top: 0.25rem;
-      margin-bottom: 0.25rem; 
+      margin-bottom: 0.25rem;
     }
   }
 
   .student-proposal-container {
-    background-color: whitesmoke; 
-    border-bottom-left-radius: 0.25rem; 
-    border-bottom-right-radius: 0.25rem; 
-    padding-top: 1rem; 
-    padding-bottom: 1rem; 
+    background-color: whitesmoke;
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
   }
 
   .search-area{
-    width: 100%; 
-    padding: 1rem; 
-    display: flex; 
-    flex-direction: column; 
-    align-items: center; 
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .student-proposal-card {
     margin: 0.5rem 0.5rem;
-    border-width: 2px; 
+    border-width: 2px;
     border-style: solid;
     border-color: #003576 ;
     border-radius: 0.25rem;
     background-color: white;
-    padding: 1rem; 
+    padding: 1rem;
   }
-  
+
   @media (min-width: 768px) {
     .student-proposal-card {
       margin-top: 0.25rem; /* Equivalent to my-md-1 */
       margin-bottom: 0.25rem; /* Equivalent to my-md-1 */
     }
   }
-  
+
 
 /*************************/
 /* APPLICATION ***********/
@@ -251,7 +255,7 @@ body {
     padding-top: 10px;
     padding-bottom: 10px;
     margin: 0;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
 
 }
@@ -271,7 +275,7 @@ body {
 }
 #title-btn:hover{
     background-color: lightgray ;
-} 
+}
 
 #title-add-btn {
     background-color: #003576;
@@ -282,7 +286,7 @@ body {
 }
 #title-add-btn:hover{
     background-color: lightgray ;
-} 
+}
 
 /*************************/
 /* FOOTER ****************/
@@ -328,4 +332,3 @@ footer img {
         align-items: center;
     }
 }
-

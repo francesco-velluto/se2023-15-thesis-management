@@ -1,9 +1,9 @@
 import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup } from 'react-bootstrap';
-import { FaCalendar } from 'react-icons/fa';
+import { FaCalendar, FaCheck } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
 import { VirtualClockContext } from '../context/VirtualClockContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 import Logo from '../images/logo_poli_bianco_260.png'
@@ -11,6 +11,7 @@ import Logo from '../images/logo_poli_bianco_260.png'
 function NavbarContainer() {
     const navigate = useNavigate();
     const { currentDate, updateCurrentDate } = useContext(VirtualClockContext);
+    const [selectedDate, setSelectedDate] = useState("");
     const [showFormControl, setShowFormControl] = useState(false);
     const { handleLogout } = useContext(LoggedUserContext);
     const { loggedUser } = useContext(LoggedUserContext);
@@ -22,6 +23,10 @@ function NavbarContainer() {
     const handleButtonClick = () => {
         setShowFormControl(true);
     };
+
+    useEffect(() => {
+        setSelectedDate(currentDate);
+    }, [currentDate]);
 
     return (
         <Navbar expand="md" className='px-3 navbar-dark d-flex'>
@@ -36,21 +41,27 @@ function NavbarContainer() {
             <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
                 <Nav className="mr-auto" id="navbar-toggle">
                     <Col className='me-0 me-md-3 my-3 my-md-0 d-flex justify-content-center'>
-                            <InputGroup className='d-flex justify-content-center me-2'>
+                        <InputGroup className='d-flex justify-content-center me-2'>
 
-                                {!showFormControl && (
-                                    <Button id="show-virtual-clock-btn" onClick={handleButtonClick} >
-                                        <FaCalendar />
-                                    </Button>
-                                )}
-                                {showFormControl && (
+                            {!showFormControl && (
+                                <Button id="show-virtual-clock-btn" onClick={handleButtonClick} >
+                                    <FaCalendar />
+                                </Button>
+                            )}
+                            {showFormControl && (
+                                <>
                                     <Form.Control
-                                    id="virtual-clock-form"
-                                    type="date"
-                                    min={dayjs().format("YYYY-MM-DD")}
-                                    value={currentDate}
-                                    onChange={(ev) => updateCurrentDate(ev.target.value)}
-                                />
+                                        id="virtual-clock-form"
+                                        type="date"
+                                        min={dayjs(currentDate).format("YYYY-MM-DD")}
+                                        value={selectedDate}
+                                        onChange={(ev) => setSelectedDate(ev.target.value)}
+                                    />
+                                    {!dayjs(selectedDate).isSame(currentDate) &&
+                                    <Button variant='success' disabled={dayjs(selectedDate).isSame(currentDate)} id="apply-new-date" onClick={() => updateCurrentDate(selectedDate)} >
+                                        <FaCheck />
+                                    </Button>}
+                                </>
                             )}
                         </InputGroup>
                         <Dropdown show={showDropdown} onToggle={toggleDropdown} className='d-flex flex-column justify-content-center align-items-center' >

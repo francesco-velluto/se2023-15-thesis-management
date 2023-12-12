@@ -21,7 +21,6 @@ function HomePage() {
       <Container fluid className="home-page" >
         <Row className="home-page-content p-3" >
           {loggedUser && (
-            <>
               <Card bg="light" className="rounded p-4">
                 <h2>
                   Hi <b>{loggedUser.name + " " + loggedUser.surname}</b>
@@ -161,7 +160,6 @@ function HomePage() {
                   )}
                 </Form>
               </Card>
-            </>
           )}
         </Row>
         <Row className="m-4 p-3">
