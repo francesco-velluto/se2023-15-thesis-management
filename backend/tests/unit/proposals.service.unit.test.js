@@ -12,7 +12,9 @@ beforeEach(() => {
   jest.spyOn(console, "log").mockImplementation(() => {});
   jest.spyOn(console, "info").mockImplementation(() => {});
   jest.spyOn(console, "error").mockImplementation(() => {});
+  
 });
+
 
 describe("T1 - getAllProposals", () => {
   test("T1.1 SUCESS 200 | Get all proposals", (done) => {
@@ -294,44 +296,6 @@ describe("T4 - getAllProfessorProposals", () => {
 
   describe("T5 - getProposalById", () => {
     // test("T5.1 SUCCESS 200 | Get proposal by ID", (done) => {
-    //     const mockProposalId = "P012";
-
-    //   const mockDbRows = [
-    //     {
-    //       proposal_id: "P012",
-    //       title: "New Proposal",
-    //       supervisor_id: "T001",
-    //       keywords: ["Keyword1", "Keyword2"],
-    //       type: "Experimental",
-    //       groups: ["GroupA"],
-    //       description: "Test description",
-    //       required_knowledge: "Node.js, PostgreSQL",
-    //       notes: "Test notes",
-    //       expiration_date: "2024-12-31",
-    //       level: "Master",
-    //       programmes: [{ title_degree: "Master of Science" }],
-    //       supervisor_name: "John",
-    //       supervisor_surname: "Doe",
-    //     },
-    //   ];
-  
-    //   db.query.mockResolvedValue({
-    //     rows: mockDbRows,
-    //   });
-  
-    //   db.query.mockResolvedValue({
-    //     rows: [{ title_degree: "Master of Science" }],
-    //   });
-  
-    //   service.getProposalById(mockProposalId)
-    //     .then((result) => {
-    //         expect(result.status).toBe(200);
-    //         expect(result.data).toEqual("???");
-    //         expect(db.query).toHaveBeenCalledWith(expect.any(String), [mockProposalId]);
-    //         expect(db.query).toHaveBeenCalledWith(expect.any(String), [[mockDbRows[0].programmes[0]]]);
-    //         done();
-    //     })
-    //     .catch((err) => done(err));
 
     // });
   
@@ -366,7 +330,7 @@ describe("T4 - getAllProfessorProposals", () => {
   });
   
   describe("T6 - setProposalArchived", () => {
-    test("T6.1 SUCCESS 200 | Set proposal as archived", (done) => {
+    test("T6.1 SUCCESS | Set proposal as archived", (done) => {
       const mockProposalId = "P012";
 
       const mockDbRows = [
@@ -419,7 +383,7 @@ describe("T4 - getAllProfessorProposals", () => {
         .catch((err) => done(err));
     });
   
-    test("T6.2 SUCCESS 200 | Proposal already archived", (done) => {
+    test("T6.2 Return undefined - rowCount: 0", (done) => {
       const mockProposalId = "P012";
       const mockDbRows = [
         {
@@ -442,7 +406,7 @@ describe("T4 - getAllProfessorProposals", () => {
         .catch((err) => done(err));
     });
   
-    test("T6.3 ERROR 500 | Internal server error - database", (done) => {
+    test("T6.3 - Error ", (done) => {
       const mockProposalId = "P012";
   
       db.query.mockRejectedValue(new Error("Database error"));
@@ -456,5 +420,73 @@ describe("T4 - getAllProfessorProposals", () => {
         });    
     });
   
+});
+
+describe("T7 - deleteProposal", () => {
+  test("T7.1 SUCCESS - Proposal deleted", (done) => {
+
+    const mockDbRows = [
+      {
+        proposal_id: "P012",
+        title: "New Proposal",
+        supervisor_id: "T001",
+        keywords: ["Keyword1", "Keyword2"],
+        type: "Experimental",
+        groups: ["GroupA"],
+        description: "Test description",
+        required_knowledge: "Node.js, PostgreSQL",
+        notes: "Test notes",
+        expiration_date: "2024-12-31",
+        level: "Master",
+        programmes: ["MS001"],
+        deleted: true,
+      },
+    ];
+
+    db.query.mockResolvedValue({
+      rows: mockDbRows,
+    });
+
+    service.deleteProposal("P012")
+      .then((result) => {
+        expect(result.data).toEqual(mockDbRows[0]);
+        expect(db.query).toHaveBeenCalledWith(expect.any(String), ["P012"]);
+        done();
+      })
+      .catch((err) => done(err));
+   
+  });
+  test("T7.2 ERROR ", (done) => {
+
+    const mockProposalId = "P012";
+  
+      db.query.mockRejectedValue(new Error("Database error"));
+  
+      service.deleteProposal(mockProposalId)
+        .catch((error) => {
+            expect(error).toBeInstanceOf(Error);
+            expect(error.message).toBe("Database error");
+            expect(db.query).toHaveBeenCalled();
+            done();
+        });    
+   
+  });
+
+  test("T6.2 Return undefined - rowCount: 0", (done) => {
+    const mockProposalId = "P012";
+    db.query.mockResolvedValue({
+      rows: [{proposal_id: mockProposalId,}],
+      rowCount: 0,
+    });
+
+    service.deleteProposal(mockProposalId)
+      .then((result) => {
+        expect(result.data).toBeUndefined();
+        expect(db.query).toHaveBeenCalledWith(expect.any(String), [mockProposalId]);
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
 });
   
