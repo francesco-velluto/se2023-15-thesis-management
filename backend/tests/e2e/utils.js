@@ -8,7 +8,7 @@ module.exports = {
     doLogin: async (username, password, driver) => {
         await driver.get(baseURL);
     
-        await driver.sleep(4000);
+        await driver.sleep(1000);
     
         // perform login
         const usernameBox = await driver.wait(until.elementLocated(By.id("username")), 20000);
