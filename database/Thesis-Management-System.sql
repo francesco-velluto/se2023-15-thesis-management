@@ -84,6 +84,24 @@ INSERT INTO public.degree (cod_degree, title_degree) VALUES
 
 ALTER TABLE public.degree OWNER TO postgres;
 
+--
+-- Name: Groups; Type: TABLE; Schema: public; Owner: postgres
+-- CANNOT BE CHANGED
+--
+
+CREATE TABLE public.group (
+    cod_group VARCHAR(10) PRIMARY KEY,
+    title_group VARCHAR(50) NOT NULL
+);
+
+INSERT INTO public.group (cod_group, title_group) VALUES
+  ('G001', 'Groupe 1'),
+  ('G002', 'Groupe 2'),
+  ('G003', 'Groupe 3'),
+  ('G004', 'Groupe 4');
+
+ALTER TABLE public.group OWNER TO postgres;
+
 
 --
 -- Name: Student; Type: TABLE; Schema: public; Owner: postgres
@@ -150,6 +168,10 @@ INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department)
 
 ALTER TABLE public.teacher OWNER TO postgres;
 
+ALTER TABLE ONLY public.teacher
+    ADD CONSTRAINT teacher_fk_group FOREIGN KEY (cod_group) REFERENCES public.group(cod_group);
+
+
 
 --
 -- Name: Careers; Type: TABLE; Schema: public; Owner: postgres
@@ -207,7 +229,7 @@ CREATE TABLE public.proposals (
 
 INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, programmes, archived, deleted) VALUES
   ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Theoretical', ARRAY['G001'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Research', ARRAY['G002'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Master', ARRAY['MSC001', 'MSC002'], false, false),
+  ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Research', ARRAY['G002', 'G001'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Master', ARRAY['MSC001', 'MSC002'], false, false),
   ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Experimental', ARRAY['G001'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Master', ARRAY['MSC001'], false, false),
   ('P004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Experimental'], 'Research', ARRAY['G002'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Master', ARRAY['MSC001'], false, false),
   ('P005', 'Marketing Strategies', 'T005', ARRAY['Marketing', 'Strategies'], 'Theoretical', ARRAY['G003'], 'A marketing strategies thesis description.', 'Marketing fundamentals', 'N/A', '2023-10-20', 'Bachelor', ARRAY['BSC001'], false, false),
