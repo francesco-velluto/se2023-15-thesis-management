@@ -3,6 +3,8 @@ const { Builder, By, Select, Button, until } = require("selenium-webdriver");
 const app = require("../../app");
 const { doLogin, doLogout } = require("./utils");
 const db = require("../../service/db");
+const { ca } = require("date-fns/locale");
+const e = require("express");
 
 /*
  * Template for insert proposal request body,
@@ -485,3 +487,574 @@ describe("End to end test for delete proposal", () => {
 
 
 })
+
+describe("End to end test for update proposal", () => {
+
+    beforeAll(async () => {
+        driver = await new Builder().forBrowser("chrome").build();
+    });
+
+    afterAll(async () => {
+        await driver.quit();
+    });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals/P019");
+
+        await driver.sleep(500);
+
+        let pageTitle = await driver
+            .findElement(By.className("alert-danger"))
+            .getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+
+    }, 20000);
+
+    test("Shouldn't show the update button if logged as a student", async() => {
+        await doLogin("john.smith@example.com", "S001", driver);
+
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        try{
+
+            await driver.findElement(By.id('dropdown-proposal-actions'));
+
+            //if the element is found, the test fails
+            expect(true).toEqual(false);
+
+        } catch(err){
+
+            expect(err.name).toEqual("NoSuchElementError");
+
+            doLogout(driver);
+
+
+
+        }
+
+    }, 20000);
+
+    test("Shouldn't update the proposal if cancel the action", async() =>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+        
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const titleField = await driver.findElement(By.name('title'));
+
+        const titleBefore = await titleField.getAttribute('value');
+
+        await titleField.clear();
+
+        await titleField.sendKeys("Modified title");
+
+        await driver.sleep(500);
+
+        const cancelButton = await driver.findElement(By.css('#go-back'));
+
+        expect(await cancelButton.getText()).toEqual("Return");
+
+        await driver.executeScript(
+            "document.getElementById('go-back').click()"
+        );
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const titleAfter = await driver.findElement(By.id('proposal-title')).getAttribute('value');
+
+        expect(titleAfter).toEqual(titleBefore);
+        expect(titleAfter).not.toEqual("Modified title");
+
+        await doLogout(driver);     
+
+    }, 20000);
+
+    test("Should update the proposal", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const titleField = await driver.findElement(By.name('title'));
+
+        await titleField.clear();
+
+        const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+
+        await titleField.sendKeys(randomString);
+
+        await driver.sleep(500);
+
+        const saveButton = await driver.findElement(By.css('#add-proposal-btn'));
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const titleAfter = await driver.findElement(By.id('proposal-title')).getAttribute('value');
+
+        expect(titleAfter).toEqual(randomString);
+
+        await driver.sleep(1000);
+
+        await doLogout(driver);
+
+        await driver.sleep(1000);
+
+    }, 30000);
+
+    test("Shouldn't update the proposal if title is empty", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const titleField = await driver.findElement(By.name('title'));
+
+        await titleField.clear();
+
+        await driver.sleep(500);
+
+        const saveButton = await driver.findElement(By.css('#add-proposal-btn'));
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const titleAfter = await driver.findElement(By.id('proposal-title')).getAttribute('value');
+
+        expect(titleAfter).not.toEqual("");
+
+        await doLogout(driver);
+
+    }, 20000);
+
+    test("Shouldn't update the proposal if description is empty", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");  
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const descriptionField = await driver.findElement(By.name('description'));
+
+        await descriptionField.clear();
+
+        await driver.sleep(500);
+
+        const saveButton = await driver.findElement(By.css('#add-proposal-btn'));
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const descriptionAfter = await driver.findElement(By.id('description')).getText();
+
+        expect(descriptionAfter).not.toEqual("");
+
+        await doLogout(driver);
+
+    }   , 20000);
+
+    test("Shouldn't update the proposal if type is empty", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const typeField = await driver.findElement(By.name('proposal-type'));
+
+        await typeField.clear();
+
+        await driver.sleep(500);
+
+        const saveButton = await driver.findElement(By.css('#add-proposal-btn'));
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const typeAfter = await driver.findElement(By.id('proposal-type')).getAttribute('value');
+
+        expect(typeAfter).not.toEqual("");
+
+        await doLogout(driver);
+
+    }, 20000);
+
+    test("Shouldn't update the proposal if CdS / Programmes are empty", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const proposalProgrammesList = await driver.wait(until.elementLocated(By.id("proposal-programmes-list")), 10000);
+
+        await driver.executeScript("arguments[0].innerHTML = '';", proposalProgrammesList);
+
+        await driver.sleep(500);
+
+        const saveButton = await driver.findElement(By.css('#add-proposal-btn'));
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const proposalBadge = await driver.wait(until.elementLocated(By.className("proposal-badge")), 10000);
+
+        const textContent = await proposalBadge.getText();
+
+        expect(textContent).not.toEqual("");
+
+        await doLogout(driver);
+
+        }, 20000);
+
+    test("Shouldn't update the proposal if expiration date is empty", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(500);
+
+        const expirationDateField = await driver.findElement(By.id('expiration-date'));
+
+        await expirationDateField.clear();
+
+        await driver.sleep(500);
+
+        const saveButton = await driver.findElement(By.css('#add-proposal-btn'));
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        let expirationDateAfter = await driver.wait(until.elementLocated(By.className("proposal-details-expiration")), 10000).getText();
+        expirationDateAfter = expirationDateAfter.substring(12);
+
+        expect(expirationDateAfter).not.toEqual("");
+
+        await doLogout(driver);
+
+    }, 30000);
+
+    test("Shouldn't update the proposal if Keyword are empty", async ()=>{
+
+        await doLogin("michael.wilson@example.com", "T002", driver);
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposal = await driver.wait(until.elementLocated(By.className('proposal-row')), 10000);
+
+        const dropdownButton = await firstProposal.findElement(By.css('#dropdown-proposal-actions'));
+
+        expect(await dropdownButton.getText()).toEqual("Actions");
+
+        await dropdownButton.click();
+
+        const dropdownButtonUpdate = await firstProposal.findElement(By.css('#update-proposal-id'));
+
+        expect(await dropdownButtonUpdate.getText()).toEqual("Update");
+
+        await dropdownButtonUpdate.click();
+
+        await driver.sleep(1000);
+
+        let buttons;
+
+        while (1) {
+
+            buttons = await driver.findElements(By.className("delete-keyword-btn"));
+      
+            if (buttons.length > 0) {
+              await driver.executeScript("arguments[0].click()", buttons[buttons.length - 1]);
+            } else {
+              break;
+            }
+          }
+
+        await driver.sleep(1000);
+
+
+        const saveButton = await driver.wait(until.elementLocated(By.css('#add-proposal-btn')), 20000);
+
+        expect(await saveButton.getText()).toEqual("Save");
+
+        await driver.executeScript(
+            "document.getElementById('add-proposal-btn').click()"
+        );
+
+        await driver.sleep(1000);
+
+        await driver.get(baseURL + "/proposals");
+
+        await driver.sleep(1000);
+
+        const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
+
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
+
+        await showDetailsButton.click();
+
+        await driver.sleep(1000);
+
+        const proposalBadge = await driver.wait(until.elementLocated(By.className("proposal-badge")), 10000);
+
+        const textContent = await proposalBadge.getText();
+
+        expect(textContent).not.toEqual("");
+
+        await doLogout(driver);
+
+        }, 40000);
+
+
+});

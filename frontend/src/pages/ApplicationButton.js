@@ -17,7 +17,7 @@ const ApplicationButton = ({ proposalID, setErrMsg }) => {
         // student can apply only if they have no application currently pending or accepted
         if (Applist.some((a) => a.proposal_id === proposalID)) {
           setApplied(true);
-        } else if (Applist.some((a) => a.status !== "Rejected" && a.proposal_id !== proposalID)) {
+        } else if (Applist.some((a) => a.status !== "Rejected" && a.status !== "Canceled" && a.proposal_id !== proposalID)) {
           setDisabled(true);
           setErrMsg("You can't apply to this proposal because you currently have pending or accepted applications.");
         }

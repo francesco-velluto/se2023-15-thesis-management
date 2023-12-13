@@ -174,11 +174,8 @@ module.exports = {
         credentials: "include",
       });
 
-      //console.log(response);
-
       if (response.ok) {
         const returnStatus = await response.status;
-        console.log(returnStatus);
         return true;
       } else {
         const res = await response.json();

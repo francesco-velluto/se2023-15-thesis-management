@@ -106,7 +106,7 @@ body {
 /* PROPOSAL LIST**********/
 /*************************/
 
-#show-proposal-detail, #proposal-detail-actions{
+#show-proposal-detail, #proposal-detail-actions, .show-details-button{
     margin-top: -2px; 
     cursor: pointer;
     color:  #003576;
@@ -133,6 +133,18 @@ body {
     border-color: #003576 ;
     border-radius: 0.25rem;
     padding: 1rem; 
+  }
+
+  #dropdown-proposal-actions:hover{
+    color: whitesmoke;
+    background-color: #003576;
+  }
+
+  #show-details-proposal:hover{
+    color: whitesmoke;
+    background-color: #003576;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
   }
 
   @media (min-width: 768px) {
@@ -231,9 +243,16 @@ body {
     background-color: whitesmoke;
 
 }
-#back-to-homepage-button {
-    background-color:#4F4557;
-    border-color: #4F4557,
+
+#back-to-homepage-button{
+    color:orange;
+    border-color: orange;
+    background-color: whitesmoke;
+}
+#back-to-homepage-button:hover{
+    color:white;
+    border-color: orange;
+    background-color: orange;
 }
 
 /*************************/
@@ -270,7 +289,8 @@ body {
 
 }
 #title-btn:hover{
-    background-color: lightgray ;
+    background-color: #003576 ;
+    color: white;
 } 
 
 #title-add-btn {
@@ -282,6 +302,7 @@ body {
 }
 #title-add-btn:hover{
     background-color: lightgray ;
+    color: #003576;
 } 
 
 /*************************/

@@ -145,6 +145,10 @@ module.exports = {
         return res.status(403).json({ error: "Not authorized!" });
       }
 
+      if(req.params.proposal_id !== req.body.proposal_id){
+        return res.status(400).json({ error: "Bad request!" });
+      }
+
       const { data } = await proposalsService.updateProposal({ ...req.body });
       res.status(200).json({ proposal: data });
     } catch (err) {
@@ -179,6 +183,10 @@ module.exports = {
 
       if (proposal.data.supervisor_id !== teacher_id) {
         return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+      }
+
+      if(req.params.proposal_id !== proposal_id){
+        return res.status(400).json({ error: "Bad request!" });
       }
 
       // check if the proposal is expired
