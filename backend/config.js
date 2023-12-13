@@ -1,16 +1,4 @@
-const CryptoJS = require('crypto-js');
-
-function generateHash(length) {
-    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let input = '';
-
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        input += characters.charAt(randomIndex);
-    }
-
-    return CryptoJS.SHA256(input).toString(CryptoJS.enc.Hex);
-}
+const { v4: uuidv4 } = require('uuid');
 
 config = {
     saml: {
@@ -24,7 +12,7 @@ config = {
     },
     session: {
         resave: false,
-        secret: generateHash(32),
+        secret: uuidv4(),
         saveUninitialized: true
     }
 };

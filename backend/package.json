@@ -16,7 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "crypto-js": "^4.2.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "dotenv": "^16.0.2",
@@ -30,7 +29,8 @@
     "passport-local": "^1.0.0",
     "passport-saml": "^3.2.4",
     "pg": "^8.11.3",
-    "selenium-webdriver": "^4.15.0"
+    "selenium-webdriver": "^4.15.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "jest": "^29.7.0",
