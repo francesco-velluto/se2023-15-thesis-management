@@ -175,7 +175,6 @@ module.exports = {
       });
 
       if (response.ok) {
-        const returnStatus = await response.status;
         return true;
       } else {
         const res = await response.json();

@@ -147,9 +147,9 @@ const copyFromCopiedProposalPage = async () => {
     proposal.notes = await driver.findElement(By.name("additional-notes")).getAttribute('value');
 
     // Expiration date
-    date = await driver.findElement(By.id("expiration-date")).getAttribute('value');
+    const date = await driver.findElement(By.id("expiration-date")).getAttribute('value');
     proposal.expiration_date = dayjs(date).format("YYYY-MM-DD");
-    
+
     // Level
     proposal.level = await driver.findElement(By.name("proposal-level")).getAttribute('value');
 
@@ -198,7 +198,7 @@ const fillProposalForm = async (proposal) => {
     /*const date = await driver.findElement(By.id("expiration-date"));
     //await date.clear();
     await driver.executeScript("arguments[0].scrollIntoView();", date);
-    
+
     driver.sleep(1000);
     await date.click();
     await date.sendKeys(proposal.expiration_date, Key.RETURN);
@@ -341,7 +341,7 @@ describe("End to end tests for Copy Proposal", () => {
         const copiedProposal = await copyFromCopiedProposalPage();
 
         await doLogout(driver);
-        
+
         assert(deepEqual(originalProposal, copiedProposal), "The proposal copied is not the same to the original proposal!");
     }, 20000);
 
@@ -426,9 +426,9 @@ describe("End to end tests for Copy Proposal", () => {
         try {
             alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
         } catch (e) { }
-        
+
         await doLogout(driver);
-        
+
         expect(alert !== undefined).toEqual(true);
     }, 20000);
 
@@ -463,7 +463,7 @@ describe("End to end tests for Copy Proposal", () => {
         } catch (e) { }
 
         await doLogout(driver);
-        
+
         expect(alert !== undefined).toEqual(true);
     }, 20000);
 });

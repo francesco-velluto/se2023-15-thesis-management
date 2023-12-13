@@ -219,7 +219,7 @@ function ProposalDetailsPage({ mode }) {
     }
 
     const handleDeleteProposal = async () => {
-        var result = await deleteProposal(proposal_id);
+        const result = await deleteProposal(proposal_id);
 
         if (!(result instanceof Error)) {
             navigate("/proposals");
