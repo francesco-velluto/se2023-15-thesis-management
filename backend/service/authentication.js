@@ -79,7 +79,9 @@ exports.getUserById = async (id) => {
             let teachers = await db.query('SELECT * FROM teacher WHERE id = $1;', [id]);    // it gets the user from the db
             if (teachers.rows.length > 0) {
                 let group = await db.query('SELECT CONCAT(cod_group, \' : \' ,title_group) AS group_info FROM "group" WHERE cod_group = $1', [teachers.rows[0].cod_group]);
+                if (group.rows.length > 0) {
                 teachers.rows[0].cod_group = group.rows[0].group_info;
+                }
                 user = mapObjToTeacher(teachers?.rows[0]);
             }
         }
