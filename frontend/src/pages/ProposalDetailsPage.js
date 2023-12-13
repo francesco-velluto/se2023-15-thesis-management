@@ -648,7 +648,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup id="groups" className="mt-2">
                                                                 {groups.map((group, index) => (
                                                                     <ListGroup.Item key={index} disabled className="d-flex justify-content-between align-items-center my-1">
-                                                                        {group.cod_group}
+                                                                        {group.title_group}
                                                                         {/*<Button
                                                                             variant="danger"
                                                                             size="sm"
