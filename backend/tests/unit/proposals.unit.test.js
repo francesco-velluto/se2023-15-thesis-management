@@ -1308,11 +1308,11 @@ describe("T6 - Update proposals unit tests", () => {
     let mockProposal = {
       ...mockProposalReq,
     };
-    mockProposal.expiration_date = "2023-02-29",
+    mockProposal.expiration_date = "2023-02-29";
 
-      isLoggedIn.mockImplementation((req, res, next) => {
-        next(); // Authenticated
-      });
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
 
     isTeacher.mockImplementation((req, res, next) => {
       next(); // Authenticated
