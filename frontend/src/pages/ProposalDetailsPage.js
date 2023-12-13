@@ -813,7 +813,7 @@ function ProposalDetailsPage({ mode }) {
                                         <Modal.Header closeButton>
                                             <Modal.Title>Are you sure?</Modal.Title>
                                         </Modal.Header>
-                                        <Modal.Body>You are <strong>deleting</strong> this application!</Modal.Body>
+                                        <Modal.Body>You are <strong>deleting</strong> this application: <strong>{title}</strong></Modal.Body>
                                         <Modal.Footer>
                                             <Button id="cancel-delete-proposal" variant="danger" onClick={handleClose}>
                                                 Cancel
