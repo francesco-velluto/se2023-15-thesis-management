@@ -411,19 +411,19 @@ function ProposalDetailsPage({ mode }) {
                                                                 maxHeight: !showFullDescription ? 'none' : `${50 * 1.2}em`, // 1.2em is an approximate line height
                                                                 overflowY: !showFullDescription ? 'visible' : 'auto',
                                                                 whiteSpace: 'pre-line',
-                                                                cursor: 'pointer'
                                                             }}
                                                             onKeyDown={() => { }}
-                                                            role="button"
-                                                            tabIndex={0}
-                                                            onClick={() => setShowFullDescription(!showFullDescription)}>
+                                                            tabIndex={0}>
                                                             <span>
                                                                 {showFullDescription ? description : truncatedDescription}
-                                                                <span id="show-more" >
+                                                                <span id="show-more" onClick={() => setShowFullDescription(!showFullDescription)} >
                                                                     {!showFullDescription && description.length > truncatedDescription.length && ' Show more...'}
                                                                 </span>
                                                             </span>
                                                         </p>
+                                                        <span id="show-less" onClick={() => setShowFullDescription(!showFullDescription)}>
+                                                            {showFullDescription && ' Show less...'}
+                                                        </span>
                                                     </Card.Body>
                                                 </Card>
                                             }

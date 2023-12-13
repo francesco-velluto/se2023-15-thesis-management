@@ -1,12 +1,12 @@
 .proposal-details-container {
-    background-color: whitesmoke ;
-    padding: 6px ;
+    background-color: whitesmoke;
+    padding: 6px;
 }
 
 .proposal-details-title {
     text-align: center;
     font-weight: bold;
-
+    font-size: 25px;
 }
 
 .proposal-details-container .row {
@@ -17,8 +17,9 @@
     text-align: center;
     margin: 3px;
 }
+
 .proposal-details-keyword .badge {
-    background: orange ;
+    background: orange;
     margin: 3px;
     font-size: 14px;
 }
@@ -50,18 +51,21 @@
 }
 
 
-#add-proposal-btn, #add-keyword-btn, #add-group-btn {
-    background-color:orange ;
+#add-proposal-btn,
+#add-keyword-btn,
+#add-group-btn {
+    background-color: orange;
     border-color: orange;
 }
 
 #go-back {
-    color:rgb(226, 169, 119);
+    color: rgb(226, 169, 119);
     border-color: rgb(226, 169, 119);
     background-color: whitesmoke;
 }
-#go-back:hover{
-    color:white;
+
+#go-back:hover {
+    color: white;
     border-color: rgb(226, 169, 119);
     background-color: rgb(226, 169, 119);
 }
@@ -69,6 +73,13 @@
 #show-more {
     color: darkgray;
     font-weight: bold;
+    cursor: pointer;
+}
+
+#show-less {
+    color: darkgray;
+    font-weight: bold;
+    cursor: pointer;
 }
 
 @media (min-width: 768px) {
@@ -78,12 +89,12 @@
     }
 }
 
-.text-plus{
+.text-plus {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin-bottom: 6px; 
+    margin-bottom: 6px;
 }
 
 .text-plus>* {
@@ -94,8 +105,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  
+}
+
 .text-plus> :last-child {
     margin-right: 0;
 }
