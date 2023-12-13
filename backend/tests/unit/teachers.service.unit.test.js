@@ -70,7 +70,7 @@ describe("T1 - getTeachers", () => {
       .catch((error) => done(error));
   });
 
-  test("T1.3 ERROR | Throw an Error", (done) => {
+  test("T1.3 ERROR   | Throw an Error", (done) => {
     const message = new Error("Database error");
     db.query.mockRejectedValue(message);
 
@@ -122,7 +122,7 @@ describe("T2 - getTeacherById", () => {
       .catch((error) => done(error));
   });
 
-  test("T2.3 ERROR | Throw an Error", (done) => {
+  test("T2.3 ERROR   | Throw an Error", (done) => {
     const message = new Error("Database error");
     db.query.mockRejectedValue(message);
 
@@ -134,7 +134,7 @@ describe("T2 - getTeacherById", () => {
       });
   });
 
-  test("T2.4 ERROR | The id is undefined", (done) => {
+  test("T2.4 ERROR   | The id is undefined", (done) => {
     const message = new Error("The id cannot be undefined");
     db.query.mockRejectedValue(message);
 
