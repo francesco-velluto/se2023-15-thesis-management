@@ -581,7 +581,7 @@ function ProposalDetailsPage({ mode }) {
                                                                 {programmes.map((program, index) => (
                                                                     <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
                                                                         <span>
-                                                                            {program.title_degree + " - " + program.cod_degree}
+                                                                            {program.title_degree}
                                                                         </span>
                                                                         <Button
                                                                             variant="danger"
@@ -648,7 +648,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup id="groups" className="mt-2">
                                                                 {groups.map((group, index) => (
                                                                     <ListGroup.Item key={index} disabled className="d-flex justify-content-between align-items-center my-1">
-                                                                        {group.title_group}
+                                                                        {group.cod_group}
                                                                         {/*<Button
                                                                             variant="danger"
                                                                             size="sm"
