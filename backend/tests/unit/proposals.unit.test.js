@@ -1081,6 +1081,7 @@ describe("T5 - Delete a proposal unit tests", () => {
 
 describe("T6 - Update proposals unit tests", () => {
   const mockProposalReq = {
+    proposal_id: "P001",
     title: "Update Proposal",
     keywords: ["Keyword1", "Keyword2"],
     type: "Experimental",
@@ -1361,7 +1362,46 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.10 - SUCCESS 200 | Proposal updated", (done) => {
+  test("T6.10 - ERROR 400   | Bad request", (done) => {
+    let mockProposal = {
+      ...mockProposalReq,
+    };
+    mockProposal.proposal_id = "-1";
+    const message = "Bad request!";
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next(); // Authenticated
+    });
+
+    const mockProposalInDb = {
+      data: {
+        supervisor_id: 'T001'
+      },
+    };
+
+    getProposalById.mockResolvedValue(mockProposalInDb);
+
+    request(app)
+      .put("/api/proposals/" + "P001")
+      .send(mockProposal)
+      .then((res) => {
+        expect(res.body).toEqual({ error: message });
+        expect(res.status).toBe(400);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        expect(getProposalById).toHaveBeenCalled();
+        expect(updateProposal).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T6.11 - SUCCESS 200 | Proposal updated", (done) => {
     const mockProposalRes = {
       ...mockProposalReq,
     };
@@ -1399,7 +1439,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.11 - SUCCESS 200 | Undefined required knowledge field", (done) => {
+  test("T6.12 - SUCCESS 200 | Undefined required knowledge field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
       required_knowledge: undefined
@@ -1445,7 +1485,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.12 - SUCCESS 200 | Undefined notes field", (done) => {
+  test("T6.13 - SUCCESS 200 | Undefined notes field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
       notes: undefined
@@ -1480,8 +1520,8 @@ describe("T6 - Update proposals unit tests", () => {
       .put("/api/proposals/" + "P001")
       .send(mockProposal)
       .then((res) => {
-        expect(res.status).toBe(200);
         expect(res.body).toEqual({});
+        expect(res.status).toBe(200);
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
         expect(getProposalById).toHaveBeenCalled();
@@ -1491,7 +1531,7 @@ describe("T6 - Update proposals unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T6.13 - ERROR 500   | Database error", (done) => {
+  test("T6.14 - ERROR 500   | Database error", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       next(); // Authenticated
     });
@@ -1512,7 +1552,7 @@ describe("T6 - Update proposals unit tests", () => {
       throw Error("Internal Database Error");
     });
 
-    const message = {"error": "Internal server error has occurred"};
+    const message = { "error": "Internal server error has occurred" };
 
     request(app)
       .put("/api/proposals/" + "P001")
