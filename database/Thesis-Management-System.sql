@@ -188,17 +188,93 @@ CREATE TABLE public.career (
     PRIMARY KEY (id, cod_course)
 );
 
+-- Inserimenti con numero casuale di esami per gli studenti da S001 a S012
+
 INSERT INTO public.career (id, cod_course, title_course, cfu, grade, date) VALUES
-  ('S001', 'CRS001', 'Computer Science 101', 6, 27, '2022-05-15'),
-  ('S001', 'CRS002', 'Mathematics Basics', 10, 30, '2022-06-20'),
-  ('S002', 'CRS003', 'Physics Fundamentals', 10, 18, '2022-07-10'),
-  ('S003', 'CRS004', 'History of Art', 6, 23, '2022-08-05'),
-  ('S002', 'CRS005', 'Introduction to Marketing', 6, 25, '2022-09-12'),
-  ('S001', 'CRS006', 'Advanced Robotics', 8, 21, '2022-10-18'),
-  ('S004', 'CRS007', 'Environmental Science', 6, 29, '2022-11-25'),
-  ('S003', 'CRS008', 'Literature Appreciation', 6, 26, '2022-12-30'),
-  ('S002', 'CRS009', 'Financial Management', 8, 19, '2023-01-15'),
-  ('S004', 'CRS010', 'Machine Learning for Beginners', 8, 21, '2023-02-20');
+('S001', 'CRS001', 'Computer Science 101', 6, 27, '2022-05-15'),
+('S001', 'CRS002', 'Mathematics Basics', 10, 30, '2022-06-20'),
+('S001', 'CRS003', 'Introduction to Robotics', 8, 25, '2022-07-10'),
+('S001', 'CRS004', 'Data Structures', 8, 28, '2022-08-05'),
+('S001', 'CRS005', 'Algorithm Design', 8, 26, '2022-09-12'),
+('S001', 'CRS006', 'Artificial Intelligence Fundamentals', 8, 29, '2022-10-18'),
+
+('S002', 'CRS007', 'Database Management', 8, 24, '2022-11-25'),
+('S002', 'CRS008', 'Software Engineering', 10, 30, '2022-12-30'),
+('S002', 'CRS009', 'Cloud Computing', 8, 23, '2023-01-15'),
+('S002', 'CRS010', 'Business Analytics', 8, 28, '2023-02-20'),
+('S002', 'CRS011', 'Leadership Skills', 6, 27, '2023-03-10'),
+('S002', 'CRS012', 'International Business', 8, 29, '2023-04-15'),
+
+('S003', 'CRS013', 'Financial Management', 8, 19, '2023-05-20'),
+('S003', 'CRS014', 'Marketing Strategy', 8, 25, '2023-06-25'),
+('S003', 'CRS015', 'Human-Computer Interaction', 6, 26, '2023-07-10'),
+('S003', 'CRS016', 'Project Management', 8, 28, '2023-08-05'),
+('S003', 'CRS017', 'Consumer Behavior', 6, 23, '2023-09-12'),
+('S003', 'CRS018', 'Digital Marketing', 8, 30, '2023-10-18'),
+
+('S004', 'CRS019', 'Operations Management', 6, 22, '2023-11-25'),
+('S004', 'CRS020', 'Cybersecurity Fundamentals', 6, 24, '2023-12-30'),
+('S004', 'CRS021', 'Data Science Essentials', 8, 26, '2022-01-15'),
+('S004', 'CRS022', 'Strategic Management', 8, 21, '2022-02-20'),
+('S004', 'CRS023', 'Entrepreneurship', 6, 23, '2022-03-15'),
+('S004', 'CRS024', 'Digital Communication', 8, 27, '2022-04-20'),
+
+('S005', 'CRS025', 'Machine Learning Foundations', 10, 30, '2023-05-25'),
+('S005', 'CRS026', 'Software Testing Techniques', 6, 25, '2023-06-30'),
+('S005', 'CRS027', 'Network Security', 8, 28, '2023-07-05'),
+('S005', 'CRS028', 'Mobile App Design', 8, 26, '2023-08-10'),
+('S005', 'CRS029', 'Digital Ethics', 6, 24, '2023-09-15'),
+('S005', 'CRS030', 'Business Intelligence', 8, 29, '2023-10-20'),
+
+('S006', 'CRS031', 'Computer Graphics', 8, 27, '2022-11-25'),
+('S006', 'CRS032', 'Web Development', 6, 23, '2022-12-30'),
+('S006', 'CRS033', 'Cryptography Fundamentals', 8, 26, '2023-01-15'),
+('S006', 'CRS034', 'Supply Chain Analytics', 8, 22, '2023-02-20'),
+('S006', 'CRS035', 'Human Resource Management', 6, 24, '2023-03-15'),
+('S006', 'CRS036', 'Data Warehousing', 8, 28, '2023-04-20'),
+
+('S007', 'CRS037', 'Digital Sociology', 6, 22, '2023-05-25'),
+('S007', 'CRS038', 'Cloud Security', 8, 26, '2023-06-30'),
+('S007', 'CRS039', 'Software Project Management', 8, 24, '2023-07-05'),
+('S007', 'CRS040', 'International Marketing', 6, 23, '2023-08-10'),
+('S007', 'CRS041', 'Computer Networks', 8, 27, '2023-09-15'),
+('S007', 'CRS042', 'Artificial Neural Networks', 8, 30, '2023-10-20'),
+
+('S008', 'CRS043', 'E-commerce Strategies', 6, 23, '2023-11-25'),
+('S008', 'CRS030', 'Business Intelligence', 8, 29, '2023-12-30'),
+('S008', 'CRS045', 'IT Governance', 6, 26, '2022-01-15'),
+('S008', 'CRS046', 'Quantitative Methods', 8, 25, '2022-02-20'),
+('S008', 'CRS047', 'Social Media Marketing', 6, 22, '2022-03-15'),
+('S008', 'CRS007', 'Advanced Database Management', 8, 28, '2022-04-20'),
+
+('S009', 'CRS049', 'Business Process Reengineering', 8, 26, '2022-05-25'),
+('S009', 'CRS050', 'Game Development', 6, 24, '2022-06-30'),
+('S009', 'CRS051', 'Strategic HRM', 6, 23, '2022-07-05'),
+('S009', 'CRS052', 'Web Security', 8, 27, '2022-08-10'),
+('S009', 'CRS053', 'Social Entrepreneurship', 6, 22, '2022-09-15'),
+('S009', 'CRS054', 'Data Mining Techniques', 8, 28, '2022-10-20'),
+
+('S010', 'CRS055', 'Mobile App Security', 6, 23, '2022-11-25'),
+('S010', 'CRS056', 'International Finance', 8, 29, '2022-12-30'),
+('S010', 'CRS057', 'Digital Forensics', 8, 28, '2023-01-15'),
+('S010', 'CRS058', 'Marketing Analytics', 6, 26, '2023-02-20'),
+('S010', 'CRS022', 'Strategic Management', 6, 24, '2023-03-15'),
+('S010', 'CRS060', 'Data Ethics', 8, 30, '2023-04-20'),
+
+('S011', 'CRS009', 'Cloud Computing Security', 6, 25, '2023-05-25'),
+('S011', 'CRS062', 'Business Law', 8, 28, '2023-06-30'),
+('S011', 'CRS063', 'User Interface Design', 6, 24, '2023-07-05'),
+('S011', 'CRS064', 'Financial Accounting', 8, 26, '2023-08-10'),
+('S011', 'CRS065', 'Operations Research', 8, 27, '2023-09-15'),
+('S011', 'CRS066', 'Innovation Management', 6, 23, '2023-10-20'),
+
+('S012', 'CRS067', 'Information Security Management', 8, 29, '2023-11-25'),
+('S012', 'CRS068', 'Marketing Research', 6, 23, '2023-12-30'),
+('S012', 'CRS004', 'Data Structures', 8, 28, '2022-01-15'),
+('S012', 'CRS012', 'International Business Law', 6, 22, '2022-02-20'),
+('S012', 'CRS071', 'Machine Learning Applications', 8, 30, '2022-03-15'),
+('S012', 'CRS072', 'Entrepreneurial Finance', 6, 26, '2022-04-20');
+
 
 
 ALTER TABLE public.career OWNER TO postgres;
@@ -252,7 +328,30 @@ INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type,
   ('P022', 'Renewable Energy', 'T003', ARRAY['Renewable Energy', 'Sustainability'], 'Research', ARRAY['G002'], 'A thesis on renewable energy and sustainability.', 'Environmental Science, Renewable Energy', 'N/A', '2024-02-10', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P023', 'E-commerce Strategies', 'T001', ARRAY['E-commerce', 'Strategies'], 'Theoretical', ARRAY['G003'], 'A thesis on e-commerce strategies and online business.', 'E-commerce, Marketing', 'N/A', '2023-11-05', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P024', 'Natural Language Processing', 'T002', ARRAY['NLP', 'Language Processing'], 'Research', ARRAY['G001'], 'A thesis on natural language processing and language analysis.', 'Python, NLP', 'N/A', '2024-03-20', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P025', 'Global Marketing Trends', 'T003', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G004'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2023-10-30', 'Bachelor', ARRAY['BSC001'], false, false);
+  ('P025', 'Global Marketing Trends', 'T003', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G004'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2023-10-30', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P026', 'Long description proposal', 'T002', ARRAY['Long keyword'], 'Very long thesis', ARRAY['G002'], 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis turpis leo, sodales maximus blandit eget, ullamcorper quis erat. Sed vitae eleifend ligula. Fusce sed nulla fringilla, convallis tortor sed, ultricies nulla. Donec vel tincidunt erat. Nullam lacus lectus, vestibulum accumsan libero sit amet, tincidunt dictum felis. Etiam pulvinar sapien eget neque dapibus, non luctus dui tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla ultrices luctus sem id tempus.
+
+Nunc non volutpat velit, vel tristique erat. Nunc sed cursus tellus. Pellentesque interdum pharetra dui, eget fringilla dui suscipit quis. Sed bibendum accumsan finibus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis quis lorem aliquam, convallis ligula eu, rhoncus dolor. Maecenas dignissim dui metus, vitae finibus magna interdum vitae. Aliquam consectetur sed eros ac fermentum. Integer erat enim, bibendum at tellus quis, tincidunt semper urna. Nullam mi sem, ultricies sed lorem nec, auctor sagittis diam.
+
+Sed metus metus, vulputate nec vulputate sit amet, auctor ut tellus. Suspendisse imperdiet est ac lobortis dapibus. Sed luctus leo nec sem pharetra eleifend nec eu nisl. Ut a turpis eget ipsum ultrices rutrum. Curabitur suscipit diam vel mi malesuada vestibulum. Maecenas sed rhoncus purus. Donec libero ligula, efficitur in tristique eu, vehicula et lorem.
+
+Aliquam erat volutpat. Nulla id lectus nec lacus suscipit condimentum. Aliquam sem nunc, sodales ut mi sed, pulvinar efficitur arcu. Morbi venenatis velit eget augue volutpat, eu faucibus mauris pharetra. Duis a orci id turpis volutpat tincidunt. Nullam laoreet purus non enim pellentesque ultrices. Donec non velit faucibus, sollicitudin orci vel, ultricies sapien.
+
+Praesent cursus convallis ante, in gravida elit rhoncus sed. Vestibulum ac leo velit. Quisque sed justo id nibh molestie dignissim dictum vel nunc. Aenean accumsan tortor lorem, ultricies consectetur quam dignissim at. Nulla mauris libero, bibendum vel augue sit amet, maximus mattis lacus. Etiam quis faucibus turpis. Nulla malesuada libero quis interdum lobortis. In hendrerit ligula nec odio tincidunt ornare. Curabitur fringilla est enim, eu vestibulum dolor commodo a. Donec massa ante, fringilla et tortor in, fringilla pellentesque sapien. Nulla lacinia mi sed ex aliquam, sit amet euismod ante tincidunt.
+
+Aliquam laoreet, ex nec rutrum hendrerit, lectus lorem eleifend velit, in viverra urna mauris vitae lorem. Nullam libero ex, condimentum ac lacinia nec, malesuada et eros. Donec rutrum fermentum gravida. Cras sed neque nisl. Phasellus semper purus quis tellus egestas congue. Mauris gravida pharetra viverra. Sed congue felis vitae eros vestibulum, at egestas tortor maximus. Nulla ac ligula ullamcorper, mattis lectus ut, accumsan nibh. Morbi sit amet imperdiet ligula, ac dignissim leo. Nullam ultrices quam nec tellus suscipit maximus. Pellentesque vitae dictum nibh. In hac habitasse platea dictumst. Vivamus a quam efficitur libero facilisis suscipit a vitae nulla. Sed sodales lobortis aliquet. Fusce bibendum id metus eu ornare.
+
+Proin quis nunc arcu. Duis consequat, ex ac interdum venenatis, libero libero ultrices ante, vel interdum mauris purus ut dolor. Nulla facilisi. Donec a lorem vestibulum, fermentum risus vitae, luctus dui. Proin vel velit lorem. Pellentesque et lectus risus. Morbi faucibus, quam sit amet suscipit bibendum, metus nunc congue tortor, in imperdiet odio tortor sit amet nisi. Donec neque arcu, dictum in finibus a, gravida euismod mi. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec vel purus ante. Nullam volutpat at neque quis egestas. Donec aliquam feugiat porta. Mauris felis nisi, venenatis non elementum a, tristique sed quam.
+
+Phasellus dapibus ultricies urna, at molestie ante porttitor non. Fusce accumsan diam aliquet magna porttitor varius. Sed vel ligula erat. Quisque dapibus consectetur dolor, sit amet iaculis mi porttitor id. Praesent dictum dignissim tempor. Fusce porta tristique sapien, id fermentum sapien imperdiet ut. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Donec eu nisl purus. In sed massa magna. Proin tristique, velit quis blandit tincidunt, nunc diam finibus dui, vitae aliquet nibh augue eu magna. Sed malesuada porta augue, non pulvinar felis lobortis a. Pellentesque ut lacus dui. Sed sit amet massa a quam fermentum efficitur. Sed dictum elementum porttitor. Duis dapibus iaculis dapibus. Donec dignissim efficitur nibh eu condimentum.
+
+In vitae consequat risus, egestas pharetra justo. Aliquam in tellus ornare, rhoncus risus eu, sagittis augue. Pellentesque sit amet nibh eu purus dictum convallis. Donec tincidunt facilisis libero eget suscipit. Nulla massa nibh, laoreet ac mollis et, rhoncus quis justo. Mauris tortor metus, lobortis sit amet scelerisque sed, consectetur at orci. Nulla finibus libero ac est mattis tristique. Pellentesque vestibulum quam metus, sit amet finibus metus faucibus vitae. Nullam accumsan nisl sed bibendum egestas. Sed interdum sagittis turpis eu placerat. Nullam vehicula magna in nulla ornare tristique. Aenean euismod ac lorem vel volutpat. Aenean nec tellus nunc. Nunc eget lectus et lorem iaculis tincidunt quis interdum urna.
+
+Suspendisse potenti. Sed porttitor elit eget molestie maximus. Phasellus ex nisl, feugiat quis neque vel, rhoncus ultrices ligula. Vivamus purus tortor, tristique quis mi eget, rutrum blandit purus. Donec posuere gravida quam, vitae blandit quam ornare ac. Aenean at purus blandit, gravida nisl fermentum, sollicitudin massa. Vestibulum fringilla fermentum luctus. Morbi congue eu ipsum ut vestibulum. Nulla dignissim ante eu suscipit venenatis. Duis tempus ligula ac placerat dictum. Etiam scelerisque et magna in suscipit. Vestibulum tempus volutpat odio, vitae dapibus felis bibendum quis. Cras in commodo est, vel consequat dolor.
+
+Proin convallis turpis a orci vulputate, sed finibus purus fermentum. Donec vestibulum, leo ut viverra volutpat, elit est aliquam massa, non pulvinar turpis enim vitae lacus. Curabitur viverra erat metus. Ut pretium bibendum felis non ornare. Vestibulum eget urna eu nisl aliquam accumsan sit amet sagittis lorem. Pellentesque eget nibh sed tortor faucibus venenatis. Sed sit amet congue tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
+
+Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false);
 
 ALTER TABLE public.proposals OWNER TO postgres;
 
@@ -281,7 +380,9 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P008', 'S008', 'Accepted', '2023-10-10'),
   ('P009', 'S009', 'Pending', '2023-11-18'),
   ('P010', 'S010', 'Accepted', '2023-10-05'),
-  ('P003', 'S003', 'Pending', '2023-10-30');
+  ('P003', 'S003', 'Pending', '2023-10-30'),
+  ('P002', 'S001', 'Accepted', '2023-12-10');
+
 
 ALTER TABLE public.applications OWNER TO postgres;
 

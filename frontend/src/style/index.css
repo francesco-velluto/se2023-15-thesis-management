@@ -135,6 +135,18 @@ body {
     padding: 1rem; 
   }
 
+  #dropdown-proposal-actions:hover{
+    color: whitesmoke;
+    background-color: #003576;
+  }
+
+  #show-details-proposal:hover{
+    color: whitesmoke;
+    background-color: #003576;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+
   @media (min-width: 768px) {
     .proposal-row {
       margin-top: 0.25rem;

@@ -585,7 +585,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -652,7 +652,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -718,7 +718,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -779,7 +779,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -841,7 +841,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -903,7 +903,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -967,7 +967,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
@@ -1040,7 +1040,7 @@ describe("End to end test for update proposal", () => {
 
         const firstProposalAfter = await driver.findElement(By.className('proposal-row'));
 
-        const showDetailsButton = await firstProposalAfter.findElement(By.id('proposal-detail-actions-showdetails'));
+        const showDetailsButton = await firstProposalAfter.findElement(By.id('show-details-proposal'));
 
         await showDetailsButton.click();
 
