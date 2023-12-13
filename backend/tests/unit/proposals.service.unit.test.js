@@ -315,8 +315,6 @@ describe("T4 - getAllProfessorProposals", () => {
     });
 
     test("T5.3 ERROR 500 | Internal server error - database", (done) => {
-      const mockProposalId = "P003";
-
       db.query.mockRejectedValue(new Error("Database error"));
 
       service.getProposalById("P999")

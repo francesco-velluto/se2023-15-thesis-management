@@ -1,6 +1,6 @@
 import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup } from 'react-bootstrap';
 import { FaCalendar, FaCheck } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
 import { VirtualClockContext } from '../context/VirtualClockContext';
 import { useContext, useEffect, useState } from 'react';
@@ -9,7 +9,6 @@ import dayjs from 'dayjs';
 import Logo from '../images/logo_poli_bianco_260.png'
 
 function NavbarContainer() {
-    const navigate = useNavigate();
     const { currentDate, updateCurrentDate } = useContext(VirtualClockContext);
     const [selectedDate, setSelectedDate] = useState("");
     const [showFormControl, setShowFormControl] = useState(false);

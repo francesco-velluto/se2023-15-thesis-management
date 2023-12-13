@@ -384,7 +384,7 @@ describe("End to end tests for Copy Proposal", () => {
         await driver.sleep(1000);
 
         // Check if the save message is present
-        let alert = undefined;
+        let alert;
         try {
             alert = await driver.findElement(By.className('fade alert alert-success alert-dismissible show'));
         } catch (e) { }
@@ -422,7 +422,7 @@ describe("End to end tests for Copy Proposal", () => {
         await driver.executeScript("document.getElementById('add-proposal-btn').click()");
         await driver.sleep(1000);
 
-        let alert = undefined;
+        let alert;
         try {
             alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
         } catch (e) { }
@@ -457,7 +457,7 @@ describe("End to end tests for Copy Proposal", () => {
         await driver.executeScript("document.getElementById('add-proposal-btn').click()");
         await driver.sleep(1000);
 
-        let alert = undefined;
+        let alert;
         try {
             alert = await driver.findElement(By.className("fade alert alert-danger alert-dismissible show"));
         } catch (e) { }

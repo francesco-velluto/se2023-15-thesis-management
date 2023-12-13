@@ -15,6 +15,7 @@ exports.getDegrees = async () => {
     const degrees = await db.query("SELECT cod_degree, title_degree FROM degree");
     return degrees.rows.map((row) => new Degree(row.cod_degree, row.title_degree));
   } catch (err) {
+    console.error("[BACKEND-SERVER] Error in getDegrees service function: ", err);
     throw err;
   }
 };

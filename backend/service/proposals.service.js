@@ -166,14 +166,14 @@ exports.getProposalById = (proposal_id) => {
               proposal.programmes = degrees;
 
               // get names of each group of the proposal
-              db.query('SELECT * FROM "group" WHERE cod_group = ANY($1)', [ 
-                proposal.groups, 
+              db.query('SELECT * FROM "group" WHERE cod_group = ANY($1)', [
+                proposal.groups,
               ])
                 .then((group_result) => {
                   let group = group_result.rows;
                   proposal.groups = group;
 
-                resolve({ status: 200, data: proposal }); 
+                resolve({ status: 200, data: proposal });
               })
               .catch((error) => {
                 console.log(
@@ -181,7 +181,7 @@ exports.getProposalById = (proposal_id) => {
                   error
                 );
                 reject({ status: 500, data: "Internal Server Error" });
-              });             
+              });
             })
             .catch((error) => {
               console.log(
@@ -242,14 +242,11 @@ exports.deleteProposal = async(proposal_id) =>{
       return {data: undefined};
     }
 
-
     let queryDelete = "update proposals set deleted = true where proposal_id = $1 RETURNING *";
     const deletedProposal = await db.query(queryDelete, [proposal_id]);
 
     let cancelApplicationsQuery = "update applications set status = 'Canceled' where proposal_id = $1 returning *";
-    const canceledApplications = await db.query(cancelApplicationsQuery, [proposal_id]);
-
-
+    await db.query(cancelApplicationsQuery, [proposal_id]);
 
     return {data: deletedProposal.rows[0]};
 

@@ -3,7 +3,6 @@ import { Form, Button, Col, Row, Alert, Container, Spinner } from 'react-bootstr
 import { getAllProposals } from "../api/ProposalsAPI";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { VirtualClockContext } from "../context/VirtualClockContext";
-import dayjs from "dayjs";
 import { isSameDay, parse, parseISO } from "date-fns";
 import { FaTimesCircle } from 'react-icons/fa';
 

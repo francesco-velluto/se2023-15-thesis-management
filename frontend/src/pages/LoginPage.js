@@ -3,8 +3,8 @@ import { Alert, Button, Col, Container, Form, Row } from "react-bootstrap";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 
 function LoginPage() {
-  const [username, setUsername] = useState("michael.wilson@example.com");   // useState('david.lee@example.com');
-  const [password, setPassword] = useState("T002");                         // useState('S003');
+  const [username, setUsername] = useState("michael.wilson@example.com");
+  const [password, setPassword] = useState("T002");
   const [disableButtonSubmit, setDisableButtonSubmit] = useState(true);
 
   const { handleLogin, errors, setErrors } = useContext(LoggedUserContext); // context for logged user

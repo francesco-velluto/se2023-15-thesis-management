@@ -165,11 +165,11 @@ module.exports = {
    * Delete a proposal given its id.
    * A proposal with an accepted application cannot be removed.
    * All the applications of the deleted proposal are set to canceled.
-   * 
+   *
    * @params proposal_id
    * @body none
-   * 
-   * 
+   *
+   *
    */
   deleteProposal: async (req, res) => {
 
@@ -194,15 +194,15 @@ module.exports = {
         return res.status(403).json({ error: "Cannot delete an expired proposal" });
       }
 
-      
+
 
      // check if the proposal is archived
-     if (proposal.data.archived == true){
+     if (proposal.data.archived){
         return res.status(403).json({ error: "Cannot delete an archived proposal" });
      }
 
      // check if the proposal is already deleted
-     if (proposal.data.deleted == true){
+     if (proposal.data.deleted){
       return res.status(403).json({ error: "Cannot delete an already deleted proposal" });
      }
 
@@ -211,7 +211,7 @@ module.exports = {
 
 
 
-      if (applications && applications.some((a) => a.status === "Accepted"))
+      if (applications?.some((a) => a.status === "Accepted"))
         return res.status(403).json({ error: "Cannot delete a proposal with an accepted application" });
 
 

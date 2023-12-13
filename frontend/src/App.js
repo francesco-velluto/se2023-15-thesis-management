@@ -79,8 +79,8 @@ function PageLayout() {
  * Informs the user that he does not have authorization for this page
  */
 export function UnAuthorizationPage({error, message}) {
-    const titleMessage = error ? error : "Access Not Authorized";
-    const bodyMessage = message ? message : "You are not allowed to access this page!";
+    const titleMessage = error || "Access Not Authorized";
+    const bodyMessage = message || "You are not allowed to access this page!";
 
     return (
         <Container className="text-center" >
