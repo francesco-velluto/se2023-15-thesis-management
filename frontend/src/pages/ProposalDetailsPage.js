@@ -609,7 +609,7 @@ function ProposalDetailsPage({ mode }) {
                                                     {mode === "read" ?
                                                         <Card.Text id="groups" className={"proposal-badge"}>
                                                             {groups.map((group, index) =>
-                                                                <Badge key={index} bg=""  >{group.cod_group} :  {group.title_group}</Badge>
+                                                                <Badge key={index} bg=""  >{group.title_group}</Badge>
                                                             )}
                                                         </Card.Text>
                                                         :
