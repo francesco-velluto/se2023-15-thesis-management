@@ -221,6 +221,7 @@ POST `/api/authentication/login`
     - ...
 
 - Errors:
+  - `ERROR 400` If the proposal_id in the body differs from the proposal_id in parameters
   - `ERROR 401` If the user is not authenticated or not a teacher
   - `ERROR 403` If the user is a teacher but the proposal does not belong to them
   - `ERROR 404` If the proposal with the specified proposal_id does not exist
