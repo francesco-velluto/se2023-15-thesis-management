@@ -47,7 +47,7 @@ function ProposalDetailsPage({ mode }) {
     const [keywords, setKeywords] = useState([]);
     const [programmes, setProgrammes] = useState([]);
     // const [coSupervisors, setCoSupervisors] = useState([]);
-    const [groups, setGroups] = useState([loggedUser.cod_group]);
+    const [groups, setGroups] = useState([{cod_group: loggedUser.cod_group}]);
     const [description, setDescription] = useState("");
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
@@ -609,7 +609,7 @@ function ProposalDetailsPage({ mode }) {
                                                 {mode === "read" ?
                                                     <Card.Text id="groups" className={"proposal-badge"}>
                                                     {groups.map((group, index) =>
-                                                                <Badge key={index} bg=""  >{group}</Badge>
+                                                                <Badge key={index} bg=""  >{group.cod_group} :  {group.title_group}</Badge>
                                                             )}
                                                         </Card.Text>
                                                         :
@@ -648,7 +648,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup id="groups" className="mt-2">
                                                                 {groups.map((group, index) => (
                                                                     <ListGroup.Item key={index} disabled className="d-flex justify-content-between align-items-center my-1">
-                                                                        {group}
+                                                                        {group.cod_group} 
                                                                         {/*<Button
                                                                             variant="danger"
                                                                             size="sm"
