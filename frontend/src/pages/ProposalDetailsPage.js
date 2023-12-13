@@ -272,6 +272,7 @@ function ProposalDetailsPage({ mode }) {
                                     .catch(err => {
                                         setErrorMessage(err);
                                         setProposalDegreeList([]);
+                                        scrollToTarget();
                                     });
                             }
 
@@ -697,7 +698,7 @@ function ProposalDetailsPage({ mode }) {
                                                                     <Button id="add-keyword-btn"  onClick={() => {
                                                                         if (!newKeyword.trim()) {
                                                                             return;
-                                                                        } else if (!keywords.includes(newKeyword)) {
+                                                                        } else if (!keywords.includes(newKeyword)) {             //TODO: implement a case insensitive check
                                                                             setKeywords([...keywords, newKeyword]);
                                                                             setNewKeyword('');
                                                                         } else {

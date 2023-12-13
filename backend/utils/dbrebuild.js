@@ -4,6 +4,8 @@ require('dotenv').config({path:'../.env'})
 const { Client } = require('pg');
 const {readFile} = require("fs");
 
+const inputSQLFilename = 'Thesis-Management-System.sql'; // Change this if you want to rebuild the database from a different file
+
 const dbConnectionGeneral = new Client({
     user: process.env.DB_USER,
     host: 'localhost',
@@ -67,7 +69,7 @@ stdin.addListener("data", function (d) {
                 console.log('[DB-REBUILD] Connected to the database "Thesis-Management-System"');
                 console.log('[DB-REBUILD] Reading the file Thesis-Management-System.sql');
                 return new Promise((resolve, reject) => {
-                    readFile('../database/Thesis-Management-System.sql', 'utf8', (err, data) => {
+                    readFile('../database/' + inputSQLFilename, 'utf8', (err, data) => {
                         if (err) {
                             reject(err);
                         }
