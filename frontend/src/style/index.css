@@ -106,7 +106,7 @@ body {
 /* PROPOSAL LIST**********/
 /*************************/
 
-#show-proposal-detail, #proposal-detail-actions{
+#show-proposal-detail, #proposal-detail-actions, .show-details-button{
     margin-top: -2px; 
     cursor: pointer;
     color:  #003576;
@@ -133,6 +133,18 @@ body {
     border-color: #003576 ;
     border-radius: 0.25rem;
     padding: 1rem; 
+  }
+
+  #dropdown-proposal-actions:hover{
+    color: whitesmoke;
+    background-color: #003576;
+  }
+
+  #show-details-proposal:hover{
+    color: whitesmoke;
+    background-color: #003576;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
   }
 
   @media (min-width: 768px) {
