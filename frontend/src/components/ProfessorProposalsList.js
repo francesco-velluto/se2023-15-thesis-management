@@ -168,8 +168,8 @@ function ProposalRow({ proposal }) {
                     Update
                 </span>
             </Col>
-            <Col xs={12} md={1} xxl={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" id="proposal-detail-actions-showdetails" onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
-                <span id="show-details-proposal" className="d-flex align-items-center">
+            <Col xs={12} md={1} xxl={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" id="proposal-detail-actions-showdetails" >
+                <span id="show-details-proposal" className="d-flex align-items-center show-details-button" onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
                     <FaBook className="me-1" />
                     Show details
                 </span>

@@ -179,7 +179,7 @@ function ProposalRow(props) {
                     {format(parseISO(props.data.expiration_date), 'dd/MM/yyyy')}
                 </Col>
                 <Col xs={12} md={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0 show-details-link" id="show-proposal-detail" onClick={() => { navigate('/proposals/' + props.data.proposal_id) }}>
-                    <span id="show-details-proposal" className="d-flex align-items-center">
+                    <span id="show-details-proposal" className="d-flex align-items-center show-details-button">
                         <FaBook className="me-1" />
                         Show details
                     </span>
