@@ -65,17 +65,6 @@ function ProposalDetailsPage({ mode }) {
     const handleShow = () => setShowModal(true);
     const handleClose = () => { setShowModal(false); }
 
-    const handleDeleteProposal = async () => {
-        var result = await deleteProposal(proposal_id);
-        
-        if (!(result instanceof Error)) {
-            navigate("/proposals");
-        } else {
-            setErrorMessage(result.message);
-            handleClose();
-        }
-    }
-
     const levelEnum = {
         BACHELOR: "Bachelor",
         MASTER: "Master"
@@ -229,10 +218,22 @@ function ProposalDetailsPage({ mode }) {
         }
     }
 
+    const handleDeleteProposal = async () => {
+        var result = await deleteProposal(proposal_id);
+        
+        if (!(result instanceof Error)) {
+            navigate("/proposals");
+        } else {
+            setErrorMessage(result.message);
+            handleClose();
+        }
+    }
+
     useEffect(() => {
         setIsLoading(true);
         setErrorMessage(null); // reset error message when component is re-rendered
         setUnauthorized(false);
+        setSuccessMessage("");
 
         if (mode === "read" || mode === "update" || mode === "copy") {       // read, update and copy mode
             getProposalById(proposal_id)
@@ -297,8 +298,22 @@ function ProposalDetailsPage({ mode }) {
                 });
 
         } else if (mode === "add") {
-            setIsLoading(false);
+            setTitle("");
             setSupervisor(loggedUser.name + " " + loggedUser.surname);
+            setLevel("");
+            setType("");
+            setExpDate("");
+            setKeywords([]);
+            setProgrammes([]);
+            setGroups([loggedUser.cod_group]);
+            setDescription("");
+            setKnowledge("");
+            setNotes("");
+
+            setNewKeyword("");
+            setProposalDegreeList([]);
+
+            setIsLoading(false);
             getAllDegrees()
                 .then(list => setProposalDegreeList(list))
                 .catch(err => {
