@@ -135,7 +135,8 @@ module.exports = {
                 throw new Error(`Student with id ${student_id} currently already has pending or accepted applications.`);
             } else {
                 // okay it's another call to the DB but it will be removed in production so...
-                const { data: application_date } = getVirtualDate();  //! VIRTUAL_CLOCK: remove this line in production
+                const { data: application_date } = await getVirtualDate();  //! VIRTUAL_CLOCK: remove this line in production
+                console.log(application_date)
                 const query = "INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
                 const res = await db.query(query, [proposal_id, student_id, status, application_date])
                 return res;

@@ -17,12 +17,12 @@ export const VirtualClockProvider = ({ children }) => {
 
   const fetchVirtualDate = async () => {
     const res = await getVirtualDate();
-    res.error ? setCurrentDate("") : setCurrentDate(res.date);
+    res?.error ? setCurrentDate("") : setCurrentDate(res.date);
   }
 
   const updateCurrentDate = async (newDate) => {
     const res = await updateVirtualDate(newDate);
-    !res.error && setCurrentDate(res.date);
+    !res?.error && setCurrentDate(res.date);
   }
 
   useEffect(() => {
