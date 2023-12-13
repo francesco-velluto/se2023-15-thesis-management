@@ -809,8 +809,7 @@ function ProposalDetailsPage({ mode }) {
 
                                     <Row>
                                         <Col>
-                                            <Button id="go-back"
-                                                onClick={() => { navigate('/proposals') }}>
+                                            <Button id="go-back" onClick={() => { navigate('/proposals') }}>
                                                 Return
                                             </Button>
                                         </Col>
@@ -819,6 +818,19 @@ function ProposalDetailsPage({ mode }) {
                                                 <Button id="delete-proposal-btn" variant="outline-danger" onClick={handleShow}>
                                                     Delete proposal
                                                 </Button>}
+
+                                            {mode === "read" && loggedUser.role === 0 &&
+                                                <Button id="update-proposal-btn" variant="outline-primary" className="me-2"
+                                                    onClick={() => navigate('/proposals/' + proposal_id + "/update")}>
+                                                    Update proposal
+                                                </Button>}
+
+                                            {mode === "read" && loggedUser.role === 0 &&
+                                                <Button id="copy-proposal-btn" variant="outline-success" className="me-2"
+                                                    onClick={() => navigate('/proposals/' + proposal_id + "/copy")}>
+                                                    Copy proposal
+                                                </Button>}
+
                                             {mode === "read" && loggedUser.role === 1 &&
                                                 <ApplicationButton setErrMsg={setErrorMessage} proposalID={proposal_id} />}
 
