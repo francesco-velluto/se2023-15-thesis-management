@@ -413,15 +413,22 @@ function ProposalDetailsPage({ mode }) {
                                                                 whiteSpace: 'pre-line',
                                                             }}
                                                             onKeyDown={() => { }}
+                                                            role="button"
                                                             tabIndex={0}>
                                                             <span>
                                                                 {showFullDescription ? description : truncatedDescription}
-                                                                <span id="show-more" onClick={() => setShowFullDescription(!showFullDescription)} >
+                                                                <span id="show-more"
+                                                                    onKeyDown={() => { }}
+                                                                    onClick={() => setShowFullDescription(!showFullDescription)}
+                                                                    role="button">
                                                                     {!showFullDescription && description.length > truncatedDescription.length && ' Show more...'}
                                                                 </span>
                                                             </span>
                                                         </p>
-                                                        <span id="show-less" onClick={() => setShowFullDescription(!showFullDescription)}>
+                                                        <span id="show-less"
+                                                            onKeyDown={() => { }}
+                                                            onClick={() => setShowFullDescription(!showFullDescription)}
+                                                            role="button">
                                                             {showFullDescription && ' Show less...'}
                                                         </span>
                                                     </Card.Body>
