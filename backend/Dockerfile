@@ -10,4 +10,9 @@ COPY . .
 
 EXPOSE ${REACT_APP_BACKEND_SERVER_PORT}
 
-CMD ["node", "index.js"]
+RUN addgroup -S nonroot \
+    && adduser -S nonroot -G nonroot
+
+USER nonroot
+
+ENTRYPOINT ["npm", "start"]

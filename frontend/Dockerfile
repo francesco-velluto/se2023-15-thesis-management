@@ -10,4 +10,9 @@ COPY . .
 
 EXPOSE ${FRONTEND_PORT}
 
-CMD ["npm", "run", "docker"]
+RUN addgroup -S nonroot \
+    && adduser -S nonroot -G nonroot
+
+USER nonroot
+
+ENTRYPOINT ["npm", "run", "docker"]
