@@ -84,6 +84,24 @@ INSERT INTO public.degree (cod_degree, title_degree) VALUES
 
 ALTER TABLE public.degree OWNER TO postgres;
 
+--
+-- Name: Groups; Type: TABLE; Schema: public; Owner: postgres
+-- CANNOT BE CHANGED
+--
+
+CREATE TABLE public.group (
+    cod_group VARCHAR(10) PRIMARY KEY,
+    title_group VARCHAR(50) NOT NULL
+);
+
+INSERT INTO public.group (cod_group, title_group) VALUES
+  ('G001', 'Groupe 1'),
+  ('G002', 'Groupe 2'),
+  ('G003', 'Groupe 3'),
+  ('G004', 'Groupe 4');
+
+ALTER TABLE public.group OWNER TO postgres;
+
 
 --
 -- Name: Student; Type: TABLE; Schema: public; Owner: postgres
@@ -149,6 +167,10 @@ INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department)
 
 
 ALTER TABLE public.teacher OWNER TO postgres;
+
+ALTER TABLE ONLY public.teacher
+    ADD CONSTRAINT teacher_fk_group FOREIGN KEY (cod_group) REFERENCES public.group(cod_group);
+
 
 
 --

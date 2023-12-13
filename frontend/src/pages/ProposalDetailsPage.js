@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState} from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 
@@ -47,7 +47,7 @@ function ProposalDetailsPage({ mode }) {
     const [keywords, setKeywords] = useState([]);
     const [programmes, setProgrammes] = useState([]);
     // const [coSupervisors, setCoSupervisors] = useState([]);
-    const [groups, setGroups] = useState([loggedUser.cod_group]);
+    const [groups, setGroups] = useState([{ cod_group: loggedUser.cod_group }]);
     const [description, setDescription] = useState("");
     const [knowledge, setKnowledge] = useState("");
     const [notes, setNotes] = useState("");
@@ -220,7 +220,7 @@ function ProposalDetailsPage({ mode }) {
 
     const handleDeleteProposal = async () => {
         var result = await deleteProposal(proposal_id);
-        
+
         if (!(result instanceof Error)) {
             navigate("/proposals");
         } else {
@@ -305,7 +305,7 @@ function ProposalDetailsPage({ mode }) {
             setExpDate("");
             setKeywords([]);
             setProgrammes([]);
-            setGroups([loggedUser.cod_group]);
+            setGroups([{ cod_group: loggedUser.cod_group }]);
             setDescription("");
             setKnowledge("");
             setNotes("");
@@ -326,7 +326,7 @@ function ProposalDetailsPage({ mode }) {
     return (
         <>
             <NavbarContainer />
-            <TitleBar/>
+            <TitleBar />
             {
                 isLoading ? (<Alert variant="info" className="d-flex justify-content-center">Loading...</Alert>) : (
                     unauthorized ?
@@ -543,7 +543,7 @@ function ProposalDetailsPage({ mode }) {
                                                     <Card.Title>CdS / Programmes:</Card.Title>
                                                     {mode === "read" ?
                                                         <Card.Text className={"proposal-badge"} name="proposal-programmes">
-                                                        {programmes.map((programme, index) =>
+                                                            {programmes.map((programme, index) =>
                                                                 <Badge key={index} bg=""   >
                                                                     {programme.title_degree}
                                                                 </Badge>)}
@@ -606,10 +606,10 @@ function ProposalDetailsPage({ mode }) {
                                             <Card className="h-100">
                                                 <Card.Body >
                                                     <Card.Title>Groups:</Card.Title>
-                                                {mode === "read" ?
-                                                    <Card.Text id="groups" className={"proposal-badge"}>
-                                                    {groups.map((group, index) =>
-                                                                <Badge key={index} bg=""  >{group}</Badge>
+                                                    {mode === "read" ?
+                                                        <Card.Text id="groups" className={"proposal-badge"}>
+                                                            {groups.map((group, index) =>
+                                                                <Badge key={index} bg=""  >{group.cod_group} :  {group.title_group}</Badge>
                                                             )}
                                                         </Card.Text>
                                                         :
@@ -648,7 +648,7 @@ function ProposalDetailsPage({ mode }) {
                                                             <ListGroup id="groups" className="mt-2">
                                                                 {groups.map((group, index) => (
                                                                     <ListGroup.Item key={index} disabled className="d-flex justify-content-between align-items-center my-1">
-                                                                        {group}
+                                                                        {group.cod_group}
                                                                         {/*<Button
                                                                             variant="danger"
                                                                             size="sm"
@@ -711,13 +711,23 @@ function ProposalDetailsPage({ mode }) {
                                                                     />
                                                                 </Col>
                                                                 <Col>
-                                                                    <Button id="add-keyword-btn"  onClick={() => {
+                                                                    <Button id="add-keyword-btn" onClick={() => {
+                                                                        let exists = true;
+
                                                                         if (!newKeyword.trim()) {
                                                                             return;
-                                                                        } else if (!keywords.includes(newKeyword)) {             //TODO: implement a case insensitive check
-                                                                            setKeywords([...keywords, newKeyword]);
-                                                                            setNewKeyword('');
-                                                                        } else {
+                                                                        } else if (!keywords.includes(newKeyword)) {
+                                                                            const keywordsLowerCase = keywords.map(k => k.toLowerCase());
+                                                                            if (keywordsLowerCase.includes(newKeyword.toLowerCase())) {
+                                                                                exists = true;
+                                                                            } else {
+                                                                                setKeywords([...keywords, newKeyword]);
+                                                                                setNewKeyword('');
+                                                                                exists = false;
+                                                                            }
+                                                                        }
+
+                                                                        if (exists) {
                                                                             setErrorMessage("This keyword is already in the list!");
                                                                             scrollToTarget();
                                                                         }
@@ -832,7 +842,7 @@ function ProposalDetailsPage({ mode }) {
                                         <Modal.Header closeButton>
                                             <Modal.Title>Are you sure?</Modal.Title>
                                         </Modal.Header>
-                                        <Modal.Body>You are <strong>deleting</strong> this application!</Modal.Body>
+                                        <Modal.Body>You are <strong>deleting</strong> this application: <strong>{title}</strong></Modal.Body>
                                         <Modal.Footer>
                                             <Button id="cancel-delete-proposal" variant="danger" onClick={handleClose}>
                                                 Cancel

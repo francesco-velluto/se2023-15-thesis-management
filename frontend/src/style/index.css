@@ -110,7 +110,7 @@ body {
 /* PROPOSAL LIST**********/
 /*************************/
 
-#show-proposal-detail, #proposal-detail-actions, .show-details-button{
+#show-proposal-detail, #proposal-detail-actions, #show-details-proposal{
     margin-top: -2px;
     cursor: pointer;
     color:  #003576;

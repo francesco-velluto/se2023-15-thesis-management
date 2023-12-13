@@ -91,7 +91,6 @@ exports.getAllProposals = async (cod_degree) => {
           console.error("[BACKEND-SERVER] Error in getAllProposals");
           reject({ status: 404, data: "proposals not found" });
         }
-
         resolve({ status: 200, data: rows.rows });
       })
       .catch((err) => {
@@ -165,7 +164,24 @@ exports.getProposalById = (proposal_id) => {
             .then((degrees_result) => {
               let degrees = degrees_result.rows;
               proposal.programmes = degrees;
-              resolve({ status: 200, data: proposal });
+
+              // get names of each group of the proposal
+              db.query('SELECT * FROM "group" WHERE cod_group = ANY($1)', [ 
+                proposal.groups, 
+              ])
+                .then((group_result) => {
+                  let group = group_result.rows;
+                  proposal.groups = group;
+
+                resolve({ status: 200, data: proposal }); 
+              })
+              .catch((error) => {
+                console.log(
+                  "Error in getProposalById - cannot get groups: ",
+                  error
+                );
+                reject({ status: 500, data: "Internal Server Error" });
+              });             
             })
             .catch((error) => {
               console.log(
