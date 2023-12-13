@@ -148,7 +148,7 @@ function ProposalRow({ proposal }) {
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                        <Dropdown.Item id="copy-proposal-id" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}><FaCopy className="me-1" /> Copy</Dropdown.Item>
+                        <Dropdown.Item id="copy-proposal-id" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy') }}><FaCopy className="me-1" /> Copy</Dropdown.Item>
                         <Dropdown.Item id="update-proposal-id" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/update') }}> <FaPen className="me-1" /> Update</Dropdown.Item>
                     </Dropdown.Menu>
 
@@ -156,7 +156,7 @@ function ProposalRow({ proposal }) {
 
             </Col>
 
-            <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0 d-md-none" id="proposal-detail-actions-copy" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy')}}>
+            <Col xs={12} className="d-flex flex-row justify-content-center mt-3 mt-md-0 d-md-none" id="proposal-detail-actions-copy" onClick={() => { navigate('/proposals/' + proposal.proposal_id + '/copy') }}>
                 <span className="d-flex align-items-center">
                     <FaCopy className="me-1" />
                     Copy
@@ -169,7 +169,10 @@ function ProposalRow({ proposal }) {
                 </span>
             </Col>
             <Col xs={12} md={1} xxl={2} className="d-flex flex-row justify-content-center mt-3 mt-md-0" id="proposal-detail-actions-showdetails" >
-                <span id="show-details-proposal" className="d-flex align-items-center show-details-button" onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
+                <span id="show-details-proposal"
+                    className="d-flex align-items-center show-details-button"
+                    onKeyDown={() => { }}
+                    onClick={() => { navigate('/proposals/' + proposal.proposal_id) }}>
                     <FaBook className="me-1" />
                     Show details
                 </span>
