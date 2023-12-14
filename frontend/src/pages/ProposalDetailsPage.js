@@ -747,7 +747,7 @@ function ProposalDetailsPage({ mode }) {
                                                         </Form.Group>
                                                         <ListGroup id="proposal-keywords-list" className="mt-2">
                                                             {keywords.map((keyword, index) => (
-                                                                <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center my-1">
+                                                                <ListGroup.Item key={index} className="d-flex border justify-content-between align-items-center my-1">
                                                                     {keyword}
                                                                     <Button
                                                                         className="delete-keyword-btn"
