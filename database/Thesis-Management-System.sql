@@ -351,7 +351,8 @@ Suspendisse potenti. Sed porttitor elit eget molestie maximus. Phasellus ex nisl
 
 Proin convallis turpis a orci vulputate, sed finibus purus fermentum. Donec vestibulum, leo ut viverra volutpat, elit est aliquam massa, non pulvinar turpis enim vitae lacus. Curabitur viverra erat metus. Ut pretium bibendum felis non ornare. Vestibulum eget urna eu nisl aliquam accumsan sit amet sagittis lorem. Pellentesque eget nibh sed tortor faucibus venenatis. Sed sit amet congue tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
-Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false);
+Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false);
 
 ALTER TABLE public.proposals OWNER TO postgres;
 
