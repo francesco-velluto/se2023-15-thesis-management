@@ -9,6 +9,7 @@ import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button
 import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
+import PropTypes from "prop-types";
 
 
 function ApplicationDetails() {
@@ -263,6 +264,18 @@ function StudentInfo(props) {
     )
 }
 
+StudentInfo.propTypes = {
+    infoStudent: PropTypes.shape({
+        name: PropTypes.string,
+        surname: PropTypes.string,
+        email: PropTypes.string,
+        enrollment_year: PropTypes.number
+    }),
+    infoApplication: PropTypes.shape({
+        application_date: PropTypes.oneOf([String, Date])
+    }),
+};
+
 function ProposalInfo(props) {
 
     const infoProposal = props.infoProposal;
@@ -295,6 +308,15 @@ function ProposalInfo(props) {
     )
 }
 
+ProposalInfo.propTypes = {
+    infoProposal: PropTypes.shape({
+        title: PropTypes.string,
+        type: PropTypes.string,
+        notes: PropTypes.string,
+        expiration_date: PropTypes.oneOf([String, Date])
+    }),
+};
+
 function RowInfo(props) {
 
     return (
@@ -308,5 +330,10 @@ function RowInfo(props) {
         </Row>
     )
 }
+
+RowInfo.propTypes = {
+    title: PropTypes.string,
+    value: PropTypes.any
+};
 
 export default ApplicationDetails;

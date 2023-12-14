@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { insertNewApplication, getAllApplicationsByStudent } from '../api/ApplicationsAPI';
 import { Button } from "react-bootstrap";
 import { LoggedUserContext } from "../context/AuthenticationContext";
+import PropTypes from "prop-types";
 
 const ApplicationButton = ({ proposalID, setErrMsg }) => {
   const [applied, setApplied] = useState(false);
@@ -56,5 +57,10 @@ const ApplicationButton = ({ proposalID, setErrMsg }) => {
     </Button>
   );
 };
+
+ApplicationButton.propTypes = {
+  proposalID: PropTypes.string,
+  setErrMsg: PropTypes.func
+}
 
 export default ApplicationButton;

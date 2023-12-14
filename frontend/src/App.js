@@ -1,7 +1,7 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import SamlRedirect from "./pages/Auth";
-
+import PropTypes from 'prop-types';
 
 import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage";
@@ -112,6 +112,11 @@ export function UnAuthorizationPage({error, message}) {
             </Row>
         </Container>
     );
+}
+
+UnAuthorizationPage.propTypes = {
+    error: PropTypes.string,
+    message: PropTypes.string
 }
 
 /**
