@@ -98,6 +98,7 @@ sections:
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
     - Improve the quality of the product, maintaining high coverage and low bugs and code smells, without decreasing the number of story points committed. We can do it continuing working as always, considering the technical debt and SonarCloud.
+    - Consult the FAQ document more often in order not to loose some specifications about the user stories we commited and not to waste time in the correction of features. 
     
 
 - One thing you are proud of as a Team!!
