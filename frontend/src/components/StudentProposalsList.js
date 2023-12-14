@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns";
 import { FaBook } from "react-icons/fa";
 import { VirtualClockContext } from '../context/VirtualClockContext';
+import PropTypes from "prop-types";
 
 function StudentProposalsList(props) {
 
@@ -146,6 +147,13 @@ function StudentProposalsList(props) {
     );
 }
 
+StudentProposalsList.propTypes = {
+    searchData: PropTypes.arrayOf(PropTypes.shape({
+        field: PropTypes.string,
+        value: PropTypes.any,
+    })),
+};
+
 
 function ProposalRow(props) {
 
@@ -189,5 +197,17 @@ function ProposalRow(props) {
     );
 
 }
+
+
+ProposalRow.propTypes = {
+    data: PropTypes.shape({
+        proposal_id: PropTypes.string,
+        title: PropTypes.string,
+        supervisor_surname: PropTypes.string,
+        supervisor_name: PropTypes.string,
+        type: PropTypes.string,
+        expiration_date: PropTypes.oneOf([String, Date])
+    }),
+};
 
 export default StudentProposalsList;
