@@ -26,7 +26,7 @@ afterAll(() => {
 });
 
 describe("T1 - Get degrees unit tests", () => {
-  test("T2.1 - ERROR 401 | Not authenticated", (done) => {
+  test("T2.1 - ERROR 401   | Not authenticated", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       return res.status(401).json({ error: "Not authenticated" });
     });
@@ -85,6 +85,24 @@ describe("T1 - Get degrees unit tests", () => {
       .then((res) => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ degrees: [] });
+        expect(getDegrees).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.2 - ERROR 500   | Internal server error", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // authenticated
+    });
+
+    getDegrees.mockRejectedValue(new Error("Internal server error"));
+
+    request(app)
+      .get("/api/degrees")
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual({ error: "Internal server error has occurred" });
         expect(getDegrees).toHaveBeenCalled();
         done();
       })

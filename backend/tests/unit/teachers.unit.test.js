@@ -15,9 +15,9 @@ beforeAll(() => {
 beforeEach(() => {
   jest.clearAllMocks();
   // comment these lines if you want to see console prints during tests
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => { });
+  jest.spyOn(console, "info").mockImplementation(() => { });
+  jest.spyOn(console, "error").mockImplementation(() => { });
 });
 
 afterAll(() => {
@@ -25,7 +25,7 @@ afterAll(() => {
 });
 
 describe("T1 - Get teachers unit tests", () => {
-  test("T2.1 - ERROR 401 | Not authenticated", (done) => {
+  test("T2.1 - ERROR 401   | Not authenticated", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       return res.status(401).json({ error: "Not authenticated" });
     });
@@ -92,6 +92,26 @@ describe("T1 - Get teachers unit tests", () => {
       .then((res) => {
         expect(res.status).toBe(200);
         expect(res.body).toEqual({ teachers: [] });
+        expect(getTeachers).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T2.3 - ERROR 500   | Internal server error", (done) => {
+    const error = "Internal server error has occurred";
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // authenticated
+    });
+
+    getTeachers.mockRejectedValue(new Error(error));
+
+    request(app)
+      .get("/api/teachers")
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual({ error: error });
         expect(getTeachers).toHaveBeenCalled();
         done();
       })
