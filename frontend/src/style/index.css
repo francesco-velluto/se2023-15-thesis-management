@@ -127,6 +127,9 @@ body {
 }
 
 .proposal-row {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.5s;
+    border-radius: 20px;
     background-color: white;
     display: flex;
     flex-direction: row;
@@ -136,9 +139,19 @@ body {
     border-width: 2px;
     border-style: solid;
     border-color: #003576 ;
-    border-radius: 0.25rem;
-    padding: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 10px;
   }
+  
+  .proposal-row:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+  }
+  #dropdown-proposal-actions{
+    border-color: #003576;
+    color: #003576;
+    background-color: white;
+  }
+
 
   #dropdown-proposal-actions:hover{
     color: whitesmoke;
@@ -154,8 +167,8 @@ body {
 
   @media (min-width: 768px) {
     .proposal-row {
-      margin-top: 0.25rem;
-      margin-bottom: 0.25rem;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
     }
   }
 
@@ -176,19 +189,27 @@ body {
   }
 
   .student-proposal-card {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    transition: box-shadow 0.5s;
     margin: 0.5rem 0.5rem;
     border-width: 2px;
     border-style: solid;
     border-color: #003576 ;
-    border-radius: 0.25rem;
+    border-radius: 20px;
     background-color: white;
-    padding: 1rem;
+    padding: 1.25rem;
+    margin-bottom: 10px;
+  }
+
+  .student-proposal-card:hover {
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
+
   }
 
   @media (min-width: 768px) {
     .student-proposal-card {
       margin-top: 0.25rem; /* Equivalent to my-md-1 */
-      margin-bottom: 0.25rem; /* Equivalent to my-md-1 */
+      margin-bottom: 1rem; /* Equivalent to my-md-1 */
     }
   }
 
