@@ -72,6 +72,12 @@
     border-color: rgb(226, 169, 119);
     background-color: rgb(226, 169, 119);
 }
+@media (max-width: 767px) {
+    #go-back {
+        width: 100%; 
+        margin-bottom: 4px;
+    }
+}
 
 #show-more {
     color: darkgray;
