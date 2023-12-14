@@ -23,6 +23,7 @@ body {
 }
 
 .home-page {
+    border: 2px solid #ddd;
     min-height: 88.8vh;
     display: flex;
     flex-direction: column;
@@ -79,7 +80,7 @@ body {
     color: #003576;
     border-color: whitesmoke;
     height: 50px;
-    width: 130px;
+    width: 155px;
     line-height: 37px;
 }
 
@@ -88,7 +89,7 @@ body {
 }
 
 #logout-id {
-    background-color: whitesmoke;
+    background-color: white;
     color: #003576;
     font-size: 16px;
 }
