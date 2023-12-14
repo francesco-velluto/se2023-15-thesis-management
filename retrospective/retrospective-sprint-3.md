@@ -25,11 +25,20 @@ sections:
 
 - **Nr of hours planned vs. spent (as a team):**
 
+  Planned: 95h 40m
+
+  Spent: 100h 10m
+
 ### Detailed statistics
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-|        |         |        |            |              |
+|   #0   |   15    |   -    |  54h 40m   |  64h 40m     |
+|   #1   |   6    |   3    |  12h        |     11h      |
+|   #2   |   8    |   3    |   10h 30m   |   11h 50m    |
+|   #3   |   5    |   3    |   10h 30m   |      11h     |
+|   #4   |   3    |   2    |     5h      |     5h       |
+
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
@@ -39,7 +48,7 @@ sections:
   - Standard Deviation Actual:
 
 - **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
-  - 
+  -
 
 
 ## QUALITY MEASURES
@@ -69,14 +78,14 @@ sections:
 
 - What caused your errors in estimation (if any)?
     - The estimation of all the new stories as requested and subsequently a change in the request led us to spend more time on that activity, even though it was no longer required later on.
-    
+
 - What lessons did you learn (both positive and negative) in this sprint?
     - good 😌 Preparing a speech in advance and conducting a rehearsal the day before the demo helped us arrive more prepared for the presentation.
     - good 😌 Designing, thinking, and implementing with a focus on maintaining consistently low technical debt has allowed us to save a significant amount of time in bug fixing, implementing new features, project management in general, etc...
     - good 😌 In this sprint, Telegram has proven to be an excellent tool, not for Telegram itself, but for the ability to communicate remotely at any time. We have improved communication by discussing a list of things to do before meetings, arriving more prepared and allowing us not to waste too much time.
     - bad  😕 We should inquire more about certain details, perhaps by actively following the series of questions posed to the Product Owner in the Telegram chat or staying continuously updated by reading the published FAQ. This, for instance, would have allowed us to avoid reworking the implementation of the Virtual Clock.
     - bad  😕 SonarCloud, although an excellent tool, keeping up with all the reported bugs and code smells has slightly increased the development and release time of a feature, leading to an accumulation of delays in case of dependencies among team members.
-    
+
 - Which improvement goals set in the previous retrospective were you able to achieve?
     - We managed to prepare a dataset before the presentation so that we could showcase all the new implemented features and existing functionalities to their best advantage.
     - Furthermore, we also managed to prepare a PowerPoint presentation showcasing the new features implemented in this sprint, aiming for an even better and smoother presentation during the demo.
