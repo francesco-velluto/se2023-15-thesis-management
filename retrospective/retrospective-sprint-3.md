@@ -33,37 +33,36 @@ sections:
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-|   #0   |   15    |   -    |  54h 40m   |  64h 40m     |
-|   #1   |   6    |   3    |  12h        |     11h      |
-|   #2   |   8    |   3    |   10h 30m   |   11h 50m    |
-|   #3   |   5    |   3    |   10h 30m   |      11h     |
-|   #4   |   3    |   2    |     5h      |     5h       |
-
+|   #0   |   15    |   -    |  54h 40m   | 61h 20m      |
+|   #1   |   6    |   3    |  12h        | 11h          |
+|   #2   |   8    |   3    |   10h 30m   | 11h 50m      |
+|   #3   |   5    |   3    |   10h 30m   | 11h          |
+|   #4   |   3    |   2    |     5h      | 5h           |
+| TOTAL |  37   |   11   |  95h 40m    | 100h 10m     |
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
-  - Average Estimate:
-  - Average Actual:
-  - Standard Deviation Estimate:
-  - Standard Deviation Actual:
+  - Average Estimate: 2h 35m
+  - Average Actual: 2h 42m
+  - Standard Deviation Estimate: 2h 39m
+  - Standard Deviation Actual: 2h 45m
 
 - **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
-  -
-
+  - 0.05
 
 ## QUALITY MEASURES
 
 - **Unit Testing:**
-  - **Total hours estimated:** 9h
-  - **Total hours spent:**
-  - **Nr of automated unit test cases:**
-  - **Coverage (if available):**
+  - **Total hours estimated:** 11h
+  - **Total hours spent:** 11h 45m
+  - **Nr of automated unit test cases:** 164
+  - **Coverage (if available):** 84-2%
 - **E2E testing:**
-  - **Total hours estimated:** 5h
-  - **Total hours spent:**
+  - **Total hours estimated:** 12h
+  - **Total hours spent:** 13h 25m
 - **Code review:**
-  - **Total hours estimated:** 1h
-  - **Total hours spent:**
+  - **Total hours estimated:** 2h
+  - **Total hours spent:** 2h 10m
 - **Technical Debt management:**
   - **Total hours estimated**
   - **Total hours spent**
