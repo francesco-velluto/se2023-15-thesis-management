@@ -141,6 +141,18 @@ The data stored in this table are the same that will be sent as notification to 
 | status | VARCHAR(30) NOT NULL             | Status of the notification. SMTP Pending, SMTP Accepted, SMTP Rejected |
 | lastupdate | TIMESTAMP NOT NULL               | Last update date of the notification status                            |
 
+### CronoLogs
+
+This table contains all the logs of the cron jobs.
+
+| Attribute | Typology             | Description                                           |
+| --- |----------------------|-------------------------------------------------------|
+| id | SERIAL               | ID, auto increment                                    |
+| job_name | VARCHAR(50) NOT NULL | Name of the job. (it is same as file name of the job) |
+| event | VARCHAR(50) NOT NULL | Event of the job. (Start, Success, Error)             |
+| timestamp | TIMESTAMP NOT NULL   | Timestamp of the event                                |
+| details | JSON                 | Details of the event, optional, can be null           |
+
 ## How to install ?
 
 Refers to Elio documentation for DBEaver or to Docker compose documentation. 😃

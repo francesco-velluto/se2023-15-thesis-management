@@ -423,6 +423,17 @@ INSERT INTO public.virtual_clock (prop_name, prop_value) VALUES ('virtual_date',
 
 ALTER TABLE public.virtual_clock OWNER TO postgres;
 
+CREATE TABLE public.cronologs
+(
+    id        SERIAL PRIMARY KEY,
+    job_name  VARCHAR(50) NOT NULL,
+    event     VARCHAR(50) NOT NULL,
+    timestamp TIMESTAMP   NOT NULL DEFAULT NOW(),
+    details   JSON        DEFAULT NULL
+);
+
+ALTER TABLE public.cronologs OWNER TO postgres;
+
 --
 -- PostgreSQL database dump complete
 --
