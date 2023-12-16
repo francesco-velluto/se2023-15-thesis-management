@@ -53,6 +53,10 @@
     color: gray;
 }
 
+.proposal-field-mandatory {
+    color: red;
+    margin-right: 4px;
+}
 
 #add-proposal-btn,
 #add-keyword-btn,

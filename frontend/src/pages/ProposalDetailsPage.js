@@ -365,7 +365,10 @@ function ProposalDetailsPage({ mode }) {
                                                 <Form.Group>
                                                     <Card className="h-100">
                                                         <Card.Body>
-                                                            <Card.Title>Title:</Card.Title>
+                                                            <Card.Title>
+                                                                <span className="proposal-field-mandatory">*</span>
+                                                                Title:
+                                                            </Card.Title>
                                                             <Form.Control
                                                                 type='text'
                                                                 name='title'
@@ -439,7 +442,10 @@ function ProposalDetailsPage({ mode }) {
                                             {mode !== "read" &&
                                                 <Card>
                                                     <Card.Body>
-                                                        <Card.Title>Description:</Card.Title>
+                                                        <Card.Title>
+                                                            <span className="proposal-field-mandatory">*</span>
+                                                            Description:
+                                                        </Card.Title>
                                                         <Form.Group>
                                                             <Form.Control
                                                                 as='textarea'
@@ -466,7 +472,10 @@ function ProposalDetailsPage({ mode }) {
                                         <Col xs={12} md={6} className="mb-1 mb-md-0">
                                             <Card className="h-100">
                                                 <Card.Body>
-                                                    <Card.Title>Supervisor:</Card.Title>
+                                                    <Card.Title>
+                                                        {mode !== 'read' && <span className="proposal-field-mandatory">*</span>}
+                                                        Supervisor:
+                                                    </Card.Title>
                                                     <Form.Control
                                                         id="supervisor"
                                                         value={supervisor}
@@ -493,11 +502,17 @@ function ProposalDetailsPage({ mode }) {
                                     <Row>
                                         <Col >
                                             <Card className="h-100">
-                                                <Card.Body>
-                                                    <Card.Title>Level:</Card.Title>
-                                                    {mode === "read" ?
+                                                {mode === "read" ?
+                                                    <Card.Body>
+                                                        <Card.Title>Level:</Card.Title>
                                                         <Card.Text name="proposal-level">{level}</Card.Text>
-                                                        :
+                                                    </Card.Body>
+                                                    :
+                                                    <Card.Body>
+                                                        <Card.Title>
+                                                            <span className="proposal-field-mandatory">*</span>
+                                                            Level:
+                                                        </Card.Title>
                                                         <Form.Group>
                                                             <Form.Select
                                                                 name='proposal-level'
@@ -515,14 +530,17 @@ function ProposalDetailsPage({ mode }) {
                                                                     ))
                                                                 }
                                                             </Form.Select>
-                                                        </Form.Group>}
-                                                </Card.Body>
+                                                        </Form.Group>
+                                                    </Card.Body>}
                                             </Card>
                                         </Col>
                                         <Col>
                                             <Card className="h-100">
                                                 <Card.Body>
-                                                    <Card.Title>Type:</Card.Title>
+                                                    <Card.Title>
+                                                        {mode !== 'read' && <span className="proposal-field-mandatory">*</span>}
+                                                        Type:
+                                                    </Card.Title>
                                                     <Form.Group>
                                                         <Form.Control
                                                             id="proposal-type"
@@ -548,7 +566,10 @@ function ProposalDetailsPage({ mode }) {
                                         <Col xs={12} md={6} className="mb-1 mb-md-0">
                                             <Card className="h-100">
                                                 <Card.Body>
-                                                    <Card.Title>CdS / Programmes:</Card.Title>
+                                                    <Card.Title>
+                                                        {mode !== 'read' && <span className="proposal-field-mandatory">*</span>}
+                                                        CdS / Programmes:
+                                                    </Card.Title>
                                                     {mode === "read" ?
                                                         <Card.Text className={"proposal-badge"} name="proposal-programmes">
                                                             {programmes.map((programme, index) =>
@@ -613,7 +634,10 @@ function ProposalDetailsPage({ mode }) {
                                         <Col xs={12} md={6}>
                                             <Card className="h-100">
                                                 <Card.Body >
-                                                    <Card.Title>Groups:</Card.Title>
+                                                    <Card.Title>
+                                                        {mode !== 'read' && <span className="proposal-field-mandatory">*</span>}
+                                                        Groups:
+                                                    </Card.Title>
                                                     {mode === "read" ?
                                                         <Card.Text id="groups" className={"proposal-badge"}>
                                                             {groups.map((group, index) =>
@@ -683,7 +707,10 @@ function ProposalDetailsPage({ mode }) {
                                             <Col xs={12} md={6} className="mb-1 mb-md-0">
                                                 <Card className="h-100">
                                                     <Card.Body>
-                                                        <Card.Title>Expiration Date:</Card.Title>
+                                                        <Card.Title>
+                                                            <span className="proposal-field-mandatory">*</span>
+                                                            Expiration Date:
+                                                        </Card.Title>
                                                         <Form.Group>
                                                             <Form.Control
                                                                 id="expiration-date"
@@ -703,7 +730,10 @@ function ProposalDetailsPage({ mode }) {
                                             <Col xs={12} md={6}>
                                                 <Card className="h-100">
                                                     <Card.Body >
-                                                        <Card.Title>Keywords</Card.Title>
+                                                        <Card.Title>
+                                                            <span className="proposal-field-mandatory">*</span>
+                                                            Keywords
+                                                        </Card.Title>
                                                         <Form.Group >
                                                             <div className="text-plus">
                                                                 <Col xs={10} >
