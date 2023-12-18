@@ -184,6 +184,7 @@ function ProposalDetailsPage({ mode }) {
         } catch (err) {
             setSuccessMessage("");
             setErrorMessage(err.message);
+            scrollToTarget();
         }
     }
 
@@ -216,6 +217,7 @@ function ProposalDetailsPage({ mode }) {
         } catch (err) {
             setSuccessMessage("");
             setErrorMessage(err.message);
+            scrollToTarget();
         }
     }
 
@@ -333,7 +335,7 @@ function ProposalDetailsPage({ mode }) {
                     unauthorized ?
                         (<UnAuthorizationPage error={"Error"} message={errorMessage} />)
                         :
-                        (<Container className={"proposal-details-container"} fluid>
+                        (<Container className="proposal-details-container" fluid>
                             <Form>
                                 <Container>
                                     <div ref={targetRef}>
@@ -885,7 +887,6 @@ function ProposalDetailsPage({ mode }) {
                                                     onClick={handleCreateProposal}>
                                                     Create Proposal
                                                 </Button>}
-
                                         </Col>
                                     </Row>
                                     <Modal show={showModal} onHide={handleClose} backdrop="static">

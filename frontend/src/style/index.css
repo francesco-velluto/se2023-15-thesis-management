@@ -38,11 +38,11 @@ body {
 
 /*************************/
 
-#card-border{
+#card-border {
     border-color: #003576 !important;
 }
 
-#card-header{
+#card-header {
     border-color: #003576 !important;
     color: orange;
 }
@@ -58,7 +58,7 @@ body {
     background-color: #003576;
 }
 
-#show-virtual-clock-btn{
+#show-virtual-clock-btn {
     background-color: whitesmoke;
     color: #003576;
     border-color: whitesmoke;
@@ -67,7 +67,7 @@ body {
 
 }
 
-#dropdown-basic{
+#dropdown-basic {
     background-color: whitesmoke;
     color: #003576;
     border-color: whitesmoke;
@@ -94,7 +94,7 @@ body {
     font-size: 16px;
 }
 
-#navbar-title{
+#navbar-title {
     font-size: 18px;
     font-weight: bold;
 }
@@ -111,17 +111,20 @@ body {
 /* PROPOSAL LIST**********/
 /*************************/
 
-#show-proposal-detail, #proposal-detail-actions, #show-details-proposal{
+#show-proposal-detail,
+#proposal-detail-actions,
+#show-details-proposal {
     margin-top: -2px;
     cursor: pointer;
-    color:  #003576;
+    color: #003576;
     font-weight: bold;
 }
 
-#copy-proposal-id, #update-proposal-id {
+#copy-proposal-id,
+#update-proposal-id {
     margin-top: -2px;
     cursor: pointer;
-    color:  orange;
+    color: orange;
     font-weight: bold;
 
 }
@@ -138,80 +141,83 @@ body {
     margin: 0.5rem 0.5rem;
     border-width: 2px;
     border-style: solid;
-    border-color: #003576 ;
+    border-color: #003576;
     padding: 1.25rem;
     margin-bottom: 10px;
-  }
-  
-  .proposal-row:hover {
+}
+
+.proposal-row:hover {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
-  }
-  #dropdown-proposal-actions{
+}
+
+#dropdown-proposal-actions {
     border-color: #003576;
     color: #003576;
     background-color: white;
-  }
+}
 
 
-  #dropdown-proposal-actions:hover{
+#dropdown-proposal-actions:hover {
     color: whitesmoke;
     background-color: #003576;
-  }
+}
 
-  #show-details-proposal:hover{
+#show-details-proposal:hover {
     color: whitesmoke;
     background-color: #003576;
     padding: 0.25rem 0.5rem;
     border-radius: 0.25rem;
-  }
+}
 
-  @media (min-width: 768px) {
+@media (min-width: 768px) {
     .proposal-row {
-      margin-top: 1rem;
-      margin-bottom: 0.5rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
     }
-  }
+}
 
-  .student-proposal-container {
+.student-proposal-container {
     background-color: whitesmoke;
     border-bottom-left-radius: 0.25rem;
     border-bottom-right-radius: 0.25rem;
     padding-top: 1rem;
     padding-bottom: 1rem;
-  }
+}
 
-  .search-area{
+.search-area {
     width: 100%;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
+}
 
-  .student-proposal-card {
+.student-proposal-card {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
     transition: box-shadow 0.5s;
     margin: 0.5rem 0.5rem;
     border-width: 2px;
     border-style: solid;
-    border-color: #003576 ;
+    border-color: #003576;
     border-radius: 20px;
     background-color: white;
     padding: 1.25rem;
     margin-bottom: 10px;
-  }
+}
 
-  .student-proposal-card:hover {
+.student-proposal-card:hover {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.5);
 
-  }
+}
 
-  @media (min-width: 768px) {
+@media (min-width: 768px) {
     .student-proposal-card {
-      margin-top: 0.25rem; /* Equivalent to my-md-1 */
-      margin-bottom: 1rem; /* Equivalent to my-md-1 */
+        margin-top: 0.25rem;
+        /* Equivalent to my-md-1 */
+        margin-bottom: 1rem;
+        /* Equivalent to my-md-1 */
     }
-  }
+}
 
 
 /*************************/
@@ -270,20 +276,32 @@ body {
 
 }
 
-#back-to-homepage-button{
-    color:orange;
+#back-to-homepage-button {
+    color: orange;
     border-color: orange;
     background-color: whitesmoke;
 }
-#back-to-homepage-button:hover{
-    color:white;
+
+#back-to-homepage-button:hover {
+    color: white;
     border-color: orange;
     background-color: orange;
 }
 
 /*************************/
 
+/*************************/
+/* THESIS REQUEST ********/
+/*************************/
 
+#title-page-thesis-request {
+    color:#003576;
+    display: flex;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/*************************/
 
 
 /*************************/
@@ -301,7 +319,7 @@ body {
 
 }
 
-#title-btn {
+.title-bar-btn {
     background-color: white;
     height: 40px;
     padding: 6.4px 20px;
@@ -311,23 +329,25 @@ body {
     font-weight: bold;
     align-items: center;
     border-color: #003576;
-    box-shadow: 0 2px 0 rgba(0,0,0,.045);
+    box-shadow: 0 2px 0 rgba(0, 0, 0, .045);
 
 }
-#title-btn:hover{
-    background-color: #003576 ;
+
+.title-bar-btn:hover {
+    background-color: #003576;
     color: white;
 }
 
-#title-add-btn {
+.title-bar-add-btn {
     background-color: #003576;
     color: white;
     border-color: #003576;
     border-radius: 50%;
 
 }
-#title-add-btn:hover{
-    background-color: lightgray ;
+
+.title-bar-add-btn:hover {
+    background-color: lightgray;
     color: #003576;
 }
 
