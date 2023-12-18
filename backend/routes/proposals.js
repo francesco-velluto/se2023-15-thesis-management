@@ -3,9 +3,8 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
-const authenticationController = require('../controllers/authentication');
 const proposalsController = require("../controllers/proposals");
-const { isLoggedIn, isTeacher } = require("../controllers/authentication");
+const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
 
 // This function is used to format express-validator errors as strings
 const errorFormatter = ({ location, msg, path, value, nestedErrors }) => {
@@ -46,7 +45,7 @@ const isArrayOfStrings = (array) => {
  *
  * @see proposalsController.getAllProposals
  */
-router.get("/", authenticationController.isLoggedIn, authenticationController.isStudent, proposalsController.getAllProposals);
+router.get("/", isLoggedIn, isStudent, proposalsController.getAllProposals);
 
 /**
  * GET /api/proposals/professor/
@@ -60,7 +59,7 @@ router.get("/", authenticationController.isLoggedIn, authenticationController.is
 *
 * @see proposalsController.getAllProfessorProposals
 */
-router.get("/professor", authenticationController.isLoggedIn, authenticationController.isTeacher, proposalsController.getAllProfessorProposals);
+router.get("/professor", isLoggedIn, isTeacher, proposalsController.getAllProfessorProposals);
 
 /**
  * POST /api/proposals
@@ -115,7 +114,7 @@ router.post(
  * @error 404 Not Found - if the proposal_id is not found
  * @error 500 Internal Server Error - if something went wrong
  */
-router.get('/:proposal_id', authenticationController.isLoggedIn, proposalsController.getProposalById);
+router.get('/:proposal_id', isLoggedIn, proposalsController.getProposalById);
 
 /**
  * PUT /api/proposals/:proposal_id
@@ -174,8 +173,33 @@ router.put(
  * 
  * 
  */
-router.delete('/:proposal_id', authenticationController.isLoggedIn, authenticationController.isTeacher,
-                proposalsController.deleteProposal);
+router.delete('/:proposal_id', isLoggedIn, isTeacher, proposalsController.deleteProposal);
 
+/**
+ * POST /api/proposals/requests
+ *
+ * @params none
+ * @body {
+ *  title : string,
+ *  description : string,
+ *  supervisor : string,
+ * }
+ * @returns { proposal: { request_id: number, title: string, ... } }
+ * @error 401 Unauthorized - if the user is not logged in
+ * @error 422 Invalid body - invalid fields in request body
+ * @error 500 Internal Server Error - if something went wrong
+ *
+ * Refer to the official documentation for more details
+ */
+router.post(
+  "/requests",
+  isLoggedIn,
+  isStudent,
+  check("title").isString().notEmpty(),
+  check("description").isString().notEmpty(),
+  check("supervisor").isString().notEmpty(),
+  validate,
+  proposalsController.insertThesisRequest
+);
 
 module.exports = router;

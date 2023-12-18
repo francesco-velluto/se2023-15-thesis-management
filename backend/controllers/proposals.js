@@ -46,10 +46,10 @@ module.exports = {
         if (result.data.supervisor_id !== req.user.id && req.user instanceof Teacher) {
           return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
         }
-        if (result.data.deleted === true){
+        if (result.data.deleted === true) {
           return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
         }
-        if (result.data.archived === true){
+        if (result.data.archived === true) {
           return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
         }
         return res.status(result.status).json(result.data);
@@ -93,6 +93,36 @@ module.exports = {
       res.status(201).json({ proposal });
     } catch (err) {
       console.error("[BACKEND-SERVER] Cannot insert new proposal", err);
+      res.status(500).json({ error: "Internal server error has occurred" });
+    }
+  },
+
+  /**
+   * Insert a new thesis request
+   *
+   * @params none
+   * @body {
+   *  title : string,
+   *  description : string,
+   *  supervisor : string,
+   * }
+   * @returns { proposal: { request_id: number, title: string, ... } }
+   * @error 500 Internal Server Error - if something went wrong
+   *
+   * Refer to the official documentation for more details
+   */
+  insertThesisRequest: async (req, res) => {
+    try {
+      const maxIdNum = await proposalsService.getMaxThesisRequestIdNumber();
+      const newId = "R" + (maxIdNum + 1).toString().padStart(3, "0");
+      const thesisRequest = await proposalsService.insertThesisRequest({
+        ...req.body,
+        request_id: newId,
+        student_id: req.user.id
+      });
+      res.status(201).json({ thesisRequest });
+    } catch (err) {
+      console.error("[BACKEND-SERVER] Cannot insert new thesis request", err);
       res.status(500).json({ error: "Internal server error has occurred" });
     }
   },
@@ -145,7 +175,7 @@ module.exports = {
         return res.status(403).json({ error: "Not authorized!" });
       }
 
-      if(req.params.proposal_id !== req.body.proposal_id){
+      if (req.params.proposal_id !== req.body.proposal_id) {
         return res.status(400).json({ error: "Bad request!" });
       }
 
@@ -185,7 +215,7 @@ module.exports = {
         return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
       }
 
-      if(req.params.proposal_id !== proposal_id){
+      if (req.params.proposal_id !== proposal_id) {
         return res.status(400).json({ error: "Bad request!" });
       }
 
@@ -196,15 +226,15 @@ module.exports = {
 
 
 
-     // check if the proposal is archived
-     if (proposal.data.archived){
+      // check if the proposal is archived
+      if (proposal.data.archived) {
         return res.status(403).json({ error: "Cannot delete an archived proposal" });
-     }
+      }
 
-     // check if the proposal is already deleted
-     if (proposal.data.deleted){
-      return res.status(403).json({ error: "Cannot delete an already deleted proposal" });
-     }
+      // check if the proposal is already deleted
+      if (proposal.data.deleted) {
+        return res.status(403).json({ error: "Cannot delete an already deleted proposal" });
+      }
 
       //check if there is an accepted application related to the proposal
       const { data: applications } = await applicationsService.getAllApplicationsByProposalId(proposal_id);
