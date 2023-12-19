@@ -13,6 +13,7 @@ import { LoggedUserContext } from "../context/AuthenticationContext";
 import { UnAuthorizationPage } from "../App";
 import dayjs from "dayjs";
 import "../style/ProposalDetails.css"
+import ArchiveProposalModal from "../components/ArchiveProposalModal";
 
 /**
  * This page supports three modes:
@@ -74,6 +75,8 @@ function ProposalDetailsPage({ mode }) {
     // list of useful data
     const proposalLevelsList = [levelEnum.BACHELOR, levelEnum.MASTER];
     const [proposalDegreeList, setProposalDegreeList] = useState([]);
+
+    const [showArchiveModal, setShowArchiveModal] = useState(false);
 
     /**
      * It is used to show a message error in the page to the user
@@ -856,6 +859,12 @@ function ProposalDetailsPage({ mode }) {
                                                 <Button id="delete-proposal-btn" variant="outline-danger" onClick={handleShow}>
                                                     Delete proposal
                                                 </Button>}
+                                            {
+                                                mode === "read" && loggedUser.role === 0 &&
+                                                <Button id="archive-proposal-btn" variant="outline-warning" className="me-2" onClick={() => setShowArchiveModal(true)}>
+                                                    Archive proposal
+                                                </Button>
+                                            }
 
                                             {mode === "read" && loggedUser.role === 0 &&
                                                 <Button id="update-proposal-btn" variant="outline-primary" className="me-2"
@@ -902,6 +911,7 @@ function ProposalDetailsPage({ mode }) {
                                             </Button>
                                         </Modal.Footer>
                                     </Modal>
+                                    {showArchiveModal && <ArchiveProposalModal show={showArchiveModal} onHide={() => setShowArchiveModal(false)} proposal_id={proposal_id} proposal_title={title}/>}
                                 </Container>
                             </Form>
                         </Container>

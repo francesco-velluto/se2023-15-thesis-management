@@ -416,6 +416,29 @@ The proposal is archived.
   - `401`: Not authenticated or not authorized (only students are authorized)
   - `500`: Internal Server Error
 
+#### For a teacher retrieve all applications of a proposal
+
+***GET*** `api/applications/proposals/:proposal_id`
+- Retrieving all data about all applications related to a single proposal, defined by its proposal_id
+
+- Authentication: required
+- Authorization: must be a teacher
+- Request query parameters: proposal_id
+- Request body: _none_
+
+- `Success 200` Response body: 
+  - Array of applications each one containing these information:
+    - `id`: application id
+    - `proposal_id`: proposal id
+    - `student_id`: student id
+    - `status`: status of the application
+    - `application_date`: when the application have been received by the server
+
+- `Error`
+  - `401`: Not authorized, the teacher cannot see applications to proposals which are not his
+  - `404`: Proposal not found
+  - `500`: Internal server error
+
 ### Students
 
 **GET** `/api/students/student_id`

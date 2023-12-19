@@ -20,6 +20,10 @@ module.exports = {
         return await APICall(ApplicationsAPIURL, 'GET');
     },
 
+    getAllApplicationsByProposalId: async (proposal_id) => {
+        return await APICall(ApplicationsAPIURL + `/proposals/${proposal_id}`, 'GET');
+    },
+
     getAllApplicationsByStudent: async (id) => {
         return await APICall(ApplicationsAPIURL + `/${id}`, 'GET');
     },

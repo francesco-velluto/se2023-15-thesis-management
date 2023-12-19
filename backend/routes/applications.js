@@ -49,6 +49,29 @@ router.get(
   applicationsController.getAllApplicationsByTeacherId
 );
 
+/**
+ * 
+ * GET /api/applications/proposals/:proposal_id
+ * 
+ * @params proposal_id
+ * @body none
+ * @returns {
+ * {
+*   proposal_id: number,
+*   title: string,
+*   description: string,
+*   application_date: date,
+*   status: string
+* }[]
+* }
+*/
+router.get(
+  "/proposals/:proposal_id",
+  authenticationController.isLoggedIn,
+  authenticationController.isTeacher,
+  applicationsController.getAllApplicationsByProposalId
+); 
+
 router.post(
   "/",
   authenticationController.isLoggedIn,

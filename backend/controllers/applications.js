@@ -84,6 +84,28 @@ module.exports = {
             });
     },
 
+    getAllApplicationsByProposalId: (req, res) => {
+        const proposal_id = req.params.proposal_id;
+
+        proposalsService.getProposalById(proposal_id)
+            .then((result) => {
+                if (result.data.supervisor_id !== req.user.id)
+                    return res.status(401).json({ error: "You are not allowed to see details of applications of this proposal" });
+            })
+            .catch((err) => {
+                return res.status(err.status).json({ error: err.data });
+            });
+
+
+        applicationsService.getAllApplicationsByProposalId(proposal_id)
+            .then((result) => {
+                res.status(200).json(result.data);
+            })
+            .catch((err) => {
+                res.status(500).json({ errors: [err.data] });
+            });
+    },
+
     insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
