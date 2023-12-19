@@ -27,19 +27,19 @@ function ThesisRequestDetailsPage({ }) {
     };
 
     const handleRequestCheck = () => {
-        if (title?.trim() === "") {
+        if (!title || title?.trim() === "") {
             setErrorMessage("Please enter a valid title.");
             scrollToTarget();
             return false;
         }
 
-        if (description?.trim() === "") {
+        if (!description || description?.trim() === "") {
             setErrorMessage("Please enter a valid description.");
             scrollToTarget();
             return false;
         }
 
-        if (supervisor?.trim() === "") {
+        if (!supervisor || supervisor?.trim() === "") {
             setErrorMessage("Please enter a valid supervisor.");
             scrollToTarget();
             return false;
@@ -49,7 +49,6 @@ function ThesisRequestDetailsPage({ }) {
     };
 
     const handleCreateRequest = async () => {
-
         if (!handleRequestCheck()) {
             return;
         }
@@ -57,18 +56,14 @@ function ThesisRequestDetailsPage({ }) {
         const newRequest = {
             title: title,
             description: description,
-            supervisor: supervisor
+            supervisor: "a"
         };
 
         try {
-            console.log(newRequest);
-
-            const response = await insertNewThesisRequest(newRequest);
-
-            console.log(response, "risposta");
-
-            setSuccessMessage("The thesis request has been added correctly!");
+            await insertNewThesisRequest(newRequest);
+            setSuccessMessage("The thesis request has been added correctly!");  // TODO: adding this success message in the home page
             scrollToTarget();
+            navigate("/");
         } catch (error) {
             setSuccessMessage("");
             setErrorMessage(error.message);

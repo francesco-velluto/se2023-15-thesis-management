@@ -4,6 +4,7 @@ const proposalsService = require("../service/proposals.service");
 const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 const dayjs = require("dayjs");
+const { getTeacherById } = require("../service/teachers.service");
 
 module.exports = {
   /**
@@ -113,11 +114,16 @@ module.exports = {
    */
   insertThesisRequest: async (req, res) => {
     try {
+      // check if the teacher exists in the dbs
+      const teacher = await getTeacherById(req.supervisor);
+      if (!teacher?.data) {
+        console.error("[BACKEND-SERVER] This teacher doesn't exist");
+        res.status(404).json({ error: "This teacher doesn't exist, enter a valid teacher!" });
+        return;
+      }
+
       const maxIdNum = await proposalsService.getMaxThesisRequestIdNumber();
       const newId = "R" + (maxIdNum + 1).toString().padStart(3, "0");
-      
-      console.log(req.body);
-      
       const thesisRequest = await proposalsService.insertThesisRequest({
         request_id: newId,
         title: req.body.title,

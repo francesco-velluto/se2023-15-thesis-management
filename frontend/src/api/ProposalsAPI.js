@@ -134,9 +134,6 @@ module.exports = {
 
       if (response.ok) {
         const resObject = await response.json();
-        
-        console.log(resObject);
-
         return resObject.response;
       } else {
         const res = await response.json();
