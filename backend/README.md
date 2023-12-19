@@ -228,6 +228,22 @@ POST `/api/authentication/login`
   - `ERROR 422` If the is an error in the validation of the request body fields
   - `ERROR 500` Internal Server Error
 
+
+**DELETE** `/api/proposals/:proposal_id/archive`
+- Archive a proposal
+- Authentication: required
+- Authorization: only the teacher supervisor of the thesis can access this endpoint
+- Request Query Parameters: proposal_id
+- Request Body: _none_
+- `SUCCESS 202` Response Body: _none_
+- Errors:
+  - `ERROR 400` If the proposal doesn't exist
+  - `ERROR 401` If the user is not the teacher supervisor of the thesis
+  - `ERROR 403` If the proposal is expired or already archived or already deleted or accepted
+  - `ERROR 404` If the proposal with the specified proposal_id does not exist
+  - `ERROR 500` Internal Server Error
+
+
 ### Teachers
 
 **GET** `/api/teachers`
