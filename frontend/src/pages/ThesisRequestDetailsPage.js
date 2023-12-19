@@ -56,7 +56,7 @@ function ThesisRequestDetailsPage({ }) {
         const newRequest = {
             title: title,
             description: description,
-            supervisor: "a"
+            supervisor: supervisor
         };
 
         try {

@@ -115,7 +115,7 @@ module.exports = {
   insertThesisRequest: async (req, res) => {
     try {
       // check if the teacher exists in the db
-      const teacher = await getTeacherById(req.supervisor);
+      const teacher = await getTeacherById(req.body.supervisor);
       if (!teacher?.data) {
         console.error("[BACKEND-SERVER] This teacher doesn't exist");
         res.status(404).json({ error: "This teacher doesn't exist, enter a valid teacher!" });
