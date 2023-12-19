@@ -74,7 +74,6 @@ module.exports = {
    * @params: none
    * @body: {proposal}
    */
-
   insertNewProposal: async (newProposal) => {
     try {
       const response = await fetch(ProposalsAPIURL, {
@@ -115,6 +114,39 @@ module.exports = {
       throw new Error(err);
     }
   },
+
+  /**
+   * Insert a new thesis request
+   *
+   * POST /api/proposals/requests
+   *
+   * @params: none
+   * @body: {request}
+   */
+  insertNewThesisRequest: async (thesisRequest) => {
+    try {
+      const response = await fetch(ProposalsAPIURL+'/requests', {
+        method: "POST",
+        headers: APIConfig.API_REQUEST_HEADERS,
+        credentials: "include",
+        body: JSON.stringify(thesisRequest),
+      });
+
+      if (response.ok) {
+        const resObject = await response.json();
+        
+        console.log(resObject);
+
+        return resObject.response;
+      } else {
+        const res = await response.json();
+        throw new Error(res.error);
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
 
   /**
    * Get all the teachers

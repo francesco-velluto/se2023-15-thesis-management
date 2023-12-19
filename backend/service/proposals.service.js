@@ -2,6 +2,7 @@
 
 const db = require("./db");
 const Proposal = require("../model/Proposal");
+const ThesisRequest = require("../model/ThesisRequest");
 
 exports.rowToProposal = (row) => {
   return new Proposal(

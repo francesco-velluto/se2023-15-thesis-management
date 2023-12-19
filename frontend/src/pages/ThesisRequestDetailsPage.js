@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import NavbarContainer from '../components/Navbar';
 import TitleBar from '../components/TitleBar';
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import { getAllTeachers } from '../api/ProposalsAPI';
+import { getAllTeachers, insertNewThesisRequest } from '../api/ProposalsAPI';
 import { useNavigate } from 'react-router-dom';
 
 function ThesisRequestDetailsPage({ }) {
@@ -48,7 +48,7 @@ function ThesisRequestDetailsPage({ }) {
         return true;
     };
 
-    const handleCreateRequest = () => {
+    const handleCreateRequest = async () => {
 
         if (!handleRequestCheck()) {
             return;
@@ -62,6 +62,10 @@ function ThesisRequestDetailsPage({ }) {
 
         try {
             console.log(newRequest);
+
+            const response = await insertNewThesisRequest(newRequest);
+
+            console.log(response, "risposta");
 
             setSuccessMessage("The thesis request has been added correctly!");
             scrollToTarget();

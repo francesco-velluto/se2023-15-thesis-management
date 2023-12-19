@@ -115,12 +115,17 @@ module.exports = {
     try {
       const maxIdNum = await proposalsService.getMaxThesisRequestIdNumber();
       const newId = "R" + (maxIdNum + 1).toString().padStart(3, "0");
+      
+      console.log(req.body);
+      
       const thesisRequest = await proposalsService.insertThesisRequest({
-        ...req.body,
         request_id: newId,
+        title: req.body.title,
+        description: req.body.description,
+        supervisor_id: req.body.supervisor,
         student_id: req.user.id
       });
-      res.status(201).json({ thesisRequest });
+      res.status(201).json({ response: thesisRequest });
     } catch (err) {
       console.error("[BACKEND-SERVER] Cannot insert new thesis request", err);
       res.status(500).json({ error: "Internal server error has occurred" });
