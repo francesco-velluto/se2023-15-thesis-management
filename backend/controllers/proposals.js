@@ -5,6 +5,8 @@ const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 const dayjs = require("dayjs");
 const { getTeacherById } = require("../service/teachers.service");
+const { getVirtualDate } = require("../service/virtualclock.service");
+const { sendUpdateApplicationStatusEmail } = require("./email.notifier");
 
 module.exports = {
   /**
@@ -17,7 +19,8 @@ module.exports = {
    * @error 500 Internal Server Error - if something went wrong
    */
   getAllProposals: async (req, res) => {
-    proposalsService.getAllProposals(req.user.cod_degree)
+    proposalsService
+      .getAllProposals(req.user.cod_degree)
       .then((result) => {
         res.status(result.status).json({ proposals: result.data });
       })
@@ -42,16 +45,35 @@ module.exports = {
       return res.status(400).json({ error: "Missing proposal_id" });
     }
 
-    proposalsService.getProposalById(proposal_id)
+    proposalsService
+      .getProposalById(proposal_id)
       .then((result) => {
-        if (result.data.supervisor_id !== req.user.id && req.user instanceof Teacher) {
-          return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+        if (
+          result.data.supervisor_id !== req.user.id &&
+          req.user instanceof Teacher
+        ) {
+          return res
+            .status(401)
+            .json({
+              error:
+                "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
+            });
         }
         if (result.data.deleted === true) {
-          return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+          return res
+            .status(401)
+            .json({
+              error:
+                "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
+            });
         }
         if (result.data.archived === true) {
-          return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+          return res
+            .status(401)
+            .json({
+              error:
+                "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
+            });
         }
         return res.status(result.status).json(result.data);
       })
@@ -89,7 +111,7 @@ module.exports = {
         ...req.body,
         proposal_id: newId,
         groups: [req.user.cod_group],
-        supervisor_id: req.user.id
+        supervisor_id: req.user.id,
       });
       res.status(201).json({ proposal });
     } catch (err) {
@@ -122,7 +144,11 @@ module.exports = {
       const teacher = await getTeacherById(req.body.supervisor);
       if (!teacher?.data) {
         console.error("[BACKEND-SERVER] This teacher doesn't exist");
-        res.status(404).json({ error: "This teacher doesn't exist, enter a valid teacher!" });
+        res
+          .status(404)
+          .json({
+            error: "This teacher doesn't exist, enter a valid teacher!",
+          });
         return;
       }
 
@@ -133,7 +159,7 @@ module.exports = {
         title: req.body.title,
         description: req.body.description,
         supervisor_id: req.body.supervisor,
-        student_id: req.user.id
+        student_id: req.user.id,
       });
       res.status(201).json({ response: thesisRequest });
     } catch (err) {
@@ -152,7 +178,8 @@ module.exports = {
    * @error 500 Internal Server Error - if something went wrong
    */
   getAllProfessorProposals: async (req, res) => {
-    proposalsService.getAllProfessorProposals(req.user.id)
+    proposalsService
+      .getAllProfessorProposals(req.user.id)
       .then((result) => {
         res.status(result.status).json({ proposals: result.data });
       })
@@ -184,7 +211,9 @@ module.exports = {
    */
   updateProposal: async (req, res) => {
     try {
-      const { data: proposal } = await proposalsService.getProposalById(req.params.proposal_id);
+      const { data: proposal } = await proposalsService.getProposalById(
+        req.params.proposal_id
+      );
 
       if (proposal.supervisor_id !== req.user?.id) {
         return res.status(403).json({ error: "Not authorized!" });
@@ -205,7 +234,6 @@ module.exports = {
     }
   },
 
-
   /**
    * Delete a proposal given its id.
    * A proposal with an accepted application cannot be removed.
@@ -217,7 +245,6 @@ module.exports = {
    *
    */
   deleteProposal: async (req, res) => {
-
     try {
       const proposal_id = req.params.proposal_id;
       const teacher_id = req.user.id;
@@ -225,9 +252,13 @@ module.exports = {
       // check if the proposal belong to the teacher
       const proposal = await proposalsService.getProposalById(proposal_id);
 
-
       if (proposal.data.supervisor_id !== teacher_id) {
-        return res.status(401).json({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
+        return res
+          .status(401)
+          .json({
+            error:
+              "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
+          });
       }
 
       if (req.params.proposal_id !== proposal_id) {
@@ -235,46 +266,127 @@ module.exports = {
       }
 
       // check if the proposal is expired
-      if (dayjs(proposal.data.expiration_date).format('YYYY-MM-DD') < dayjs().format('YYYY-MM-DD')) {
-        return res.status(403).json({ error: "Cannot delete an expired proposal" });
+      if (
+        dayjs(proposal.data.expiration_date).format("YYYY-MM-DD") <
+        dayjs().format("YYYY-MM-DD")
+      ) {
+        return res
+          .status(403)
+          .json({ error: "Cannot delete an expired proposal" });
       }
-
-
 
       // check if the proposal is archived
       if (proposal.data.archived) {
-        return res.status(403).json({ error: "Cannot delete an archived proposal" });
+        return res
+          .status(403)
+          .json({ error: "Cannot delete an archived proposal" });
       }
 
       // check if the proposal is already deleted
       if (proposal.data.deleted) {
-        return res.status(403).json({ error: "Cannot delete an already deleted proposal" });
+        return res
+          .status(403)
+          .json({ error: "Cannot delete an already deleted proposal" });
       }
 
       //check if there is an accepted application related to the proposal
-      const { data: applications } = await applicationsService.getAllApplicationsByProposalId(proposal_id);
-
-
+      const { data: applications } =
+        await applicationsService.getAllApplicationsByProposalId(proposal_id);
 
       if (applications?.some((a) => a.status === "Accepted"))
-        return res.status(403).json({ error: "Cannot delete a proposal with an accepted application" });
+        return res
+          .status(403)
+          .json({
+            error: "Cannot delete a proposal with an accepted application",
+          });
 
-
-      const deletedProposal = await proposalsService.deleteProposal(proposal_id);
+      const deletedProposal = await proposalsService.deleteProposal(
+        proposal_id
+      );
 
       if (!deletedProposal.data)
         return res.status(404).json({ error: "Proposal not found" });
 
       return res.status(204).json();
-
     } catch (err) {
       console.error("[BACKEND-SERVER] Cannot delete the proposal", err);
       if (err.status && err.status === 404)
         return res.status(404).json({ error: err.data });
       res.status(500).json({ error: "Internal server error has occurred" });
     }
+  },
 
+  archiveProposal: async (req, res) => {
+    try {
+      const proposal_id = req.params.proposal_id;
+      const teacher_id = req.user.id;
 
+      const proposal = await proposalsService.getProposalById(proposal_id);
 
-  }
+      // check if the proposal exist
+      if (!proposal.data) {
+        return res.status(400).json({ error: "Bad request!" });
+      }
+
+      // check if the proposal belong to the teacher
+      if (proposal.data.supervisor_id !== teacher_id) {
+        return res
+          .status(401)
+          .json({
+            error:
+              "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
+          });
+      }
+
+      const { data: virtualDate } = await getVirtualDate(); // Replace this line with const virtualDate = dayjs().format('YYYY-MM-DD'); for the production version
+
+      // check if the proposal is expired
+      if (
+        dayjs(proposal.data.expiration_date).format("YYYY-MM-DD") <
+        dayjs(virtualDate).format("YYYY-MM-DD")
+      ) {
+        return res
+          .status(403)
+          .json({ error: "Cannot archive an expired proposal" });
+      }
+
+      // check if the proposal is archived
+      if (proposal.data.archived) {
+        return res
+          .status(403)
+          .json({ error: "Cannot archive an archived proposal" });
+      }
+
+      // check if the proposal is already deleted
+      if (proposal.data.deleted) {
+        return res
+          .status(403)
+          .json({ error: "Cannot archive an already deleted proposal" });
+      }
+
+      //check if there is an accepted application related to the proposal
+      const { data: applications } =
+        await applicationsService.getAllApplicationsByProposalId(proposal_id);
+
+      if (applications?.some((a) => a.status === "Accepted"))
+        return res
+          .status(403)
+          .json({
+            error: "Cannot archive a proposal with an accepted application",
+          });
+
+      const archivedProposal = await proposalsService.setProposalArchived(
+        proposal_id
+      );
+      if (!archivedProposal.data)
+        return res.status(404).json({ error: "Proposal not found" });
+
+      return res.status(204).json();
+    } catch (err) {
+      console.error("[BACKEND-SERVER] Cannot archive the proposal", err);
+      if (err.status && err.status === 404)
+        return res.status(404).json({ error: err.data });
+      res.status(500).json({ error: "Internal server error has occurred" });
+    }
+  },
 };

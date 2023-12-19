@@ -107,7 +107,11 @@ module.exports = {
   updateProposalApi: async (proposal) => {
     try {
       const ProposalURL = ProposalsAPIURL + "/" + proposal.proposal_id;
-      const result = await APICall(ProposalURL, "PUT", JSON.stringify(proposal));
+      const result = await APICall(
+        ProposalURL,
+        "PUT",
+        JSON.stringify(proposal)
+      );
 
       return result.proposal;
     } catch (err) {
@@ -125,7 +129,7 @@ module.exports = {
    */
   insertNewThesisRequest: async (thesisRequest) => {
     try {
-      const response = await fetch(ProposalsAPIURL+'/requests', {
+      const response = await fetch(ProposalsAPIURL + "/requests", {
         method: "POST",
         headers: APIConfig.API_REQUEST_HEADERS,
         credentials: "include",
@@ -143,7 +147,6 @@ module.exports = {
       throw new Error(err);
     }
   },
-
 
   /**
    * Get all the teachers
@@ -195,7 +198,7 @@ module.exports = {
     }
   },
 
-  deleteProposal: async(proposal_id) =>{
+  deleteProposal: async (proposal_id) => {
     try {
       const response = await fetch(ProposalsAPIURL + "/" + proposal_id, {
         method: "DELETE",
@@ -212,5 +215,27 @@ module.exports = {
     } catch (err) {
       throw new Error(err);
     }
-  }
+  },
+
+  archiveProposal: async (proposal_id) => {
+    try {
+      const response = await fetch(
+        ProposalsAPIURL + "/" + proposal_id + "/archive",
+        {
+          method: "DELETE",
+          headers: APIConfig.API_REQUEST_HEADERS,
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        return true;
+      } else {
+        const res = await response.json();
+        return new Error(res.error);
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
 };

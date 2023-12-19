@@ -4,7 +4,11 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const router = express.Router();
 const proposalsController = require("../controllers/proposals");
-const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
+const {
+  isLoggedIn,
+  isTeacher,
+  isStudent,
+} = require("../controllers/authentication");
 
 // This function is used to format express-validator errors as strings
 const errorFormatter = ({ location, msg, path, value, nestedErrors }) => {
@@ -24,7 +28,6 @@ const isArrayOfStrings = (array) => {
   }
   return true;
 };
-
 
 /**
  * Proposals API routes
@@ -53,13 +56,18 @@ router.get("/", isLoggedIn, isStudent, proposalsController.getAllProposals);
  * @params none
  * @body none
  * @returns { proposals: [ { proposal_id: string, title: string, description: string, supervisor_name: string,
-*                              supervisor_surname: string, ... } ] }
-* @error 401 Unauthorized - if the user is not logged in
-* @error 500 Internal Server Error - if something went wrong
-*
-* @see proposalsController.getAllProfessorProposals
-*/
-router.get("/professor", isLoggedIn, isTeacher, proposalsController.getAllProfessorProposals);
+ *                              supervisor_surname: string, ... } ] }
+ * @error 401 Unauthorized - if the user is not logged in
+ * @error 500 Internal Server Error - if something went wrong
+ *
+ * @see proposalsController.getAllProfessorProposals
+ */
+router.get(
+  "/professor",
+  isLoggedIn,
+  isTeacher,
+  proposalsController.getAllProfessorProposals
+);
 
 /**
  * POST /api/proposals
@@ -114,7 +122,7 @@ router.post(
  * @error 404 Not Found - if the proposal_id is not found
  * @error 500 Internal Server Error - if something went wrong
  */
-router.get('/:proposal_id', isLoggedIn, proposalsController.getProposalById);
+router.get("/:proposal_id", isLoggedIn, proposalsController.getProposalById);
 
 /**
  * PUT /api/proposals/:proposal_id
@@ -161,19 +169,45 @@ router.put(
 );
 /**
  * DELETE /api/proposals/:proposal_id
- * 
+ *
  * @params proposal_id
  * @body none
  * @returns none -> status 204
- * 
+ *
  * @error 401 Not authenticated or Unauthorized
  * @error 403 Proposal with accepted application, expired proposal
  * @error 404 Proposal not found
  * @error 500 Internal server error
- * 
- * 
+ *
+ *
  */
-router.delete('/:proposal_id', isLoggedIn, isTeacher, proposalsController.deleteProposal);
+router.delete(
+  "/:proposal_id",
+  isLoggedIn,
+  isTeacher,
+  proposalsController.deleteProposal
+);
+
+/**
+ * DELETE /api/proposals/:proposal_id/archive
+ *
+ * @params proposal_id
+ * @body none
+ * @returns none -> status 204
+ *
+ * @error 401 Not authenticated or Unauthorized
+ * @error 403 Proposal with accepted application, expired proposal
+ * @error 404 Proposal not found
+ * @error 500 Internal server error
+ *
+ *
+ */
+router.delete(
+  "/:proposal_id/archive",
+  isLoggedIn,
+  isTeacher,
+  proposalsController.archiveProposal
+);
 
 /**
  * POST /api/proposals/requests
