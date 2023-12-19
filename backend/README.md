@@ -410,11 +410,39 @@ The proposal is archived.
   - `supervisor_name`: name of the supervisor
   - `supervisor_surname`
 
-
 - `Error`
   - `400`: Bad Request, parameters not found in the request body
   - `401`: Not authenticated or not authorized (only students are authorized)
   - `500`: Internal Server Error
+
+### For a student insert a thesis request
+
+***POST*** `api/proposals/requests`
+- Insert a new thesis request
+
+- Authentication: required
+- Authorization: must be a student
+- Request query parameters: _none_
+- Request body:
+    - title
+    - description
+    - supervisor
+
+- `Success 201` Response body:
+  - `request_id`: id of the thesis request
+  - `title`: title of the thesis request
+  - `description`: description of the thesis request
+  - `supervisor_id`: id of the teacher (supervisor for the thesis request)
+  - `student_id`: id of the student
+  - `co_supervisor_id`: id of the co supervisor for the thesis request
+  - `approval_date`: date of the approval
+  - `status`: status updated
+
+- `Error`
+  - `401` Unauthorized - if the user is not logged in
+  - `404` Invalid teacher - teacher not found in the db
+  - `422` Invalid body - invalid fields in request body
+  - `500` Internal Server Error - if something went wrong
 
 #### For a teacher retrieve all applications of a proposal
 

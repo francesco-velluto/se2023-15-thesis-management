@@ -185,11 +185,13 @@ router.delete('/:proposal_id', isLoggedIn, isTeacher, proposalsController.delete
  *  supervisor : string,
  * }
  * @returns { proposal: { request_id: number, title: string, ... } }
+ * @status 201 Success status
  * @error 401 Unauthorized - if the user is not logged in
+ * @error 404 Invalid teacher - teacher not found in the db
  * @error 422 Invalid body - invalid fields in request body
  * @error 500 Internal Server Error - if something went wrong
  *
- * Refer to the official documentation for more details
+ * @note Refer to the official documentation for more details
  */
 router.post(
   "/requests",
