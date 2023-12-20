@@ -6,6 +6,8 @@ COPY package*.json ./
 
 RUN npm install --ignore-scripts
 
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+
 COPY . .
 
 EXPOSE ${FRONTEND_PORT}
