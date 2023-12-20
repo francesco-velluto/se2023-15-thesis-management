@@ -73,6 +73,7 @@ function ProposalDetailsPage({ mode }) {
   const [notes, setNotes] = useState("");
   const [archived, setArchived] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [timer, setTimer] = useState(5);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -255,13 +256,28 @@ function ProposalDetailsPage({ mode }) {
     const result = await deleteProposal(proposal_id);
 
     if (!(result instanceof Error)) {
-      navigate("/proposals");
       setDeleted(true);
+
+      setTimeout(() => navigate("/proposals"), 5000);
     } else {
       setErrorMessage(result.message);
       handleClose();
     }
   };
+
+  useEffect(() => {
+    if (deleted) {
+      const countdownInterval = setInterval(() => {
+        setTimer((prevCount) => prevCount - 1);
+      }, 1000);
+
+      // Reindirizzamento dopo 5 secondi
+      setTimeout(() => {
+        clearInterval(countdownInterval);
+        navigate("/proposals");
+      }, 5000);
+    }
+  }, [deleted]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -374,6 +390,17 @@ function ProposalDetailsPage({ mode }) {
         </Alert>
       ) : unauthorized ? (
         <UnAuthorizationPage error={"Error"} message={errorMessage} />
+      ) : deleted ? (
+        <Container>
+          <Alert variant="info" className="d-flex justify-content-center">
+            <p>
+              <strong>Your proposal has been deleted succesfully!</strong>
+              <br />
+              <br />
+              You will be redirected to the proposals list in {timer} ...
+            </p>
+          </Alert>
+        </Container>
       ) : (
         <Container className="proposal-details-container" fluid>
           <Form>
