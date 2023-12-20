@@ -3,7 +3,7 @@
 const emailNotifierController = require('../../controllers/email.notifier');
 const studentsService = require("../../service/students.service");
 const teachersService = require("../../service/teachers.service");
-const applicationDecisionEmailTemplate = require("../../notifiers/templates/application.decision.template");
+const applicationDecisionEmailTemplate = require("../../templates/application.decision.template");
 const studentnotifsService = require("../../service/studentnotifs.service");
 const emailNotifier = require("../../notifiers/email.notifier");
 

@@ -2,7 +2,7 @@ const CronoJob = require('../CronoJob');
 
 const studentNotifsService = require('../service/studentnotifs.service');
 const emailNotifier = require('../notifiers/email.notifier');
-const applicationDecisionEmailTemplate = require('../../notifiers/templates/application.decision.template');
+const applicationDecisionEmailTemplate = require('../../templates/application.decision.template');
 
 /**
  * This class represents a Crono Job that will retry to send an email notification to students.

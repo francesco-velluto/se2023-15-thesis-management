@@ -17,7 +17,7 @@ dotenv.config({ path: '../.env' });
  *
  * @type {ChildProcess}
  */
-const cronoProcess = fork('./crono/index.js');
+let cronoProcess = fork('./crono/index.js');
 
 cronoProcess.on('message', (msg) => {
     if (msg === 'crono-ready') {
@@ -27,6 +27,12 @@ cronoProcess.on('message', (msg) => {
 
 cronoProcess.on('exit', (err) => {
     console.info('[BACKEND-SERVER] Crono process exited with code ' + err);
+
+    // if the crono process exited with an error, try to restart it
+    if (err !== 0) {
+        console.info('[BACKEND-SERVER] Restarting crono process...');
+        cronoProcess = fork('./crono/index.js');
+    }
 });
 
 console.info('[BACKEND-SERVER] Connecting to Postgres database at ' + process.env.DB_HOST + ':5432');
