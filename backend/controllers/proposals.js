@@ -381,6 +381,11 @@ module.exports = {
       if (!archivedProposal.data)
         return res.status(404).json({ error: "Proposal not found" });
 
+      
+      // Set all the applications of the archived proposal to canceled
+
+      await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
+
       return res.status(204).json();
     } catch (err) {
       console.error("[BACKEND-SERVER] Cannot archive the proposal", err);
