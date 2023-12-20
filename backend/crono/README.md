@@ -4,9 +4,11 @@ The crono module is a module of the backend server that allows to schedule jobs 
 
 The module is run in a different process from the rest of the server, so it is not affected by the rest of the server.
 
+To mantain the isolation between the crono module and the rest of the server, the crono module also uses a dedicated database connection and SMTP connection.
+
 This means that, if the crono module crashes for some reason, the rest of the server will continue to work correctly.
 
-Also, the crono module assures that the same job is executed only once at the same time.
+Finally, the crono module assures that the same job is executed only once at the same time.
 
 So, if a job is scheduled to be executed every 5 minutes, and the job takes 10 minutes to be executed, it won't be executed again until the previous execution has finished.
 

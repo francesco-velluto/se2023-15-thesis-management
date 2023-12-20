@@ -1,7 +1,7 @@
 const CronoJob = require('../CronoJob');
 
 const studentNotifsService = require('../service/studentnotifs.service');
-const emailNotifier = require('../../notifiers/email.notifier');
+const emailNotifier = require('../notifiers/email.notifier');
 const applicationDecisionEmailTemplate = require('../../notifiers/templates/application.decision.template');
 
 /**
@@ -38,7 +38,17 @@ class RetrySendStudentNotificationEmail extends CronoJob {
                 const notificationDestination = notification.email;
                 const notificationSubject = notification.subject;
 
-                const notificationHTMLContent = applicationDecisionEmailTemplate.getEmailBody(notification.content.application_decision, notification.content.proposal_id, notification.content.proposal_title, notification.content.application_date, notification.content.student, notification.content.supervisor);
+                const notificationCamapign = notification.campaign;
+
+                let notificationHTMLContent = "";
+
+                switch (notificationCamapign) {
+                    case "Application Decision":
+                        notificationHTMLContent = applicationDecisionEmailTemplate.getEmailBody(notification.content.application_decision, notification.content.proposal_id, notification.content.proposal_title, notification.content.application_date, notification.content.student, notification.content.supervisor);
+                        break;
+                    default:
+                        throw new Error("Invalid notification campaign for student notification with id " + notificationId + ": " + notificationCamapign);
+                }
 
                 try {
                     await emailNotifier.sendEmailNotification(notificationId, notificationDestination, notificationSubject, notificationHTMLContent)

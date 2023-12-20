@@ -163,8 +163,8 @@ INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department)
   ('T007', 'Brown', 'Linda', 'linda.brown@example.com', 'G003', 'D003'),
   ('T008', 'Wang', 'Xiaojie', 'xiaojie.wang@example.com', 'G004', 'D004'),
   ('T009', 'Garcia', 'Carlos', 'carlos.garcia@example.com', 'G004', 'D004'),
-  ('T010', 'Chen', 'Yun', 'yun.chen@example.com', 'G003', 'D003');
-
+  ('T010', 'Chen', 'Yun', 'yun.chen@example.com', 'G003', 'D003'),
+  ('T011', 'Mario', 'Rossi', 'teacherofpolito@gmail.com', 'G001', 'D001');
 
 ALTER TABLE public.teacher OWNER TO postgres;
 
@@ -352,8 +352,8 @@ Suspendisse potenti. Sed porttitor elit eget molestie maximus. Phasellus ex nisl
 Proin convallis turpis a orci vulputate, sed finibus purus fermentum. Donec vestibulum, leo ut viverra volutpat, elit est aliquam massa, non pulvinar turpis enim vitae lacus. Curabitur viverra erat metus. Ut pretium bibendum felis non ornare. Vestibulum eget urna eu nisl aliquam accumsan sit amet sagittis lorem. Pellentesque eget nibh sed tortor faucibus venenatis. Sed sit amet congue tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
 Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false);
-
+  ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false),
+  ('P028', 'Impact of AI to computer science', 'T011', ARRAY['AI', 'Computer Science'], 'Theoretical', ARRAY['G001'], 'A thesis on the impact of AI to computer science.', 'AI, Computer Science', 'N/A', '2024-10-15', 'Master', ARRAY['MSC001'], false, false);
 ALTER TABLE public.proposals OWNER TO postgres;
 
 ALTER TABLE ONLY public.proposals
@@ -433,6 +433,23 @@ CREATE TABLE public.cronologs
 );
 
 ALTER TABLE public.cronologs OWNER TO postgres;
+
+CREATE TABLE public.teachernotifs (
+    id SERIAL PRIMARY KEY,
+    channel VARCHAR(30) NOT NULL,
+    teacher_id VARCHAR(10) NOT NULL,
+    campaign VARCHAR(30) NOT NULL,
+    subject TEXT NOT NULL,
+    content JSON NOT NULL,
+    creation TIMESTAMP NOT NULL DEFAULT NOW(),
+    status VARCHAR(30) NOT NULL,
+    lastupdate TIMESTAMP NOT NULL
+);
+
+ALTER TABLE public.teachernotifs OWNER TO postgres;
+
+ALTER TABLE ONLY public.teachernotifs
+    ADD CONSTRAINT teachernotifs_fk_teacher FOREIGN KEY (teacher_id) REFERENCES public.teacher(id);
 
 --
 -- PostgreSQL database dump complete
