@@ -79,11 +79,9 @@ function ProposalDetailsPage({ mode }) {
 
   const [showFullDescription, setShowFullDescription] = useState(false);
   const truncatedDescription = description?.slice(0, 1500);
-    // this is used to show the modal when the user clicks on the apply button
-    const [applyingState, setApplyingState] = useState("no-applying");
+  // this is used to show the modal when the user clicks on the apply button
+  const [applyingState, setApplyingState] = useState("no-applying");
 
-    const [showFullDescription, setShowFullDescription] = useState(false);
-    const truncatedDescription = description?.slice(0, 1500);
 
   //const [newGroup, setNewGroup] = useState('');
   const [newKeyword, setNewKeyword] = useState("");
@@ -1126,6 +1124,80 @@ function ProposalDetailsPage({ mode }) {
                   setArchived={setArchived}
                 />
               )}
+              <Modal show={applyingState !== "no-applying"}>
+                <Modal.Header>
+                  <Modal.Title>Applying for this proposal</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className={"align-content-center align-items-center"}>
+                  <Container>
+                    <Row className={"align-items-center align-content-center"}>
+                      <Col lg={3}>
+                        {applyingState === "applying" ?
+                            <Spinner animation="border" role="status" style={{margin: "auto"}}/> :
+                            <>
+                              <svg className="svg-icon" width={50} height={50} viewBox="0 0 20 20">
+                                <path d="M17.388,4.751H2.613c-0.213,0-0.389,0.175-0.389,0.389v9.72c0,0.216,0.175,0.389,0.389,0.389h14.775c0.214,0,0.389-0.173,0.389-0.389v-9.72C17.776,4.926,17.602,4.751,17.388,4.751 M16.448,5.53L10,11.984L3.552,5.53H16.448zM3.002,6.081l3.921,3.925l-3.921,3.925V6.081z M3.56,14.471l3.914-3.916l2.253,2.253c0.153,0.153,0.395,0.153,0.548,0l2.253-2.253l3.913,3.916H3.56z M16.999,13.931l-3.921-3.925l3.921-3.925V13.931z"></path>
+                              </svg>
+                              {
+                                applyingState === "applied_mail_success" ?
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> :
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                              }
+                            </>
+                        }
+                      </Col>
+                      <Col id={"email-sending-message"}>
+                        {applyingState === "applying" &&
+                            <>
+                              You have <b>applied</b> for this proposal!<br/>
+                              <i>We are inserting your application and sending an email notification to the teacher.</i>
+                            </>
+                        }
+                        {applyingState === "error" &&
+                            <>
+                              There was an <b>error</b> while applying for this proposal. Retry later.<br/>
+                            </>
+                        }
+                        {applyingState === "applied_mail_success" &&
+                            <>
+                              Your application has been inserted successfully!<br/>
+                              <i>An email notification has been sent to the teacher.</i>
+                            </>
+                        }
+                        {applyingState === "applied_mail_error" &&
+                            <>
+                              Your application has been inserted successfully!<br/>
+                              <i>There was an error while sending the email notification to the teacher, but your application has still been inserted anyways.</i>
+                            </>
+                        }
+                      </Col>
+                    </Row>
+                  </Container>
+                </Modal.Body>
+                {
+                    applyingState === "error" && (
+                        <Modal.Footer>
+                          <Button id="close-modal" variant="secondary" onClick={() => {
+                            setApplyingState("no-applying");
+                          }}>
+                            Go back
+                          </Button>
+                        </Modal.Footer>
+                    )
+                }
+                {
+                    (applyingState === "applied_mail_success" || applyingState === "applied_mail_success") && (
+                        <Modal.Footer>
+                          <Button id="close-modal" variant="secondary" onClick={() => {
+                            navigate("/applications");
+                          }}>
+                            Go to your applications
+                          </Button>
+                        </Modal.Footer>
+
+                    )
+                }
+              </Modal>
             </Container>
           </Form>
         </Container>
