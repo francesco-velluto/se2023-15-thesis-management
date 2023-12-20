@@ -65,6 +65,12 @@
     border-color: #5bc0de;
 }
 
+#add-proposal-btn:hover,
+#add-keyword-btn:hover,
+#add-group-btn:hover {
+    background-color: #499cbf;
+}
+
 #go-back {
     color: black;
     background-color: #f0f0f0;

@@ -44,7 +44,10 @@ body {
 
 #card-header {
   border-color: #003576 !important;
-  color: orange;
+  color: #003576;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /*************************/
@@ -124,7 +127,7 @@ body {
 #archive-proposal-id {
   margin-top: -2px;
   cursor: pointer;
-  color: orange;
+  color: #003576;
   font-weight: bold;
 }
 
@@ -272,15 +275,13 @@ body {
 }
 
 #back-to-homepage-button {
-  color: orange;
-  border-color: orange;
-  background-color: whitesmoke;
+  color: black;
+  border: 2px solid #666;
+  background-color: #f0f0f0;
 }
 
 #back-to-homepage-button:hover {
-  color: white;
-  border-color: orange;
-  background-color: orange;
+  background-color: darkgray;
 }
 
 /*************************/
@@ -289,7 +290,7 @@ body {
 /* THESIS REQUEST ********/
 /*************************/
 
-#title-page-thesis-request {
+#title-page {
   color: #003576;
   display: flex;
   justify-content: center;

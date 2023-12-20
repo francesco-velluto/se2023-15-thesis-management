@@ -402,6 +402,12 @@ function ProposalDetailsPage({ mode }) {
                   </Row>
                 )}
               </div>
+              {mode === "add" &&
+                <Row>
+                  <h3 id='title-page'>
+                    Add Proposal
+                  </h3>
+                </Row>}
               <Row>
                 <Col>
                   {mode === "read" ? (
@@ -482,7 +488,7 @@ function ProposalDetailsPage({ mode }) {
                               : "auto",
                             whiteSpace: "pre-line",
                           }}
-                          onKeyDown={() => {}}
+                          onKeyDown={() => { }}
                           role="button"
                           tabIndex={0}
                         >
@@ -492,7 +498,7 @@ function ProposalDetailsPage({ mode }) {
                               : truncatedDescription}
                             <span
                               id="show-more"
-                              onKeyDown={() => {}}
+                              onKeyDown={() => { }}
                               onClick={() =>
                                 setShowFullDescription(!showFullDescription)
                               }
@@ -500,14 +506,14 @@ function ProposalDetailsPage({ mode }) {
                             >
                               {!showFullDescription &&
                                 description.length >
-                                  truncatedDescription.length &&
+                                truncatedDescription.length &&
                                 " Show more..."}
                             </span>
                           </span>
                         </p>
                         <span
                           id="show-less"
-                          onKeyDown={() => {}}
+                          onKeyDown={() => { }}
                           onClick={() =>
                             setShowFullDescription(!showFullDescription)
                           }

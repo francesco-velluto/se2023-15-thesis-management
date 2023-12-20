@@ -102,7 +102,7 @@ function ThesisRequestDetailsPage({ }) {
                     </div>
                     <Form>
                         <Row>
-                            <h3 id='title-page-thesis-request'>
+                            <h3 id='title-page'>
                                 Add Thesis Request
                             </h3>
                         </Row>
