@@ -452,5 +452,31 @@ ALTER TABLE ONLY public.teachernotifs
     ADD CONSTRAINT teachernotifs_fk_teacher FOREIGN KEY (teacher_id) REFERENCES public.teacher(id);
 
 --
+-- Name: thesis_request; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.thesis_request (
+    request_id VARCHAR(10) PRIMARY KEY,
+    supervisor_id VARCHAR(10) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    approval_date DATE,
+    status VARCHAR(20) NOT NULL,
+    co_supervisor_id VARCHAR(10)
+);
+
+ALTER TABLE public.thesis_request OWNER TO postgres;
+
+ALTER TABLE ONLY public.thesis_request
+    ADD CONSTRAINT thesis_request_fk FOREIGN KEY (supervisor_id) REFERENCES public.teacher(id);
+
+ALTER TABLE ONLY public.thesis_request
+    ADD CONSTRAINT thesis_request_fk_1 FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+ALTER TABLE ONLY public.thesis_request
+    ADD CONSTRAINT thesis_request_fk_2 FOREIGN KEY (co_supervisor_id) REFERENCES public.teacher(id);
+
+--
 -- PostgreSQL database dump complete
 --

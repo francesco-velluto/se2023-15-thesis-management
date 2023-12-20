@@ -236,6 +236,22 @@ POST `/api/authentication/login`
   - `ERROR 422` If the is an error in the validation of the request body fields
   - `ERROR 500` Internal Server Error
 
+
+**DELETE** `/api/proposals/:proposal_id/archive`
+- Archive a proposal
+- Authentication: required
+- Authorization: only the teacher supervisor of the thesis can access this endpoint
+- Request Query Parameters: proposal_id
+- Request Body: _none_
+- `SUCCESS 202` Response Body: _none_
+- Errors:
+  - `ERROR 400` If the proposal doesn't exist
+  - `ERROR 401` If the user is not the teacher supervisor of the thesis
+  - `ERROR 403` If the proposal is expired or already archived or already deleted or accepted
+  - `ERROR 404` If the proposal with the specified proposal_id does not exist
+  - `ERROR 500` Internal Server Error
+
+
 ### Teachers
 
 **GET** `/api/teachers`
@@ -418,11 +434,62 @@ The proposal is archived.
   - `supervisor_name`: name of the supervisor
   - `supervisor_surname`
 
-
 - `Error`
   - `400`: Bad Request, parameters not found in the request body
   - `401`: Not authenticated or not authorized (only students are authorized)
   - `500`: Internal Server Error
+
+### For a student insert a thesis request
+
+***POST*** `api/proposals/requests`
+- Insert a new thesis request
+
+- Authentication: required
+- Authorization: must be a student
+- Request query parameters: _none_
+- Request body:
+    - title
+    - description
+    - supervisor
+
+- `Success 201` Response body:
+  - `request_id`: id of the thesis request
+  - `title`: title of the thesis request
+  - `description`: description of the thesis request
+  - `supervisor_id`: id of the teacher (supervisor for the thesis request)
+  - `student_id`: id of the student
+  - `co_supervisor_id`: id of the co supervisor for the thesis request
+  - `approval_date`: date of the approval
+  - `status`: status updated
+
+- `Error`
+  - `401` Unauthorized - if the user is not logged in
+  - `404` Invalid teacher - teacher not found in the db
+  - `422` Invalid body - invalid fields in request body
+  - `500` Internal Server Error - if something went wrong
+
+#### For a teacher retrieve all applications of a proposal
+
+***GET*** `api/applications/proposals/:proposal_id`
+- Retrieving all data about all applications related to a single proposal, defined by its proposal_id
+
+- Authentication: required
+- Authorization: must be a teacher
+- Request query parameters: proposal_id
+- Request body: _none_
+
+- `Success 200` Response body: 
+  - Array of applications each one containing these information:
+    - `id`: application id
+    - `proposal_id`: proposal id
+    - `student_id`: student id
+    - `status`: status of the application
+    - `application_date`: when the application have been received by the server
+
+- `Error`
+  - `401`: Not authorized, the teacher cannot see applications to proposals which are not his
+  - `404`: Proposal not found
+  - `500`: Internal server error
 
 ### Students
 

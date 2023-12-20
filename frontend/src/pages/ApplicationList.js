@@ -87,7 +87,7 @@ function ApplicationList() {
                                     ))}
                             </Accordion>
                             {(applications === undefined || Object.keys(applications).length === 0) &&
-                                <Card className='my-3 fs-5' >
+                                <Card className='my-3 fs-5 w-75' >
                                     <Card.Body>
                                         No applications were found for your thesis proposals!
                                     </Card.Body>

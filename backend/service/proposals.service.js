@@ -2,8 +2,9 @@
 
 const db = require("./db");
 const Proposal = require("../model/Proposal");
+const ThesisRequest = require("../model/ThesisRequest.js");
 
- exports.rowToProposal = (row) => {
+exports.rowToProposal = (row) => {
   return new Proposal(
     row.proposal_id,
     row.title,
@@ -20,6 +21,54 @@ const Proposal = require("../model/Proposal");
     row.archived,
     row.deleted
   );
+};
+
+exports.rowToThesisRequest = (row) => {
+  return new ThesisRequest(
+    row.request_id,
+    row.title,
+    row.description,
+    row.supervisor_id,
+    row.student_id,
+    row.co_supervisor_id,
+    row.approval_date,
+    row.status
+  );
+};
+
+exports.insertThesisRequest = async (request) => {
+  try {
+    const result = await db.query(
+      `INSERT INTO thesis_request
+        (request_id, title, description, supervisor_id, student_id, status)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *;`,
+      [
+        request.request_id,
+        request.title,
+        request.description,
+        request.supervisor_id,
+        request.student_id,
+        "pending"
+      ]
+    );
+    return this.rowToThesisRequest(result.rows[0]);
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+};
+
+exports.getMaxThesisRequestIdNumber = async () => {
+  try {
+    const result = await db.query(`SELECT MAX(request_id) FROM thesis_request;`);
+    const max = result.rows[0].max;
+    if (max == null) return 0;
+    else return Number(max.slice(1));
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
 
 exports.insertProposal = async (proposal) => {
@@ -71,19 +120,19 @@ exports.getAllProposals = async (cod_degree) => {
   return new Promise((resolve, reject) => {
     db.query(
       'SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t."name" as supervisor_name, ' +
-        'p.keywords, p."type", p."groups", p.description, p.required_knowledge, p.notes, ' +
-        'p.expiration_date, p."level", array_agg(d.title_degree) as "degrees" ' +
-        "FROM proposals p " +
-        "JOIN teacher t ON p.supervisor_id = t.id " +
-        "JOIN unnest(p.programmes) AS prog ON true " +
-        "JOIN degree d ON prog = d.cod_degree " +
-        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
-        "WHERE cod_degree = $1 " +
-        // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
-        "AND p.archived = false AND p.deleted = false " +
-        'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
-        'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
-        "ORDER BY p.proposal_id",
+      'p.keywords, p."type", p."groups", p.description, p.required_knowledge, p.notes, ' +
+      'p.expiration_date, p."level", array_agg(d.title_degree) as "degrees" ' +
+      "FROM proposals p " +
+      "JOIN teacher t ON p.supervisor_id = t.id " +
+      "JOIN unnest(p.programmes) AS prog ON true " +
+      "JOIN degree d ON prog = d.cod_degree " +
+      "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
+      "WHERE cod_degree = $1 " +
+      // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
+      "AND p.archived = false AND p.deleted = false " +
+      'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
+      'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
+      "ORDER BY p.proposal_id",
       [cod_degree]
     )
       .then((rows) => {
@@ -104,19 +153,19 @@ exports.getAllProfessorProposals = async (prof_id) => {
   return new Promise((resolve, reject) => {
     db.query(
       'SELECT p.proposal_id, p.title, t.surname as supervisor_surname, t."name" as supervisor_name, ' +
-        'p.keywords, p."type", p."groups", p.description, p.required_knowledge, p.notes, ' +
-        'p.expiration_date, p."level", array_agg(d.title_degree) as "degrees" ' +
-        "FROM proposals p " +
-        "JOIN teacher t ON p.supervisor_id = t.id " +
-        "JOIN unnest(p.programmes) AS prog ON true " +
-        "JOIN degree d ON prog = d.cod_degree " +
-        "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
-        "WHERE p.supervisor_id = $1 " +
-        // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
-        "AND p.archived = false AND p.deleted = false " +
-        'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
-        'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
-        "ORDER BY p.proposal_id",
+      'p.keywords, p."type", p."groups", p.description, p.required_knowledge, p.notes, ' +
+      'p.expiration_date, p."level", array_agg(d.title_degree) as "degrees" ' +
+      "FROM proposals p " +
+      "JOIN teacher t ON p.supervisor_id = t.id " +
+      "JOIN unnest(p.programmes) AS prog ON true " +
+      "JOIN degree d ON prog = d.cod_degree " +
+      "JOIN virtual_clock vc ON vc.prop_name = 'virtual_date' AND p.expiration_date >= vc.prop_value " + //! VIRTUAL_CLOCK: remove this line in production
+      "WHERE p.supervisor_id = $1 " +
+      // "AND p.expiration_date >= current_date " + //! VIRTUAL_CLOCK: uncomment this line in production
+      "AND p.archived = false AND p.deleted = false " +
+      'GROUP BY p.proposal_id, p.title, supervisor_surname, supervisor_name, p.keywords, p."type", p."groups", ' +
+      'p.description, p.required_knowledge, p.notes, p.expiration_date, p."level" ' +
+      "ORDER BY p.proposal_id",
       [prof_id]
     )
       .then((rows) => {
@@ -173,15 +222,15 @@ exports.getProposalById = (proposal_id) => {
                   let group = group_result.rows;
                   proposal.groups = group;
 
-                resolve({ status: 200, data: proposal });
-              })
-              .catch((error) => {
-                console.log(
-                  "Error in getProposalById - cannot get groups: ",
-                  error
-                );
-                reject({ status: 500, data: "Internal Server Error" });
-              });
+                  resolve({ status: 200, data: proposal });
+                })
+                .catch((error) => {
+                  console.log(
+                    "Error in getProposalById - cannot get groups: ",
+                    error
+                  );
+                  reject({ status: 500, data: "Internal Server Error" });
+                });
             })
             .catch((error) => {
               console.log(
@@ -232,14 +281,14 @@ exports.setProposalArchived = async (proposal_id) => {
  *
  * @returns {data: proposalDeleted}
  */
-exports.deleteProposal = async(proposal_id) =>{
-  try{
+exports.deleteProposal = async (proposal_id) => {
+  try {
     // check if the proposal exists
     let checkProposal = "select * from proposals where proposal_id = $1";
 
     const rows = await db.query(checkProposal, [proposal_id]);
-    if(rows.rowCount === 0) {
-      return {data: undefined};
+    if (rows.rowCount === 0) {
+      return { data: undefined };
     }
 
     let queryDelete = "update proposals set deleted = true where proposal_id = $1 RETURNING *";
@@ -248,9 +297,9 @@ exports.deleteProposal = async(proposal_id) =>{
     let cancelApplicationsQuery = "update applications set status = 'Canceled' where proposal_id = $1 returning *";
     await db.query(cancelApplicationsQuery, [proposal_id]);
 
-    return {data: deletedProposal.rows[0]};
+    return { data: deletedProposal.rows[0] };
 
-  }catch (error) {
+  } catch (error) {
     console.log("Error in deleteProposal: ", error);
     throw error;
   }
@@ -259,8 +308,8 @@ exports.updateProposal = async (proposal) => {
   try {
     const result = await db.query(
       "UPDATE proposals SET title = $1, level = $2, keywords = $3, type = $4, " +
-        "description = $5, required_knowledge = $6, notes = $7, expiration_date = $8, programmes = $9 " +
-        "WHERE proposal_id = $10 RETURNING *;",
+      "description = $5, required_knowledge = $6, notes = $7, expiration_date = $8, programmes = $9 " +
+      "WHERE proposal_id = $10 RETURNING *;",
       [
         proposal.title,
         proposal.level,

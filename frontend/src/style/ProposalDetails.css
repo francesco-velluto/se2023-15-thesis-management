@@ -61,20 +61,24 @@
 #add-proposal-btn,
 #add-keyword-btn,
 #add-group-btn {
-    background-color: orange;
-    border-color: orange;
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+#add-proposal-btn:hover,
+#add-keyword-btn:hover,
+#add-group-btn:hover {
+    background-color: #499cbf;
 }
 
 #go-back {
-    color: rgb(226, 169, 119);
-    border-color: rgb(226, 169, 119);
-    background-color: whitesmoke;
+    color: black;
+    background-color: #f0f0f0;
+    border: 2px solid #666;
 }
 
 #go-back:hover {
-    color: white;
-    border-color: rgb(226, 169, 119);
-    background-color: rgb(226, 169, 119);
+    background-color: darkgray;
 }
 @media (max-width: 767px) {
     #go-back {

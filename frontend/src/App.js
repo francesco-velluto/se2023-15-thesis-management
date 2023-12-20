@@ -18,6 +18,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/index.css";
 import StudentProposalsPage from "./pages/StudentProposalsPage";
 import ProfessorProposalsPage from "./pages/ProfessorProposalsPage";
+import ThesisRequestDetailsPage from "./pages/ThesisRequestDetailsPage";
 
 function App() {
     return (
@@ -59,9 +60,9 @@ function Main() {
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="add" /> : <UnAuthorizationPage />} />
                     <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage />} />
                     <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage />} />
+                    <Route path="requests/new" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
-
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
     );
