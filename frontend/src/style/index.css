@@ -220,6 +220,33 @@ body {
 }
 
 /*************************/
+/* ARCHIVE MODAL *******/
+/*************************/
+
+.pending-applications-names-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Stile per la scrollbar */
+.pending-applications-names-list::-webkit-scrollbar {
+  width: 10px; /* Larghezza della scrollbar */
+}
+
+/* Stile per il "tracciatore" (la parte mobile della scrollbar) */
+.pending-applications-names-list::-webkit-scrollbar-thumb {
+  background-color: #003576; /* Colore del tracciatore */
+  border-radius: 6px; /* Bordo arrotondato del tracciatore */
+}
+
+/* Stile per la "traccia" (la parte fissa della scrollbar) */
+.pending-applications-names-list::-webkit-scrollbar-track {
+  background-color: #d1d1d1; /* Colore della traccia */
+  border-radius: 6px; /* Bordo arrotondato del tracciatore */
+}
+
+
+/*************************/
 /* APPLICATION ***********/
 /*************************/
 
