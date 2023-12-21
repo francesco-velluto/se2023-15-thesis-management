@@ -18,7 +18,7 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback })
    * - applied_mail_error: the application has been applied but the email has not been sent
    * - error: an error occurred while applying the application
    */
-  
+
 
   const { loggedUser } = useContext(LoggedUserContext);
 
@@ -50,7 +50,7 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback })
       await applicationStatusCallback("applying");
       const response = await insertNewApplication({ proposalID });
 
-      if (response.length !== 0 ) {
+      if (response.length !== 0) {
         let data = await response.json();
         setApplied(true);
         await getApplicationList();
@@ -68,7 +68,8 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback })
   return (
     <Button id={"apply-button"} variant="secondary" onClick={handleButtonClick}
       disabled={applied || disabled}
-      style={{marginLeft: "auto"}}>
+      style={{ marginLeft: "auto" }}
+      >
       {applied ? 'Applied' : 'Apply'}
     </Button>
   );

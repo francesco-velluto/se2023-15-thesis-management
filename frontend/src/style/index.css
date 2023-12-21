@@ -44,7 +44,8 @@ body {
 
 #card-header {
   border-color: #003576 !important;
-  color: #003576;
+  color: black;
+  background-color: #00bdf9;
   display: flex;
   align-items: center;
   justify-content: center;

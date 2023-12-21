@@ -1004,88 +1004,101 @@ function ProposalDetailsPage({ mode }) {
                     id="go-back"
                     onClick={() => {
                       navigate("/proposals");
-                    }}
-                  >
+                    }}>
                     Return
                   </Button>
                 </Col>
-                <Col className={"d-flex flex-row-reverse"}>
-                  {mode === "read" && loggedUser.role === 0 && !deleted && (
-                    <Button
-                      id="delete-proposal-btn"
-                      variant="outline-danger"
-                      onClick={handleShow}
-                    >
-                      Delete proposal
-                    </Button>
-                  )}
-                  {mode === "read" &&
-                    loggedUser.role === 0 &&
-                    !archived &&
-                    !deleted && (
-                      <Button
-                        id="archive-proposal-btn"
-                        variant="outline-warning"
-                        className="me-2"
-                        onClick={() => setShowArchiveModal(true)}
-                      >
-                        Archive proposal
-                      </Button>
+                <Col>
+                  <Row className="no-gutters m-0 p-0">
+                    {mode === "read" &&
+                      loggedUser.role === 0 &&
+                      !archived &&
+                      !deleted && (
+                        <Col as={Row} xs={12} sm={3}>
+                          <Button
+                            id="archive-proposal-btn"
+                            variant="outline-warning"
+                            onClick={() => setShowArchiveModal(true)}
+                          >
+                            Archive proposal
+                          </Button>
+                        </Col>
+                      )}
+
+                    {mode === "read" && loggedUser.role === 0 && (
+                      <Col as={Row} xs={12} sm={3}>
+                        <Button
+                          id="update-proposal-btn"
+                          variant="outline-primary"
+                          onClick={() =>
+                            navigate("/proposals/" + proposal_id + "/update")
+                          }
+                        >
+                          Update proposal
+                        </Button>
+                      </Col>
                     )}
 
-                  {mode === "read" && loggedUser.role === 0 && (
-                    <Button
-                      id="update-proposal-btn"
-                      variant="outline-primary"
-                      className="me-2"
-                      onClick={() =>
-                        navigate("/proposals/" + proposal_id + "/update")
-                      }
-                    >
-                      Update proposal
-                    </Button>
-                  )}
+                    {mode === "read" && loggedUser.role === 0 && (
+                      <Col as={Row} xs={12} sm={3}>
+                        <Button
+                          id="copy-proposal-btn"
+                          variant="outline-success"
+                          onClick={() =>
+                            navigate("/proposals/" + proposal_id + "/copy")
+                          }
+                        >
+                          Copy proposal
+                        </Button>
+                      </Col>
+                    )}
 
-                  {mode === "read" && loggedUser.role === 0 && (
-                    <Button
-                      id="copy-proposal-btn"
-                      variant="outline-success"
-                      className="me-2"
-                      onClick={() =>
-                        navigate("/proposals/" + proposal_id + "/copy")
-                      }
-                    >
-                      Copy proposal
-                    </Button>
-                  )}
+                    {mode === "read" && loggedUser.role === 0 && !deleted && (
+                      <Col as={Row} xs={12}>
+                        <Button
+                          id="delete-proposal-btn"
+                          variant="outline-danger"
+                          onClick={handleShow}
+                        >
+                          Delete proposal
+                        </Button>
+                      </Col>
+                    )}
+                  </Row>
+                </Col>
 
-                                            {mode === "read" && loggedUser.role === 1 &&
-                                                <ApplicationButton
-                                                    setErrMsg={setErrorMessage}
-                                                    proposalID={proposal_id}
-                                                    applicationStatusCallback={setApplyingState}
-                                                />
-                                            }
+                {mode === "read" && loggedUser.role === 1 &&
+                  <Col as={Row} xs={12} sm={3}>
+                    <ApplicationButton
+                      setErrMsg={setErrorMessage}
+                      proposalID={proposal_id}
+                      applicationStatusCallback={setApplyingState}
+                    />
+                  </Col>
+                }
 
-                  {mode === "update" && loggedUser.role === 0 && (
+                {mode === "update" && loggedUser.role === 0 && (
+                  <Col as={Row} xs={12} sm={3}>
                     <Button
                       id="add-proposal-btn"
                       onClick={handleUpdateProposal}
                     >
                       Save
                     </Button>
-                  )}
+                  </Col>
+                )}
 
-                  {(mode === "add" || mode === "copy") &&
-                    loggedUser.role === 0 && (
+                {(mode === "add" || mode === "copy") &&
+                  loggedUser.role === 0 && (
+                    <Col as={Row} xs={12} sm={3} className="d-flex flex-row-reverse">
                       <Button
                         id="add-proposal-btn"
                         onClick={handleCreateProposal}
                       >
                         Create Proposal
                       </Button>
-                    )}
-                </Col>
+                    </Col>
+                  )}
               </Row>
               <Modal show={showModal} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
@@ -1133,75 +1146,76 @@ function ProposalDetailsPage({ mode }) {
                     <Row className={"align-items-center align-content-center"}>
                       <Col lg={3}>
                         {applyingState === "applying" ?
-                            <Spinner animation="border" role="status" style={{margin: "auto"}}/> :
-                            <>
-                              <svg className="svg-icon" width={50} height={50} viewBox="0 0 20 20">
-                                <path d="M17.388,4.751H2.613c-0.213,0-0.389,0.175-0.389,0.389v9.72c0,0.216,0.175,0.389,0.389,0.389h14.775c0.214,0,0.389-0.173,0.389-0.389v-9.72C17.776,4.926,17.602,4.751,17.388,4.751 M16.448,5.53L10,11.984L3.552,5.53H16.448zM3.002,6.081l3.921,3.925l-3.921,3.925V6.081z M3.56,14.471l3.914-3.916l2.253,2.253c0.153,0.153,0.395,0.153,0.548,0l2.253-2.253l3.913,3.916H3.56z M16.999,13.931l-3.921-3.925l3.921-3.925V13.931z"></path>
-                              </svg>
-                              {
-                                applyingState === "applied_mail_success" ?
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> :
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                              }
-                            </>
+                          <Spinner animation="border" role="status" style={{ margin: "auto" }} /> :
+                          <>
+                            <svg className="svg-icon" width={50} height={50} viewBox="0 0 20 20">
+                              <path d="M17.388,4.751H2.613c-0.213,0-0.389,0.175-0.389,0.389v9.72c0,0.216,0.175,0.389,0.389,0.389h14.775c0.214,0,0.389-0.173,0.389-0.389v-9.72C17.776,4.926,17.602,4.751,17.388,4.751 M16.448,5.53L10,11.984L3.552,5.53H16.448zM3.002,6.081l3.921,3.925l-3.921,3.925V6.081z M3.56,14.471l3.914-3.916l2.253,2.253c0.153,0.153,0.395,0.153,0.548,0l2.253-2.253l3.913,3.916H3.56z M16.999,13.931l-3.921-3.925l3.921-3.925V13.931z"></path>
+                            </svg>
+                            {
+                              applyingState === "applied_mail_success" ?
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> :
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            }
+                          </>
                         }
                       </Col>
                       <Col id={"email-sending-message"}>
                         {applyingState === "applying" &&
-                            <>
-                              You have <b>applied</b> for this proposal!<br/>
-                              <i>We are inserting your application and sending an email notification to the teacher.</i>
-                            </>
+                          <>
+                            You have <b>applied</b> for this proposal!<br />
+                            <i>We are inserting your application and sending an email notification to the teacher.</i>
+                          </>
                         }
                         {applyingState === "error" &&
-                            <>
-                              There was an <b>error</b> while applying for this proposal. Retry later.<br/>
-                            </>
+                          <>
+                            There was an <b>error</b> while applying for this proposal. Retry later.<br />
+                          </>
                         }
                         {applyingState === "applied_mail_success" &&
-                            <>
-                              Your application has been inserted successfully!<br/>
-                              <i>An email notification has been sent to the teacher.</i>
-                            </>
+                          <>
+                            Your application has been inserted successfully!<br />
+                            <i>An email notification has been sent to the teacher.</i>
+                          </>
                         }
                         {applyingState === "applied_mail_error" &&
-                            <>
-                              Your application has been inserted successfully!<br/>
-                              <i>There was an error while sending the email notification to the teacher, but your application has still been inserted anyways.</i>
-                            </>
+                          <>
+                            Your application has been inserted successfully!<br />
+                            <i>There was an error while sending the email notification to the teacher, but your application has still been inserted anyways.</i>
+                          </>
                         }
                       </Col>
                     </Row>
                   </Container>
                 </Modal.Body>
                 {
-                    applyingState === "error" && (
-                        <Modal.Footer>
-                          <Button id="close-modal" variant="secondary" onClick={() => {
-                            setApplyingState("no-applying");
-                          }}>
-                            Go back
-                          </Button>
-                        </Modal.Footer>
-                    )
+                  applyingState === "error" && (
+                    <Modal.Footer>
+                      <Button id="close-modal" variant="secondary" onClick={() => {
+                        setApplyingState("no-applying");
+                      }}>
+                        Go back
+                      </Button>
+                    </Modal.Footer>
+                  )
                 }
                 {
-                    (applyingState === "applied_mail_success" || applyingState === "applied_mail_success") && (
-                        <Modal.Footer>
-                          <Button id="close-modal" variant="secondary" onClick={() => {
-                            navigate("/applications");
-                          }}>
-                            Go to your applications
-                          </Button>
-                        </Modal.Footer>
+                  (applyingState === "applied_mail_success" || applyingState === "applied_mail_success") && (
+                    <Modal.Footer>
+                      <Button id="close-modal" variant="secondary" onClick={() => {
+                        navigate("/applications");
+                      }}>
+                        Go to your applications
+                      </Button>
+                    </Modal.Footer>
 
-                    )
+                  )
                 }
               </Modal>
             </Container>
           </Form>
         </Container>
-      )}
+      )
+      }
     </>
   );
 }
