@@ -1199,7 +1199,7 @@ function ProposalDetailsPage({ mode }) {
                   )
                 }
                 {
-                  (applyingState === "applied_mail_success" || applyingState === "applied_mail_success") && (
+                  (applyingState === "applied_mail_success") && (
                     <Modal.Footer>
                       <Button id="close-modal" variant="secondary" onClick={() => {
                         navigate("/applications");
