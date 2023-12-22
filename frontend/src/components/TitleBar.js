@@ -3,9 +3,9 @@ import { Button, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { BiPlus } from "react-icons/bi";
-import { FaCog, FaFileAlt, FaHome, FaMobile, FaMobileAlt, FaPen } from "react-icons/fa";
+import { FaCog, FaFileAlt, FaHome, FaPen } from "react-icons/fa";
 
-function TitleBar({ }) {
+function TitleBar() {
   const { loggedUser } = useContext(LoggedUserContext);
 
   return (
