@@ -252,7 +252,7 @@ describe("UNIT-SERVICE: insertNewApplication", () => {
     try {
       await applicationService.insertNewApplication(proposalId, studentId);
     } catch (err) {
-      expect(err).toBe(mockError);
+      expect(err).toBe("Error during insert");
     }
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "[BACKEND-SERVER] Error in insertNewApplication service:",
