@@ -3,7 +3,7 @@
 const request = require("supertest");
 const app = require("../../app");
 
-const { getUserById, authUser } = require("../../service/authentication");
+const { authUser } = require("../../service/authentication");
 const Teacher = require("../../model/Teacher");
 
 jest.mock("../../service/authentication");
