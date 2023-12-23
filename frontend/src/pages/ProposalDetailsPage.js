@@ -32,7 +32,6 @@ import { UnAuthorizationPage } from "../App";
 import dayjs from "dayjs";
 import "../style/ProposalDetails.css";
 import ArchiveProposalModal from "../components/ArchiveProposalModal";
-import { set } from "date-fns";
 
 /**
  * This page supports three modes:
