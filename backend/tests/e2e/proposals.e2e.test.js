@@ -1058,3 +1058,39 @@ describe("End to end test for update proposal", () => {
 
 
 });
+
+describe("End to end test for archive proposal", () => {
+
+    beforeAll(async () => {
+        driver = await new Builder().forBrowser("chrome").build();
+    });
+
+    afterAll(async () => {
+        await driver.quit();
+    });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals/");
+
+        await driver.sleep(500);
+
+        let pageTitle = await driver
+            .findElement(By.className("alert-danger"))
+            .getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+
+    }, 20000);
+
+    test("Shouldn't show the possibility to archive the proposal if logged as a student", async() =>{
+
+        await doLogin("john.smith@example.com", "S001", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/");
+
+        let dropDownButton = await driver.findElement(By.css('#dropdwon-proposal-actions'));
+        expect(dropDownButton).toBe(null);
+
+    }, 20000);
+
+});
