@@ -12,9 +12,9 @@ jest.mock("../../service/virtualclock.service");
 beforeEach(() => {
   jest.resetAllMocks();
   // comment these lines if you want to see console prints during tests
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => { });
+  jest.spyOn(console, "info").mockImplementation(() => { });
+  jest.spyOn(console, "error").mockImplementation(() => { });
 });
 
 describe("UNIT-SERVICE: getAllApplicationsByStudentId", () => {
@@ -247,18 +247,56 @@ describe("UNIT-SERVICE: insertNewApplication", () => {
 
     const consoleErrorSpy = jest
       .spyOn(console, "error")
-      .mockImplementation(() => {});
+      .mockImplementation(() => { });
 
     try {
       await applicationService.insertNewApplication(proposalId, studentId);
     } catch (err) {
-      expect(err).toBe(mockError);
+      expect(err).toBe("Error during insert");
     }
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       "[BACKEND-SERVER] Error in insertNewApplication service:",
       mockError
     );
     consoleErrorSpy.mockRestore();
+  });
+
+  it("should handle error when the student or the proposal is not found", async () => {
+    const proposal_id = 1;
+    const student_id = "s1";
+    const message = `Student with id ${student_id} not found or Proposal with id ${proposal_id} not found.`;
+
+    db.query.mockResolvedValueOnce({ rows: [] });
+    db.query.mockResolvedValueOnce({ rows: [] });
+    db.query.mockResolvedValueOnce({ rows: [] });
+
+    try {
+      await applicationService.insertNewApplication(proposal_id, student_id);
+    } catch (error) {
+      expect(error).toBe(message);
+      expect(db.query).toHaveBeenCalledWith('SELECT * FROM student WHERE id = $1', [student_id]);
+      expect(db.query).toHaveBeenCalledWith('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
+      expect(db.query).toHaveBeenCalledWith('SELECT * FROM applications WHERE student_id = $1 AND status NOT IN ($2, $3)', [student_id, "Rejected", "Canceled"]);
+    }
+  });
+
+  it("should handle error when the student has already pending or accepted applications", async () => {
+    const proposal_id = 1;
+    const student_id = "s1";
+    const message = `Student with id ${student_id} currently already has pending or accepted applications.`;
+
+    db.query.mockResolvedValueOnce({ rows: ["student"] });
+    db.query.mockResolvedValueOnce({ rows: ["proposal"] });
+    db.query.mockResolvedValueOnce({ rows: ["application"] });
+
+    try {
+      await applicationService.insertNewApplication(proposal_id, student_id);
+    } catch (error) {
+      expect(error).toBe(message);
+      expect(db.query).toHaveBeenCalledWith('SELECT * FROM student WHERE id = $1', [student_id]);
+      expect(db.query).toHaveBeenCalledWith('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
+      expect(db.query).toHaveBeenCalledWith('SELECT * FROM applications WHERE student_id = $1 AND status NOT IN ($2, $3)', [student_id, "Rejected", "Canceled"]);
+    }
   });
 });
 
@@ -384,11 +422,12 @@ describe("UNIT-SERVICE: getAllPendingApplicationsByProposalId", () => {
       student_id: "S001",
       status: "Pending",
       application_date: "2023-11-23",
-      proposal_id:'P001'
+      proposal_id: 'P001'
     };
 
     db.query.mockResolvedValueOnce({
-      rows: [queryResult]});
+      rows: [queryResult]
+    });
 
     const res = await applicationService.getAllPendingApplicationsByProposalId('P001');
 
@@ -422,7 +461,7 @@ describe("UNIT-SERVICE: getAllApplicationsByProposalId", () => {
       student_id: "S001",
       status: "Pending",
       application_date: "2023-11-23",
-      proposal_id:"P001"
+      proposal_id: "P001"
     };
 
     db.query.mockResolvedValueOnce({

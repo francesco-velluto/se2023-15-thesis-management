@@ -192,7 +192,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
 exports.getProposalById = (proposal_id) => {
   return new Promise((resolve, reject) => {
     db.query(
-      "SELECT t.name AS supervisor_name, t.surname AS supervisor_surname, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1",
+      "SELECT t.id as supervisor_id, t.name AS supervisor_name, t.surname AS supervisor_surname, t.email AS supervisor_email, p.* FROM proposals p JOIN teacher t ON p.supervisor_id = t.id WHERE p.proposal_id = $1",
       [proposal_id]
     )
       .then((result) => {

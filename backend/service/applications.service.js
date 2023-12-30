@@ -122,7 +122,6 @@ module.exports = {
         // const application_date = new Date().toISOString() //! VIRTUAL_CLOCK: uncomment this line in production
 
         try {
-
             const studentCheck = await db.query('SELECT * FROM student WHERE id = $1', [student_id]);
             const proposalCheck = await db.query('SELECT * FROM proposals WHERE proposal_id = $1', [proposal_id]);
 
@@ -141,10 +140,9 @@ module.exports = {
                 const res = await db.query(query, [proposal_id, student_id, status, application_date])
                 return res;
             }
-
         } catch (error) {
             console.error('[BACKEND-SERVER] Error in insertNewApplication service:', error);
-            throw error;
+            throw error.message;
         }
 
     },

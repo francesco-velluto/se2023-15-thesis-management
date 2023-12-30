@@ -116,7 +116,7 @@ function ArchiveProposalModal({
                     Application{pendingApplications.length !== 1 ? "s" : ""} to
                     be cancelled:
                   </p>
-                  <ul>
+                  <ul className="pending-applications-names-list">
                     {pendingApplications.map((application) => {
                       return (
                         <li>

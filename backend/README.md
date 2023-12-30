@@ -56,6 +56,14 @@ In particular, the SMTP Username is also used as the sender address.
 
 The SMTP server used for testing is [Elastic Email](https://elasticemail.com/).
 
+## Crono Jobs
+
+The server supports the scheduling and execution of cron jobs.
+
+The crono module is run in a separate process from the main server process.
+
+This will allow the server to continue to run even if the crono module crashes.
+
 ## API Documentation
 
 ### Authentication

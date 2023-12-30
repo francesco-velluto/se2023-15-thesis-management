@@ -5,7 +5,7 @@ import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap'
 import { getAllTeachers, insertNewThesisRequest } from '../api/ProposalsAPI';
 import { useNavigate } from 'react-router-dom';
 
-function ThesisRequestDetailsPage({ }) {
+function ThesisRequestDetailsPage() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [supervisor, setSupervisor] = useState("");
@@ -102,7 +102,7 @@ function ThesisRequestDetailsPage({ }) {
                     </div>
                     <Form>
                         <Row>
-                            <h3 id='title-page-thesis-request'>
+                            <h3 id='title-page'>
                                 Add Thesis Request
                             </h3>
                         </Row>

@@ -1,10 +1,39 @@
 "use strict";
 
+const { fork } = require('child_process');
+
 const dotenv = require('dotenv')
 const app = require("./app");
 const db = require("./service/db");
 
 dotenv.config({ path: '../.env' });
+
+/**
+ * Create a child process to run the crono jobs in the background.
+ * Scheduling the crono jobs in the main thread would block the server
+ * and prevent it from responding to requests if an unhandled issue happens in crono jobs.
+ * The crono jobs are run in a separate process to prevent them from
+ * blocking the main thread.
+ *
+ * @type {ChildProcess}
+ */
+let cronoProcess = fork('./crono/index.js');
+
+cronoProcess.on('message', (msg) => {
+    if (msg === 'crono-ready') {
+        console.info('[BACKEND-SERVER] Received ready message from crono process.');
+    }
+});
+
+cronoProcess.on('exit', (err) => {
+    console.info('[BACKEND-SERVER] Crono process exited with code ' + err);
+
+    // if the crono process exited with an error, try to restart it
+    if (err !== 0) {
+        console.info('[BACKEND-SERVER] Restarting crono process...');
+        cronoProcess = fork('./crono/index.js');
+    }
+});
 
 console.info('[BACKEND-SERVER] Connecting to Postgres database at ' + process.env.DB_HOST + ':5432');
 db.connect()
@@ -16,5 +45,10 @@ db.connect()
     })
     .catch(err => {
         console.error('[BACKEND-SERVER] Error connecting to database', err.stack)
+
+        // if the crono process is alive kill it before exiting
+        if (cronoProcess.connected && !cronoProcess.killed)
+            cronoProcess.kill();
+
         process.exit(1);
     });

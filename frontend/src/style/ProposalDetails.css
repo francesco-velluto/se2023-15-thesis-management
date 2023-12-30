@@ -15,12 +15,11 @@
 
 .proposal-details-keyword {
     text-align: center;
-    margin: 8px 0;
 }
 
 .proposal-details-keyword .badge {
     background: orange;
-    margin: 4px;
+    margin: 2px;
     font-size: 14px;
     border-radius: 20px;
 }
@@ -31,7 +30,7 @@
 
 .proposal-details-expiration .badge {
     margin: 4px;
-    font-size: 18px;
+    font-size: 14px;
     border-radius: 24px;
 }
 
@@ -63,6 +62,12 @@
 #add-group-btn {
     background-color: #5bc0de;
     border-color: #5bc0de;
+}
+
+#add-proposal-btn:hover,
+#add-keyword-btn:hover,
+#add-group-btn:hover {
+    background-color: #499cbf;
 }
 
 #go-back {

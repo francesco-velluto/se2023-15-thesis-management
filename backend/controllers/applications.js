@@ -4,7 +4,7 @@ const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 const proposalsService = require("../service/proposals.service");
 
-const { sendUpdateApplicationStatusEmail } = require("./email.notifier");
+const { sendUpdateApplicationStatusEmail, sendNewApplicationEmail} = require("./email.notifier");
 
 module.exports = {
     /**
@@ -109,16 +109,29 @@ module.exports = {
     insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
-                .then((result) => {
-                    res.status(200).json(result.data);
+                .then(async (result) => {
+                    // application is inserted correctly, try to send email to the supervisor
+                    let emailNotificationSent = false;
+
+                    try {
+                        // send email to the supervisor
+                        await sendNewApplicationEmail(result.rows[0].id, result.rows[0].application_date, result.rows[0].proposal_id, result.rows[0].student_id);
+
+                        // if the email has been sent correctly, set the flag to true
+                        emailNotificationSent = true;
+                    } catch(e) {
+                        console.error("[BACKEND-SERVER] Cannot send application email to supervisor: ", e);
+                    }
+
+                    // event if the email cannot be sent, at this point the application has still been correctly inserted
+                    return res.status(200).json({...result.rows[0], emailNotificationSent});
                 })
                 .catch((err) => {
-                    res.status(500).json({ errors: [err.message] });
+                    return res.status(500).json({ errors: [err] });
                 });
 
         } else
             return res.status(400).send("Parameters not found in insert new application controller");
-
     },
 
     /**
