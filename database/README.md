@@ -171,6 +171,41 @@ This table contains all the logs of the cron jobs.
 | timestamp | TIMESTAMP NOT NULL   | Timestamp of the event                                |
 | details | JSON                 | Details of the event, optional, can be null           |
 
+### Thesis_request
+
+This table contains all the thesis requests.
+
+| Attribute         | Typology              | Description                                               |
+| ------------------|-----------------------|-----------------------------------------------------------|
+| request_id        | VARCHAR(10) NOT NULL  | ID                                                        |
+| supervisor_id     | VARCHAR(10) NOT NULL  | Supervisor ID (the supervisor chosen by the student)      |
+| student_id        | VARCHAR(10) NOT NULL  | Student ID (who made the request)                         |
+| title             | VARCHAR(255) NOT NULL | Title of the thesis request                               |
+| description       | TEXT NOT NULL         | Description of the thesis request                         |
+| approval_date     | DATE                  | Date of the thesis request approval                       |
+| status            | VARCHAR(20) NOT NULL  | Status of the thesis request                              |
+| co_supervisor_id  | VARCHAR(10)           | CoSupervisor ID (the cosupervisor chosen by the student)  |
+
+### Group
+
+This table contains all the groups that can be assigned to a teacher.
+
+| Attribute         | Typology              | Description                                               |
+| ------------------|-----------------------|-----------------------------------------------------------|
+| cod_group         | VARCHAR(10) NOT NULL  | Group ID                                                  |
+| title_group       | VARCHAR(50) NOT NULL  | Title of the group                                        |
+
+
+### Virtual_clock
+
+This table contains the virtual clock value.
+
+| Attribute         | Typology              | Description                                               |
+| ------------------|-----------------------|-----------------------------------------------------------|
+| prop_name         | VARCHAR(10) NOT NULL  | Field Name                                                |
+| prop_value        | DATE NOT NULL         | Field Value                                               |
+
+
 ## How to install ?
 
 Refers to Elio documentation for DBEaver or to Docker compose documentation. 😃

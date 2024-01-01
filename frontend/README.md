@@ -9,6 +9,15 @@ npm start
 
 This will install all the dependencies and start the server on port 3000.
 
+## Users Credentials
+
+- user with the role of student
+    - email: `john.smith@example.com` 
+    - password: `S001`
+- user with the role of teacher
+    - email: `michael.wilson@example.com` 
+    - password: `T002`
+
 ## API Interface
 
 All API interfaces are in the `src/api` folder. The API interfaces are placed in different files based on the resource they are related to.
@@ -79,8 +88,6 @@ const fetchLogin = () => {
         It can also return an error in case of failure on backend side.
 
 
-
-
 ## Pages
 
 All pages are in the `src/pages` folder. The pages are placed in different files based on the resource they are related to.
@@ -117,11 +124,8 @@ The application details page is in `src/pages/ProposalDetailsPage.js`.
 
 The route is accesible at `/applications/:application_id`.
 
-## Users Credentials
+### ThesisRequestPage
 
-- user with the role of student
-    - email: `john.smith@example.com` 
-    - password: `S001`
-- user with the role of teacher
-    - email: `michael.wilson@example.com` 
-    - password: `T002`
+The thesis request page is in `src/pages/ThesisRequestDetailsPage.js`.
+
+The route is accessible at `/proposals/requests/new`.
