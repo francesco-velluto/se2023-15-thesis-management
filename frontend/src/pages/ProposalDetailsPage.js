@@ -405,10 +405,16 @@ function ProposalDetailsPage({ mode }) {
                   </Row>
                 )}
               </div>
-              {mode === "add" &&
+              {mode === "add" || mode == "copy" &&
                 <Row>
                   <h3 id='title-page'>
                     Add Proposal
+                  </h3>
+                </Row>}
+                {mode === "update" &&
+                <Row>
+                  <h3 id='title-page'>
+                    Update Proposal
                   </h3>
                 </Row>}
               <Row>
