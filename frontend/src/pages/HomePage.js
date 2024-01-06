@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
+import ResumeStatus from "../components/ResumeStatus";
 
 function HomePage() {
   const { loggedUser } = useContext(LoggedUserContext);
@@ -12,12 +13,7 @@ function HomePage() {
   return (
     <>
     <NavbarContainer />
-    {loggedUser.role === 0 && (
       <TitleBar />
-    )}
-    {loggedUser.role === 1 && (
-      <TitleBar />
-    )}
       <Container fluid className="home-page" >
         <Row className="home-page-content p-3" >
           {loggedUser && (
@@ -169,6 +165,9 @@ function HomePage() {
             </Button>
           )}
         </Row>
+        {loggedUser.role === 1 && (
+        <ResumeStatus/>
+        )}
       </Container>
       <footer>
         <Col  xs={12} sm={2}>

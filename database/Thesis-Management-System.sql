@@ -478,5 +478,26 @@ ALTER TABLE ONLY public.thesis_request
     ADD CONSTRAINT thesis_request_fk_2 FOREIGN KEY (co_supervisor_id) REFERENCES public.teacher(id);
 
 --
+-- Name: uploaded_resume; Type: TABLE; Schema: public; Owner: postgres
+--
+
+
+CREATE TABLE public.uploaded_resume (
+    resume_id SERIAL PRIMARY KEY,
+    filename VARCHAR(100) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
+    date_uploaded DATE
+);
+
+ALTER TABLE ONLY public.uploaded_resume
+    ADD CONSTRAINT uploaded_resume_fk_1 FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+INSERT INTO public.uploaded_resume (filename, student_id, date_uploaded) VALUES
+  ('Resume-S001.pdf', 'S001','2023-11-09'),
+  ('Resume-S011.pdf', 'S011','2023-11-03'),
+  ('Resume-S012.pdf', 'S012','2023-11-15');
+
+ALTER TABLE public.uploaded_resume OWNER TO postgres;
+--
 -- PostgreSQL database dump complete
 --
