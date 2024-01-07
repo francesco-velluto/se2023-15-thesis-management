@@ -838,6 +838,8 @@ describe("T5 - Delete a proposal unit tests", () => {
     });
     deleteProposal.mockResolvedValue({ data: true });
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
@@ -853,7 +855,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.2 ERROR 401 | Unauthorized access (Proposal does not belong to the teacher)", (done) => {
+  test("T5.2 ERROR 403 | Unauthorized access (Proposal does not belong to the teacher)", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T002" };
       next(); // Authenticated
@@ -877,7 +879,7 @@ describe("T5 - Delete a proposal unit tests", () => {
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(401);
+        expect(res.status).toBe(403);
         expect(res.body).toEqual({
           error:
             "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
@@ -890,7 +892,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3.1 ERROR 403 | Expired proposal", (done) => {
+  test("T5.3.1 ERROR 400 | Expired proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -911,10 +913,12 @@ describe("T5 - Delete a proposal unit tests", () => {
 
     getProposalById.mockResolvedValue(mockProposal);
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(400);
         expect(res.body).toEqual({
           error: "Cannot delete an expired proposal",
         });
@@ -926,7 +930,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3.2 ERROR 403 | Archived proposal", (done) => {
+  test("T5.3.2 ERROR 400 | Archived proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -947,10 +951,12 @@ describe("T5 - Delete a proposal unit tests", () => {
 
     getProposalById.mockResolvedValue(mockProposal);
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(400);
         expect(res.body).toEqual({
           error: "Cannot delete an archived proposal",
         });
@@ -962,7 +968,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3.3 ERROR 403 | Already deleted proposal", (done) => {
+  test("T5.3.3 ERROR 400 | Already deleted proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -983,10 +989,12 @@ describe("T5 - Delete a proposal unit tests", () => {
 
     getProposalById.mockResolvedValue(mockProposal);
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(400);
         expect(res.body).toEqual({
           error: "Cannot delete an already deleted proposal",
         });
@@ -998,7 +1006,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3.4 ERROR 403 | Cannot delete if there is an accepted application related to the proposal", (done) => {
+  test("T5.3.4 ERROR 400 | Cannot delete if there is an accepted application related to the proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
@@ -1031,10 +1039,12 @@ describe("T5 - Delete a proposal unit tests", () => {
     });
     deleteProposal.mockResolvedValue({ data: true });
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
+        expect(res.status).toBe(400);
         expect(res.body).toEqual({
           error: "Cannot delete a proposal with an accepted application",
         });
