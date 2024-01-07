@@ -254,7 +254,7 @@ module.exports = {
 
       if (proposal.data.supervisor_id !== teacher_id) {
         return res
-          .status(401)
+          .status(403)
           .json({
             error:
               "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
@@ -265,27 +265,29 @@ module.exports = {
         return res.status(400).json({ error: "Bad request!" });
       }
 
+      const { data: virtualDate } = await getVirtualDate(); // Replace this line with const virtualDate = dayjs().format('YYYY-MM-DD'); for the production version
+
       // check if the proposal is expired
       if (
         dayjs(proposal.data.expiration_date).format("YYYY-MM-DD") <
-        dayjs().format("YYYY-MM-DD")
+        dayjs(virtualDate).format("YYYY-MM-DD")
       ) {
         return res
-          .status(403)
+          .status(400)
           .json({ error: "Cannot delete an expired proposal" });
       }
 
       // check if the proposal is archived
       if (proposal.data.archived) {
         return res
-          .status(403)
+          .status(400)
           .json({ error: "Cannot delete an archived proposal" });
       }
 
       // check if the proposal is already deleted
       if (proposal.data.deleted) {
         return res
-          .status(403)
+          .status(400)
           .json({ error: "Cannot delete an already deleted proposal" });
       }
 
@@ -295,7 +297,7 @@ module.exports = {
 
       if (applications?.some((a) => a.status === "Accepted"))
         return res
-          .status(403)
+          .status(400)
           .json({
             error: "Cannot delete a proposal with an accepted application",
           });
