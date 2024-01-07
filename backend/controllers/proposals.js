@@ -325,13 +325,13 @@ module.exports = {
 
       // check if the proposal exist
       if (!proposal.data) {
-        return res.status(400).json({ error: "Bad request!" });
+        return res.status(404).json({ error: "Proposal not found" });
       }
 
       // check if the proposal belong to the teacher
       if (proposal.data.supervisor_id !== teacher_id) {
         return res
-          .status(401)
+          .status(403)
           .json({
             error:
               "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
@@ -346,21 +346,21 @@ module.exports = {
         dayjs(virtualDate).format("YYYY-MM-DD")
       ) {
         return res
-          .status(403)
+          .status(400)
           .json({ error: "Cannot archive an expired proposal" });
       }
 
       // check if the proposal is archived
       if (proposal.data.archived) {
         return res
-          .status(403)
+          .status(400)
           .json({ error: "Cannot archive an archived proposal" });
       }
 
       // check if the proposal is already deleted
       if (proposal.data.deleted) {
         return res
-          .status(403)
+          .status(400)
           .json({ error: "Cannot archive an already deleted proposal" });
       }
 
@@ -370,7 +370,7 @@ module.exports = {
 
       if (applications?.some((a) => a.status === "Accepted"))
         return res
-          .status(403)
+          .status(400)
           .json({
             error: "Cannot archive a proposal with an accepted application",
           });
@@ -381,7 +381,7 @@ module.exports = {
       if (!archivedProposal.data)
         return res.status(404).json({ error: "Proposal not found" });
 
-      
+
       // Set all the applications of the archived proposal to canceled
 
       await applicationsService.cancelPendingApplicationsByProposalId(proposal_id);
