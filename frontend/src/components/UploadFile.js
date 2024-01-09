@@ -19,7 +19,7 @@ const UploadResume = ({setCallbackUploadId}) => {
   const [fileInfo, setFileInfo] = useState(null);
 
 
-  const [drop] = useDrop({
+  const [{ canDrop, isOver },drop] = useDrop({
     accept: [NativeTypes.FILE],
     drop: (item) => handleFileDrop(item.files),
     collect: (monitor) => ({
