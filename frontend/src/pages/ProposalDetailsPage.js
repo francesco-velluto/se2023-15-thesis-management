@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
+import { AiOutlineFilePdf} from 'react-icons/ai';
 
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -24,7 +25,7 @@ import {
   Modal,
   Spinner
 } from "react-bootstrap";
-import ApplicationButton from "./ApplicationButton";
+import ApplicationButton from "../components/ApplicationButton";
 
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
@@ -84,6 +85,8 @@ function ProposalDetailsPage({ mode }) {
 
   //const [newGroup, setNewGroup] = useState('');
   const [newKeyword, setNewKeyword] = useState("");
+
+  const [fileSent, setFileSent] = useState(false);
 
   const targetRef = useRef(null);
 
@@ -405,7 +408,7 @@ function ProposalDetailsPage({ mode }) {
                   </Row>
                 )}
               </div>
-              {mode === "add" || mode == "copy" &&
+              {mode === "add" || mode === "copy" &&
                 <Row>
                   <h3 id='title-page'>
                     Add Proposal
@@ -1078,6 +1081,7 @@ function ProposalDetailsPage({ mode }) {
                       setErrMsg={setErrorMessage}
                       proposalID={proposal_id}
                       applicationStatusCallback={setApplyingState}
+                      setFileSent={setFileSent}
                     />
                   </Col>
                 }
@@ -1189,6 +1193,20 @@ function ProposalDetailsPage({ mode }) {
                           </>
                         }
                       </Col>
+                    </Row>
+                    <Row>
+                      { fileSent ? (
+                         <Col className="d-flex align-items-center text-success">
+                         <AiOutlineFilePdf size={50} /> 
+                         <i>Your file has been added successfully to your application.</i>
+                         </Col>
+                      ) : (
+                        <Col className="d-flex align-items-center text-danger">
+                         <AiOutlineFilePdf size={50} />
+                         <i>An error occured, your file has not been sent with your application</i>
+                         </Col>
+                      )
+                      }
                     </Row>
                   </Container>
                 </Modal.Body>

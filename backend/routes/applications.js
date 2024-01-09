@@ -104,4 +104,23 @@ router.get(
   applicationsController.getApplicationById
 );
 
+
+router.post(
+  '/upload', 
+  authenticationController.isLoggedIn, 
+  authenticationController.isStudent, 
+  applicationsController.uploadFileServer);
+
+router.get(
+  '/upload/:upload_id', 
+  authenticationController.isLoggedIn, 
+  authenticationController.isStudent, 
+  applicationsController.previewFile);
+
+router.get(
+  '/upload/:upload_id/info', 
+  authenticationController.isLoggedIn, 
+  authenticationController.isStudent, 
+  applicationsController.getFileInfo);
+
 module.exports = router;

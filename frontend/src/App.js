@@ -60,6 +60,7 @@ function Main() {
                         	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
                     } />
                     <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
+                    <Route path="upload/:upload_id" element={loggedUser ? <PreviewResume/> : <UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
                     <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
@@ -68,9 +69,6 @@ function Main() {
                     <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage />} />
                     <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage />} />
                     <Route path="requests/new" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage />} />
-                </Route>
-                <Route path="/students">
-                    <Route path="preview" element={loggedUser ? <PreviewResume /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
             <Route path='*' element={<NotFoundPage />} />

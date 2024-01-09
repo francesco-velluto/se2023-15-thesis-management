@@ -93,18 +93,6 @@ router.use('/applications', applications);
  */
 router.get("/students/:student_id", isLoggedIn, isTeacher, studentController.getStudentById);
 
-/**
- * Student Resume Routes
- * These routes handle operations related to student resumes.
- */
-
-// Add a resume for the student (Student only)
-router.post('/students/:student_id/resume', isLoggedIn, isStudent, studentController.addResumeHandler);
-// Retrieve the resume information for the student (Student only)
-router.get('/students/:student_id/resume', isLoggedIn, isStudent, studentController.getStudentResume);
-// Retrieve the resume information (metadata) for the student (Student only)
-router.get('/students/:student_id/resume/info', isLoggedIn, isStudent, studentController.getStudentResumeInfo);
-
 
 router.get("/virtualclock", isLoggedIn, getVirtualDate); //! VIRTUAL_CLOCK: remove this line in production
 router.put("/virtualclock", isLoggedIn, updateVirtualDate); //! VIRTUAL_CLOCK: remove this line in production

@@ -1,15 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { fetchStudentResume } from '../api/StudentsAPI';
-import { LoggedUserContext } from "../context/AuthenticationContext";
+import React, { useState, useEffect } from 'react';
+import { fetchUploadedFile } from '../api/ApplicationsAPI';
+import { useParams } from 'react-router-dom';
+
 
 const PreviewResume = () => {
+  const { upload_id } = useParams();
   const [fileUrl, setFileUrl] = useState(null);
-  const { loggedUser } = useContext(LoggedUserContext);
-
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = await fetchStudentResume(loggedUser.id);
+        const url = await fetchUploadedFile(upload_id);
         setFileUrl(url);
       } catch (error) {
         console.error(error.message);
@@ -17,7 +18,7 @@ const PreviewResume = () => {
     };
 
     fetchData();
-  }, []); 
+  }, [upload_id]); 
 
   return (
     <div>
