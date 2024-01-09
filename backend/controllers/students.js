@@ -29,6 +29,7 @@ module.exports = {
    */
   getStudentCareer: async (req, res) => {
     const student_id = req.params.student_id;
+    const teacher_id = req.user.id;
 
     try {
       const { data: student } = await studentService.getStudentById(student_id);
@@ -37,6 +38,10 @@ module.exports = {
       }
 
       // TODO: only teacher supervisor of a proposal for which the student applied can see his career
+      const isAuthorized = await studentService.hasStudentAppliedForTeacher(student_id, teacher_id);
+      if (!isAuthorized) {
+        return res.status(403).json({ error: "Teacher not authorized to see student's career" });
+      }
 
       const { data: career } = await studentService.getStudentCareer(student_id);
 
