@@ -11,10 +11,10 @@ const router = express.Router();
 const authentication = require("./authentication");
 const proposals = require("./proposals");
 const applications = require("./applications");
+const students = require("./students");
 const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
-const studentController = require("../controllers/students");
-const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
+const { isLoggedIn } = require("../controllers/authentication");
 const { getVirtualDate, updateVirtualDate } = require("../controllers/virtualclock"); //! VIRTUAL_CLOCK: remove this line in production
 
 /**
@@ -77,21 +77,13 @@ router.get("/degrees", isLoggedIn, getDegrees);
 router.use('/applications', applications);
 
 /**
- * GET /api/students/:student_id
+ * Students routes
+ * All the routes for the students resources
+ * @see students.js
  *
- * Retrieve the lstudent given his id
- * Authentication: Required
- * Authorization required: Teacher
- *
- * @param {Object} res HTTP Response Object
- * response body contains an array of degrees
- *
- * @error 401 - Not Authenticated, Not Authorized
- * @error 404 - Student not found
- * @error 500 - Internal Server Error
- *
+ * Route /api/students
  */
-router.get("/students/:student_id", isLoggedIn, isTeacher, studentController.getStudentById);
+router.use('/students', students);
 
 
 router.get("/virtualclock", isLoggedIn, getVirtualDate); //! VIRTUAL_CLOCK: remove this line in production

@@ -36,3 +36,19 @@ exports.getStudentById = async (student_id) => {
     throw error;
   }
 };
+
+/**
+ * Get the career of a student by student id.
+ *
+ */
+exports.getStudentCareer = async (student_id) => {
+  try {
+    const query = "SELECT * FROM career WHERE id = $1";
+    const { rows } = await db.query(query, [student_id]);
+
+    return { data: rows };
+  } catch (error) {
+    console.log("Error in getStudentCareer: ", error);
+    throw error;
+  }
+};
