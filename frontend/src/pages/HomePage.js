@@ -12,12 +12,7 @@ function HomePage() {
   return (
     <>
     <NavbarContainer />
-    {loggedUser.role === 0 && (
       <TitleBar />
-    )}
-    {loggedUser.role === 1 && (
-      <TitleBar />
-    )}
       <Container fluid className="home-page" >
         <Row className="home-page-content p-3" >
           {loggedUser && (

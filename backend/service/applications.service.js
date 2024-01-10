@@ -297,5 +297,58 @@ module.exports = {
             console.error('[BACKEND-SERVER] Error in getAllApplicationsByProposalId: ', error);
             throw error;
         }
+    }, 
+
+    getApplicationFile: async (student_id, upload_id) => {
+        try {
+            const { rows, rowCount }  = await db.query('SELECT * FROM temp_file_uploads WHERE student_id = $1 and upload_id = $2',
+            [student_id, upload_id]
+            );  
+            if (rowCount != 0) {
+                return { success: true, data: rows[0] };  
+            }
+            else {
+                return { success: false, data: undefined };  
+            }
+        }
+        catch (error){
+            console.error("[BACKEND-SERVER] Error in getApplicationFile", error);
+            return { error: "Internal server error has occurred" };
+        }
+    },
+
+    uploadFileServer: async (student_id, filename,date_uploaded) => {
+        try {
+        // In this case returning the ID is not an issue, because this id is temporary and the temp_file_uploads will be emptied
+          const { rows, rowCount } = await db.query('INSERT INTO temp_file_uploads (filename, student_id, date_uploaded) VALUES ($1, $2, $3) RETURNING upload_id',
+          [filename, student_id, date_uploaded]
+          );
+          return { success: true, rows: rows };
+          
+        } catch (error) {
+          console.error(error);
+          return { success: false, error: 'Database Error' };
+        }
+      
+      }, 
+    
+
+    AddApplicationFile: async(student_id, application_id, upload_id) => {
+        try {
+            const { rows, rowCount }  = await db.query('SELECT * FROM temp_file_uploads WHERE student_id = $1 AND upload_id = $2 ',[student_id, upload_id]
+            );
+            if (rowCount != 0) {
+                const result = await db.query('INSERT INTO application_file (application_id, filename, student_id,  date_uploaded) VALUES ($1, $2, $3, $4)',
+                [application_id, rows[0].filename, rows[0].student_id, rows[0].date_uploaded]
+                );
+                return { success: true, result };
+            }
+            else {
+                return { success: false, data: undefined };
+            }
+          } catch (error) {
+            console.error(error);
+            return { success: false, error: 'Database Error' };
+          }
     }
 }

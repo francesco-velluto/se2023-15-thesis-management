@@ -1,12 +1,15 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { insertNewApplication, getAllApplicationsByStudent } from '../api/ApplicationsAPI';
-import { Button } from "react-bootstrap";
+import { Button, Container, Modal } from "react-bootstrap";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import PropTypes from "prop-types";
+import UploadResume from './UploadFile';
 
-const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback }) => {
+const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, setFileSent }) => {
   const [applied, setApplied] = useState(false);
   const [disabled, setDisabled] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [uploadId, setUploadId] = useState(null);
 
   /**
    * This is used to communicate to the proposal details page that the application is being applied.
@@ -40,6 +43,11 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback })
     }
   };
 
+  const handleShow = () => setShowModal(true);
+  const handleClose = () => {
+    setShowModal(false);
+  };
+
   useEffect(() => {
     applicationStatusCallback("no-applying");
     getApplicationList();
@@ -48,11 +56,12 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback })
   const handleButtonClick = async () => {
     try {
       await applicationStatusCallback("applying");
-      const response = await insertNewApplication({ proposalID });
+      const response = await insertNewApplication({ proposalID }, uploadId);
 
       if (response.length !== 0) {
         let data = await response.json();
         setApplied(true);
+        setFileSent(data.fileSent)
         await getApplicationList();
         await applicationStatusCallback(data.emailNotificationSent ? "applied_mail_success" : "applied_mail_error");
       } else {
@@ -66,12 +75,31 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback })
   };
 
   return (
-    <Button id={"apply-button"} variant="secondary" onClick={handleButtonClick}
-      disabled={applied || disabled}
-      style={{ marginLeft: "auto" }}
-      >
-      {applied ? 'Applied' : 'Apply'}
-    </Button>
+    <Container>
+        <Button id={"apply-button"} variant="secondary" onClick={handleShow}
+          disabled={applied || disabled}
+          style={{ marginLeft: "auto" }}
+          >
+          {applied ? 'Applied' : 'Apply'}
+        </Button>
+        <Modal show={showModal} onHide={handleClose} backdrop="static">
+          <Modal.Header closeButton>
+            <Modal.Title>Add a PDF file (optionnal)</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <UploadResume setCallbackUploadId={setUploadId}/>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              id="confirm-application"
+              variant="success"
+              onClick={handleButtonClick}
+            >
+              Confirm
+            </Button>
+          </Modal.Footer>
+        </Modal>
+    </Container>
   );
 };
 

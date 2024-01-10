@@ -14,14 +14,19 @@ const {
   getAllProfessorProposals,
   deleteProposal,
   updateProposal,
+  setProposalArchived,
 } = require("../../service/proposals.service");
-
-const { getAllApplicationsByProposalId } = require("../../service/applications.service");
+const {
+  getAllApplicationsByProposalId,
+  cancelPendingApplicationsByProposalId,
+} = require("../../service/applications.service");
+const { getVirtualDate } = require("../../service/virtualclock.service");
 
 const app = require("../../app");
 
 jest.mock("../../service/proposals.service");
 jest.mock("../../service/applications.service");
+jest.mock("../../service/virtualclock.service");
 jest.mock("../../controllers/authentication");
 
 beforeAll(() => {
@@ -31,9 +36,9 @@ beforeAll(() => {
 beforeEach(() => {
   jest.clearAllMocks();
   // comment these lines if you want to see console prints during tests
-  jest.spyOn(console, "log").mockImplementation(() => { });
-  jest.spyOn(console, "info").mockImplementation(() => { });
-  jest.spyOn(console, "error").mockImplementation(() => { });
+  jest.spyOn(console, "log").mockImplementation(() => {});
+  jest.spyOn(console, "info").mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterAll(() => {
@@ -241,7 +246,7 @@ describe("T2 - Insert proposals unit tests", () => {
     const mockProposalRes = {
       ...mockProposalReq,
       proposal_id: "P011",
-      supervisor_id: "T001"
+      supervisor_id: "T001",
     };
 
     getMaxProposalIdNumber.mockResolvedValue(10);
@@ -322,7 +327,7 @@ describe("T2 - Insert proposals unit tests", () => {
     const mockProposalRes = {
       ...mockProposalReq,
       proposal_id: "P011",
-      supervisor_id: "T001"
+      supervisor_id: "T001",
     };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
@@ -367,7 +372,7 @@ describe("T2 - Insert proposals unit tests", () => {
     const mockProposalRes = {
       ...mockProposalReq,
       proposal_id: "P011",
-      supervisor_id: "T001"
+      supervisor_id: "T001",
     };
     getMaxProposalIdNumber.mockResolvedValue(10);
 
@@ -621,7 +626,8 @@ describe("T3 - Get proposal by Id unit tests", () => {
     const mockProposalRes = {
       proposal_id: "P001",
       title: "Test proposal",
-      supervisor_id: "T001", cod_group: "G001",
+      supervisor_id: "T001",
+      cod_group: "G001",
       keywords: ["k1", "k2"],
       type: "Master",
       groups: ["G001", "G002"],
@@ -696,29 +702,22 @@ describe("T4 - Get proposals by professor unit tests", () => {
   });
 
   test("T4.3 SUCCESS 200 | List of proposals", (done) => {
-
     const mockProposals = [
       {
         proposal_id: "P003",
         title: "Artificial Intelligence",
         supervisor_surname: "Gomez",
         supervisor_name: "Ana",
-        keywords: [
-          "AI", "Machine Learning"
-        ],
+        keywords: ["AI", "Machine Learning"],
         type: "Experimental",
-        groups: [
-          "Group A"
-        ],
+        groups: ["Group A"],
         description: "An AI research thesis description",
         required_knowledge: "Python, TensoFlow",
         notes: "N/A",
         expiration_date: "2024-05-14T22:00:00.000Z",
         level: "Master",
-        degrees: [
-          "Master of Science"
-        ]
-      }
+        degrees: ["Master of Science"],
+      },
     ];
 
     const mockedTeacherId = "T000";
@@ -730,14 +729,13 @@ describe("T4 - Get proposals by professor unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     getAllProfessorProposals.mockResolvedValue({
       status: 200,
-      data: mockProposals
+      data: mockProposals,
     });
-
 
     request(app)
       .get("/api/proposals/professor")
@@ -762,14 +760,13 @@ describe("T4 - Get proposals by professor unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     getAllProfessorProposals.mockRejectedValue({
       status: 404,
-      data: "Proposals not found"
+      data: "Proposals not found",
     });
-
 
     request(app)
       .get("/api/proposals/professor")
@@ -805,25 +802,23 @@ describe("T4 - Get proposals by professor unit tests", () => {
         done();
       });
   });
-
 });
 
 describe("T5 - Delete a proposal unit tests", () => {
   test("T5.1 SUCCESS 204 | deleteProposal", (done) => {
-
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     const mockProposal = {
       data: {
-        supervisor_id: 'T001',
-        expiration_date: '2024-05-14',
+        supervisor_id: "T001",
+        expiration_date: "2024-05-14",
         archived: false,
         deleted: false,
       },
@@ -833,16 +828,17 @@ describe("T5 - Delete a proposal unit tests", () => {
     getAllApplicationsByProposalId.mockResolvedValueOnce({
       data: [
         {
-          id: 'A001',
-          proposal_id: 'P001',
-          student_id: 'S012',
-          status: 'Pending',
-          application_date: '2023-05-14',
+          id: "A001",
+          proposal_id: "P001",
+          student_id: "S012",
+          status: "Pending",
+          application_date: "2023-05-14",
         },
-      ]
+      ],
     });
     deleteProposal.mockResolvedValue({ data: true });
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
 
     request(app)
       .delete("/api/proposals/P001")
@@ -857,58 +853,22 @@ describe("T5 - Delete a proposal unit tests", () => {
         done();
       })
       .catch((err) => done(err));
-
   });
 
-
-  test("T5.2 ERROR 401 | Unauthorized access (Proposal does not belong to the teacher)", (done) => {
+  test("T5.2 ERROR 403 | Unauthorized access (Proposal does not belong to the teacher)", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T002" };
       next(); // Authenticated
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     const mockProposal = {
       data: {
-        supervisor_id: 'T001',
-        expiration_date: '2024-05-14',
-        archived: false,
-        deleted: false,
-      },
-    };
-
-    getProposalById.mockResolvedValue(mockProposal);
-
-    request(app)
-      .delete("/api/proposals/P001")
-      .then((res) => {
-        expect(res.status).toBe(401);
-        expect(res.body).toEqual({ error: "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content." });
-        expect(getProposalById).toHaveBeenCalled();
-        expect(isLoggedIn).toHaveBeenCalled();
-        expect(isTeacher).toHaveBeenCalled();
-        done();
-      })
-      .catch((err) => done(err));
-  });
-
-  test("T5.3.1 ERROR 403 | Expired proposal", (done) => {
-    isLoggedIn.mockImplementation((req, res, next) => {
-      req.user = { id: "T001" };
-      next(); // Authenticated
-    });
-
-    isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
-    });
-
-    const mockProposal = {
-      data: {
-        supervisor_id: 'T001',
-        expiration_date: '2023-01-01', // Past date
+        supervisor_id: "T001",
+        expiration_date: "2024-05-14",
         archived: false,
         deleted: false,
       },
@@ -920,7 +880,10 @@ describe("T5 - Delete a proposal unit tests", () => {
       .delete("/api/proposals/P001")
       .then((res) => {
         expect(res.status).toBe(403);
-        expect(res.body).toEqual({ error: "Cannot delete an expired proposal" });
+        expect(res.body).toEqual({
+          error:
+            "Access to this thesis proposal is unauthorized. Please ensure you have the necessary permissions to view this content.",
+        });
         expect(getProposalById).toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
@@ -929,21 +892,58 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-
-  test("T5.3.2 ERROR 403 | Archived proposal", (done) => {
+  test("T5.3.1 ERROR 400 | Expired proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     const mockProposal = {
       data: {
-        supervisor_id: 'T001',
-        expiration_date: '2024-01-01',
+        supervisor_id: "T001",
+        expiration_date: "2023-01-01", // Past date
+        archived: false,
+        deleted: false,
+      },
+    };
+
+    getProposalById.mockResolvedValue(mockProposal);
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    request(app)
+      .delete("/api/proposals/P001")
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot delete an expired proposal",
+        });
+        expect(getProposalById).toHaveBeenCalled();
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T5.3.2 ERROR 400 | Archived proposal", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    const mockProposal = {
+      data: {
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
         archived: true, //True
         deleted: false,
       },
@@ -951,11 +951,15 @@ describe("T5 - Delete a proposal unit tests", () => {
 
     getProposalById.mockResolvedValue(mockProposal);
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
-        expect(res.body).toEqual({ error: "Cannot delete an archived proposal" });
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot delete an archived proposal",
+        });
         expect(getProposalById).toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
@@ -964,20 +968,20 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3.3 ERROR 403 | Already deleted proposal", (done) => {
+  test("T5.3.3 ERROR 400 | Already deleted proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     const mockProposal = {
       data: {
-        supervisor_id: 'T001',
-        expiration_date: '2024-01-01',
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
         archived: false,
         deleted: true,
       },
@@ -985,11 +989,15 @@ describe("T5 - Delete a proposal unit tests", () => {
 
     getProposalById.mockResolvedValue(mockProposal);
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
-        expect(res.body).toEqual({ error: "Cannot delete an already deleted proposal" });
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot delete an already deleted proposal",
+        });
         expect(getProposalById).toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isTeacher).toHaveBeenCalled();
@@ -998,21 +1006,20 @@ describe("T5 - Delete a proposal unit tests", () => {
       .catch((err) => done(err));
   });
 
-  test("T5.3.4 ERROR 403 | Cannot delete if there is an accepted application related to the proposal", (done) => {
-
+  test("T5.3.4 ERROR 400 | Cannot delete if there is an accepted application related to the proposal", (done) => {
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "T001" };
       next(); // Authenticated
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
     const mockProposal = {
       data: {
-        supervisor_id: 'T001',
-        expiration_date: '2024-05-14',
+        supervisor_id: "T001",
+        expiration_date: "2024-05-14",
         archived: false,
         deleted: false,
       },
@@ -1022,22 +1029,25 @@ describe("T5 - Delete a proposal unit tests", () => {
     getAllApplicationsByProposalId.mockResolvedValueOnce({
       data: [
         {
-          id: 'A001',
-          proposal_id: 'P001',
-          student_id: 'S012',
-          status: 'Accepted',
-          application_date: '2023-05-14',
+          id: "A001",
+          proposal_id: "P001",
+          student_id: "S012",
+          status: "Accepted",
+          application_date: "2023-05-14",
         },
-      ]
+      ],
     });
     deleteProposal.mockResolvedValue({ data: true });
 
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
 
     request(app)
       .delete("/api/proposals/P001")
       .then((res) => {
-        expect(res.status).toBe(403);
-        expect(res.body).toEqual({ error: "Cannot delete a proposal with an accepted application" });
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot delete a proposal with an accepted application",
+        });
         expect(getAllApplicationsByProposalId).toHaveBeenCalled();
         expect(getProposalById).toHaveBeenCalled();
         expect(isLoggedIn).toHaveBeenCalled();
@@ -1045,7 +1055,6 @@ describe("T5 - Delete a proposal unit tests", () => {
         done();
       })
       .catch((err) => done(err));
-
   });
 
   test("T5.4 ERROR 500 | Internal server error", (done) => {
@@ -1055,10 +1064,10 @@ describe("T5 - Delete a proposal unit tests", () => {
     });
 
     isTeacher.mockImplementation((req, res, next) => {
-      next();   // Authorized
+      next(); // Authorized
     });
 
-    getProposalById.mockRejectedValue(new Error('Some internal error'));
+    getProposalById.mockRejectedValue(new Error("Some internal error"));
 
     request(app)
       .delete("/api/proposals/P001")
@@ -1071,13 +1080,7 @@ describe("T5 - Delete a proposal unit tests", () => {
       })
       .catch((err) => done(err));
   });
-
 });
-
-
-
-
-
 
 describe("T6 - Update proposals unit tests", () => {
   const mockProposalReq = {
@@ -1088,7 +1091,7 @@ describe("T6 - Update proposals unit tests", () => {
     description: "Test description",
     required_knowledge: "Node.js, PostgreSQL",
     notes: "Test notes",
-    expiration_date: '2026-10-31',
+    expiration_date: "2026-10-31",
     level: "Master",
     programmes: ["Master of Science", "Master of Business"],
   };
@@ -1161,7 +1164,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       data: {
-        supervisor_id: 'T001'
+        supervisor_id: "T001",
       },
     };
 
@@ -1197,7 +1200,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       status: 404,
-      data: "The proposal has not been found!"
+      data: "The proposal has not been found!",
     };
 
     getProposalById.mockRejectedValue(mockProposalInDb);
@@ -1220,7 +1223,7 @@ describe("T6 - Update proposals unit tests", () => {
   test("T6.5 - ERROR 422    | Empty title field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
-      title: ""
+      title: "",
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -1380,7 +1383,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       data: {
-        supervisor_id: 'T001'
+        supervisor_id: "T001",
       },
     };
 
@@ -1417,7 +1420,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       data: {
-        supervisor_id: 'T001'
+        supervisor_id: "T001",
       },
     };
 
@@ -1442,7 +1445,7 @@ describe("T6 - Update proposals unit tests", () => {
   test("T6.12 - SUCCESS 200 | Undefined required knowledge field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
-      required_knowledge: undefined
+      required_knowledge: undefined,
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -1456,7 +1459,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       data: {
-        supervisor_id: 'T001'
+        supervisor_id: "T001",
       },
     };
 
@@ -1464,7 +1467,7 @@ describe("T6 - Update proposals unit tests", () => {
       ...mockProposal,
       proposal_id: "P001",
       supervisor_id: "T001",
-      cod_group: "G001"
+      cod_group: "G001",
     };
 
     getProposalById.mockResolvedValue(mockProposalInDb);
@@ -1488,14 +1491,14 @@ describe("T6 - Update proposals unit tests", () => {
   test("T6.13 - SUCCESS 200 | Undefined notes field", (done) => {
     let mockProposal = {
       ...mockProposalReq,
-      notes: undefined
+      notes: undefined,
     };
 
     const mockProposalRes = {
       ...mockProposal,
       proposal_id: "P001",
       supervisor_id: "T001",
-      cod_group: "G001"
+      cod_group: "G001",
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -1509,7 +1512,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       data: {
-        supervisor_id: 'T001'
+        supervisor_id: "T001",
       },
     };
 
@@ -1543,7 +1546,7 @@ describe("T6 - Update proposals unit tests", () => {
 
     const mockProposalInDb = {
       data: {
-        supervisor_id: 'T001'
+        supervisor_id: "T001",
       },
     };
 
@@ -1552,7 +1555,7 @@ describe("T6 - Update proposals unit tests", () => {
       throw Error("Internal Database Error");
     });
 
-    const message = { "error": "Internal server error has occurred" };
+    const message = { error: "Internal server error has occurred" };
 
     request(app)
       .put("/api/proposals/" + "P001")
@@ -1564,6 +1567,360 @@ describe("T6 - Update proposals unit tests", () => {
         expect(isTeacher).toHaveBeenCalled();
         expect(getProposalById).toHaveBeenCalled();
         expect(updateProposal).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+});
+
+describe("T7 - Archive a proposal unit tests", () => {
+  test("T7.1 - ERROR 401 | Not authenticated", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      return res.status(401).json({ error: "Not authenticated" });
+    });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).not.toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.2 - ERROR 401 | Not authorized", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      return res
+        .status(401)
+        .json({ error: "Not authorized, must be a teacher" });
+    });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isTeacher).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.3 - ERROR 404 | Proposal not found", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockRejectedValue({
+      status: 404,
+      data: "The proposal has not been found!",
+    });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(404);
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.4 - ERROR 403 | Teacher is not supervisor of the proposal", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T002",
+      },
+    });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(403);
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.5 - ERROR 400 | Cannot archive an expired proposal", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T001",
+        expiration_date: "2023-01-01",
+      },
+    });
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot archive an expired proposal",
+        });
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.6 - ERROR 400 | Cannot archive an archived proposal", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
+        archived: true,
+      },
+    });
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot archive an archived proposal",
+        });
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.7 - ERROR 400 | Cannot archive a deleted proposal", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
+        archived: false,
+        deleted: true,
+      },
+    });
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot archive an already deleted proposal",
+        });
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.8 - ERROR 400 | Cannot archive proposal with accepted applications", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
+        archived: false,
+        deleted: false,
+      },
+    });
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    getAllApplicationsByProposalId.mockResolvedValue({
+      data: [
+        {
+          id: "A001",
+          proposal_id: "P001",
+          student_id: "S001",
+          status: "Accepted",
+          application_date: "2023-01-01",
+        },
+      ],
+    });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(400);
+        expect(res.body).toEqual({
+          error: "Cannot archive a proposal with an accepted application",
+        });
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.9 - ERROR 400 | Proposal not found when archiving", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
+        archived: false,
+        deleted: false,
+      },
+    });
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    getAllApplicationsByProposalId.mockResolvedValue({});
+
+    setProposalArchived.mockResolvedValue({});
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(404);
+        expect(res.body).toEqual({
+          error: "Proposal not found",
+        });
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.10 - ERROR 500 | Generic server error", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockImplementation(() => {
+      throw Error("Generic error");
+    });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual({
+          error: "Internal server error has occurred",
+        });
+        expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T7.11 - SUCCESS 204 | Proposal archived correctly", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isTeacher.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next();
+    });
+
+    getProposalById.mockResolvedValue({
+      status: 200,
+      data: {
+        proposal_id: "P001",
+        supervisor_id: "T001",
+        expiration_date: "2024-01-01",
+        archived: false,
+        deleted: false,
+      },
+    });
+
+    getVirtualDate.mockResolvedValue({ data: "2023-01-20" });
+
+    getAllApplicationsByProposalId.mockResolvedValue({});
+
+    setProposalArchived.mockResolvedValue({
+      data: { proposal_id: "P001", archived: true },
+    });
+
+    cancelPendingApplicationsByProposalId.mockResolvedValue({ data: 0 });
+
+    request(app)
+      .delete("/api/proposals/P001/archive")
+      .then((res) => {
+        expect(res.status).toBe(204);
+        expect(getProposalById).toHaveBeenCalledWith("P001");
         done();
       })
       .catch((err) => done(err));

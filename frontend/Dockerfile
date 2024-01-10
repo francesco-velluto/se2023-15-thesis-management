@@ -6,7 +6,7 @@ COPY package*.json ./
 
 RUN npm install --ignore-scripts
 
-RUN mkdir node_modules/.cache && chmod -R 770 node_modules/.cache
+RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
 
 COPY . .
 

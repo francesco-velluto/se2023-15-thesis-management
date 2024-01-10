@@ -376,8 +376,8 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),
-  ('P021', 'S006', 'Pending', '2023-10-12'),
-  ('P024', 'S007', 'Pending', '2023-11-15'),
+  ('P021', 'S011', 'Pending', '2023-10-12'),
+  ('P024', 'S012', 'Pending', '2023-11-15'),
   ('P008', 'S008', 'Accepted', '2023-10-10'),
   ('P009', 'S009', 'Pending', '2023-11-18'),
   ('P010', 'S010', 'Accepted', '2023-10-05'),
@@ -505,6 +505,55 @@ AFTER UPDATE OF prop_value ON public.virtual_clock
 FOR EACH ROW
 EXECUTE FUNCTION public.aggiorna_proposal();
 
+--
+-- Name: temp_file_uploads; Type: TABLE; Schema: public; Owner: postgres
+-- Since, the file is upload as the same time a student apply for thesis, the application_id is not created yet
+-- So here, you store the file with its id, to link it after to the application_id. 
+--
+
+CREATE TABLE public.temp_file_uploads (
+    upload_id SERIAL PRIMARY KEY,
+    student_id VARCHAR(10) NOT NULL,
+    filename VARCHAR(100) NOT NULL,
+    date_uploaded DATE
+);
+
+ALTER TABLE ONLY public.temp_file_uploads
+    ADD CONSTRAINT upload_file_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+
+INSERT INTO public.temp_file_uploads (filename,student_id, date_uploaded) VALUES
+  ('Resume_S001.pdf', 'S001', '2023-11-01'),
+  ('Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
+  ('Recommendation_Letter_S012.pdf', 'S012', '2023-11-15');
+
+ALTER TABLE public.temp_file_uploads OWNER TO postgres;
+
+--
+-- Name: application_file; Type: TABLE; Schema: public; Owner: postgres
+--
+
+
+CREATE TABLE public.application_file (
+    id SERIAL PRIMARY KEY,
+    application_id INT NOT NULL, 
+    student_id VARCHAR(10) NOT NULL,
+    filename VARCHAR(100) NOT NULL,
+    date_uploaded DATE
+);
+
+ALTER TABLE ONLY public.application_file
+    ADD CONSTRAINT application_file_fk_application FOREIGN KEY (application_id) REFERENCES public.applications(id);
+
+ALTER TABLE ONLY public.application_file
+    ADD CONSTRAINT application_file_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+INSERT INTO public.application_file ( application_id,filename, student_id,  date_uploaded) VALUES
+  ('1', 'Resume_S001.pdf', 'S001', '2023-11-01'),
+  ('5', 'Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
+  ('6', 'Resume_S012.pdf', 'S012', '2023-11-15');
+
+ALTER TABLE public.application_file OWNER TO postgres;
 --
 -- PostgreSQL database dump complete
 --

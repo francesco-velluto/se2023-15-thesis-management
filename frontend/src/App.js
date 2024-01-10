@@ -19,16 +19,23 @@ import "./style/index.css";
 import StudentProposalsPage from "./pages/StudentProposalsPage";
 import ProfessorProposalsPage from "./pages/ProfessorProposalsPage";
 import ThesisRequestDetailsPage from "./pages/ThesisRequestDetailsPage";
+import PreviewResume from "./components/PreviewResume";
+
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 
 function App() {
     return (
-        <BrowserRouter>
-            <LoggedUserProvider>
-                <VirtualClockProvider>
-                    <Main />
-                </VirtualClockProvider>
-            </LoggedUserProvider>
-        </BrowserRouter>
+        <DndProvider backend={HTML5Backend}>
+            <BrowserRouter>
+                <LoggedUserProvider>
+                    <VirtualClockProvider>
+                        <Main />
+                    </VirtualClockProvider>
+                </LoggedUserProvider>
+            </BrowserRouter>
+        </DndProvider>
     );
 }
 
@@ -53,6 +60,7 @@ function Main() {
                         	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
                     } />
                     <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
+                    <Route path="upload/:upload_id" element={loggedUser ? <PreviewResume/> : <UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
                     <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
