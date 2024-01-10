@@ -304,7 +304,7 @@ CREATE TABLE public.proposals (
 );
 
 INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, programmes, archived, deleted) VALUES
-  ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Theoretical', ARRAY['G001'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P001', 'Web Development', 'T002', ARRAY['Web', 'Development'], 'Theoretical', ARRAY['G001'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2024-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Research', ARRAY['G002'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Master', ARRAY['MSC001', 'MSC002'], false, false),
   ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Experimental', ARRAY['G001'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Master', ARRAY['MSC001'], false, false),
   ('P004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Experimental'], 'Research', ARRAY['G002'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Master', ARRAY['MSC001'], false, false),
@@ -372,7 +372,7 @@ CREATE TABLE public.applications (
 );
 
 INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
-  ('P001', 'S001', 'Canceled', '2023-11-01'),
+  ('P001', 'S001', 'Pending', '2023-11-01'),
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),

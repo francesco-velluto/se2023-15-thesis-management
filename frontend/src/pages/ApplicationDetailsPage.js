@@ -10,6 +10,9 @@ import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
 import PropTypes from "prop-types";
+import { AiOutlineFilePdf, AiOutlineSearch} from 'react-icons/ai';
+
+import { fetchFileInfo } from "../api/ApplicationsAPI";
 
 
 function ApplicationDetails() {
@@ -231,13 +234,35 @@ function ApplicationDetails() {
 
 
 function StudentInfo(props) {
-
+    const [fileInfo, setFileInfo] = useState(null);
+    const [isUploaded, setIsUploaded] = useState(false);
     const infoStudent = props.infoStudent;
     const infoApplication = props.infoApplication;
 
     const formattedDate = (date) => {
         return format(new Date(date), "EEEE, MMMM do yyyy")
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const info = await fetchFileInfo({ application_id: infoApplication.id });
+                console.log(info);
+    
+                if (info ) {
+                    setFileInfo(info);
+                    setIsUploaded(true);
+                } else {
+                    console.log('No data found');
+                }
+            } catch (err) {
+                console.error('[FRONTEND ERROR] Error in get student application list: ' + err.message);
+            }
+        };
+    
+        fetchData();
+    }, [infoApplication.id]);
+
     return (
         <Row className="my-2">
             <Col>
@@ -253,7 +278,29 @@ function StudentInfo(props) {
                         <RowInfo title={"Surname"} value={infoStudent.surname} />
                         <RowInfo title={"E-mail"} value={infoStudent.email} />
                         <RowInfo title={"Enrollment year"} value={infoStudent.enrollment_year} />
-
+                        {isUploaded && fileInfo && (
+                            <div className="file-div">
+                                <Row className="d-flex align-items-center">
+                                    <Col xs={1}>
+                                        <AiOutlineFilePdf size={50} />
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p className="d-flex mb-0 fw-bold" >{fileInfo.data.filename}</p>
+                                    </Col>
+                                    <Col >
+                                        <AiOutlineSearch size={30}/>
+                                        <a
+                                            href={`/applications/file/${infoApplication.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="resume-link"
+                                        >
+                                            See preview
+                                        </a>
+                                    </Col>
+                                </Row>
+                            </div>
+                            )}
                     </CardBody>
                     <CardFooter style={{ borderColor: "#6D5D6E" }}>
                         Applied for this thesis on {formattedDate(infoApplication.application_date)}

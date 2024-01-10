@@ -1,11 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { LoggedUserContext } from '../context/AuthenticationContext';
-import { uploadFile, fetchUploadedFile, fetchFileInfo } from '../api/ApplicationsAPI';
+import { uploadFile, fetchFileInfo } from '../api/ApplicationsAPI';
 import { Row, Col, Button } from 'react-bootstrap';
 import { useDrop } from 'react-dnd';
 import { AiOutlineFilePdf, AiOutlineSearch} from 'react-icons/ai';
 import { NativeTypes } from 'react-dnd-html5-backend';
-import { toast } from 'react-toastify';
 
 
 const UploadResume = ({setCallbackUploadId}) => {
@@ -15,7 +14,6 @@ const UploadResume = ({setCallbackUploadId}) => {
   const [filename, setFilename] = useState("");
   const[isUploaded, setIsUploaded] = useState(false)
   const [uploadId, setUploadId]= useState("");
-  const [fileUrl, setFileUrl] = useState(null);
   const [fileInfo, setFileInfo] = useState(null);
 
 
@@ -50,24 +48,23 @@ const UploadResume = ({setCallbackUploadId}) => {
       if (filename){
         formData.append('file', file, filename);
         const response = await uploadFile(loggedUser.id, formData);
+
         const upload_id =response.rows[0].upload_id
         setUploadId(upload_id);
         setCallbackUploadId(upload_id);
 
-        toast.success('File uploaded successfully');
+        alert('File uploaded successfully');
         setIsUploaded(true);
 
-        const url = await fetchUploadedFile(upload_id);
-        setFileUrl(url);
-        const info = await fetchFileInfo(upload_id)
+        const info = await fetchFileInfo({upload_id: upload_id})
         setFileInfo(info);
         
         
       }
 
     } catch (error) {
-      console.error('Error uploading file:', error.message);
-      alert('Error uploading file: ', error.message);
+      console.error('Error uploading file:', error);
+      alert('An error occured : ', error);
     }
   };
 
@@ -146,10 +143,7 @@ const UploadResume = ({setCallbackUploadId}) => {
                   See preview
                 </a>
               </Col>
-   
      </Row>
-   
-
  }
 </div>
 

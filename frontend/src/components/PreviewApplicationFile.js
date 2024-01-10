@@ -3,14 +3,14 @@ import { fetchUploadedFile } from '../api/ApplicationsAPI';
 import { useParams } from 'react-router-dom';
 
 
-const PreviewResume = () => {
-  const { upload_id } = useParams();
+const PreviewApplicationFile= () => {
+  const { application_id } = useParams();
   const [fileUrl, setFileUrl] = useState(null);
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const url = await fetchUploadedFile(upload_id);
+        const url = await fetchUploadedFile({ application_id: application_id });
         setFileUrl(url);
       } catch (error) {
         console.error(error.message);
@@ -18,7 +18,7 @@ const PreviewResume = () => {
     };
 
     fetchData();
-  }, [upload_id]); 
+  }, [application_id]); 
 
   return (
     <div>
@@ -36,4 +36,4 @@ const PreviewResume = () => {
   );
 };
 
-export default PreviewResume;
+export default PreviewApplicationFile;

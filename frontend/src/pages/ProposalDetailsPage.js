@@ -88,6 +88,7 @@ function ProposalDetailsPage({ mode }) {
   const [newKeyword, setNewKeyword] = useState("");
 
   const [fileSent, setFileSent] = useState(false);
+  const [isFile, setIsFile] = useState(false);
 
   const targetRef = useRef(null);
 
@@ -1109,6 +1110,7 @@ function ProposalDetailsPage({ mode }) {
                       proposalID={proposal_id}
                       applicationStatusCallback={setApplyingState}
                       setFileSent={setFileSent}
+                      setIsFile={setIsFile}
                     />
                   </Col>
                 }
@@ -1222,16 +1224,18 @@ function ProposalDetailsPage({ mode }) {
                       </Col>
                     </Row>
                     <Row>
-                      { fileSent ? (
+                      { fileSent && isFile ? (
                          <Col className="d-flex align-items-center text-success">
                          <AiOutlineFilePdf size={50} /> 
                          <i>Your file has been added successfully to your application.</i>
                          </Col>
-                      ) : (
+                      ) : !fileSent && isFile ? (
                         <Col className="d-flex align-items-center text-danger">
                          <AiOutlineFilePdf size={50} />
                          <i>An error occured, your file has not been sent with your application</i>
                          </Col>
+                      ) :(
+                        <></>
                       )
                       }
                     </Row>

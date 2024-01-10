@@ -170,9 +170,11 @@ module.exports = {
      * @param upload_id
      */
 
-    fetchUploadedFile: async (upload_id) => {
+    fetchUploadedFile: async ({ upload_id, application_id }) => {
         try {
-            const response = await fetch(`${ApplicationsAPIURL}/upload/${upload_id}`, {
+            const url = `${ApplicationsAPIURL}/${upload_id ? `upload/${upload_id}` : `file/${application_id}`}`;
+
+            const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -189,7 +191,7 @@ module.exports = {
             throw new Error(`Error fetching resume: ${response.statusText}`);
             }
         } catch (error) {
-            throw new Error(`Error fetching resume: ${error.message}`);
+            throw new Error(error.message);
         }
         },
           
@@ -201,22 +203,24 @@ module.exports = {
          * @param student_id
          */
         
-        fetchFileInfo: async (upload_id) => {
+        fetchFileInfo: async ({upload_id, application_id}) => {
             try {
-            const response = await fetch(`${ApplicationsAPIURL}/upload/${upload_id}/info`, {
-                method: 'GET',
-                headers: APIConfig.API_REQUEST_HEADERS,
-                credentials: 'include',
-            });
-        
-            if (response.ok) {
-                const data = await response.json(); 
-                return data;
-            } else {
-                throw new Error(`Error fetching resume: ${response.statusText}`);
-            }
+                const url = `${ApplicationsAPIURL}/${upload_id ? `upload/${upload_id}/info` : `file/${application_id}/info`}`;
+
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: APIConfig.API_REQUEST_HEADERS,
+                    credentials: 'include',
+                });
+            
+                if (response.ok) {
+                    const data = await response.json(); 
+                    return data;
+                } else {
+                    throw new Error(`Error fetching resume: ${response.statusText}`);
+                }
             } catch (error) {
-            throw new Error(`Error fetching resume: ${error.message}`);
+                throw new Error(`Error fetching resume: ${error.message}`);
             }
         },
 

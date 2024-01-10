@@ -326,22 +326,27 @@ module.exports = {
     
     previewFile: async (req, res) => {  
         try {
-        const { success, data } = await applicationsService.getApplicationFile(req.user.id, req.params.upload_id);
-    
-        if (success === true) {
-            const filePath = path.join(__dirname, '..', 'uploads', data.filename);
-            if (fs.existsSync(filePath)) {
-            res.setHeader('Content-Type', 'application/pdf');
-            res.setHeader('Content-Disposition', `inline; filename=${data.filename}`);
-            if (res.headersSent) {
-                console.warn("Response headers already sent. Exiting.");
-                return;
+            let {success, data} = {success: false, data: undefined};
+            if(req.params.upload_id) {
+                ({ success, data } = await applicationsService.getUploadedFile(req.user.id, req.params.upload_id));
             }
-            const stream = fs.createReadStream(filePath);
-            stream.pipe(res);
-            } else {
-            res.status(404).json({ error: 'File not found' });
+            if(req.params.application_id) {
+                ({ success, data } = await applicationsService.getApplicationFile(req.user.id, req.params.application_id));
             }
+            if (success === true) {
+                const filePath = path.join(__dirname, '..', 'uploads', data.filename);
+                if (fs.existsSync(filePath)) {
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `inline; filename=${data.filename}`);
+                if (res.headersSent) {
+                    console.warn("Response headers already sent. Exiting.");
+                    return;
+                }
+                const stream = fs.createReadStream(filePath);
+                stream.pipe(res);
+                } else {
+                res.status(404).json({ error: 'File not found' });
+                }
         } else {
             res.status(404).json({ error: 'Resume not found for the specified student' });
         }
@@ -353,15 +358,20 @@ module.exports = {
 
     getFileInfo: async (req, res) => { 
         try {
-        const { success, data } = await applicationsService.getApplicationFile(req.user.id, req.params.upload_id);
-        if (success === true ) {
-            res.status(200).json({ data });
+            let {success, data} = {success: false, data: undefined};
+            // if it is not yet associated to an application, the student jsut uploaded the file but did not "confirm" application yet
+            if (req.params.upload_id){
+                ({ success, data } = await applicationsService.getUploadedFile(req.user.id, req.params.upload_id));
+            }
+            // here we retrieve the file associated to an application
+            if (req.params.application_id) {
+                ({ success, data } = await applicationsService.getApplicationFile(req.user.id, req.params.application_id));             
+            }
+            if (success === true ) {
+                res.status(200).json({ data });
+            }
+            else { res.status(200).json({ message: "No file found" });    }     
         }
-        else { res.status(500).json({ error: "Internal server error" });    }
-        } catch (error) {
-        console.error("[BACKEND-SERVER] Error in getStudentResumeInfo", error);
-        res.status(500).json({ error: "Internal server error" });
-        }
+    catch(error) {res.status(500).json({ error: "Internal server error" }); }
     }
-
 }
