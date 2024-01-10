@@ -489,12 +489,13 @@ CREATE OR REPLACE FUNCTION public.aggiorna_proposal()
 RETURNS TRIGGER AS $$
 BEGIN
 
-        UPDATE public.proposals SET archived = true WHERE expiration_date <= NEW.prop_value AND deleted = false RETURNING proposal_id;
-        UPDATE public.applications SET status = 'Canceled' WHERE proposal_id in 
-            (select proposal_id
-            from public.proposals
-            where archived = true)
-            and status = 'Pending';
+        UPDATE public.proposals SET archived = true WHERE expiration_date <= NEW.prop_value AND deleted = false;
+        UPDATE public.applications SET status = 'Canceled'
+            FROM public.proposals
+            WHERE public.applications.proposal_id = public.proposals.proposal_id 
+            AND public.proposals.archived = true
+            AND public.applications.status = 'Pending'; 
+           
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
