@@ -477,6 +477,34 @@ ALTER TABLE ONLY public.thesis_request
 ALTER TABLE ONLY public.thesis_request
     ADD CONSTRAINT thesis_request_fk_2 FOREIGN KEY (co_supervisor_id) REFERENCES public.teacher(id);
 
+-- Set expired proposals as archived
+update public.proposals
+set archived = true
+where expiration_date <= CURRENT_DATE AND deleted = false;
+
+
+
+-- Function executed when trigger is activated
+CREATE OR REPLACE FUNCTION public.aggiorna_proposal()
+RETURNS TRIGGER AS $$
+BEGIN
+
+        UPDATE public.proposals SET archived = true WHERE expiration_date <= NEW.prop_value AND deleted = false RETURNING proposal_id;
+        UPDATE public.applications SET status = 'Canceled' WHERE proposal_id in 
+            (select proposal_id
+            from public.proposals
+            where archived = true)
+            and status = 'Pending';
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger actived when the virtual_clock changes
+CREATE or replace TRIGGER trigger_aggiorna_proposal
+AFTER UPDATE OF prop_value ON public.virtual_clock
+FOR EACH ROW
+EXECUTE FUNCTION public.aggiorna_proposal();
+
 --
 -- PostgreSQL database dump complete
 --

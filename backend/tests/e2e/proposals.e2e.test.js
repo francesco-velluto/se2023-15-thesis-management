@@ -1059,7 +1059,7 @@ describe("End to end test for update proposal", () => {
 
 });
 
-describe.only("End to end test for archive proposal", () => {
+describe("End to end test for archive proposal", () => {
 
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
