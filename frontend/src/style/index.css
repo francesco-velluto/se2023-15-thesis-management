@@ -114,6 +114,14 @@ body {
 /* PROPOSAL LIST**********/
 /*************************/
 
+.loadingSpinner{
+  color: #003576;
+}
+
+.loadingText{
+  font-size: large;
+}
+
 #show-proposal-detail,
 #proposal-detail-actions,
 #show-details-proposal {

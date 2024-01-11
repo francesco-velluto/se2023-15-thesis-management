@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { Alert, Button, Col, Container, Dropdown, Row } from "react-bootstrap";
+import { Alert, Button, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
 import { getAllProfessorProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
@@ -9,7 +9,7 @@ import ArchiveProposalModal from "./ArchiveProposalModal";
 
 function ProfessorProposalsList() {
   const [proposals, setProposals] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -46,7 +46,7 @@ function ProfessorProposalsList() {
           setErrorMessage(err.message);
           setIsLoading(false);
         });
-      setIsLoading(false);
+      
     }
 
     loadProposals();
@@ -57,8 +57,9 @@ function ProfessorProposalsList() {
     <Container className="rounded-bottom py-4">
       {isLoading && (
         <Row>
-          <Col>
-            <Alert variant="danger">Loading...</Alert>
+          <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+            <Spinner animation="border" className="loadingSpinner" />
+            <span className="mt-3 loadingText">Loading...</span>
           </Col>
         </Row>
       )}
@@ -87,6 +88,7 @@ function ProfessorProposalsList() {
           </Row>
         )}
       </div>
+      
       {!errorMessage && proposals.length > 0 && (
         <Row className="mt-1 mb-4 mx-2 p-2">
           <Col xs={12} md={3} className="text-center text-md-start">
@@ -145,7 +147,7 @@ function ProfessorProposalsList() {
         </Row>
       )}
 
-      {!errorMessage && proposals.length > 0 ? (
+      {!errorMessage && proposals.length > 0 && (
         proposals.map((proposal, index) => (
           <ProposalRow
             key={index}
@@ -156,7 +158,8 @@ function ProfessorProposalsList() {
             setArchived={setArchived}
           />
         ))
-      ) : (
+      ) }
+      {!isLoading && proposals.length === 0 && (
         <Row>
           <Col xs={12} className="d-flex flex-row justify-content-center">
             You didn't create any proposal yet
