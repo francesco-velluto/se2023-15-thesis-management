@@ -247,19 +247,16 @@ function StudentInfo(props) {
         const fetchData = async () => {
             try {
                 const info = await fetchFileInfo({ application_id: infoApplication.id });
-                console.log(info);
-    
-                if (info ) {
+
+                if (info) {
                     setFileInfo(info);
                     setIsUploaded(true);
-                } else {
-                    console.log('No data found');
                 }
             } catch (err) {
                 console.error('[FRONTEND ERROR] Error in get student application list: ' + err.message);
             }
         };
-    
+
         fetchData();
     }, [infoApplication.id]);
 
@@ -319,7 +316,7 @@ StudentInfo.propTypes = {
         enrollment_year: PropTypes.number
     }),
     infoApplication: PropTypes.shape({
-        application_date: PropTypes.oneOf([String, Date])
+        application_date: PropTypes.string
     }),
 };
 
@@ -360,7 +357,7 @@ ProposalInfo.propTypes = {
         title: PropTypes.string,
         type: PropTypes.string,
         notes: PropTypes.string,
-        expiration_date: PropTypes.oneOf([String, Date])
+        expiration_date: PropTypes.string
     }),
 };
 

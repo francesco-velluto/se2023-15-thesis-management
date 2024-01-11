@@ -120,13 +120,13 @@ module.exports = {
         }catch(err){
             throw new Error(err);
         }
-    }, 
+    },
 
     /**
      * POST /applications/upload
-     * 
+     *
      * Upload a file for a student
-     * 
+     *
      * @param student_id
      * @param formData FormData object containing the file to upload
      */
@@ -144,16 +144,16 @@ module.exports = {
             body: formData,
             credentials: 'include',
             });
-        
+
             if (response.ok) {
             try {
-                return response.json(); 
+                return response.json();
             } catch (error) {
                 console.error('Error parsing JSON from server response:', error);
                 throw new Error('Invalid response from server');
             }
             } else {
-            const errorText = await response.text(); 
+            const errorText = await response.text();
             console.error('Error response from server:', errorText);
             throw new Error(errorText || 'Unknown error');
             }
@@ -163,9 +163,9 @@ module.exports = {
         },
         /**
      * GET /applications/upload/:upload_id
-     * 
+     *
      * Get the current uploaded file of a student
-     * 
+     *
      * @param student_id
      * @param upload_id
      */
@@ -178,11 +178,11 @@ module.exports = {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/pdf', 
+                'Accept': 'application/pdf',
             },
             credentials: 'include',
             });
-        
+
             if (response.ok) {
             const pdfBlob = await response.blob();
             const url = URL.createObjectURL(pdfBlob);
@@ -194,15 +194,15 @@ module.exports = {
             throw new Error(error.message);
         }
         },
-          
+
         /**
          * GET /applications/upload/:upload_id/info
-         * 
+         *
          * Get the information of the current uploaded resume of a student
-         * 
+         *
          * @param student_id
          */
-        
+
         fetchFileInfo: async ({upload_id, application_id}) => {
             try {
                 const url = `${ApplicationsAPIURL}/${upload_id ? `upload/${upload_id}/info` : `file/${application_id}/info`}`;
@@ -212,10 +212,12 @@ module.exports = {
                     headers: APIConfig.API_REQUEST_HEADERS,
                     credentials: 'include',
                 });
-            
+
                 if (response.ok) {
-                    const data = await response.json(); 
+                    const data = await response.json();
                     return data;
+                } else if (response.status === 404) {
+                    return undefined;
                 } else {
                     throw new Error(`Error fetching resume: ${response.statusText}`);
                 }
