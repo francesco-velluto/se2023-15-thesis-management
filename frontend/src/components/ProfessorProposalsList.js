@@ -295,6 +295,7 @@ function ProposalRow({
           <Dropdown.Menu>
             <Dropdown.Item
               id="copy-proposal-id"
+              
               onClick={() => {
                 navigate("/proposals/" + proposal.proposal_id + "/copy");
               }}
@@ -303,6 +304,7 @@ function ProposalRow({
             </Dropdown.Item>
             <Dropdown.Item
               id="update-proposal-id"
+              
               onClick={() => {
                 navigate("/proposals/" + proposal.proposal_id + "/update");
               }}
@@ -312,6 +314,7 @@ function ProposalRow({
             </Dropdown.Item>
             <Dropdown.Item
               id="archive-proposal-id"
+              
               onClick={() => {
                 setShowArchiveModal(true);
               }}

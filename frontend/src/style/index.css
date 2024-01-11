@@ -140,6 +140,13 @@ body {
   font-weight: bold;
 }
 
+#copy-proposal-id:hover,
+#update-proposal-id:hover,
+#archive-proposal-id:hover {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
 .proposal-row {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s;
@@ -168,6 +175,11 @@ body {
 }
 
 #dropdown-proposal-actions:hover {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
+#dropdown-proposal-actions:focus {
   color: whitesmoke;
   background-color: #003576;
 }
@@ -227,6 +239,39 @@ body {
     /* Equivalent to my-md-1 */
   }
 }
+
+/*************************/
+/* PROPOSAL DETAIL *******/
+/*************************/
+
+#dropdown-detail-actions {
+  border-color: #666666;
+  border-width: 2px;
+  background-color: #f0f0f0;
+}
+
+#dropdown-detail-actions:hover {
+  color: whitesmoke;
+  background-color: #003576;
+  border-color: #003576;
+}
+
+#dropdown-detail-actions:focus {
+  color: whitesmoke;
+  background-color: #003576;
+  border-color: #003576;
+}
+
+.dropdown-detail-actions-options {
+  color: #003576;
+  font-weight: bold;
+}
+
+.dropdown-detail-actions-options:hover {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
 
 /*************************/
 /* ARCHIVE MODAL *******/

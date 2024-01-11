@@ -78,7 +78,7 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
   };
 
   return (
-    <Container>
+    <Container className='d-flex justify-content-end p-0'>
         <Button id={"apply-button"} variant="secondary" onClick={handleShow}
           disabled={applied || disabled}
           style={{ marginLeft: "auto" }}
