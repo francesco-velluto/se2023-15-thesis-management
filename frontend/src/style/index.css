@@ -229,6 +229,38 @@ body {
 }
 
 /*************************/
+/* PROPOSAL DETAIL *******/
+/*************************/
+
+#dropdown-detail-actions {
+  border-color: #666666;
+  border-width: 2px;
+  background-color: #f0f0f0;
+}
+
+#dropdown-detail-actions:hover {
+  color: whitesmoke;
+  background-color: #003576;
+  border-color: #003576;
+}
+
+#dropdown-detail-actions:focus {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
+.dropdown-detail-actions-options {
+  color: #003576;
+  font-weight: bold;
+}
+
+.dropdown-detail-actions-options:hover {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
+
+/*************************/
 /* ARCHIVE MODAL *******/
 /*************************/
 

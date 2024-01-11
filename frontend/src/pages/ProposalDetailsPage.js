@@ -23,7 +23,8 @@ import {
   ListGroup,
   Row,
   Modal,
-  Spinner
+  Spinner,
+  Dropdown
 } from "react-bootstrap";
 import ApplicationButton from "../components/ApplicationButton";
 
@@ -33,6 +34,7 @@ import { UnAuthorizationPage } from "../App";
 import dayjs from "dayjs";
 import "../style/ProposalDetails.css";
 import ArchiveProposalModal from "../components/ArchiveProposalModal";
+import { FaArchive, FaCopy, FaPen, FaTrash } from "react-icons/fa";
 
 /**
  * This page supports three modes:
@@ -1038,13 +1040,135 @@ function ProposalDetailsPage({ mode }) {
                 <Col>
                   <Button
                     id="go-back"
+                    className="w-50"
                     onClick={() => {
                       navigate("/proposals");
                     }}>
                     Return
                   </Button>
                 </Col>
+
+                {mode === "update" && loggedUser.role === 0 && (
+                  <Col className="d-flex justify-content-end">
+                    <Button
+                      id="add-proposal-btn"
+                      onClick={handleUpdateProposal}
+                    >
+                      Save
+                    </Button>
+                  </Col>
+                )}
+
+                {(mode === "add" || mode === "copy") &&
+                  loggedUser.role === 0 && (
+                    <Col className="d-flex justify-content-end">
+                      <Button
+                        id="add-proposal-btn"
+                        onClick={handleCreateProposal}
+                      >
+                        Create Proposal
+                      </Button>
+                    </Col>
+                  )}
+
+              {mode === "read" && loggedUser.role === 1 &&
+                  <Col  className="d-flex justify-content-end">
+                    <ApplicationButton
+                      setErrMsg={setErrorMessage}
+                      proposalID={proposal_id}
+                      applicationStatusCallback={setApplyingState}
+                      setFileSent={setFileSent}
+                      setIsFile={setIsFile}
+                    />
+                  </Col>
+                }
+
+                {
+                  !(mode === "update" && loggedUser.role === 0) &&
+                  !(mode === "add" || mode === "copy") && 
+                  !(mode === "read" && loggedUser.role === 1) &&
+
                 <Col>
+                
+                    <Dropdown className="w-100 d-flex justify-content-end">
+                      <Dropdown.Toggle variant="outline-dark" id="dropdown-detail-actions" className="w-50">
+                        Actions
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+
+                      {mode === "read" && loggedUser.role === 0 && (
+                          <Dropdown.Item
+                            id="copy-proposal-btn"
+                            className="dropdown-detail-actions-options"
+                            onClick={() =>
+                              navigate("/proposals/" + proposal_id + "/copy")
+                            }
+                          >
+                            <span className="d-flex align-items-center">
+                              <FaCopy className="me-1" />
+                              Copy
+                            </span>
+                          </Dropdown.Item>
+                        )}
+
+                          {mode === "read" && loggedUser.role === 0 && (
+                          <Dropdown.Item
+                            id="update-proposal-btn"
+                            className="dropdown-detail-actions-options"
+                            onClick={() =>
+                              navigate("/proposals/" + proposal_id + "/update")
+                            }
+                          >
+                            <span className="d-flex align-items-center">
+                              <FaPen className="me-1" />
+                              Update
+                            </span>
+                          </Dropdown.Item>
+                        )}
+
+                        {mode === "read" &&
+                          loggedUser.role === 0 &&
+                          !archived &&
+                          !deleted && (
+                            <Dropdown.Item
+                              id="archive-proposal-btn"
+                              className="dropdown-detail-actions-options"
+                              onClick={() => setShowArchiveModal(true)}
+                            >
+                              <span className="d-flex align-items-center">
+                                <FaArchive className="me-1" />
+                                Archive
+                              </span>
+                            </Dropdown.Item>
+                          )}
+
+                        
+
+                        
+
+                        {mode === "read" && loggedUser.role === 0 && !deleted && (
+                          <Dropdown.Item
+                            id="delete-proposal-btn"
+                            className="dropdown-detail-actions-options"
+                            onClick={handleShow}
+                          >
+                            <span className="d-flex align-items-center">
+                                <FaTrash className="me-1" />
+                                Delete
+                              </span>
+                          </Dropdown.Item>
+                        )}
+                        
+                      </Dropdown.Menu>
+
+      
+
+                    </Dropdown>
+                
+                </Col>
+                }
+                {/* <Col>
                   <Row className="no-gutters m-0 p-0">
                     {mode === "read" &&
                       loggedUser.role === 0 &&
@@ -1103,40 +1227,9 @@ function ProposalDetailsPage({ mode }) {
                   </Row>
                 </Col>
 
-                {mode === "read" && loggedUser.role === 1 &&
-                  <Col as={Row} xs={12} sm={3}>
-                    <ApplicationButton
-                      setErrMsg={setErrorMessage}
-                      proposalID={proposal_id}
-                      applicationStatusCallback={setApplyingState}
-                      setFileSent={setFileSent}
-                      setIsFile={setIsFile}
-                    />
-                  </Col>
-                }
+                
 
-                {mode === "update" && loggedUser.role === 0 && (
-                  <Col as={Row} xs={12} sm={3}>
-                    <Button
-                      id="add-proposal-btn"
-                      onClick={handleUpdateProposal}
-                    >
-                      Save
-                    </Button>
-                  </Col>
-                )}
-
-                {(mode === "add" || mode === "copy") &&
-                  loggedUser.role === 0 && (
-                    <Col as={Row} xs={12} sm={3} className="d-flex flex-row-reverse">
-                      <Button
-                        id="add-proposal-btn"
-                        onClick={handleCreateProposal}
-                      >
-                        Create Proposal
-                      </Button>
-                    </Col>
-                  )}
+                 */}
               </Row>
               <Modal show={showModal} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
