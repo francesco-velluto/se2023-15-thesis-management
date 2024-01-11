@@ -320,6 +320,14 @@ body {
   background-color: darkgray;
 }
 
+#career-accordion {
+  margin-top: 1rem;
+}
+
+#career-title .accordion-button {
+  font-weight: bold;
+}
+
 /*************************/
 
 /*************************/
@@ -384,7 +392,7 @@ body {
 /*************************/
 
 .resume-container {
-  border: 1px solid #ccc; 
+  border: 1px solid #ccc;
   padding: 20px;
   margin: 20px 0;
   border-radius: 8px;
@@ -394,7 +402,7 @@ body {
 .resume-container:hover {
   color: #003576;
   background-color: lightgray;
-  
+
 }
 
 .resume-link {
@@ -407,7 +415,7 @@ body {
 }
 
 .upload-container {
-  border: 1px solid #ccc; 
+  border: 1px solid #ccc;
   padding: 20px;
   margin: 20px 0;
   border-radius: 8px;
@@ -447,8 +455,8 @@ body {
 .upload-message {
   margin-bottom: 10px;
   font-size: 16px;
-  white-space: nowrap; 
-  width: 100%; 
+  white-space: nowrap;
+  width: 100%;
 }
 
 .filename-title {

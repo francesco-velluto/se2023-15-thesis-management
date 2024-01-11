@@ -5,7 +5,7 @@ import TitleBar from "../components/TitleBar";
 import { useNavigate, useParams } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
-import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
+import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal, Accordion, Table } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
@@ -275,6 +275,37 @@ function StudentInfo(props) {
                         <RowInfo title={"Surname"} value={infoStudent.surname} />
                         <RowInfo title={"E-mail"} value={infoStudent.email} />
                         <RowInfo title={"Enrollment year"} value={infoStudent.enrollment_year} />
+                        <Accordion defaultActiveKey={null}>
+                            <Accordion.Item id="career-accordion">
+                                <Accordion.Header id="career-title">Student's Career</Accordion.Header>
+                                <Accordion.Body>
+                                    <Table hover id="career-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Course</th>
+                                                <th>CFU</th>
+                                                <th>Grade</th>
+                                                <th>Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Software Engineering I</td>
+                                                <td>8</td>
+                                                <td>28</td>
+                                                <td>2023-01-29</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Computer Architectures</td>
+                                                <td>10</td>
+                                                <td>27</td>
+                                                <td>2023-02-10</td>
+                                            </tr>
+                                        </tbody>
+                                    </Table>
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Accordion>
                         {isUploaded && fileInfo && (
                             <div className="file-div">
                                 <Row className="d-flex align-items-center">
