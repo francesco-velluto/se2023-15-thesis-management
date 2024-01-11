@@ -65,14 +65,17 @@ function ProfessorProposalsList() {
       )}
       <div ref={targetRef}>
         {errorMessage && (
-          <Row className="d-flex flex-row justify-content-center">
+          <Row >
+            <Col className="d-flex flex-row justify-content-center">
             <Alert
+            className="w-50"
               variant="danger"
               dismissible
               onClose={() => setErrorMessage("")}
             >
               {errorMessage}
             </Alert>
+            </Col>
           </Row>
         )}
         {successMessage && (
@@ -159,7 +162,7 @@ function ProfessorProposalsList() {
           />
         ))
       ) }
-      {!isLoading && proposals.length === 0 && (
+      {!isLoading && !errorMessage && proposals.length === 0 && (
         <Row>
           <Col xs={12} className="d-flex flex-row justify-content-center">
             You didn't create any proposal yet
@@ -176,12 +179,19 @@ function ProfessorProposalsList() {
           </Col>
         </Row>
       )}
-      {errorMessage && (
-        <Row>
-          <Col>
-            <Alert variant="danger">{errorMessage}</Alert>
-          </Col>
-        </Row>
+      {errorMessage && proposals && proposals.length > 6 && (
+        <Row >
+        <Col className="d-flex flex-row justify-content-center">
+        <Alert
+        className="w-50"
+          variant="danger"
+          dismissible
+          onClose={() => setErrorMessage("")}
+        >
+          {errorMessage}
+        </Alert>
+        </Col>
+      </Row>
       )}
     </Container>
   );
