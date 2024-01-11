@@ -1,6 +1,5 @@
 "use strict";
 
-const { getAllApplicationsByTeacherId, getAllApplicationsByStudentId } = require("../service/applications.service");
 const studentService = require("../service/students.service");
 
 module.exports = {
@@ -37,7 +36,6 @@ module.exports = {
         return res.status(404).json({ error: "Student not found" });
       }
 
-      // TODO: only teacher supervisor of a proposal for which the student applied can see his career
       const isAuthorized = await studentService.hasStudentAppliedForTeacher(student_id, teacher_id);
       if (!isAuthorized) {
         return res.status(403).json({ error: "Teacher not authorized to see student's career" });
