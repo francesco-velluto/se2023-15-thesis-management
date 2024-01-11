@@ -36,6 +36,20 @@ body {
   width: 100%;
 }
 
+
+::-webkit-scrollbar {
+  width: 10px; 
+}
+
+::-webkit-scrollbar-track {
+  background: #cacaca;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #003576;
+}
+
+
 /*************************/
 
 #card-border {
