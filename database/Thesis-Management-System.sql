@@ -95,10 +95,10 @@ CREATE TABLE public.group (
 );
 
 INSERT INTO public.group (cod_group, title_group) VALUES
-  ('G001', 'Groupe 1'),
-  ('G002', 'Groupe 2'),
-  ('G003', 'Groupe 3'),
-  ('G004', 'Groupe 4');
+  ('G001', 'Group 1'),
+  ('G002', 'Group 2'),
+  ('G003', 'Group 3'),
+  ('G004', 'Group 4');
 
 ALTER TABLE public.group OWNER TO postgres;
 

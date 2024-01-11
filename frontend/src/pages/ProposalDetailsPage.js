@@ -336,7 +336,7 @@ function ProposalDetailsPage({ mode }) {
                 getAllDegrees()
                   .then((list) => setProposalDegreeList(list))
                   .catch((err) => {
-                    setErrorMessage(err);
+                    setErrorMessage(err.message);
                     setProposalDegreeList([]);
                     scrollToTarget();
                   });
@@ -420,7 +420,7 @@ function ProposalDetailsPage({ mode }) {
                       dismissible
                       onClose={() => setErrorMessage("")}
                     >
-                      {errorMessage}
+                      {typeof(errorMessage) === "string" ? errorMessage : errorMessage.message}
                     </Alert>
                   </Row>
                 )}

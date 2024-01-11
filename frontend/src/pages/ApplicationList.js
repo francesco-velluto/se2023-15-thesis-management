@@ -35,22 +35,29 @@ function ApplicationList() {
 
             <TitleBar/>
             <Container >
-                <Row >
+                <Row>
+                    <Col className='d-flex justify-content-center align-items-center'>
                     {errors?.map((error, index) => (
                         <Alert variant='danger'
+                            className='w-50 mt-3'
                             dismissible={true}
                             onClose={() => setErrors(undefined)}
                             key={index}>
                             {error}
                         </Alert>
                     ))}
+                    </Col>
+                    
                 </Row>
 
                 <Row className='browse-application'>
                     {loading ? (
-                        <Spinner animation="border">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
+                        <Row>
+                        <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+                          <Spinner animation="border" className="loadingSpinner" />
+                          <span className="mt-3 loadingText">Loading...</span>
+                        </Col>
+                      </Row>
                     ) : (
                         <>
                             <Accordion alwaysOpen>
@@ -86,7 +93,7 @@ function ApplicationList() {
                                         </Accordion.Item>
                                     ))}
                             </Accordion>
-                            {(applications === undefined || Object.keys(applications).length === 0) &&
+                            {!loading && errors && errors.length === 0 && (applications === undefined || Object.keys(applications).length === 0) &&
                                 <Card className='my-3 fs-5 w-75' >
                                     <Card.Body>
                                         No applications were found for your thesis proposals!
