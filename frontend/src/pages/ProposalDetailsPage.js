@@ -2,7 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
-import { AiOutlineFilePdf} from 'react-icons/ai';
+import { AiOutlineFilePdf } from "react-icons/ai";
 
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -24,7 +24,7 @@ import {
   Row,
   Modal,
   Spinner,
-  Dropdown
+  Dropdown,
 } from "react-bootstrap";
 import ApplicationButton from "../components/ApplicationButton";
 
@@ -84,7 +84,6 @@ function ProposalDetailsPage({ mode }) {
   const truncatedDescription = description?.slice(0, 1500);
   // this is used to show the modal when the user clicks on the apply button
   const [applyingState, setApplyingState] = useState("no-applying");
-
 
   //const [newGroup, setNewGroup] = useState('');
   const [newKeyword, setNewKeyword] = useState("");
@@ -422,7 +421,9 @@ function ProposalDetailsPage({ mode }) {
                       dismissible
                       onClose={() => setErrorMessage("")}
                     >
-                      {typeof(errorMessage) === "string" ? errorMessage : errorMessage.message}
+                      {typeof errorMessage === "string"
+                        ? errorMessage
+                        : errorMessage.message}
                     </Alert>
                   </Row>
                 )}
@@ -438,18 +439,17 @@ function ProposalDetailsPage({ mode }) {
                   </Row>
                 )}
               </div>
-              {mode === "add" || mode === "copy" &&
+              {mode === "add" ||
+                (mode === "copy" && (
+                  <Row>
+                    <h3 id="title-page">Add Proposal</h3>
+                  </Row>
+                ))}
+              {mode === "update" && (
                 <Row>
-                  <h3 id='title-page'>
-                    Add Proposal
-                  </h3>
-                </Row>}
-                {mode === "update" &&
-                <Row>
-                  <h3 id='title-page'>
-                    Update Proposal
-                  </h3>
-                </Row>}
+                  <h3 id="title-page">Update Proposal</h3>
+                </Row>
+              )}
               <Row>
                 <Col>
                   {mode === "read" ? (
@@ -530,7 +530,7 @@ function ProposalDetailsPage({ mode }) {
                               : "auto",
                             whiteSpace: "pre-line",
                           }}
-                          onKeyDown={() => { }}
+                          onKeyDown={() => {}}
                           role="button"
                           tabIndex={0}
                         >
@@ -540,7 +540,7 @@ function ProposalDetailsPage({ mode }) {
                               : truncatedDescription}
                             <span
                               id="show-more"
-                              onKeyDown={() => { }}
+                              onKeyDown={() => {}}
                               onClick={() =>
                                 setShowFullDescription(!showFullDescription)
                               }
@@ -548,14 +548,14 @@ function ProposalDetailsPage({ mode }) {
                             >
                               {!showFullDescription &&
                                 description.length >
-                                truncatedDescription.length &&
+                                  truncatedDescription.length &&
                                 " Show more..."}
                             </span>
                           </span>
                         </p>
                         <span
                           id="show-less"
-                          onKeyDown={() => { }}
+                          onKeyDown={() => {}}
                           onClick={() =>
                             setShowFullDescription(!showFullDescription)
                           }
@@ -1043,7 +1043,8 @@ function ProposalDetailsPage({ mode }) {
                     className="w-50"
                     onClick={() => {
                       navigate("/proposals");
-                    }}>
+                    }}
+                  >
                     Return
                   </Button>
                 </Col>
@@ -1071,8 +1072,8 @@ function ProposalDetailsPage({ mode }) {
                     </Col>
                   )}
 
-              {mode === "read" && loggedUser.role === 1 &&
-                  <Col  className="d-flex justify-content-end">
+                {mode === "read" && loggedUser.role === 1 && (
+                  <Col className="d-flex justify-content-end">
                     <ApplicationButton
                       setErrMsg={setErrorMessage}
                       proposalID={proposal_id}
@@ -1081,155 +1082,88 @@ function ProposalDetailsPage({ mode }) {
                       setIsFile={setIsFile}
                     />
                   </Col>
-                }
+                )}
 
-                {
-                  !(mode === "update" && loggedUser.role === 0) &&
-                  !(mode === "add" || mode === "copy") && 
-                  !(mode === "read" && loggedUser.role === 1) &&
+                {!(mode === "update" && loggedUser.role === 0) &&
+                  !(mode === "add" || mode === "copy") &&
+                  !(mode === "read" && loggedUser.role === 1) && (
+                    <Col>
+                      <Dropdown className="w-100 d-flex justify-content-end">
+                        <Dropdown.Toggle
+                          variant="outline-dark"
+                          id="dropdown-detail-actions"
+                          className="w-50"
+                        >
+                          Actions
+                        </Dropdown.Toggle>
 
-                <Col>
-                
-                    <Dropdown className="w-100 d-flex justify-content-end">
-                      <Dropdown.Toggle variant="outline-dark" id="dropdown-detail-actions" className="w-50">
-                        Actions
-                      </Dropdown.Toggle>
-
-                      <Dropdown.Menu>
-
-                      {mode === "read" && loggedUser.role === 0 && (
-                          <Dropdown.Item
-                            id="copy-proposal-btn"
-                            className="dropdown-detail-actions-options"
-                            onClick={() =>
-                              navigate("/proposals/" + proposal_id + "/copy")
-                            }
-                          >
-                            <span className="d-flex align-items-center">
-                              <FaCopy className="me-1" />
-                              Copy
-                            </span>
-                          </Dropdown.Item>
-                        )}
-
+                        <Dropdown.Menu>
                           {mode === "read" && loggedUser.role === 0 && (
-                          <Dropdown.Item
-                            id="update-proposal-btn"
-                            className="dropdown-detail-actions-options"
-                            onClick={() =>
-                              navigate("/proposals/" + proposal_id + "/update")
-                            }
-                          >
-                            <span className="d-flex align-items-center">
-                              <FaPen className="me-1" />
-                              Update
-                            </span>
-                          </Dropdown.Item>
-                        )}
-
-                        {mode === "read" &&
-                          loggedUser.role === 0 &&
-                          !archived &&
-                          !deleted && (
                             <Dropdown.Item
-                              id="archive-proposal-btn"
+                              id="copy-proposal-btn"
                               className="dropdown-detail-actions-options"
-                              onClick={() => setShowArchiveModal(true)}
+                              onClick={() =>
+                                navigate("/proposals/" + proposal_id + "/copy")
+                              }
                             >
                               <span className="d-flex align-items-center">
-                                <FaArchive className="me-1" />
-                                Archive
+                                <FaCopy className="me-1" />
+                                Copy
                               </span>
                             </Dropdown.Item>
                           )}
 
-                        
-
-                        
-
-                        {mode === "read" && loggedUser.role === 0 && !deleted && (
-                          <Dropdown.Item
-                            id="delete-proposal-btn"
-                            className="dropdown-detail-actions-options"
-                            onClick={handleShow}
-                          >
-                            <span className="d-flex align-items-center">
-                                <FaTrash className="me-1" />
-                                Delete
+                          {mode === "read" && loggedUser.role === 0 && (
+                            <Dropdown.Item
+                              id="update-proposal-btn"
+                              className="dropdown-detail-actions-options"
+                              onClick={() =>
+                                navigate(
+                                  "/proposals/" + proposal_id + "/update"
+                                )
+                              }
+                            >
+                              <span className="d-flex align-items-center">
+                                <FaPen className="me-1" />
+                                Update
                               </span>
-                          </Dropdown.Item>
-                        )}
-                        
-                      </Dropdown.Menu>
+                            </Dropdown.Item>
+                          )}
 
-      
+                          {mode === "read" &&
+                            loggedUser.role === 0 &&
+                            !archived &&
+                            !deleted && (
+                              <Dropdown.Item
+                                id="archive-proposal-btn"
+                                className="dropdown-detail-actions-options"
+                                onClick={() => setShowArchiveModal(true)}
+                              >
+                                <span className="d-flex align-items-center">
+                                  <FaArchive className="me-1" />
+                                  Archive
+                                </span>
+                              </Dropdown.Item>
+                            )}
 
-                    </Dropdown>
-                
-                </Col>
-                }
-                {/* <Col>
-                  <Row className="no-gutters m-0 p-0">
-                    {mode === "read" &&
-                      loggedUser.role === 0 &&
-                      !archived &&
-                      !deleted && (
-                        <Col as={Row} xs={12} sm={3}>
-                          <Button
-                            id="archive-proposal-btn"
-                            variant="outline-warning"
-                            onClick={() => setShowArchiveModal(true)}
-                          >
-                            Archive proposal
-                          </Button>
-                        </Col>
-                      )}
-
-                    {mode === "read" && loggedUser.role === 0 && (
-                      <Col as={Row} xs={12} sm={3}>
-                        <Button
-                          id="update-proposal-btn"
-                          variant="outline-primary"
-                          onClick={() =>
-                            navigate("/proposals/" + proposal_id + "/update")
-                          }
-                        >
-                          Update proposal
-                        </Button>
-                      </Col>
-                    )}
-
-                    {mode === "read" && loggedUser.role === 0 && (
-                      <Col as={Row} xs={12} sm={3}>
-                        <Button
-                          id="copy-proposal-btn"
-                          variant="outline-success"
-                          onClick={() =>
-                            navigate("/proposals/" + proposal_id + "/copy")
-                          }
-                        >
-                          Copy proposal
-                        </Button>
-                      </Col>
-                    )}
-
-                    {mode === "read" && loggedUser.role === 0 && !deleted && (
-                      <Col as={Row} xs={12}>
-                        <Button
-                          id="delete-proposal-btn"
-                          variant="outline-danger"
-                          onClick={handleShow}
-                        >
-                          Delete proposal
-                        </Button>
-                      </Col>
-                    )}
-                  </Row>
-                </Col>
-
-                
-
-                 */}
+                          {mode === "read" &&
+                            loggedUser.role === 0 &&
+                            !deleted && (
+                              <Dropdown.Item
+                                id="delete-proposal-btn"
+                                className="dropdown-detail-actions-options"
+                                onClick={handleShow}
+                              >
+                                <span className="d-flex align-items-center">
+                                  <FaTrash className="me-1" />
+                                  Delete
+                                </span>
+                              </Dropdown.Item>
+                            )}
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </Col>
+                  )}
               </Row>
               <Modal show={showModal} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
@@ -1272,97 +1206,157 @@ function ProposalDetailsPage({ mode }) {
                 <Modal.Header>
                   <Modal.Title>Applying for this proposal</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className={"align-content-center align-items-center"}>
+                <Modal.Body
+                  className={"align-content-center align-items-center"}
+                >
                   <Container>
                     <Row className={"align-items-center align-content-center"}>
                       <Col lg={3}>
-                        {applyingState === "applying" ?
-                          <Spinner animation="border" role="status" style={{ margin: "auto" }} /> :
+                        {applyingState === "applying" ? (
+                          <Spinner
+                            animation="border"
+                            role="status"
+                            style={{ margin: "auto" }}
+                          />
+                        ) : (
                           <>
-                            <svg className="svg-icon" width={50} height={50} viewBox="0 0 20 20">
+                            <svg
+                              className="svg-icon"
+                              width={50}
+                              height={50}
+                              viewBox="0 0 20 20"
+                            >
                               <path d="M17.388,4.751H2.613c-0.213,0-0.389,0.175-0.389,0.389v9.72c0,0.216,0.175,0.389,0.389,0.389h14.775c0.214,0,0.389-0.173,0.389-0.389v-9.72C17.776,4.926,17.602,4.751,17.388,4.751 M16.448,5.53L10,11.984L3.552,5.53H16.448zM3.002,6.081l3.921,3.925l-3.921,3.925V6.081z M3.56,14.471l3.914-3.916l2.253,2.253c0.153,0.153,0.395,0.153,0.548,0l2.253-2.253l3.913,3.916H3.56z M16.999,13.931l-3.921-3.925l3.921-3.925V13.931z"></path>
                             </svg>
-                            {
-                              applyingState === "applied_mail_success" ?
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> :
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                            }
+                            {applyingState === "applied_mail_success" ? (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#000000"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                              </svg>
+                            ) : (
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="#000000"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                              >
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                              </svg>
+                            )}
                           </>
-                        }
+                        )}
                       </Col>
                       <Col id={"email-sending-message"}>
-                        {applyingState === "applying" &&
+                        {applyingState === "applying" && (
                           <>
-                            You have <b>applied</b> for this proposal!<br />
-                            <i>We are inserting your application and sending an email notification to the teacher.</i>
+                            You have <b>applied</b> for this proposal!
+                            <br />
+                            <i>
+                              We are inserting your application and sending an
+                              email notification to the teacher.
+                            </i>
                           </>
-                        }
-                        {applyingState === "error" &&
+                        )}
+                        {applyingState === "error" && (
                           <>
-                            There was an <b>error</b> while applying for this proposal. Retry later.<br />
+                            There was an <b>error</b> while applying for this
+                            proposal. Retry later.
+                            <br />
                           </>
-                        }
-                        {applyingState === "applied_mail_success" &&
+                        )}
+                        {applyingState === "applied_mail_success" && (
                           <>
-                            Your application has been inserted successfully!<br />
-                            <i>An email notification has been sent to the teacher.</i>
+                            Your application has been inserted successfully!
+                            <br />
+                            <i>
+                              An email notification has been sent to the
+                              teacher.
+                            </i>
                           </>
-                        }
-                        {applyingState === "applied_mail_error" &&
+                        )}
+                        {applyingState === "applied_mail_error" && (
                           <>
-                            Your application has been inserted successfully!<br />
-                            <i>There was an error while sending the email notification to the teacher, but your application has still been inserted anyways.</i>
+                            Your application has been inserted successfully!
+                            <br />
+                            <i>
+                              There was an error while sending the email
+                              notification to the teacher, but your application
+                              has still been inserted anyways.
+                            </i>
                           </>
-                        }
+                        )}
                       </Col>
                     </Row>
                     <Row>
-                      { fileSent && isFile ? (
-                         <Col className="d-flex align-items-center text-success">
-                         <AiOutlineFilePdf size={50} /> 
-                         <i>Your file has been added successfully to your application.</i>
-                         </Col>
+                      {fileSent && isFile ? (
+                        <Col className="d-flex align-items-center text-success">
+                          <AiOutlineFilePdf size={50} />
+                          <i>
+                            Your file has been added successfully to your
+                            application.
+                          </i>
+                        </Col>
                       ) : !fileSent && isFile ? (
                         <Col className="d-flex align-items-center text-danger">
-                         <AiOutlineFilePdf size={50} />
-                         <i>An error occured, your file has not been sent with your application</i>
-                         </Col>
-                      ) :(
+                          <AiOutlineFilePdf size={50} />
+                          <i>
+                            An error occured, your file has not been sent with
+                            your application
+                          </i>
+                        </Col>
+                      ) : (
                         <></>
-                      )
-                      }
+                      )}
                     </Row>
                   </Container>
                 </Modal.Body>
-                {
-                  applyingState === "error" && (
-                    <Modal.Footer>
-                      <Button id="close-modal" variant="secondary" onClick={() => {
+                {applyingState === "error" && (
+                  <Modal.Footer>
+                    <Button
+                      id="close-modal"
+                      variant="secondary"
+                      onClick={() => {
                         setApplyingState("no-applying");
-                      }}>
-                        Go back
-                      </Button>
-                    </Modal.Footer>
-                  )
-                }
-                {
-                  (applyingState === "applied_mail_success" || applyingState === "applied_mail_error") && (
-                    <Modal.Footer>
-                      <Button id="close-modal" variant="secondary" onClick={() => {
+                      }}
+                    >
+                      Go back
+                    </Button>
+                  </Modal.Footer>
+                )}
+                {(applyingState === "applied_mail_success" ||
+                  applyingState === "applied_mail_error") && (
+                  <Modal.Footer>
+                    <Button
+                      id="close-modal"
+                      variant="secondary"
+                      onClick={() => {
                         navigate("/applications");
-                      }}>
-                        Go to your applications
-                      </Button>
-                    </Modal.Footer>
-
-                  )
-                }
+                      }}
+                    >
+                      Go to your applications
+                    </Button>
+                  </Modal.Footer>
+                )}
               </Modal>
             </Container>
           </Form>
         </Container>
-      )
-      }
+      )}
     </>
   );
 }
