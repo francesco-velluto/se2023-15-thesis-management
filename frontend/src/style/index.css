@@ -140,6 +140,13 @@ body {
   font-weight: bold;
 }
 
+#copy-proposal-id:hover,
+#update-proposal-id:hover,
+#archive-proposal-id:hover {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
 .proposal-row {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
   transition: box-shadow 0.5s;
@@ -168,6 +175,11 @@ body {
 }
 
 #dropdown-proposal-actions:hover {
+  color: whitesmoke;
+  background-color: #003576;
+}
+
+#dropdown-proposal-actions:focus {
   color: whitesmoke;
   background-color: #003576;
 }
@@ -247,6 +259,7 @@ body {
 #dropdown-detail-actions:focus {
   color: whitesmoke;
   background-color: #003576;
+  border-color: #003576;
 }
 
 .dropdown-detail-actions-options {
