@@ -5,7 +5,7 @@ import { LoggedUserContext } from "../context/AuthenticationContext";
 import PropTypes from "prop-types";
 import UploadResume from './UploadFile';
 
-const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, setFileSent }) => {
+const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, setFileSent, setIsFile }) => {
   const [applied, setApplied] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -57,6 +57,9 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
     try {
       await applicationStatusCallback("applying");
       const response = await insertNewApplication({ proposalID }, uploadId);
+      if(uploadId){
+        setIsFile(true);
+      }
 
       if (response.length !== 0) {
         let data = await response.json();
@@ -87,7 +90,7 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
             <Modal.Title>Add a PDF file (optionnal)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <UploadResume setCallbackUploadId={setUploadId}/>
+            <UploadResume setCallbackUploadId={setUploadId} />
           </Modal.Body>
           <Modal.Footer>
             <Button

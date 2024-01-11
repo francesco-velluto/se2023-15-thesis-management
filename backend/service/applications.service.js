@@ -299,7 +299,7 @@ module.exports = {
         }
     }, 
 
-    getApplicationFile: async (student_id, upload_id) => {
+    getUploadedFile: async (student_id, upload_id) => {
         try {
             const { rows, rowCount }  = await db.query('SELECT * FROM temp_file_uploads WHERE student_id = $1 and upload_id = $2',
             [student_id, upload_id]
@@ -350,5 +350,26 @@ module.exports = {
             console.error(error);
             return { success: false, error: 'Database Error' };
           }
-    }
+    }, 
+
+    getApplicationFile: async (id, application_id) => {
+        try {
+            const { rows, rowCount }  = await db.query('SELECT f.application_id, f.student_id, f.filename, f.date_uploaded ' +
+                                                        'FROM application_file f JOIN applications a ON f.application_id = a.id ' + 
+                                                        'JOIN proposals p ON a.proposal_id = p.proposal_id ' + 
+                                                        'WHERE (f.student_id = $1 OR p.supervisor_id = $1) AND f.application_id = $2',
+            [id, application_id]
+            ); 
+            if (rowCount != 0) {
+                return { success: true, data: rows[0] };  
+            }
+            else {
+                return { success: false, data: undefined };  
+            }
+        }
+        catch (error){
+            console.error("[BACKEND-SERVER] Error in getApplicationFile", error);
+            return { error: "Internal server error has occurred" };
+        }
+    },
 }

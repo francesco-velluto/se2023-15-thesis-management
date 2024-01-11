@@ -489,6 +489,29 @@ body {
   color: red;
   margin-left: 4px;
 }
+.file-container {
+  margin: 20px 0;
+  border-radius: 8px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.file-div {
+  margin-left: 2rem;
+  margin-top: 1rem;
+}
+
+.file-div p {
+  display: flex;
+  font-size: 18px;
+  align-items: center;
+}
+.file-div .resume-link{
+  font-size: 18px;
+  align-items: center;
+}
+
+
 
 /*************************/
 /* FOOTER ****************/
