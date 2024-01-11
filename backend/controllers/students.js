@@ -1,6 +1,6 @@
 "use strict";
 
-const { getStudentById } = require("../service/students.service");
+const studentService = require("../service/students.service");
 
 module.exports = {
   /**
@@ -11,7 +11,7 @@ module.exports = {
     const student_id = req.params.student_id;
     
     try {
-      const { data: student } = await getStudentById(student_id);
+      const { data: student } = await studentService.getStudentById(student_id);
       if (!student) {
         return res.status(404).json({ error: "Student not found" });
       }

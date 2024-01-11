@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
+import { AiOutlineFilePdf} from 'react-icons/ai';
 
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -24,7 +25,7 @@ import {
   Modal,
   Spinner
 } from "react-bootstrap";
-import ApplicationButton from "./ApplicationButton";
+import ApplicationButton from "../components/ApplicationButton";
 
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { LoggedUserContext } from "../context/AuthenticationContext";
@@ -32,7 +33,6 @@ import { UnAuthorizationPage } from "../App";
 import dayjs from "dayjs";
 import "../style/ProposalDetails.css";
 import ArchiveProposalModal from "../components/ArchiveProposalModal";
-import { set } from "date-fns";
 
 /**
  * This page supports three modes:
@@ -74,6 +74,7 @@ function ProposalDetailsPage({ mode }) {
   const [notes, setNotes] = useState("");
   const [archived, setArchived] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [timer, setTimer] = useState(5);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -85,6 +86,9 @@ function ProposalDetailsPage({ mode }) {
 
   //const [newGroup, setNewGroup] = useState('');
   const [newKeyword, setNewKeyword] = useState("");
+
+  const [fileSent, setFileSent] = useState(false);
+  const [isFile, setIsFile] = useState(false);
 
   const targetRef = useRef(null);
 
@@ -259,13 +263,28 @@ function ProposalDetailsPage({ mode }) {
     const result = await deleteProposal(proposal_id);
 
     if (!(result instanceof Error)) {
-      navigate("/proposals");
       setDeleted(true);
+
+      setTimeout(() => navigate("/proposals"), 5000);
     } else {
       setErrorMessage(result.message);
       handleClose();
     }
   };
+
+  useEffect(() => {
+    if (deleted) {
+      const countdownInterval = setInterval(() => {
+        setTimer((prevCount) => prevCount - 1);
+      }, 1000);
+
+      // Reindirizzamento dopo 5 secondi
+      setTimeout(() => {
+        clearInterval(countdownInterval);
+        navigate("/proposals");
+      }, 5000);
+    }
+  }, [deleted]);
 
   useEffect(() => {
     setIsLoading(true);
@@ -378,6 +397,17 @@ function ProposalDetailsPage({ mode }) {
         </Alert>
       ) : unauthorized ? (
         <UnAuthorizationPage error={"Error"} message={errorMessage} />
+      ) : deleted ? (
+        <Container>
+          <Alert variant="info" className="d-flex justify-content-center">
+            <p>
+              <strong>Your proposal has been deleted succesfully!</strong>
+              <br />
+              <br />
+              You will be redirected to the proposals list in {timer} ...
+            </p>
+          </Alert>
+        </Container>
       ) : (
         <Container className="proposal-details-container" fluid>
           <Form>
@@ -406,10 +436,16 @@ function ProposalDetailsPage({ mode }) {
                   </Row>
                 )}
               </div>
-              {mode === "add" &&
+              {mode === "add" || mode === "copy" &&
                 <Row>
                   <h3 id='title-page'>
                     Add Proposal
+                  </h3>
+                </Row>}
+                {mode === "update" &&
+                <Row>
+                  <h3 id='title-page'>
+                    Update Proposal
                   </h3>
                 </Row>}
               <Row>
@@ -1073,6 +1109,8 @@ function ProposalDetailsPage({ mode }) {
                       setErrMsg={setErrorMessage}
                       proposalID={proposal_id}
                       applicationStatusCallback={setApplyingState}
+                      setFileSent={setFileSent}
+                      setIsFile={setIsFile}
                     />
                   </Col>
                 }
@@ -1185,6 +1223,22 @@ function ProposalDetailsPage({ mode }) {
                         }
                       </Col>
                     </Row>
+                    <Row>
+                      { fileSent && isFile ? (
+                         <Col className="d-flex align-items-center text-success">
+                         <AiOutlineFilePdf size={50} /> 
+                         <i>Your file has been added successfully to your application.</i>
+                         </Col>
+                      ) : !fileSent && isFile ? (
+                        <Col className="d-flex align-items-center text-danger">
+                         <AiOutlineFilePdf size={50} />
+                         <i>An error occured, your file has not been sent with your application</i>
+                         </Col>
+                      ) :(
+                        <></>
+                      )
+                      }
+                    </Row>
                   </Container>
                 </Modal.Body>
                 {
@@ -1199,7 +1253,7 @@ function ProposalDetailsPage({ mode }) {
                   )
                 }
                 {
-                  (applyingState === "applied_mail_success" || applyingState === "applied_mail_success") && (
+                  (applyingState === "applied_mail_success" || applyingState === "applied_mail_error") && (
                     <Modal.Footer>
                       <Button id="close-modal" variant="secondary" onClick={() => {
                         navigate("/applications");

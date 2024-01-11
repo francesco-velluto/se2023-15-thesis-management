@@ -13,8 +13,8 @@ const proposals = require("./proposals");
 const applications = require("./applications");
 const { getTeachers } = require("../controllers/teachers");
 const { getDegrees } = require("../controllers/degrees");
-const { getStudentById } = require("../controllers/students");
-const { isLoggedIn, isTeacher } = require("../controllers/authentication");
+const studentController = require("../controllers/students");
+const { isLoggedIn, isTeacher, isStudent } = require("../controllers/authentication");
 const { getVirtualDate, updateVirtualDate } = require("../controllers/virtualclock"); //! VIRTUAL_CLOCK: remove this line in production
 
 /**
@@ -91,7 +91,7 @@ router.use('/applications', applications);
  * @error 500 - Internal Server Error
  *
  */
-router.get("/students/:student_id", isLoggedIn, isTeacher, getStudentById);
+router.get("/students/:student_id", isLoggedIn, isTeacher, studentController.getStudentById);
 
 
 router.get("/virtualclock", isLoggedIn, getVirtualDate); //! VIRTUAL_CLOCK: remove this line in production
