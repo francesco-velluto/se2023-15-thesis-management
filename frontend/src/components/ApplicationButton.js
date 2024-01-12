@@ -108,7 +108,11 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
 
 ApplicationButton.propTypes = {
   proposalID: PropTypes.string,
-  setErrMsg: PropTypes.func
+  setErrMsg: PropTypes.func,
+  applicationStatusCallback: PropTypes.func, 
+  setFileSent: PropTypes.func, 
+  setIsFile: PropTypes.func,   
+
 }
 
 export default ApplicationButton;

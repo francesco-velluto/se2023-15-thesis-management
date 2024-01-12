@@ -147,7 +147,8 @@ module.exports = {
 
             if (response.ok) {
             try {
-                return response.json();
+                const jsonData = await response.json();
+                return jsonData;
             } catch (error) {
                 console.error('Error parsing JSON from server response:', error);
                 throw new Error('Invalid response from server');
@@ -172,7 +173,7 @@ module.exports = {
 
     fetchUploadedFile: async ({ upload_id, application_id }) => {
         try {
-            const url = `${ApplicationsAPIURL}/${upload_id ? `upload/${upload_id}` : `file/${application_id}`}`;
+            const url = `${ApplicationsAPIURL}/${upload_id ? 'upload/' + upload_id : 'file/' + application_id}`;
 
             const response = await fetch(url, {
             method: 'GET',
@@ -205,8 +206,10 @@ module.exports = {
 
         fetchFileInfo: async ({upload_id, application_id}) => {
             try {
-                const url = `${ApplicationsAPIURL}/${upload_id ? `upload/${upload_id}/info` : `file/${application_id}/info`}`;
-
+                const url = `${ApplicationsAPIURL}/${
+                    upload_id ? `upload/${upload_id}/info` : `file/${application_id}/info`
+                  }`;
+                  
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: APIConfig.API_REQUEST_HEADERS,

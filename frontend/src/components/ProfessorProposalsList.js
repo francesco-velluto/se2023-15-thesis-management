@@ -6,6 +6,8 @@ import { format, parseISO } from "date-fns";
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { FaBook, FaPen, FaCopy, FaArchive } from "react-icons/fa";
 import ArchiveProposalModal from "./ArchiveProposalModal";
+import PropTypes from 'prop-types';
+
 
 function ProfessorProposalsList() {
   const [proposals, setProposals] = useState([]);
@@ -153,7 +155,7 @@ function ProfessorProposalsList() {
       {!errorMessage && proposals.length > 0 && (
         proposals.map((proposal, index) => (
           <ProposalRow
-            key={index}
+            key={proposal.id}
             proposal={proposal}
             setSuccessMessage={setSuccessMessage}
             setErrorMessage={setErrorMessage}
@@ -373,6 +375,7 @@ function ProposalRow({
       >
         <span
           id="show-details-proposal"
+          role="button"
           className="d-flex align-items-center show-details-button"
           onKeyDown={() => {}}
           onClick={() => {
@@ -403,5 +406,23 @@ function ProposalRow({
     </Row>
   );
 }
+
+ProfessorProposalsList.propTypes = {
+  proposals: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      level: PropTypes.string.isRequired,
+      type: PropTypes.string.isRequired,
+      expiration_date: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  errorMessage: PropTypes.string,
+  successMessage: PropTypes.string,
+  setSuccessMessage: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
+  setArchived: PropTypes.func.isRequired,
+};
 
 export default ProfessorProposalsList;
