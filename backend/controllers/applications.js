@@ -36,8 +36,7 @@ let storage = multer.diskStorage({
 let upload = multer({
         storage: storage,
         limits: {
-            fieldNameSize: 300,
-            fileSize: 1048576, // 10 MB
+            fileSize: 8000000, // 8 MB
           },
         fileFilter: function (req, file, cb) {
             const allowedFormats = 'application/pdf';

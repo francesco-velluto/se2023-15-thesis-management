@@ -18,7 +18,7 @@ app.use(cors(corsOptions));
 
 app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: "2mb"}));
 
 // set up of the authentication
 const authentication = require('./controllers/authentication');
