@@ -17,8 +17,8 @@ console.info('[BACKEND-SERVER] Allowing CORS requests from http://localhost:' + 
 app.use(cors(corsOptions));
 
 app.use(morgan('dev', { skip: (req, res) => process.env.NODE_ENV === 'test' }));
-app.use(express.json({limit: "8mb"}));
-app.use(express.urlencoded({ extended: true, limit: "8mb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // set up of the authentication
 const authentication = require('./controllers/authentication');
