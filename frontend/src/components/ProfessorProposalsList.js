@@ -419,6 +419,7 @@ ProposalRow.propTypes = {
   setSuccessMessage: PropTypes.func,
   setErrorMessage: PropTypes.func,
   setArchived: PropTypes.func,
+  scrollToTarget: PropTypes.func,
 };
 
 export default ProfessorProposalsList;

@@ -14,7 +14,7 @@ const fs = require('fs');
 
 let upload = multer({
     limits: {
-        fileSize: 5000000 // 5 MB
+        fileSize: 5_000_000, // 5 MB
       },
     storage: multer.diskStorage({
         destination: function (req, file, cb) {

@@ -293,98 +293,105 @@ function ProposalDetailsPage({ mode }) {
     setUnauthorized(false);
     setSuccessMessage("");
 
-    if (mode === "read" || mode === "update" || mode === "copy") {
+    switch (mode) {
+      case "read":
+      case "update":
+      case "copy":
       // read, update and copy mode
-      getProposalById(proposal_id)
-        .then(async (res) => {
-          let data = await res.json();
+        getProposalById(proposal_id)
+          .then(async (res) => {
+            let data = await res.json();
 
-          if (res.status === 200) {
-            if (data.expiration_date < currentDate) {
-              // don't expose any data in the component state
-              setTitle("");
-              setSupervisor("");
-              setLevel("");
-              setType("");
-              setExpDate("");
-              setKeywords([]);
-              setProgrammes([]);
-              setGroups([]);
-              setDescription("");
-              setKnowledge("");
-              setNotes("");
-              setErrorMessage(
-                "We regret to inform you that the sought thesis proposal has expired. Please contact the administrator for further assistance."
-              ); //? Change this to render a component ??
+            if (res.status === 200) {
+              if (data.expiration_date < currentDate) {
+                // don't expose any data in the component state
+                setTitle("");
+                setSupervisor("");
+                setLevel("");
+                setType("");
+                setExpDate("");
+                setKeywords([]);
+                setProgrammes([]);
+                setGroups([]);
+                setDescription("");
+                setKnowledge("");
+                setNotes("");
+                setErrorMessage(
+                  "We regret to inform you that the sought thesis proposal has expired. Please contact the administrator for further assistance."
+                ); //? Change this to render a component ??
+                setUnauthorized(true);
+                scrollToTarget();
+              } else {
+                setTitle(data.title);
+                setSupervisor(
+                  data.supervisor_name + " " + data.supervisor_surname
+                );
+                setLevel(data.level);
+                setType(data.type);
+                setExpDate(dayjs(data.expiration_date).format("YYYY-MM-DD"));
+                setKeywords(data.keywords);
+
+                setArchived(data.archived);
+                setDeleted(data.deleted);
+
+                // must be set in an array of cod_degree
+                if (mode === "update" || mode === "copy") {
+                  // get all degrees list
+                  getAllDegrees()
+                    .then((list) => setProposalDegreeList(list))
+                    .catch((err) => {
+                      setErrorMessage(err.message);
+                      setProposalDegreeList([]);
+                      scrollToTarget();
+                    });
+                }
+
+                setProgrammes(data.programmes);
+                setGroups(data.groups);
+                setDescription(data.description);
+                setKnowledge(data.required_knowledge);
+                setNotes(data.notes);
+              }
+            } else {
+              setErrorMessage(data.error);
               setUnauthorized(true);
               scrollToTarget();
-            } else {
-              setTitle(data.title);
-              setSupervisor(
-                data.supervisor_name + " " + data.supervisor_surname
-              );
-              setLevel(data.level);
-              setType(data.type);
-              setExpDate(dayjs(data.expiration_date).format("YYYY-MM-DD"));
-              setKeywords(data.keywords);
-
-              setArchived(data.archived);
-              setDeleted(data.deleted);
-
-              // must be set in an array of cod_degree
-              if (mode === "update" || mode === "copy") {
-                // get all degrees list
-                getAllDegrees()
-                  .then((list) => setProposalDegreeList(list))
-                  .catch((err) => {
-                    setErrorMessage(err.message);
-                    setProposalDegreeList([]);
-                    scrollToTarget();
-                  });
-              }
-
-              setProgrammes(data.programmes);
-              setGroups(data.groups);
-              setDescription(data.description);
-              setKnowledge(data.required_knowledge);
-              setNotes(data.notes);
             }
-          } else {
-            setErrorMessage(data.error);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            setErrorMessage(err.message);
+            setIsLoading(false);
             setUnauthorized(true);
             scrollToTarget();
-          }
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          setErrorMessage(err.message);
-          setIsLoading(false);
-          setUnauthorized(true);
-          scrollToTarget();
-        });
-    } else if (mode === "add") {
-      setTitle("");
-      setSupervisor(loggedUser.name + " " + loggedUser.surname);
-      setLevel("");
-      setType("");
-      setExpDate("");
-      setKeywords([]);
-      setProgrammes([]);
-      setGroups([{ cod_group: loggedUser.cod_group }]);
-      setDescription("");
-      setKnowledge("");
-      setNotes("");
+          });
+          break;
+      case "add":
+        setTitle("");
+        setSupervisor(loggedUser.name + " " + loggedUser.surname);
+        setLevel("");
+        setType("");
+        setExpDate("");
+        setKeywords([]);
+        setProgrammes([]);
+        setGroups([{ cod_group: loggedUser.cod_group }]);
+        setDescription("");
+        setKnowledge("");
+        setNotes("");
 
-      setNewKeyword("");
-      setProposalDegreeList([]);
+        setNewKeyword("");
+        setProposalDegreeList([]);
 
-      setIsLoading(false);
-      getAllDegrees()
-        .then((list) => setProposalDegreeList(list))
-        .catch((err) => {
-          setErrorMessage(err);
-          setProposalDegreeList([]);
-        });
+        setIsLoading(false);
+        getAllDegrees()
+          .then((list) => setProposalDegreeList(list))
+          .catch((err) => {
+            setErrorMessage(err);
+            setProposalDegreeList([]);
+          });
+        break;
+      default:
+        break;
     }
   }, [proposal_id, currentDate, mode]); //! VIRTUAL CLOCK: re-render component each time the virtual date changes; remove this dependency in production
 

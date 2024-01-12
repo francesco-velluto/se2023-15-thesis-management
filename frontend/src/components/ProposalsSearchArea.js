@@ -334,6 +334,15 @@ function ProposalsSearchArea(props) {
     );
 }
 
+ProposalsSearchArea.propTypes = {
+    searchData: PropTypes.arrayOf(PropTypes.shape({
+      field: PropTypes.string,
+      value: PropTypes.string,
+    })),
+    setSearchData: PropTypes.func,
+  };
+
+
 function FilterElement(props) {
 
     const [userfriendly_field, setUserfriendly_field] = useState("");
@@ -368,14 +377,6 @@ function FilterElement(props) {
         </Col>
     );
 }
-
-ProposalsSearchArea.propTypes = {
-    searchData: PropTypes.arrayOf(PropTypes.shape({
-      field: PropTypes.string,
-      value: PropTypes.string,
-    })),
-    setSearchData: PropTypes.func,
-  };
 
 FilterElement.propTypes = {
     fltr: PropTypes.shape({

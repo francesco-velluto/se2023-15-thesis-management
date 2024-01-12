@@ -20,6 +20,7 @@ function SamlRedirect() {
             navigate("/");
         } catch (err) {
             console.log(err);
+            setErrors(err);
             window.location.replace('http://localhost:8080/api/authentication/login');
         }
     }
