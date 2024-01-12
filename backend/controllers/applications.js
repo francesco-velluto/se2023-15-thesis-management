@@ -12,31 +12,30 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-let storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, './uploads');
-    },
-    filename: function (req, file, cb) {
-      try {
-          if (!req.user.id) {
-              throw new Error('Missing required information, cannot upload file');
-          }
-
-          const currentDate = new Date();
-          const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-          const filename = file.originalname + `_${req.user.id}_`+ formattedDate + '.pdf';
-          cb(null, filename);
-      } catch (error) {
-          console.error(error);
-          cb(error);
-      }
-  }, 
-
-});
 let upload = multer({
-        storage: storage,
+        storage: multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, './uploads');
+            },
+            filename: function (req, file, cb) {
+              try {
+                  if (!req.user.id) {
+                      throw new Error('Missing required information, cannot upload file');
+                  }
+        
+                  const currentDate = new Date();
+                  const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+                  const filename = file.originalname + `_${req.user.id}_`+ formattedDate + '.pdf';
+                  cb(null, filename);
+              } catch (error) {
+                  console.error(error);
+                  cb(error);
+              }
+          }, 
+        
+        }),
         limits: {
-            fileSize: 8000000, // 8 MB
+            fileSize: 5000000, // 5 MB
           },
         fileFilter: function (req, file, cb) {
             const allowedFormats = 'application/pdf';
