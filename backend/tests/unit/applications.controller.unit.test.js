@@ -747,7 +747,8 @@ describe("T5 - insertNewApplication", () => {
           id: "A001",
           proposal_id: mockReq.proposal_id,
           student_id: "S001",
-          application_date: "2023-21-12"
+          application_date: "2023-21-12",
+          fileSent: false,
         }
       ]
     };
