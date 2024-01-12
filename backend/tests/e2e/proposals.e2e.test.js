@@ -324,40 +324,6 @@ describe("End to end test for professor proposals", () => {
 
 describe("End to end test for delete proposal", () => {
 
-    //function to create a fake proposal to delete in the test
-    /*const fakeInsert = async() =>{
-        const fakeProposalToDelete = {
-            title: "test",
-            supervisor_id: "T003",
-            keywords: ["keyword1", "keyword2"],
-            type: "Research",
-            groups: ["Group A", "Group B"],
-            description: "A master thesis just to test the insert API call",
-            required_knowledge: "Node.js, PostgreSQL, React.js",
-            notes: "These are the notes...",
-            expiration_date: "2024-06-30",
-            level: "Master",
-            programmes: ["MSC001"],
-        };
-
-        const query = `INSERT INTO proposals
-        (proposal_id, title, supervisor_id, keywords, type,
-        groups, description, required_knowledge, notes,
-        expiration_date, level, programmes, archived, deleted)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-        RETURNING *;`
-
-        await db.query(query, ['P100', fakeProposalToDelete.title, fakeProposalToDelete.supervisor_id,
-            fakeProposalToDelete.keywords, fakeProposalToDelete.type, fakeProposalToDelete.groups,
-            fakeProposalToDelete.description, fakeProposalToDelete.required_knowledge, fakeProposalToDelete.notes,
-            fakeProposalToDelete.expiration_date, fakeProposalToDelete.level, fakeProposalToDelete.programmes,
-            false, false
-        ]);
-
-        await driver.sleep(500);
-
-    };*/
-
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
     });

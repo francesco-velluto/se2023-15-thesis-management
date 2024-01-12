@@ -68,7 +68,6 @@ describe("T1 - Get virtual date unit tests", () => {
   });
 
   test("T2.3 - ERROR 500 | Error while retrieving the virtual date", (done) => {
-    const error = "Error while retrieving the virtual date";
 
     isLoggedIn.mockImplementation((req, res, next) => {
       next(); // authenticated
@@ -172,7 +171,6 @@ describe("T2 - Update VirtualDate unit tests", () => {
   });
 
   test("T2.4 - ERROR 400 | Date not found", (done) => {
-    const error = "Error while updating the virtual date";
     const mockDate = "2024-12-01";
 
     isLoggedIn.mockImplementation((req, res, next) => {

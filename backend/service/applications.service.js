@@ -320,7 +320,7 @@ module.exports = {
     uploadFileServer: async (student_id, filename,date_uploaded) => {
         try {
         // In this case returning the ID is not an issue, because this id is temporary and the temp_file_uploads will be emptied
-          const { rows, rowCount } = await db.query('INSERT INTO temp_file_uploads (filename, student_id, date_uploaded) VALUES ($1, $2, $3) RETURNING upload_id',
+          const { rows } = await db.query('INSERT INTO temp_file_uploads (filename, student_id, date_uploaded) VALUES ($1, $2, $3) RETURNING upload_id',
           [filename, student_id, date_uploaded]
           );
           return { success: true, rows: rows };

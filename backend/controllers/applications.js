@@ -8,11 +8,11 @@ const { sendUpdateApplicationStatusEmail, sendNewApplicationEmail} = require("./
 
 /*** Upload an image file ***/
 
-var multer = require('multer');
+const multer = require('multer');
 const path = require('path');
-var fs = require('fs');
+const fs = require('fs');
 
-var storage = multer.diskStorage({
+let storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads');
     },
@@ -30,10 +30,14 @@ var storage = multer.diskStorage({
           console.error(error);
           cb(error);
       }
-  }
+  }, 
+
 });
-var upload = multer({
+let upload = multer({
         storage: storage,
+        limits: {
+            fileSize: 5000000, // 5 MB
+        },
         fileFilter: function (req, file, cb) {
             const allowedFormats = 'application/pdf';
             if (file.mimetype == allowedFormats) {

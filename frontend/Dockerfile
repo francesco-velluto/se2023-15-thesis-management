@@ -6,14 +6,14 @@ COPY package*.json ./
 
 RUN npm install --ignore-scripts
 
-RUN mkdir node_modules/.cache && chmod -R 777 node_modules/.cache
+RUN addgroup -S nonroot \
+    && adduser -S nonroot -G nonroot
+
+RUN mkdir node_modules/.cache && chown -R nonroot:nonroot node_modules/.cache
 
 COPY . .
 
 EXPOSE ${FRONTEND_PORT}
-
-RUN addgroup -S nonroot \
-    && adduser -S nonroot -G nonroot
 
 USER nonroot
 

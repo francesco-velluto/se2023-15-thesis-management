@@ -91,7 +91,7 @@ describe("T1 - getAllProposals", () => {
     service.getAllProposals("CD008")
       .catch((error) => {
         expect(error.status).toBe(500);
-        expect(error.data).toBe("Internal server error");
+        expect(error.data).toBe("Internal Server Error");
         expect(db.query).toHaveBeenCalled();
         done();
       });
@@ -273,7 +273,7 @@ describe("T4 - getAllProfessorProposals", () => {
     service.getAllProfessorProposals(mockProfessorId)
       .catch((error) => {
         expect(error.status).toBe(404);
-        expect(error.data).toBe("proposals not found");
+        expect(error.data).toBe("Proposals not found");
         expect(db.query).toHaveBeenCalledWith(expect.any(String), [mockProfessorId]);
         done();
       });
@@ -287,7 +287,7 @@ describe("T4 - getAllProfessorProposals", () => {
     service.getAllProfessorProposals(mockProfessorId)
       .catch((error) => {
         expect(error.status).toBe(500);
-        expect(error.data).toBe("Internal server error");
+        expect(error.data).toBe("Internal Server Error");
         expect(db.query).toHaveBeenCalledWith(expect.any(String), [mockProfessorId]);
         done();
       });
@@ -308,7 +308,7 @@ describe("T4 - getAllProfessorProposals", () => {
       service.getProposalById("P999")
         .catch((error) => {
           expect(error.status).toBe(404);
-          expect(error.data).toBe("The proposal has not been found!");
+          expect(error.data).toBe("Proposal not found");
           expect(db.query).toHaveBeenCalledWith(expect.any(String), ["P999"]);
           done();
         });
