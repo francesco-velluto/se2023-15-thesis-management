@@ -140,6 +140,7 @@ exports.getAllProposals = async (cod_degree) => {
           console.error("[BACKEND-SERVER] Error in getAllProposals");
           const notFoundError = new Error("Proposals not found");
           notFoundError.status = 404;
+          notFoundError.data = "proposals not found";
           reject(notFoundError);
         }
         resolve({ status: 200, data: rows.rows });
@@ -148,6 +149,7 @@ exports.getAllProposals = async (cod_degree) => {
         console.error("[BACKEND-SERVER] Error in getAllProposals", err);
         const error = new Error("Internal Server Error");
         error.status = 500;
+        error.data = "Internal Server Error";
         reject(error);
       });
   });
@@ -177,6 +179,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
           console.error("[BACKEND-SERVER] Error in getAllProfessorProposals");
           const error = new Error("Proposals not found");
           error.status = 404;
+          error.data = "Proposals not found";
           reject(error);
         }
 
@@ -186,6 +189,7 @@ exports.getAllProfessorProposals = async (prof_id) => {
         console.error("[BACKEND-SERVER] Error in getAllProfessorProposals", err);
         const error = new Error("Internal Server Error");
         error.status = 500;
+        error.data = "Internal Server Error";
         reject(error);
       });
   });
@@ -210,6 +214,7 @@ exports.getProposalById = (proposal_id) => {
           );
           const error = new Error("Proposal not found");
           error.status = 404;
+          error.data = "Proposal not found";
           reject(error);
         } else {
           let proposal = result.rows[0];
@@ -241,7 +246,8 @@ exports.getProposalById = (proposal_id) => {
                   );
                   const error2 = new Error("Internal Server Error");
                   error2.status = 500;
-                  reject(error);
+                  error2.data = "Internal Server Error";
+                  reject(erro2);
                 });
             })
             .catch((error) => {
@@ -251,7 +257,8 @@ exports.getProposalById = (proposal_id) => {
               );
               const error3 = new Error("Internal Server Error");
               error3.status = 500;
-              reject(error);
+              error3.data = "Internal Server Error";
+              reject(error3);
             });
         }
       })
@@ -259,7 +266,8 @@ exports.getProposalById = (proposal_id) => {
         console.log("Error in getProposalById: ", error);
         const error4 = new Error("Internal Server Error");
         error4.status = 500;
-        reject(error);      
+        error4.data = "Internal Server Error";
+        reject(error4);      
       });
   });
 };
