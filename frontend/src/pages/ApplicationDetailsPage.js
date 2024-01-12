@@ -6,8 +6,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
 import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal, Accordion, Table } from "react-bootstrap";
-import { getStudentById } from "../api/StudentsAPI";
-import { format } from 'date-fns';
+import { getStudentById, getStudentCareer } from "../api/StudentsAPI";
+import { format, parseISO } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
 import PropTypes from "prop-types";
 import { AiOutlineFilePdf, AiOutlineSearch} from 'react-icons/ai';
@@ -236,6 +236,8 @@ function ApplicationDetails() {
 function StudentInfo(props) {
     const [fileInfo, setFileInfo] = useState(null);
     const [isUploaded, setIsUploaded] = useState(false);
+    const [career, setCareer] = useState(undefined);
+
     const infoStudent = props.infoStudent;
     const infoApplication = props.infoApplication;
 
@@ -252,13 +254,16 @@ function StudentInfo(props) {
                     setFileInfo(info);
                     setIsUploaded(true);
                 }
+
+                const careerInfo = await getStudentCareer(infoStudent.id);
+                setCareer(careerInfo);
             } catch (err) {
                 console.error('[FRONTEND ERROR] Error in get student application list: ' + err.message);
             }
         };
 
         fetchData();
-    }, [infoApplication.id]);
+    }, [infoApplication.id, infoStudent.id]);
 
     return (
         <Row className="my-2">
@@ -279,30 +284,30 @@ function StudentInfo(props) {
                             <Accordion.Item id="career-accordion">
                                 <Accordion.Header id="career-title">Student's Career</Accordion.Header>
                                 <Accordion.Body>
-                                    <Table hover id="career-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Course</th>
-                                                <th>CFU</th>
-                                                <th>Grade</th>
-                                                <th>Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Software Engineering I</td>
-                                                <td>8</td>
-                                                <td>28</td>
-                                                <td>2023-01-29</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Computer Architectures</td>
-                                                <td>10</td>
-                                                <td>27</td>
-                                                <td>2023-02-10</td>
-                                            </tr>
-                                        </tbody>
-                                    </Table>
+                                    {career &&
+                                        <Table hover id="career-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Course</th>
+                                                    <th>CFU</th>
+                                                    <th>Grade</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {career.map((exam) =>
+                                                    <tr key={exam.cod_course}>
+                                                        <td>{exam.title_course}</td>
+                                                        <td>{exam.cfu}</td>
+                                                        <td>{exam.grade}</td>
+                                                        <td>{format(parseISO(exam.date), "yyyy-MM-dd")}</td>
+                                                    </tr>)}
+                                                {career.length === 0 &&
+                                                    <h2>No exams passed yet.</h2>
+                                                }
+                                            </tbody>
+                                        </Table>}
+                                    {!career && <h2>Error fetching student's career</h2>}
                                 </Accordion.Body>
                             </Accordion.Item>
                         </Accordion>
