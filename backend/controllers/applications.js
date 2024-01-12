@@ -13,38 +13,38 @@ const path = require('path');
 const fs = require('fs');
 
 let upload = multer({
-        storage: multer.diskStorage({
-            destination: function (req, file, cb) {
-                cb(null, './uploads');
-            },
-            filename: function (req, file, cb) {
-              try {
-                  if (!req.user.id) {
-                      throw new Error('Missing required information, cannot upload file');
-                  }
-        
-                  const currentDate = new Date();
-                  const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
-                  const filename = file.originalname + `_${req.user.id}_`+ formattedDate + '.pdf';
-                  cb(null, filename);
-              } catch (error) {
-                  console.error(error);
-                  cb(error);
-              }
-          }, 
-        
-        }),
-        limits: {
-            fileSize: 5000000, // 5 MB
-          },
-        fileFilter: function (req, file, cb) {
-            const allowedFormats = 'application/pdf';
-            if (file.mimetype == allowedFormats) {
-                cb(null, true);
-            } else {
-                cb(new Error('Invalid file format. Only PDF  are allowed.'), false);
+    limits: {
+        fileSize: 5000000 // 5 MB
+      },
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, './uploads');
+        },
+        filename: function (req, file, cb) {
+            try {
+                if (!req.user.id) {
+                    throw new Error('Missing required information, cannot upload file');
+                }
+    
+                const currentDate = new Date();
+                const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+                const filename = file.originalname + `_${req.user.id}_`+ formattedDate + '.pdf';
+                cb(null, filename);
+            } catch (error) {
+                console.error(error);
+                cb(error);
             }
+        }, 
+    
+    }),
+    fileFilter: function (req, file, cb) {
+        const allowedFormats = 'application/pdf';
+        if (file.mimetype == allowedFormats) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file format. Only PDF  are allowed.'), false);
         }
+    }
     });
 
 

@@ -404,9 +404,6 @@ describe("End to end test for delete proposal", () => {
     }, 20000);
 
     test("Should delete the proposal", async ()=>{
-
-        //await fakeInsert();
-
         await doLogin("ana.gomez@example.com", "T003", driver);
 
         await driver.sleep(500);
