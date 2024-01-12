@@ -38,7 +38,7 @@ body {
 
 
 ::-webkit-scrollbar {
-  width: 10px; 
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -379,6 +379,8 @@ body {
   background-color: darkgray;
 }
 
+/* CAREER ACCORDION */
+
 #career-accordion {
   margin-top: 1rem;
 }
@@ -390,6 +392,17 @@ body {
 
 #career-title .accordion-button {
   font-weight: bold;
+}
+
+/* CAREER MODAL */
+
+.min-width-fit-content {
+  max-width: fit-content;
+}
+
+#career-modal-body {
+  max-height: 400px;
+  overflow-y: scroll;
 }
 
 /*************************/
