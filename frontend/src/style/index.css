@@ -324,6 +324,11 @@ body {
   margin-top: 1rem;
 }
 
+#career-accordion .accordion-body {
+  max-height: 350px;
+  overflow-y: scroll;
+}
+
 #career-title .accordion-button {
   font-weight: bold;
 }
