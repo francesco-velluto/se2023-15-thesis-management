@@ -4,7 +4,49 @@ const Teacher = require("../model/Teacher");
 const applicationsService = require("../service/applications.service");
 const proposalsService = require("../service/proposals.service");
 
-const { sendUpdateApplicationStatusEmail } = require("./email.notifier");
+const { sendUpdateApplicationStatusEmail, sendNewApplicationEmail} = require("./email.notifier");
+
+/*** Upload an image file ***/
+
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+let upload = multer({
+    limits: {
+        fileSize: 5_000_000, // 5 MB
+      },
+    storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, './uploads');
+        },
+        filename: function (req, file, cb) {
+            try {
+                if (!req.user.id) {
+                    throw new Error('Missing required information, cannot upload file');
+                }
+    
+                const currentDate = new Date();
+                const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+                const filename = file.originalname + `_${req.user.id}_`+ formattedDate + '.pdf';
+                cb(null, filename);
+            } catch (error) {
+                console.error(error);
+                cb(error);
+            }
+        }, 
+    
+    }),
+    fileFilter: function (req, file, cb) {
+        const allowedFormats = 'application/pdf';
+        if (file.mimetype == allowedFormats) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file format. Only PDF  are allowed.'), false);
+        }
+    }
+    });
+
 
 module.exports = {
     /**
@@ -84,19 +126,61 @@ module.exports = {
             });
     },
 
+    getAllApplicationsByProposalId: (req, res) => {
+        const proposal_id = req.params.proposal_id;
+
+        proposalsService.getProposalById(proposal_id)
+            .then((result) => {
+                if (result.data.supervisor_id !== req.user.id)
+                    return res.status(401).json({ error: "You are not allowed to see details of applications of this proposal" });
+            })
+            .catch((err) => {
+                return res.status(err.status).json({ error: err.data });
+            });
+
+
+        applicationsService.getAllApplicationsByProposalId(proposal_id)
+            .then((result) => {
+                res.status(200).json(result.data);
+            })
+            .catch((err) => {
+                res.status(500).json({ errors: [err.data] });
+            });
+    },
+
     insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
             applicationsService.insertNewApplication(req.body.proposal_id, req.user.id)
-                .then((result) => {
-                    res.status(200).json(result.data);
+                .then(async (result) => {
+                    // application is inserted correctly, try to send email to the supervisor
+                    let emailNotificationSent = false;
+                    let fileSent = false;
+
+                    try {
+                        if (req.body.upload_id){
+                            const res = await applicationsService.AddApplicationFile(req.user.id, result.rows[0].id, req.body.upload_id);
+                            if (res.success === true ){
+                                fileSent = true;
+                            }
+                        }
+                        // send email to the supervisor
+                        await sendNewApplicationEmail(result.rows[0].id, result.rows[0].application_date, result.rows[0].proposal_id, result.rows[0].student_id);
+
+                        // if the email has been sent correctly, set the flag to true
+                        emailNotificationSent = true;
+                    } catch(e) {
+                        console.error("[BACKEND-SERVER] Cannot send application email to supervisor: ", e);
+                    }
+
+                    // event if the email cannot be sent, at this point the application has still been correctly inserted
+                    return res.status(200).json({...result.rows[0], emailNotificationSent, fileSent});
                 })
                 .catch((err) => {
-                    res.status(500).json({ errors: [err.message] });
+                    return res.status(500).json({ errors: [err] });
                 });
 
         } else
             return res.status(400).send("Parameters not found in insert new application controller");
-
     },
 
     /**
@@ -220,5 +304,77 @@ module.exports = {
             console.error("[BACKEND-SERVER] Cannot get the application: ", err);
             return res.status(500).json({ error: "Internal server error" });
         }
+    },
+
+    uploadFileServer: async (req, res) => {
+        // "file" is the name of the formData in the frontend
+        upload.single('file')(req, res, function (err) {
+        if (err) {
+            console.error("[BACKEND-ERROR] Error in uploadFileServer: cannot upload to the server \n" + err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        else {
+            const date = new Date().toISOString().slice(0, 10);
+
+            applicationsService.uploadFileServer(req.user.id, req.file.filename, date)
+            .then(function (response) {
+                res.status(201).json(response);
+            })
+            .catch(function (err) {
+                res.status(500).json({err});
+            });
+        }
+        });
+    },
+
+    previewFile: async (req, res) => {
+        try {
+            let {success, data} = {success: false, data: undefined};
+            if(req.params.upload_id) {
+                ({ success, data } = await applicationsService.getUploadedFile(req.user.id, req.params.upload_id));
+            }
+            if(req.params.application_id) {
+                ({ success, data } = await applicationsService.getApplicationFile(req.user.id, req.params.application_id));
+            }
+            if (success === true) {
+                const filePath = path.join(__dirname, '..', 'uploads', data.filename);
+                if (fs.existsSync(filePath)) {
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `inline; filename=${data.filename}`);
+                if (res.headersSent) {
+                    console.warn("Response headers already sent. Exiting.");
+                    return;
+                }
+                const stream = fs.createReadStream(filePath);
+                stream.pipe(res);
+                } else {
+                res.status(404).json({ error: 'File not found' });
+                }
+        } else {
+            res.status(404).json({ error: 'Resume not found for the specified student' });
+        }
+        } catch (error) {
+        console.error("[BACKEND-SERVER] Error in getStudentResume", error);
+        res.status(500).json({ error: "Internal server error" });
+        }
+    },
+
+    getFileInfo: async (req, res) => {
+        try {
+            let {success, data} = {success: false, data: undefined};
+            // if it is not yet associated to an application, the student jsut uploaded the file but did not "confirm" application yet
+            if (req.params.upload_id){
+                ({ success, data } = await applicationsService.getUploadedFile(req.user.id, req.params.upload_id));
+            }
+            // here we retrieve the file associated to an application
+            if (req.params.application_id) {
+                ({ success, data } = await applicationsService.getApplicationFile(req.user.id, req.params.application_id));
+            }
+            if (success === true ) {
+                res.status(200).json({ data });
+            }
+            else { res.status(404).json({ message: "No file found" });    }
+        }
+    catch(error) {res.status(500).json({ error: "Internal server error" }); }
     }
 }

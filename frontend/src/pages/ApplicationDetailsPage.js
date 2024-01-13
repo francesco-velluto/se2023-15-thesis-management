@@ -4,12 +4,13 @@ import TitleBar from "../components/TitleBar";
 
 import { useNavigate, useParams } from "react-router-dom";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { getApplicationById, acceptOrRejectApplication } from "../api/ApplicationsAPI";
+import { getApplicationById, acceptOrRejectApplication, fetchFileInfo } from "../api/ApplicationsAPI";
 import { Spinner, Row, Col, Container, Alert, CardHeader, Card, CardBody, Button, CardFooter, Modal } from "react-bootstrap";
 import { getStudentById } from "../api/StudentsAPI";
 import { format } from 'date-fns';
 import { UnAuthorizationPage } from "../App";
 import PropTypes from "prop-types";
+import { AiOutlineFilePdf, AiOutlineSearch} from 'react-icons/ai';
 
 
 function ApplicationDetails() {
@@ -173,7 +174,8 @@ function ApplicationDetails() {
                                     <Row className={"align-items-center align-content-center"}>
                                         <Col lg={3}>
                                             {emailSent === undefined ?
-                                                <Spinner animation="border" role="status" style={{margin: "auto"}}/> :
+                                                <output> 
+                                                <Spinner animation="border" role="status" style={{margin: "auto"}}/> </output> :
                                                 <>
                                                     <svg className="svg-icon" width={50} height={50} viewBox="0 0 20 20">
                                                         <path d="M17.388,4.751H2.613c-0.213,0-0.389,0.175-0.389,0.389v9.72c0,0.216,0.175,0.389,0.389,0.389h14.775c0.214,0,0.389-0.173,0.389-0.389v-9.72C17.776,4.926,17.602,4.751,17.388,4.751 M16.448,5.53L10,11.984L3.552,5.53H16.448zM3.002,6.081l3.921,3.925l-3.921,3.925V6.081z M3.56,14.471l3.914-3.916l2.253,2.253c0.153,0.153,0.395,0.153,0.548,0l2.253-2.253l3.913,3.916H3.56z M16.999,13.931l-3.921-3.925l3.921-3.925V13.931z"></path>
@@ -231,13 +233,32 @@ function ApplicationDetails() {
 
 
 function StudentInfo(props) {
-
+    const [fileInfo, setFileInfo] = useState(null);
+    const [isUploaded, setIsUploaded] = useState(false);
     const infoStudent = props.infoStudent;
     const infoApplication = props.infoApplication;
 
     const formattedDate = (date) => {
         return format(new Date(date), "EEEE, MMMM do yyyy")
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const info = await fetchFileInfo({ application_id: infoApplication.id });
+
+                if (info) {
+                    setFileInfo(info);
+                    setIsUploaded(true);
+                }
+            } catch (err) {
+                console.error('[FRONTEND ERROR] Error in get student application list: ' + err.message);
+            }
+        };
+
+        fetchData();
+    }, [infoApplication.id]);
+
     return (
         <Row className="my-2">
             <Col>
@@ -253,7 +274,29 @@ function StudentInfo(props) {
                         <RowInfo title={"Surname"} value={infoStudent.surname} />
                         <RowInfo title={"E-mail"} value={infoStudent.email} />
                         <RowInfo title={"Enrollment year"} value={infoStudent.enrollment_year} />
-
+                        {isUploaded && fileInfo && (
+                            <div className="file-div">
+                                <Row className="d-flex align-items-center">
+                                    <Col xs={1}>
+                                        <AiOutlineFilePdf size={50} />
+                                    </Col>
+                                    <Col xs={5}>
+                                        <p className="d-flex mb-0 fw-bold" >{fileInfo.data.filename}</p>
+                                    </Col>
+                                    <Col >
+                                        <AiOutlineSearch size={30}/>
+                                        <a
+                                            href={`/applications/file/${infoApplication.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="resume-link"
+                                        >
+                                            See preview
+                                        </a>
+                                    </Col>
+                                </Row>
+                            </div>
+                            )}
                     </CardBody>
                     <CardFooter style={{ borderColor: "#6D5D6E" }}>
                         Applied for this thesis on {formattedDate(infoApplication.application_date)}
@@ -272,7 +315,8 @@ StudentInfo.propTypes = {
         enrollment_year: PropTypes.number
     }),
     infoApplication: PropTypes.shape({
-        application_date: PropTypes.oneOf([String, Date])
+        id: PropTypes.number,
+        application_date: PropTypes.string
     }),
 };
 
@@ -313,7 +357,7 @@ ProposalInfo.propTypes = {
         title: PropTypes.string,
         type: PropTypes.string,
         notes: PropTypes.string,
-        expiration_date: PropTypes.oneOf([String, Date])
+        expiration_date: PropTypes.string
     }),
 };
 

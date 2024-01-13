@@ -13,9 +13,7 @@ function StudentProposalsPage() {
     return (
         <>
             <NavbarContainer />
-            <TitleBar/>
-
-
+            <TitleBar />
 
             {
                 loggedUser.role === 0 ?
@@ -25,7 +23,6 @@ function StudentProposalsPage() {
                     :
                     <>
                         <ProposalsSearchArea searchData={searchData} setSearchData={setSearchData} />
-
                         <StudentProposalsList searchData={searchData} />
                     </>
             }

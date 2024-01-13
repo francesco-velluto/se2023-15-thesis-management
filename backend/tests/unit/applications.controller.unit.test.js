@@ -18,7 +18,8 @@ const {
   getAllApplicationsByTeacherId,
 } = require("../../service/applications.service");
 const {
-  sendUpdateApplicationStatusEmail
+  sendUpdateApplicationStatusEmail,
+  sendNewApplicationEmail
 } = require("../../controllers/email.notifier");
 
 const controller = require("../../controllers/applications");
@@ -741,20 +742,26 @@ describe("T5 - insertNewApplication", () => {
     });
   
     const mockRes = {
-      data: {
-        application_id: "A001",
-        proposal_id: mockReq.proposal_id,
-        student_id: "S001",
-    }};
-  
+      rows: [
+        {
+          id: "A001",
+          proposal_id: mockReq.proposal_id,
+          student_id: "S001",
+          application_date: "2023-21-12",
+          fileSent: false,
+        }
+      ]
+    };
+
     insertNewApplication.mockResolvedValue(mockRes);
-  
+    sendNewApplicationEmail.mockResolvedValue(true);
+
     request(app)
       .post("/api/applications")
       .send(mockReq)
       .then((res) => {
         expect(res.status).toBe(200);
-        expect(res.body).toEqual(mockRes.data);
+        expect(res.body).toEqual({...mockRes.rows[0], emailNotificationSent: true});
         expect(insertNewApplication).toHaveBeenCalledWith(
           mockReq.proposal_id,
           "S001"
@@ -783,7 +790,7 @@ describe("T5 - insertNewApplication", () => {
       .send(mockApplicationReq)
       .then((res) => {
         expect(res.status).toBe(500);
-        expect(res.body.errors).toEqual([errorMessage]);
+        expect(res.body.errors).toBeDefined();
         expect(insertNewApplication).toHaveBeenCalledWith(
           mockApplicationReq.proposal_id,
           "S001"

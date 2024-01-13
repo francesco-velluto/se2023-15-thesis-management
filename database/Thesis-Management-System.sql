@@ -95,10 +95,10 @@ CREATE TABLE public.group (
 );
 
 INSERT INTO public.group (cod_group, title_group) VALUES
-  ('G001', 'Groupe 1'),
-  ('G002', 'Groupe 2'),
-  ('G003', 'Groupe 3'),
-  ('G004', 'Groupe 4');
+  ('G001', 'Group 1'),
+  ('G002', 'Group 2'),
+  ('G003', 'Group 3'),
+  ('G004', 'Group 4');
 
 ALTER TABLE public.group OWNER TO postgres;
 
@@ -163,8 +163,8 @@ INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department)
   ('T007', 'Brown', 'Linda', 'linda.brown@example.com', 'G003', 'D003'),
   ('T008', 'Wang', 'Xiaojie', 'xiaojie.wang@example.com', 'G004', 'D004'),
   ('T009', 'Garcia', 'Carlos', 'carlos.garcia@example.com', 'G004', 'D004'),
-  ('T010', 'Chen', 'Yun', 'yun.chen@example.com', 'G003', 'D003');
-
+  ('T010', 'Chen', 'Yun', 'yun.chen@example.com', 'G003', 'D003'),
+  ('T011', 'Mario', 'Rossi', 'teacherofpolito@gmail.com', 'G001', 'D001');
 
 ALTER TABLE public.teacher OWNER TO postgres;
 
@@ -304,7 +304,7 @@ CREATE TABLE public.proposals (
 );
 
 INSERT INTO public.proposals (proposal_id, title, supervisor_id, keywords, type, groups, description, required_knowledge, notes, expiration_date, level, programmes, archived, deleted) VALUES
-  ('P001', 'Web Development', 'T001', ARRAY['Web', 'Development'], 'Theoretical', ARRAY['G001'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2023-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P001', 'Web Development', 'T002', ARRAY['Web', 'Development'], 'Theoretical', ARRAY['G001'], 'A web development project description.', 'HTML, CSS, JavaScript', 'No special notes.', '2024-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P002', 'Machine Learning', 'T002', ARRAY['Machine Learning', 'AI'], 'Research', ARRAY['G002'], 'A machine learning thesis description.', 'Python, TensorFlow', 'N/A', '2024-06-30', 'Master', ARRAY['MSC001', 'MSC002'], false, false),
   ('P003', 'Artificial Intelligence', 'T003', ARRAY['AI', 'Machine Learning'], 'Experimental', ARRAY['G001'], 'An AI research thesis description.', 'Python, TensorFlow', 'N/A', '2024-05-15', 'Master', ARRAY['MSC001'], false, false),
   ('P004', 'Environmental Impact Analysis', 'T004', ARRAY['Environmental Science', 'Experimental'], 'Research', ARRAY['G002'], 'An environmental impact analysis thesis description.', 'Environmental Science knowledge', 'N/A', '2023-11-30', 'Master', ARRAY['MSC001'], false, false),
@@ -352,8 +352,8 @@ Suspendisse potenti. Sed porttitor elit eget molestie maximus. Phasellus ex nisl
 Proin convallis turpis a orci vulputate, sed finibus purus fermentum. Donec vestibulum, leo ut viverra volutpat, elit est aliquam massa, non pulvinar turpis enim vitae lacus. Curabitur viverra erat metus. Ut pretium bibendum felis non ornare. Vestibulum eget urna eu nisl aliquam accumsan sit amet sagittis lorem. Pellentesque eget nibh sed tortor faucibus venenatis. Sed sit amet congue tellus. Interdum et malesuada fames ac ante ipsum primis in faucibus.
 
 Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false);
-
+  ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false),
+  ('P028', 'Impact of AI to computer science', 'T011', ARRAY['AI', 'Computer Science'], 'Theoretical', ARRAY['G001'], 'A thesis on the impact of AI to computer science.', 'AI, Computer Science', 'N/A', '2024-10-15', 'Master', ARRAY['MSC001'], false, false);
 ALTER TABLE public.proposals OWNER TO postgres;
 
 ALTER TABLE ONLY public.proposals
@@ -372,12 +372,12 @@ CREATE TABLE public.applications (
 );
 
 INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
-  ('P001', 'S001', 'Canceled', '2023-11-01'),
+  ('P001', 'S001', 'Pending', '2023-11-01'),
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),
-  ('P021', 'S006', 'Pending', '2023-10-12'),
-  ('P024', 'S007', 'Pending', '2023-11-15'),
+  ('P021', 'S011', 'Pending', '2023-10-12'),
+  ('P024', 'S012', 'Pending', '2023-11-15'),
   ('P008', 'S008', 'Accepted', '2023-10-10'),
   ('P009', 'S009', 'Pending', '2023-11-18'),
   ('P010', 'S010', 'Accepted', '2023-10-05'),
@@ -423,6 +423,138 @@ INSERT INTO public.virtual_clock (prop_name, prop_value) VALUES ('virtual_date',
 
 ALTER TABLE public.virtual_clock OWNER TO postgres;
 
+CREATE TABLE public.cronologs
+(
+    id        SERIAL PRIMARY KEY,
+    job_name  VARCHAR(50) NOT NULL,
+    event     VARCHAR(50) NOT NULL,
+    timestamp TIMESTAMP   NOT NULL DEFAULT NOW(),
+    details   JSON        DEFAULT NULL
+);
+
+ALTER TABLE public.cronologs OWNER TO postgres;
+
+CREATE TABLE public.teachernotifs (
+    id SERIAL PRIMARY KEY,
+    channel VARCHAR(30) NOT NULL,
+    teacher_id VARCHAR(10) NOT NULL,
+    campaign VARCHAR(30) NOT NULL,
+    subject TEXT NOT NULL,
+    content JSON NOT NULL,
+    creation TIMESTAMP NOT NULL DEFAULT NOW(),
+    status VARCHAR(30) NOT NULL,
+    lastupdate TIMESTAMP NOT NULL
+);
+
+ALTER TABLE public.teachernotifs OWNER TO postgres;
+
+ALTER TABLE ONLY public.teachernotifs
+    ADD CONSTRAINT teachernotifs_fk_teacher FOREIGN KEY (teacher_id) REFERENCES public.teacher(id);
+
+--
+-- Name: thesis_request; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.thesis_request (
+    request_id VARCHAR(10) PRIMARY KEY,
+    supervisor_id VARCHAR(10) NOT NULL,
+    student_id VARCHAR(10) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    approval_date DATE,
+    status VARCHAR(20) NOT NULL,
+    co_supervisor_id VARCHAR(10)
+);
+
+ALTER TABLE public.thesis_request OWNER TO postgres;
+
+ALTER TABLE ONLY public.thesis_request
+    ADD CONSTRAINT thesis_request_fk FOREIGN KEY (supervisor_id) REFERENCES public.teacher(id);
+
+ALTER TABLE ONLY public.thesis_request
+    ADD CONSTRAINT thesis_request_fk_1 FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+ALTER TABLE ONLY public.thesis_request
+    ADD CONSTRAINT thesis_request_fk_2 FOREIGN KEY (co_supervisor_id) REFERENCES public.teacher(id);
+
+-- Set expired proposals as archived
+update public.proposals
+set archived = true
+where expiration_date <= CURRENT_DATE AND deleted = false;
+
+
+
+-- Function executed when trigger is activated
+CREATE OR REPLACE FUNCTION public.aggiorna_proposal()
+RETURNS TRIGGER AS $$
+BEGIN
+
+        UPDATE public.proposals SET archived = true WHERE expiration_date <= NEW.prop_value AND deleted = false;
+        UPDATE public.applications SET status = 'Canceled'
+            FROM public.proposals
+            WHERE public.applications.proposal_id = public.proposals.proposal_id 
+            AND public.proposals.archived = true
+            AND public.applications.status = 'Pending'; 
+           
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger actived when the virtual_clock changes
+CREATE or replace TRIGGER trigger_aggiorna_proposal
+AFTER UPDATE OF prop_value ON public.virtual_clock
+FOR EACH ROW
+EXECUTE FUNCTION public.aggiorna_proposal();
+
+--
+-- Name: temp_file_uploads; Type: TABLE; Schema: public; Owner: postgres
+-- Since, the file is upload as the same time a student apply for thesis, the application_id is not created yet
+-- So here, you store the file with its id, to link it after to the application_id. 
+--
+
+CREATE TABLE public.temp_file_uploads (
+    upload_id SERIAL PRIMARY KEY,
+    student_id VARCHAR(10) NOT NULL,
+    filename VARCHAR(100) NOT NULL,
+    date_uploaded DATE
+);
+
+ALTER TABLE ONLY public.temp_file_uploads
+    ADD CONSTRAINT upload_file_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+
+INSERT INTO public.temp_file_uploads (filename,student_id, date_uploaded) VALUES
+  ('Resume_S001.pdf', 'S001', '2023-11-01'),
+  ('Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
+  ('Recommendation_Letter_S012.pdf', 'S012', '2023-11-15');
+
+ALTER TABLE public.temp_file_uploads OWNER TO postgres;
+
+--
+-- Name: application_file; Type: TABLE; Schema: public; Owner: postgres
+--
+
+
+CREATE TABLE public.application_file (
+    id SERIAL PRIMARY KEY,
+    application_id INT NOT NULL, 
+    student_id VARCHAR(10) NOT NULL,
+    filename VARCHAR(100) NOT NULL,
+    date_uploaded DATE
+);
+
+ALTER TABLE ONLY public.application_file
+    ADD CONSTRAINT application_file_fk_application FOREIGN KEY (application_id) REFERENCES public.applications(id);
+
+ALTER TABLE ONLY public.application_file
+    ADD CONSTRAINT application_file_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
+
+INSERT INTO public.application_file ( application_id,filename, student_id,  date_uploaded) VALUES
+  ('1', 'Resume_S001.pdf', 'S001', '2023-11-01'),
+  ('5', 'Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
+  ('6', 'Resume_S012.pdf', 'S012', '2023-11-15');
+
+ALTER TABLE public.application_file OWNER TO postgres;
 --
 -- PostgreSQL database dump complete
 --

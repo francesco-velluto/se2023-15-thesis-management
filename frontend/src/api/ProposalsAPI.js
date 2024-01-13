@@ -74,7 +74,6 @@ module.exports = {
    * @params: none
    * @body: {proposal}
    */
-
   insertNewProposal: async (newProposal) => {
     try {
       const response = await fetch(ProposalsAPIURL, {
@@ -108,9 +107,42 @@ module.exports = {
   updateProposalApi: async (proposal) => {
     try {
       const ProposalURL = ProposalsAPIURL + "/" + proposal.proposal_id;
-      const result = await APICall(ProposalURL, "PUT", JSON.stringify(proposal));
+      const result = await APICall(
+        ProposalURL,
+        "PUT",
+        JSON.stringify(proposal)
+      );
 
       return result.proposal;
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  /**
+   * Insert a new thesis request
+   *
+   * POST /api/proposals/requests
+   *
+   * @params: none
+   * @body: {request}
+   */
+  insertNewThesisRequest: async (thesisRequest) => {
+    try {
+      const response = await fetch(ProposalsAPIURL + "/requests", {
+        method: "POST",
+        headers: APIConfig.API_REQUEST_HEADERS,
+        credentials: "include",
+        body: JSON.stringify(thesisRequest),
+      });
+
+      if (response.ok) {
+        const resObject = await response.json();
+        return resObject.response;
+      } else {
+        const res = await response.json();
+        throw new Error(res.error);
+      }
     } catch (err) {
       throw new Error(err);
     }
@@ -166,7 +198,7 @@ module.exports = {
     }
   },
 
-  deleteProposal: async(proposal_id) =>{
+  deleteProposal: async (proposal_id) => {
     try {
       const response = await fetch(ProposalsAPIURL + "/" + proposal_id, {
         method: "DELETE",
@@ -183,5 +215,27 @@ module.exports = {
     } catch (err) {
       throw new Error(err);
     }
-  }
+  },
+
+  archiveProposal: async (proposal_id) => {
+    try {
+      const response = await fetch(
+        ProposalsAPIURL + "/" + proposal_id + "/archive",
+        {
+          method: "DELETE",
+          headers: APIConfig.API_REQUEST_HEADERS,
+          credentials: "include",
+        }
+      );
+
+      if (response.ok) {
+        return true;
+      } else {
+        const res = await response.json();
+        return new Error(res.error);
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
 };

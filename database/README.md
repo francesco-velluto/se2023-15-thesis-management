@@ -141,6 +141,71 @@ The data stored in this table are the same that will be sent as notification to 
 | status | VARCHAR(30) NOT NULL             | Status of the notification. SMTP Pending, SMTP Accepted, SMTP Rejected |
 | lastupdate | TIMESTAMP NOT NULL               | Last update date of the notification status                            |
 
+### TeacherNotifs
+
+This table contains all the notifications sent to the teachers.
+
+The data stored in this table are the same that will be sent as notification to the teacher but doesn't mean it has been sent (see status field).
+
+| Attribute | Typology                         | Description                                                            |
+| --- |----------------------------------|------------------------------------------------------------------------|
+| id | SERIAL                           | ID, auto increment                                                     |
+| channel | VARCHAR(30) NOT NULL             | Channel of the notification. (Email, ...)                              |
+| teacher_id | VARCHAR(10) NOT NULL             | Teacher ID (FOREIGN KEY)                                               |
+| campaign | VARCHAR(30) NOT NULL             | Campaign of the notification (New Application, ...)                    |
+| subject | TEXT NOT NULL                    | Subject of the notification                                            |
+| content | JSON NOT NULL                    | JSON data content of the notification                                  |
+| creation | TIMESTAMP NOT NULL DEFAULT NOW() | Creation date of the notification                                      |
+| status | VARCHAR(30) NOT NULL             | Status of the notification. SMTP Pending, SMTP Accepted, SMTP Rejected |
+| lastupdate | TIMESTAMP NOT NULL               | Last update date of the notification status                            |
+
+### CronoLogs
+
+This table contains all the logs of the cron jobs.
+
+| Attribute | Typology             | Description                                           |
+| --- |----------------------|-------------------------------------------------------|
+| id | SERIAL               | ID, auto increment                                    |
+| job_name | VARCHAR(50) NOT NULL | Name of the job. (it is same as file name of the job) |
+| event | VARCHAR(50) NOT NULL | Event of the job. (Start, Success, Error)             |
+| timestamp | TIMESTAMP NOT NULL   | Timestamp of the event                                |
+| details | JSON                 | Details of the event, optional, can be null           |
+
+### Thesis_request
+
+This table contains all the thesis requests.
+
+| Attribute         | Typology              | Description                                               |
+| ------------------|-----------------------|-----------------------------------------------------------|
+| request_id        | VARCHAR(10) NOT NULL  | ID                                                        |
+| supervisor_id     | VARCHAR(10) NOT NULL  | Supervisor ID (the supervisor chosen by the student)      |
+| student_id        | VARCHAR(10) NOT NULL  | Student ID (who made the request)                         |
+| title             | VARCHAR(255) NOT NULL | Title of the thesis request                               |
+| description       | TEXT NOT NULL         | Description of the thesis request                         |
+| approval_date     | DATE                  | Date of the thesis request approval                       |
+| status            | VARCHAR(20) NOT NULL  | Status of the thesis request                              |
+| co_supervisor_id  | VARCHAR(10)           | CoSupervisor ID (the cosupervisor chosen by the student)  |
+
+### Group
+
+This table contains all the groups that can be assigned to a teacher.
+
+| Attribute         | Typology              | Description                                               |
+| ------------------|-----------------------|-----------------------------------------------------------|
+| cod_group         | VARCHAR(10) NOT NULL  | Group ID                                                  |
+| title_group       | VARCHAR(50) NOT NULL  | Title of the group                                        |
+
+
+### Virtual_clock
+
+This table contains the virtual clock value.
+
+| Attribute         | Typology              | Description                                               |
+| ------------------|-----------------------|-----------------------------------------------------------|
+| prop_name         | VARCHAR(10) NOT NULL  | Field Name                                                |
+| prop_value        | DATE NOT NULL         | Field Value                                               |
+
+
 ## How to install ?
 
 Refers to Elio documentation for DBEaver or to Docker compose documentation. 😃

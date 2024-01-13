@@ -18,16 +18,25 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./style/index.css";
 import StudentProposalsPage from "./pages/StudentProposalsPage";
 import ProfessorProposalsPage from "./pages/ProfessorProposalsPage";
+import ThesisRequestDetailsPage from "./pages/ThesisRequestDetailsPage";
+import PreviewApplicationFile from "./components/PreviewApplicationFile";
+import PreviewUploadedFile from "./components/PreviewUploadedFile";
+
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 
 function App() {
     return (
-        <BrowserRouter>
-            <LoggedUserProvider>
-                <VirtualClockProvider>
-                    <Main />
-                </VirtualClockProvider>
-            </LoggedUserProvider>
-        </BrowserRouter>
+        <DndProvider backend={HTML5Backend}>
+            <BrowserRouter>
+                <LoggedUserProvider>
+                    <VirtualClockProvider>
+                        <Main />
+                    </VirtualClockProvider>
+                </LoggedUserProvider>
+            </BrowserRouter>
+        </DndProvider>
     );
 }
 
@@ -52,6 +61,8 @@ function Main() {
                         	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
                     } />
                     <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
+                    <Route path="upload/:upload_id" element={loggedUser ? <PreviewUploadedFile /> : <UnAuthorizationPage />} />
+                    <Route path="file/:application_id" element={loggedUser ? <PreviewApplicationFile /> : <UnAuthorizationPage />} />
                 </Route>
                 <Route path="/proposals">
                     <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
@@ -59,9 +70,9 @@ function Main() {
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="add" /> : <UnAuthorizationPage />} />
                     <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage />} />
                     <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage />} />
+                    <Route path="requests/new" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage />} />
                 </Route>
             </Route>
-
             <Route path='*' element={<NotFoundPage />} />
         </Routes>
     );

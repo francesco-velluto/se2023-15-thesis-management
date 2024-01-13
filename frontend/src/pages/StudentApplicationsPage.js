@@ -2,31 +2,50 @@ import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 import { Alert, Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
+import { fetchFileInfo } from '../api/ApplicationsAPI';
 
 import ApplicationsAPI from "../api/ApplicationsAPI";
 
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import { AiOutlineFilePdf, AiOutlineSearch} from 'react-icons/ai';
+
 
 function StudentApplicationsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [applications, setApplications] = useState([]);
+    const [fileInfo, setFileInfo] = useState({});
+    const [isUploaded, setIsUploaded] = useState(false);
 
     const { loggedUser } = useContext(LoggedUserContext);
 
     useEffect(() => {
         try {
             ApplicationsAPI.getAllApplicationsByStudent(loggedUser.id)
-                .then(applicationsList => {
-                    setApplications(applicationsList);
-                    setIsLoading(false);
-                })
-                .catch(err => {
-                    setError(err[0]);
-                    setIsLoading(false);
+            .then(applicationsList => {
+                setApplications(applicationsList);
+                setIsLoading(false);
+
+                const fetchFileInformation = async (application) => {
+                    try {
+                        const res = await fetchFileInfo({ application_id: application.id });
+                        console.log(res.data)
+                        if (res.data.length !== 0 ) {
+                            setFileInfo(prevState => ({ ...prevState, [application.id]: res }));
+                            setIsUploaded(true);
+                        }
+                    } catch (err) {
+                        console.error("Error fetching uploaded file:", err);
+                    }
+                };
+
+                applicationsList.forEach(application => {
+                    fetchFileInformation(application);
                 });
+            })
+        
         } catch (err) {
             console.error('[FRONTEND ERROR] Error in get student application list: ' + err[0]);
             setError(err[0]);
@@ -80,6 +99,29 @@ function StudentApplicationsPage() {
                                             <Card.Text>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> You applied on <i>{dayjs(application.application_date).format('dddd, DD MMMM YYYY')}</i>
                                             </Card.Text>
+                                            {isUploaded && fileInfo[application.id] && (
+                                            <div className="file-container">
+                                                <Row className="d-flex align-items-center">
+                                                    <Col xs={1}>
+                                                        <AiOutlineFilePdf size={28} />
+                                                    </Col>
+                                                    <Col>
+                                                        <p className="mb-0 fw-bold" >{fileInfo[application.id].data.filename}</p>
+                                                    </Col>
+                                                    <Col>
+                                                        <AiOutlineSearch />
+                                                        <a
+                                                            href={`/applications/file/${application.id}`}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="resume-link"
+                                                        >
+                                                            See preview
+                                                        </a>
+                                                    </Col>
+                                                </Row>
+                                            </div>
+                                            )}
                                         </Card.Body>
                                     </Card>
                                 </Col>

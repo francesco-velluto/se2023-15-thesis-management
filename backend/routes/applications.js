@@ -49,6 +49,29 @@ router.get(
   applicationsController.getAllApplicationsByTeacherId
 );
 
+/**
+ * 
+ * GET /api/applications/proposals/:proposal_id
+ * 
+ * @params proposal_id
+ * @body none
+ * @returns {
+ * {
+*   proposal_id: number,
+*   title: string,
+*   description: string,
+*   application_date: date,
+*   status: string
+* }[]
+* }
+*/
+router.get(
+  "/proposals/:proposal_id",
+  authenticationController.isLoggedIn,
+  authenticationController.isTeacher,
+  applicationsController.getAllApplicationsByProposalId
+); 
+
 router.post(
   "/",
   authenticationController.isLoggedIn,
@@ -80,5 +103,12 @@ router.get(
   authenticationController.isTeacher,
   applicationsController.getApplicationById
 );
+
+
+router.post('/upload', authenticationController.isLoggedIn, authenticationController.isStudent, applicationsController.uploadFileServer);
+router.get('/upload/:upload_id', authenticationController.isLoggedIn, authenticationController.isStudent, applicationsController.previewFile);
+router.get('/upload/:upload_id/info', authenticationController.isLoggedIn, authenticationController.isStudent, applicationsController.getFileInfo);
+router.get('/file/:application_id', authenticationController.isLoggedIn, applicationsController.previewFile);
+router.get('/file/:application_id/info', authenticationController.isLoggedIn, applicationsController.getFileInfo);
 
 module.exports = router;

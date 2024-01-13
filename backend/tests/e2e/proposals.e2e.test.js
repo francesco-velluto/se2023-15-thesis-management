@@ -324,40 +324,6 @@ describe("End to end test for professor proposals", () => {
 
 describe("End to end test for delete proposal", () => {
 
-    //function to create a fake proposal to delete in the test
-    /*const fakeInsert = async() =>{
-        const fakeProposalToDelete = {
-            title: "test",
-            supervisor_id: "T003",
-            keywords: ["keyword1", "keyword2"],
-            type: "Research",
-            groups: ["Group A", "Group B"],
-            description: "A master thesis just to test the insert API call",
-            required_knowledge: "Node.js, PostgreSQL, React.js",
-            notes: "These are the notes...",
-            expiration_date: "2024-06-30",
-            level: "Master",
-            programmes: ["MSC001"],
-        };
-
-        const query = `INSERT INTO proposals
-        (proposal_id, title, supervisor_id, keywords, type,
-        groups, description, required_knowledge, notes,
-        expiration_date, level, programmes, archived, deleted)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-        RETURNING *;`
-
-        await db.query(query, ['P100', fakeProposalToDelete.title, fakeProposalToDelete.supervisor_id,
-            fakeProposalToDelete.keywords, fakeProposalToDelete.type, fakeProposalToDelete.groups,
-            fakeProposalToDelete.description, fakeProposalToDelete.required_knowledge, fakeProposalToDelete.notes,
-            fakeProposalToDelete.expiration_date, fakeProposalToDelete.level, fakeProposalToDelete.programmes,
-            false, false
-        ]);
-
-        await driver.sleep(500);
-
-    };*/
-
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
     });
@@ -438,9 +404,6 @@ describe("End to end test for delete proposal", () => {
     }, 20000);
 
     test("Should delete the proposal", async ()=>{
-
-        //await fakeInsert();
-
         await doLogin("ana.gomez@example.com", "T003", driver);
 
         await driver.sleep(500);
@@ -1055,6 +1018,187 @@ describe("End to end test for update proposal", () => {
         await doLogout(driver);
 
         }, 40000);
+
+
+});
+
+describe("End to end test for archive proposal", () => {
+
+    beforeAll(async () => {
+        driver = await new Builder().forBrowser("chrome").build();
+    });
+
+    afterAll(async () => {
+        await driver.quit();
+    });
+
+    test("Should show not authorized page if not logged in yet", async () => {
+        await driver.get(baseURL + "/proposals/");
+
+        await driver.sleep(500);
+
+        let pageTitle = await driver
+            .findElement(By.className("alert-danger"))
+            .getText();
+        expect(pageTitle).toEqual("Access Not Authorized");
+
+    }, 20000);
+
+    test("Shouldn't show the possibility to archive the proposal if logged as a student", async() =>{
+
+        await doLogin("john.smith@example.com", "S001", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals");
+        await driver.sleep(500);
+
+        let inputValue = await driver.findElement(By.css('#inputValue'));
+        expect(inputValue).not.toBe(null);
+
+        await doLogout(driver);
+
+    }, 20000);
+
+    test("Should show the possibility to archive the proposal in the proposals list page", async() =>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals");
+        await driver.sleep(500);
+
+        let dropDownButton = await driver.findElement(By.id('dropdown-proposal-actions'));
+        await dropDownButton.click();
+
+        let archiveSelect = await driver.findElement(By.id('archive-proposal-id')).getText();
+        expect(archiveSelect).toEqual("Archive");
+
+        await doLogout(driver);
+    }, 20000);
+
+    test("Should show the possibility to archive the proposal in the proposals details page", async() =>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/P015");
+        await driver.sleep(500);
+
+        let archiveSelect = await driver.findElement(By.id('archive-proposal-btn')).getText();
+        expect(archiveSelect).toEqual("Archive proposal");
+
+        await doLogout(driver);
+    }, 20000);
+
+    test("Should not archive the proposal if click the cancel button (proposals list page)", async() =>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals");
+        await driver.sleep(500);
+
+        let dropDownButton = await driver.findElement(By.id('dropdown-proposal-actions'));
+        await dropDownButton.click();
+
+        let archiveSelect = await driver.findElement(By.id('archive-proposal-id'));
+        expect(await archiveSelect.getText()).toEqual("Archive");
+
+        await archiveSelect.click();
+        await driver.sleep(500);
+
+        let modal = await driver.findElement(By.className('modal-footer'));
+        let cancelButton = await modal.findElement(By.className('btn btn-secondary'));
+        expect(await cancelButton.getText()).toEqual("Cancel");
+
+        await cancelButton.click();
+
+        await doLogout(driver);
+        
+    }, 20000);
+
+    test("Should not archive the proposal if click the cancel button (proposal details page)", async() =>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/P015");
+        await driver.sleep(500);
+
+        let archiveButton = await driver.findElement(By.id('archive-proposal-btn'));
+        expect(await archiveButton.getText()).toEqual("Archive proposal");
+
+        await driver.executeScript(
+            "document.getElementById('archive-proposal-btn').click()"
+        );
+
+        await driver.sleep(500);
+
+        let modal = await driver.findElement(By.className('modal-footer'));
+        let cancelButton = await modal.findElement(By.className('btn btn-secondary'));
+        expect(await cancelButton.getText()).toEqual("Cancel");
+
+        await cancelButton.click();
+
+        await doLogout(driver);
+        
+    }, 20000);
+
+    test("Should show a button to go to applications if try to archive a proposal with pending applications", async ()=>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/P021");
+        await driver.sleep(500);
+
+        let archiveButton = await driver.findElement(By.id('archive-proposal-btn'));
+        expect(await archiveButton.getText()).toEqual("Archive proposal");
+
+        await driver.executeScript(
+            "document.getElementById('archive-proposal-btn').click()"
+        );
+
+        await driver.sleep(500);
+
+        let modal = await driver.findElement(By.className('modal-body'));
+        let applicationsButton = await modal.findElement(By.className('btn btn-outline-warning'));
+        expect(await applicationsButton.getText()).toEqual("Browse applications");
+
+        await applicationsButton.click();
+        await driver.sleep(500);
+
+        let currentUrl = await driver.getCurrentUrl();
+        expect(currentUrl).toBe(baseURL + "/applications");
+
+        await doLogout(driver);
+    }, 20000);
+
+    test("Should archive the proposal", async() =>{
+        await doLogin("michael.wilson@example.com", "T002", driver);
+        await driver.sleep(500);
+
+        await driver.get(baseURL + "/proposals/P015");
+        await driver.sleep(500);
+
+        let archiveButton = await driver.findElement(By.id('archive-proposal-btn'));
+        expect(await archiveButton.getText()).toEqual("Archive proposal");
+
+        await driver.executeScript(
+            "document.getElementById('archive-proposal-btn').click()"
+        );
+
+        await driver.sleep(500);
+
+        let modal = await driver.findElement(By.className('modal-footer'));
+        let confirmButton = await modal.findElement(By.className('btn btn-primary'));
+        expect(await confirmButton.getText()).toEqual("Archive");
+
+        await confirmButton.click();
+        await driver.sleep(500);
+
+        let confirmAlert = await driver.findElement(By.className('fade alert alert-success alert-dismissible show'));
+        expect (await confirmAlert.getText()).toEqual("Proposal archived successfully");
+
+        await doLogout(driver);
+        
+    }, 20000)
+
 
 
 });
