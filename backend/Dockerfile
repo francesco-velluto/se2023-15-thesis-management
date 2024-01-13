@@ -6,12 +6,14 @@ COPY package*.json ./
 
 RUN npm install --ignore-scripts
 
-COPY . .
-
-EXPOSE ${REACT_APP_BACKEND_SERVER_PORT}
-
 RUN addgroup -S nonroot \
     && adduser -S nonroot -G nonroot
+
+COPY . .
+
+RUN chmod 777 -R uploads
+
+EXPOSE ${REACT_APP_BACKEND_SERVER_PORT}
 
 USER nonroot
 
