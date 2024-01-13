@@ -12,11 +12,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-let upload = multer({
-    limits: {
-        fileSize: 5_000_000, // 5 MB
-      },
-    storage: multer.diskStorage({
+let diskStorage = multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, './uploads');
         },
@@ -36,7 +32,13 @@ let upload = multer({
             }
         }, 
     
-    }),
+    });
+    
+let upload = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 5000000, // 5 MB
+    },
     fileFilter: function (req, file, cb) {
         const allowedFormats = 'application/pdf';
         if (file.mimetype == allowedFormats) {
