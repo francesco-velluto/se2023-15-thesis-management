@@ -5,7 +5,7 @@ import { Row, Col, Button } from 'react-bootstrap';
 import { useDrop } from 'react-dnd';
 import { AiOutlineFilePdf, AiOutlineSearch} from 'react-icons/ai';
 import { NativeTypes } from 'react-dnd-html5-backend';
-
+import PropTypes from 'prop-types';
 
 const UploadResume = ({setCallbackUploadId}) => {
   const { loggedUser } = useContext(LoggedUserContext);
@@ -17,7 +17,7 @@ const UploadResume = ({setCallbackUploadId}) => {
   const [fileInfo, setFileInfo] = useState(null);
 
 
-  const [{ canDrop, isOver },drop] = useDrop({
+  const [{isOver, canDrop},drop] = useDrop({
     accept: [NativeTypes.FILE],
     drop: (item) => handleFileDrop(item.files),
     collect: (monitor) => ({
@@ -148,6 +148,10 @@ const UploadResume = ({setCallbackUploadId}) => {
 </div>
 
   );
+};
+
+UploadResume.propTypes = {
+  setCallbackUploadId: PropTypes.func,
 };
 
 export default UploadResume;

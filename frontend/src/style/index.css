@@ -143,6 +143,9 @@ body {
   cursor: pointer;
   color: #003576;
   font-weight: bold;
+  background: none;
+  border: none;
+  text-decoration: underline;
 }
 
 #copy-proposal-id,

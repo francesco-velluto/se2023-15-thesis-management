@@ -485,3 +485,174 @@ describe("UNIT-SERVICE: getAllApplicationsByProposalId", () => {
     );
   });
 });
+
+describe("UNIT-SERVICE: getUploadedFile", () => {
+  it("should return undefined data field if file doesn't exist", async () => {
+    db.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
+
+    const res = await applicationService.getUploadedFile("S001");
+    expect(res).toEqual({
+      success: false,
+      data: undefined
+    });
+  });
+
+  it("should return the file", async () => {
+    const mockFile = {
+      id: "A001",
+      application_id: "A001",
+      file_name: "file.pdf",
+      file_path: "/path/to/file.pdf",
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [mockFile],
+      rowCount: 1,
+    });
+
+    const res = await applicationService.getUploadedFile("S001");
+
+    expect(res).toEqual({
+      success: true,
+      data: mockFile
+    });
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    const res = await applicationService.getUploadedFile("S001");
+
+    expect(res).toEqual({
+      error: "Internal server error has occurred",
+    })
+  });
+});
+
+describe("UNIT-SERVICE: uploadFileServer", () => {
+  it("should upload the file", async () => {
+    const mockFile = {
+      id: "A001",
+      application_id: "A001",
+      file_name: "file.pdf",
+      file_path: "/path/to/file.pdf",
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [mockFile],
+      rowCount: 1,
+    });
+
+    const res = await applicationService.uploadFileServer("A001", "file.pdf", "/path/to/file.pdf");
+
+    expect(res).toEqual({
+      success: true,
+      rows: [mockFile]
+    });
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    const res = await applicationService.uploadFileServer("A001", "file.pdf", "/path/to/file.pdf");
+
+    expect(res).toEqual({
+      success: false,
+      error: "Database Error"
+    })
+  });
+});
+
+describe("UNIT-SERVICE: AddApplicationFile", () => {
+  it("should add the file to the application", async () => {
+    const mockFile = {
+      id: "A001",
+      application_id: "A001",
+      file_name: "file.pdf",
+      file_path: "/path/to/file.pdf",
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [mockFile],
+      rowCount: 1,
+    });
+
+    const res = await applicationService.AddApplicationFile("A001", "file.pdf", "/path/to/file.pdf");
+
+    expect(res).toEqual({
+      success: true
+    });
+  });
+
+  it("should return undefined data", async () => {
+    db.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
+
+    const res = await applicationService.AddApplicationFile("A001", "file.pdf", "/path/to/file.pdf");
+    expect(res).toEqual({
+      success: false,
+      data: undefined
+    });
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    const res = await applicationService.AddApplicationFile("A001", "file.pdf", "/path/to/file.pdf");
+
+    expect(res).toEqual({
+      success: false,
+      error: "Database Error"
+    })
+  });
+});
+
+describe("UNIT-SERVICE: getApplicationFile", () => {
+  it("should return undefined data field if file doesn't exist", async () => {
+    db.query.mockResolvedValueOnce({ rows: [], rowCount: 0 });
+
+    const res = await applicationService.getApplicationFile("A001");
+    expect(res).toEqual({
+      success: false,
+      data: undefined
+    });
+  });
+
+  it("should return the file", async () => {
+    const mockFile = {
+      id: "A001",
+      application_id: "A001",
+      file_name: "file.pdf",
+      file_path: "/path/to/file.pdf",
+    };
+
+    db.query.mockResolvedValueOnce({
+      rows: [mockFile],
+      rowCount: 1,
+    });
+
+    const res = await applicationService.getApplicationFile("A001");
+
+    expect(res).toEqual({
+      success: true,
+      data: mockFile
+    });
+  });
+
+  it("should throw error if a generic error occurs on the database", async () => {
+    db.query.mockImplementation(async () => {
+      throw new Error("Internal error");
+    });
+
+    const res = await applicationService.getApplicationFile("A001");
+
+    expect(res).toEqual({
+      error: "Internal server error has occurred",
+    })
+  });
+});

@@ -5,6 +5,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import { VirtualClockContext } from "../context/VirtualClockContext";
 import { isSameDay, parse, parseISO } from "date-fns";
 import { FaTimesCircle } from 'react-icons/fa';
+import PropTypes from 'prop-types';
 
 
 const FIELDS = [
@@ -333,6 +334,15 @@ function ProposalsSearchArea(props) {
     );
 }
 
+ProposalsSearchArea.propTypes = {
+    searchData: PropTypes.arrayOf(PropTypes.shape({
+      field: PropTypes.string,
+      value: PropTypes.string,
+    })),
+    setSearchData: PropTypes.func,
+  };
+
+
 function FilterElement(props) {
 
     const [userfriendly_field, setUserfriendly_field] = useState("");
@@ -367,6 +377,15 @@ function FilterElement(props) {
         </Col>
     );
 }
+
+FilterElement.propTypes = {
+    fltr: PropTypes.shape({
+      field: PropTypes.string,
+      value: PropTypes.string,
+    }),
+    setSearchData: PropTypes.func,
+  };
+    
 
 
 export default ProposalsSearchArea;

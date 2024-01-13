@@ -1,6 +1,6 @@
 const CronoJob = require('../CronoJob');
 
-const { getVirtualDate, updateVirtualDate } = require("../../service/virtualclock.service");
+const { updateVirtualDate } = require("../service/virtualclock.service");
 const dayjs = require('dayjs');
 
 
@@ -15,9 +15,8 @@ class PeriodicUpdateVirtualClock extends CronoJob {
         return '0 0 0 * * *';
     }
 
-/**
+    /**
      * The function that will be run by the job.
-     
      */
     async run() {
         try{

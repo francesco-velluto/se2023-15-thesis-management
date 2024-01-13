@@ -373,9 +373,8 @@ function ProposalRow({
         className="d-flex flex-row justify-content-center mt-3 mt-md-0"
         id="proposal-detail-actions-showdetails"
       >
-        <span
+        <button
           id="show-details-proposal"
-          role="button"
           className="d-flex align-items-center show-details-button"
           onKeyDown={() => {}}
           onClick={() => {
@@ -384,7 +383,7 @@ function ProposalRow({
         >
           <FaBook className="me-1" />
           Show details
-        </span>
+        </button>
       </Col>
 
       {showArchiveModal && (
@@ -407,22 +406,20 @@ function ProposalRow({
   );
 }
 
-ProfessorProposalsList.propTypes = {
-  proposals: PropTypes.arrayOf(
+ProposalRow.propTypes = {
+  proposal: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      title: PropTypes.string.isRequired,
-      level: PropTypes.string.isRequired,
-      type: PropTypes.string.isRequired,
-      expiration_date: PropTypes.string.isRequired,
+      proposal_id: PropTypes.number,
+      title: PropTypes.string,
+      level: PropTypes.string,
+      type: PropTypes.string,
+      expiration_date: PropTypes.string,
     })
   ).isRequired,
-  isLoading: PropTypes.bool.isRequired,
-  errorMessage: PropTypes.string,
-  successMessage: PropTypes.string,
-  setSuccessMessage: PropTypes.func.isRequired,
-  setErrorMessage: PropTypes.func.isRequired,
-  setArchived: PropTypes.func.isRequired,
+  setSuccessMessage: PropTypes.func,
+  setErrorMessage: PropTypes.func,
+  setArchived: PropTypes.func,
+  scrollToTarget: PropTypes.func,
 };
 
 export default ProfessorProposalsList;
