@@ -12,7 +12,10 @@ const {
   getApplicationById,
   insertNewApplication,
   cancelPendingApplicationsByProposalId,
-  getAllPendingApplicationsByProposalId
+  getAllPendingApplicationsByProposalId,
+  uploadFileServer,
+  getUploadedFile,
+  getApplicationFile
 } = require("../../service/applications.service");
 const {
   getAllApplicationsByTeacherId,
@@ -30,11 +33,15 @@ const Application = require("../../model/Application");
 const { setProposalArchived } = require("../../service/proposals.service");
 const Proposal = require("../../model/Proposal");
 const { is } = require("date-fns/locale");
+const multer = require('multer');
+const fs = require('fs');
 
 jest.mock("../../service/applications.service");
 jest.mock("../../service/proposals.service");
 jest.mock("../../controllers/authentication");
 jest.mock("../../controllers/email.notifier");
+jest.mock("multer");
+jest.mock("fs");
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -821,4 +828,406 @@ describe("T5 - insertNewApplication", () => {
   });
 
 
+});
+
+describe("T6 - uploadFileServer", (done) => {
+  test("T6.1 - SUCCESS 201 | Uploaded file to server", async () => {
+    const mockReq = {
+      file: {
+        filename: "file.pdf"
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    multer.mockImplementation(() => ({
+      single: (name) => (req, res, next) => {
+        next();
+      },
+    }));
+
+    uploadFileServer.mockResolvedValue({data: "File uploaded successfully"});
+
+    await controller.uploadFileServer(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(201);
+    expect(mockRes.json).toHaveBeenCalledWith({data: "File uploaded successfully"});
+  });
+
+  test("T6.2 - ERROR 500 | Internal server error", async () => {
+    const mockReq = {
+      file: {
+        filename: "file.pdf"
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    multer.mockImplementation(() => ({
+      single: (name) => (req, res, next) => {
+        next("Internal Server Error");
+      },
+    }));
+
+    uploadFileServer.mockRejectedValue({data: "Internal Server Error"});
+
+    await controller.uploadFileServer(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({error: "Internal Server Error"});
+  });
+});
+
+describe("T7 - previewFile", () => {
+  test("T7.1 SUCCESS 200 | Preview file (upload_id case)", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        upload_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getUploadedFile.mockResolvedValue({success: true, data: {filename: "Resume_S001.pdf"}});
+
+    fs.existsSync.mockReturnValue(true);
+
+    fs.createReadStream.mockReturnValue({
+      pipe: jest.fn()
+    });
+
+    await controller.previewFile(mockReq, mockRes);
+
+    expect(mockRes.setHeader).toHaveBeenCalledWith("Content-Type", "application/pdf");
+    expect(mockRes.setHeader).toHaveBeenCalledWith("Content-Disposition", "inline; filename=Resume_S001.pdf");
+  });
+
+  test("T7.2 SUCCESS 200 | Preview file (application_id case)", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockResolvedValue({success: true, data: {filename: "Resume_S001.pdf"}});
+
+    fs.existsSync.mockReturnValue(true);
+
+    fs.createReadStream.mockReturnValue({
+      pipe: jest.fn()
+    });
+
+    await controller.previewFile(mockReq, mockRes);
+
+    expect(mockRes.setHeader).toHaveBeenCalledWith("Content-Type", "application/pdf");
+    expect(mockRes.setHeader).toHaveBeenCalledWith("Content-Disposition", "inline; filename=Resume_S001.pdf");
+  });
+
+  test("T7.3 - 404 | File not found", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockResolvedValue({success: true, data: {filename: "Resume_S001.pdf"}});
+
+    fs.existsSync.mockReturnValue(false);
+
+    await controller.previewFile(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockRes.json).toHaveBeenCalledWith({error: "File not found"});
+  });
+
+  test("T7.4 - 404 | Resume not found for the specified student", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockResolvedValue({success: false, data: {filename: "Resume_S001.pdf"}});
+
+    await controller.previewFile(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockRes.json).toHaveBeenCalledWith({error: "Resume not found for the specified student"});
+  });
+
+  test("T7.5 - 500 | Internal server error", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockRejectedValue({success: false, data: {filename: "Resume_S001.pdf"}});
+
+    await controller.previewFile(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({error: "Internal server error"});
+  });
+});
+
+describe("T8 - getFileInfo", () => {
+  test("T8.1 SUCCESS 200 | Get file info (upload_id case)", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        upload_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getUploadedFile.mockResolvedValue({success: true, data: {filename: "Resume_S001.pdf"}});
+
+    await controller.getFileInfo(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith({data: {filename: "Resume_S001.pdf"}});
+  });
+
+  test("T8.2 SUCCESS 200 | Get file info (application_id case)", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockResolvedValue({success: true, data: {filename: "Resume_S001.pdf"}});
+
+    await controller.getFileInfo(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(200);
+    expect(mockRes.json).toHaveBeenCalledWith({data: {filename: "Resume_S001.pdf"}});
+  });
+
+  test("T8.3 - 404 | File not found", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockResolvedValue({success: false, data: {filename: "Resume_S001.pdf"}});
+
+    fs.existsSync.mockReturnValue(false);
+
+    await controller.getFileInfo(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(404);
+    expect(mockRes.json).toHaveBeenCalledWith({message: "No file found"});
+  });
+
+  test("T8.4 - 500 | Internal server error", async () => {
+    const mockReq = {
+      params: {
+        filename: "Resume_S001.pdf",
+        application_id: 1
+      },
+      user: {
+        id: "S001"
+      }
+    };
+
+    const mockRes = {
+      sendFile: jest.fn(),
+      setHeader: jest.fn(),
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn()
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next();
+    });
+
+    getApplicationFile.mockRejectedValue({success: false, data: {filename: "Resume_S001.pdf"}});
+
+    await controller.getFileInfo(mockReq, mockRes);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({error: "Internal server error"});
+  });
 });
