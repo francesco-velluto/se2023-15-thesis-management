@@ -665,3 +665,7 @@ footer img {
     align-items: center;
   }
 }
+
+.general-loading-container, .general-error-container {
+  margin-top: 9px;
+}
