@@ -43,4 +43,89 @@ describe("End to end tests for insert thesis request", () => {
 
     await doLogout(driver);
   }, 20000);
+
+  it("Should show an alert if the title is missing", async () => {
+    await doLogin("john.smith@example.com", "S001", driver);
+
+    await driver.get(baseURL + "/proposals/requests/new");
+
+    await driver.sleep(1000);
+
+    await driver.findElement(By.name("description")).sendKeys("This is the description");
+
+    let selectElement = await driver.findElement(By.name("supervisor"));
+    let select = new Select(selectElement);
+    await select.selectByValue("T001");
+
+    await driver.sleep(500);
+
+    // simulate click with js
+    await driver.executeScript("document.getElementById('add-request-btn').click()");
+
+    await driver.sleep(1000);
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).toEqual(baseURL + "/proposals/requests/new");
+
+    let alertText = await driver.findElement(By.className("alert")).getText();
+    expect(alertText).toEqual("Please enter a valid title.");
+
+    await doLogout(driver);
+  }, 20000);
+
+  it("Should show an alert if the description is missing", async () => {
+    await doLogin("john.smith@example.com", "S001", driver);
+
+    await driver.get(baseURL + "/proposals/requests/new");
+
+    await driver.sleep(1000);
+
+    await driver.findElement(By.name("title")).sendKeys("New thesis request");
+
+    let selectElement = await driver.findElement(By.name("supervisor"));
+    let select = new Select(selectElement);
+    await select.selectByValue("T001");
+
+    await driver.sleep(500);
+
+    // simulate click with js
+    await driver.executeScript("document.getElementById('add-request-btn').click()");
+
+    await driver.sleep(1000);
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).toEqual(baseURL + "/proposals/requests/new");
+
+    let alertText = await driver.findElement(By.className("alert")).getText();
+    expect(alertText).toEqual("Please enter a valid description.");
+
+    await doLogout(driver);
+  }, 20000);
+
+  it("Should show an alert if the supervisor is missing", async () => {
+    await doLogin("john.smith@example.com", "S001", driver);
+
+    await driver.get(baseURL + "/proposals/requests/new");
+
+    await driver.sleep(1000);
+
+    await driver.findElement(By.name("title")).sendKeys("New thesis request");
+
+    await driver.findElement(By.name("description")).sendKeys("This is the description");
+
+    await driver.sleep(500);
+
+    // simulate click with js
+    await driver.executeScript("document.getElementById('add-request-btn').click()");
+
+    await driver.sleep(1000);
+
+    const currentUrl = await driver.getCurrentUrl();
+    expect(currentUrl).toEqual(baseURL + "/proposals/requests/new");
+
+    let alertText = await driver.findElement(By.className("alert")).getText();
+    expect(alertText).toEqual("Please enter a valid supervisor.");
+
+    await doLogout(driver);
+  }, 20000);
 });
