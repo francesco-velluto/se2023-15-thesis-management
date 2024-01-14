@@ -362,13 +362,13 @@ function StudentInfo(props) {
                         {isUploaded && fileInfo && (
                             <div className="file-div">
                                 <Row className="d-flex align-items-center">
-                                    <Col xs={1}>
-                                        <AiOutlineFilePdf size={50} />
+                                    <Col md={1} xs={12}>
+                                        <AiOutlineFilePdf size={40} />
                                     </Col>
-                                    <Col xs={5}>
+                                    <Col md={5} xs={12}>
                                         <p className="d-flex mb-0 fw-bold" >{fileInfo.data.filename}</p>
                                     </Col>
-                                    <Col >
+                                    <Col md={6} xs={12} >
                                         <AiOutlineSearch size={30}/>
                                         <a
                                             href={`/applications/file/${infoApplication.id}`}

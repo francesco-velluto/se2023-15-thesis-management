@@ -484,7 +484,6 @@ body {
   background-color: lightgray;
 
 }
-
 .resume-link {
   color: inherit;
   margin-left: 2px;
@@ -492,6 +491,20 @@ body {
 .resume-link:hover {
   color: blue;
 
+}
+#reset-button {
+  border:none;
+  background-color: white;
+  color: #8B0000;
+  padding: 5px; 
+  margin-right: 10px; 
+
+}
+@media (max-width: 767px) {
+  #reset-button{
+  padding: 8px;
+  margin-right: 5px;
+  }
 }
 
 .upload-container {
@@ -549,7 +562,7 @@ body {
   border-color: #003576;
   background-color: whitesmoke;
   cursor: pointer;
-  flex: 1;
+  width: calc(100% - 10px); 
 }
 
 #upload-button {
@@ -598,7 +611,6 @@ body {
 }
 
 .file-div p {
-  display: flex;
   font-size: 18px;
   align-items: center;
 }
