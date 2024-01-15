@@ -15,11 +15,15 @@ const {
   deleteProposal,
   updateProposal,
   setProposalArchived,
+  getMaxThesisRequestIdNumber,
+  insertThesisRequest
 } = require("../../service/proposals.service");
 const {
   getAllApplicationsByProposalId,
   cancelPendingApplicationsByProposalId,
 } = require("../../service/applications.service");
+const { getTeacherById } = require("../../service/teachers.service");
+
 const { getVirtualDate } = require("../../service/virtualclock.service");
 
 const app = require("../../app");
@@ -28,6 +32,7 @@ jest.mock("../../service/proposals.service");
 jest.mock("../../service/applications.service");
 jest.mock("../../service/virtualclock.service");
 jest.mock("../../controllers/authentication");
+jest.mock("../../service/teachers.service");
 
 beforeAll(() => {
   jest.clearAllMocks();
@@ -1921,6 +1926,362 @@ describe("T7 - Archive a proposal unit tests", () => {
       .then((res) => {
         expect(res.status).toBe(204);
         expect(getProposalById).toHaveBeenCalledWith("P001");
+        done();
+      })
+      .catch((err) => done(err));
+  });
+});
+
+describe("T8 - Insert a new thesis request unit tests", () => {
+  test("T8.1 - Non logged user - should return 401", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      return res.status(401).json({ error: "Not authenticated" });
+    });
+
+    request(app)
+      .post("/api/proposals/requests")
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body).toEqual({ error: "Not authenticated" });
+        expect(isLoggedIn).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.2 - The user is a professor - should return not authorized", (done) => {
+    isLoggedIn.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      return res
+        .status(401)
+        .json({ error: "Not authorized, must be a Student" });
+    });
+
+    request(app)
+      .post("/api/proposals/requests")
+      .then((res) => {
+        expect(res.status).toBe(401);
+        expect(res.body).toEqual({
+          error: "Not authorized, must be a Student",
+        });
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.3 - Correct insert - should return 201", (done) => {
+    const mockRequest = {
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+    };
+
+    const mockResponse = {
+      id: 2,
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+      student: "S001",
+      status: "Pending",
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    getTeacherById.mockResolvedValue({
+      data: {
+        id: "T002",
+        name: "Teacher",
+        surname: "Test",
+        email: "michael.wilson@example.com",
+      },
+    });
+
+    getMaxThesisRequestIdNumber.mockResolvedValue(2);
+
+    insertThesisRequest.mockResolvedValue(mockResponse);
+
+    request(app)
+      .post("/api/proposals/requests")
+      .send(mockRequest)
+      .then((res) => {
+        expect(res.status).toBe(201);
+        expect(res.body.response).toEqual(mockResponse);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.4 - Empty title - should return 422", (done) => {
+    const mockRequest = {
+      title: "",
+      description: "Test description",
+      supervisor: "T002",
+    };
+
+    const mockResponse = {
+      id: 2,
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+      student: "S001",
+      status: "Pending",
+    };
+
+    const message = { error: "body[title]: Invalid value" };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    getTeacherById.mockResolvedValue({
+      data: {
+        id: "T002",
+        name: "Teacher",
+        surname: "Test",
+        email: "michael.wilson@example.com",
+      },
+    });
+
+    getMaxThesisRequestIdNumber.mockResolvedValue(2);
+
+    insertThesisRequest.mockResolvedValue(mockResponse);
+
+    request(app)
+      .post("/api/proposals/requests")
+      .send(mockRequest)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).toEqual(message);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.5 - Empty description - should return 422", (done) => {
+    const mockRequest = {
+      title: "Test request",
+      description: "",
+      supervisor: "T002",
+    };
+
+    const mockResponse = {
+      id: 2,
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+      student: "S001",
+      status: "Pending",
+    };
+
+    const message = { error: "body[description]: Invalid value" };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    getTeacherById.mockResolvedValue({
+      data: {
+        id: "T002",
+        name: "Teacher",
+        surname: "Test",
+        email: "michael.wilson@example.com",
+      },
+    });
+
+    getMaxThesisRequestIdNumber.mockResolvedValue(2);
+
+    insertThesisRequest.mockResolvedValue(mockResponse);
+
+    request(app)
+      .post("/api/proposals/requests")
+      .send(mockRequest)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).toEqual(message);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.6 - Empty supervisor - should return 422", (done) => {
+    const mockRequest = {
+      title: "Test request",
+      description: "Test description",
+      supervisor: "",
+    };
+
+    const mockResponse = {
+      id: 2,
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+      student: "S001",
+      status: "Pending",
+    };
+
+    const message = { error: "body[supervisor]: Invalid value" };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    getTeacherById.mockResolvedValue({
+      data: {
+        id: "T002",
+        name: "Teacher",
+        surname: "Test",
+        email: "michael.wilson@example.com",
+      },
+    });
+
+    getMaxThesisRequestIdNumber.mockResolvedValue(2);
+
+    insertThesisRequest.mockResolvedValue(mockResponse);
+
+    request(app)
+      .post("/api/proposals/requests")
+      .send(mockRequest)
+      .then((res) => {
+        expect(res.status).toBe(422);
+        expect(res.body).toEqual(message);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.7 - Supervisor not found - should return 404", (done) => {
+    const mockRequest = {
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+    };
+
+    const mockResponse = {
+      id: 2,
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+      student: "S001",
+      status: "Pending",
+    };
+
+    const message = {
+      error: "This teacher doesn't exist, enter a valid teacher!",
+    };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    getTeacherById.mockResolvedValue({
+      error: "This teacher doesn't exist, enter a valid teacher!",
+    });
+
+    getMaxThesisRequestIdNumber.mockResolvedValue(2);
+
+    insertThesisRequest.mockResolvedValue(mockResponse);
+
+    request(app)
+      .post("/api/proposals/requests")
+      .send(mockRequest)
+      .then((res) => {
+        expect(res.status).toBe(404);
+        expect(res.body).toEqual(message);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
+        done();
+      })
+      .catch((err) => done(err));
+  });
+
+  test("T8.8 - Database error - should return 500", (done) => {
+    const mockRequest = {
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+    };
+
+    const mockResponse = {
+      id: 2,
+      title: "Test request",
+      description: "Test description",
+      supervisor: "T002",
+      student: "S001",
+      status: "Pending",
+    };
+
+    const message = { error: "Internal server error has occurred" };
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "S001" };
+      next(); // Authenticated
+    });
+
+    isStudent.mockImplementation((req, res, next) => {
+      next(); // Authenticated
+    });
+
+    getTeacherById.mockResolvedValue({
+      data: {
+        id: "T002",
+        name: "Teacher",
+        surname: "Test",
+        email: "michael.wilson@example.com",
+      },
+    });
+    getMaxThesisRequestIdNumber.mockResolvedValue(2);
+    insertThesisRequest.mockImplementation(() => {
+      throw Error("Internal Database Error");
+    });
+
+    request(app)
+      .post("/api/proposals/requests")
+      .send(mockRequest)
+      .then((res) => {
+        expect(res.status).toBe(500);
+        expect(res.body).toEqual(message);
+        expect(isLoggedIn).toHaveBeenCalled();
+        expect(isStudent).toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));
