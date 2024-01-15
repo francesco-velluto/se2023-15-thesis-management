@@ -297,7 +297,7 @@ function ProposalDetailsPage({ mode }) {
       case "read":
       case "update":
       case "copy":
-      // read, update and copy mode
+        // read, update and copy mode
         getProposalById(proposal_id)
           .then(async (res) => {
             let data = await res.json();
@@ -365,7 +365,7 @@ function ProposalDetailsPage({ mode }) {
             setUnauthorized(true);
             scrollToTarget();
           });
-          break;
+        break;
       case "add":
         setTitle("");
         setSupervisor(loggedUser.name + " " + loggedUser.surname);
@@ -1044,70 +1044,76 @@ function ProposalDetailsPage({ mode }) {
               </Row>
 
               <Row className="d-flex justify-content-between g-3 m-2">
-  <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
-    <Button
-      id="go-back"
-      className="w-100 h-100"
-      onClick={() => {
-        navigate("/proposals");
-      }}
-    >
-      Return
-    </Button>
-  </Col>
+                <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
+                  <Button
+                    id="go-back"
+                    className="w-100 h-100"
+                    onClick={() => {
+                      navigate("/proposals");
+                    }}
+                  >
+                    Return
+                  </Button>
+                </Col>
 
-  {mode === "update" && loggedUser.role === 0 && (
-    <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
-      <Button
-        id="add-proposal-btn"
-        className="w-100 h-100"
-        onClick={handleUpdateProposal}
-      >
-        Save
-      </Button>
-    </Col>
-  )}
+                {mode === "update" && loggedUser.role === 0 && (
+                  <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
+                    <Button
+                      id="add-proposal-btn"
+                      className="w-100 h-100"
+                      onClick={handleUpdateProposal}
+                    >
+                      Save
+                    </Button>
+                  </Col>
+                )}
 
-  {(mode === "add" || mode === "copy") && loggedUser.role === 0 && (
-    <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
-      <Button
-        id="add-proposal-btn"
-        className="w-100 h-100"
-        onClick={handleCreateProposal}
-      >
-        Create Proposal
-      </Button>
-    </Col>
-  )}
+                {(mode === "add" || mode === "copy") &&
+                  loggedUser.role === 0 && (
+                    <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
+                      <Button
+                        id="add-proposal-btn"
+                        className="w-100 h-100"
+                        onClick={handleCreateProposal}
+                      >
+                        Create Proposal
+                      </Button>
+                    </Col>
+                  )}
 
-  {mode === "read" && loggedUser.role === 1 && (
-    <Col xs={12} sm={6} md={4} lg={3} className="d-flex justify-content-end mb-2">
-      <ApplicationButton
-        setErrMsg={setErrorMessage}
-        proposalID={proposal_id}
-        applicationStatusCallback={setApplyingState}
-        setFileSent={setFileSent}
-        setIsFile={setIsFile}
-        className="w-100 h-100"
-      />
-    </Col>
-  )}
+                {mode === "read" && loggedUser.role === 1 && (
+                  <Col
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    className="d-flex justify-content-end mb-2"
+                  >
+                    <ApplicationButton
+                      setErrMsg={setErrorMessage}
+                      proposalID={proposal_id}
+                      applicationStatusCallback={setApplyingState}
+                      setFileSent={setFileSent}
+                      setIsFile={setIsFile}
+                      className="w-100 h-100"
+                    />
+                  </Col>
+                )}
 
-  {!(mode === "update" && loggedUser.role === 0) &&
-    !(mode === "add" || mode === "copy") &&
-    !(mode === "read" && loggedUser.role === 1) && (
-      <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
-        <Dropdown className="w-100 d-flex justify-content-end">
-          <Dropdown.Toggle
-            variant="outline-dark"
-            id="dropdown-detail-actions"
-            className="w-100 h-100"
-          >
-            Actions
-          </Dropdown.Toggle>
+                {!(mode === "update" && loggedUser.role === 0) &&
+                  !(mode === "add" || mode === "copy") &&
+                  !(mode === "read" && loggedUser.role === 1) && (
+                    <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
+                      <Dropdown className="w-100 d-flex justify-content-end">
+                        <Dropdown.Toggle
+                          variant="outline-dark"
+                          id="dropdown-detail-actions"
+                          className="w-100 h-100"
+                        >
+                          Actions
+                        </Dropdown.Toggle>
 
-          
-          <Dropdown.Menu>
+                        <Dropdown.Menu>
                           {mode === "read" && loggedUser.role === 0 && (
                             <Dropdown.Item
                               id="copy-proposal-btn"
@@ -1171,13 +1177,11 @@ function ProposalDetailsPage({ mode }) {
                               </Dropdown.Item>
                             )}
                         </Dropdown.Menu>
-          
-        </Dropdown>
-      </Col>
-    )}
-</Row>
+                      </Dropdown>
+                    </Col>
+                  )}
+              </Row>
 
-              
               <Modal show={showModal} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
                   <Modal.Title>Are you sure?</Modal.Title>
