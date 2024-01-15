@@ -1,5 +1,5 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 import SamlRedirect from "./pages/Auth";
 import PropTypes from 'prop-types';
 
@@ -7,7 +7,7 @@ import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage";
 import ApplicationDetails from "./pages/ApplicationDetailsPage";
 
-import {Alert, Card, Col, Container, Row, Spinner} from "react-bootstrap";
+import {Alert, Card, Col, Container, Row} from "react-bootstrap";
 import { LoggedUserContext, LoggedUserProvider } from "./context/AuthenticationContext";
 import React, {useContext, useEffect, useState} from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
@@ -66,7 +66,8 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect />} />
+                <Route index path='/' element={loggedUser ? <ProfilePage /> : <SamlRedirect redirectTo={"/"} />} />
+                <Route path='/profile' element={loggedUser ? <ProfilePage /> : <SamlRedirect redirectTo={"/profile"} />} />
                 <Route path='/applications'>
                     <Route index element={
                     	!loggedUser ? <UnAuthorizationPage isLoadingUser={isLoadingUser}/> :

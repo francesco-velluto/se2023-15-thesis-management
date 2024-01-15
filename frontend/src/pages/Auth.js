@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { APICall } from '../api/GenericAPI';
 import { LoggedUserContext } from '../context/AuthenticationContext';
 import { Link, useNavigate } from 'react-router-dom';
-import {Alert, Card, Col, Container, Row, Spinner} from 'react-bootstrap';
+import {Alert, Card, Col, Container, Row} from 'react-bootstrap';
 import GenericLoading from "../components/GenericLoading";
 
 const APIConfig = require('../api/api.config.js');
 const AuthenticationAPIURL = APIConfig.API_URL + '/authentication';
 
-function SamlRedirect() {
+function SamlRedirect({redirectTo}) {
     const [errors, setErrors] = useState(undefined);
     const [isLoadingUser, setIsLoadingUser] = useState(true);
     const { setLoggedUser } = useContext(LoggedUserContext);
@@ -20,7 +20,7 @@ function SamlRedirect() {
         try {
             const response = await APICall(AuthenticationAPIURL + '/whoami');
             await setLoggedUser(response.user);
-            navigate("/");
+            navigate(redirectTo);
         } catch (err) {
             console.log(err);
 
