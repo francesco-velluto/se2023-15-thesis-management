@@ -65,6 +65,8 @@ function ThesisRequestDetailsPage() {
             await insertNewThesisRequest(newRequest);
             setSuccessMessage("The thesis request has been added correctly!");
             scrollToTarget();
+            let supervisorChoosen = teachersList.find(teacher => teacher.id === supervisor);
+            setSupervisor(supervisorChoosen.surname + " " + supervisorChoosen.name);
             setDisabledFields(true);
         } catch (error) {
             setSuccessMessage("");
