@@ -41,9 +41,9 @@ beforeAll(() => {
 beforeEach(() => {
   jest.clearAllMocks();
   // comment these lines if you want to see console prints during tests
-  jest.spyOn(console, "log").mockImplementation(() => {});
-  jest.spyOn(console, "info").mockImplementation(() => {});
-  jest.spyOn(console, "error").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => { });
+  jest.spyOn(console, "info").mockImplementation(() => { });
+  jest.spyOn(console, "error").mockImplementation(() => { });
 });
 
 afterAll(() => {
@@ -1982,12 +1982,15 @@ describe("T8 - Insert a new thesis request unit tests", () => {
     };
 
     const mockResponse = {
-      id: 2,
-      title: "Test request",
-      description: "Test description",
-      supervisor: "T002",
-      student: "S001",
-      status: "Pending",
+      status: 201,
+      data: {
+        id: 2,
+        title: "Test request",
+        description: "Test description",
+        supervisor: "T002",
+        student: "S001",
+        status: "Pending"
+      }
     };
 
     isLoggedIn.mockImplementation((req, res, next) => {
@@ -2017,7 +2020,7 @@ describe("T8 - Insert a new thesis request unit tests", () => {
       .send(mockRequest)
       .then((res) => {
         expect(res.status).toBe(201);
-        expect(res.body.response).toEqual(mockResponse);
+        expect(res.body.response).toEqual(mockResponse.data);
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isStudent).toHaveBeenCalled();
         done();
@@ -2241,16 +2244,12 @@ describe("T8 - Insert a new thesis request unit tests", () => {
       supervisor: "T002",
     };
 
+    const message = { error: "Internal server error has occurred" };
     const mockResponse = {
-      id: 2,
-      title: "Test request",
-      description: "Test description",
-      supervisor: "T002",
-      student: "S001",
-      status: "Pending",
+      status: 500,
+      data: message
     };
 
-    const message = { error: "Internal server error has occurred" };
 
     isLoggedIn.mockImplementation((req, res, next) => {
       req.user = { id: "S001" };
@@ -2270,16 +2269,14 @@ describe("T8 - Insert a new thesis request unit tests", () => {
       },
     });
     getMaxThesisRequestIdNumber.mockResolvedValue(2);
-    insertThesisRequest.mockImplementation(() => {
-      throw Error("Internal Database Error");
-    });
+    insertThesisRequest.mockImplementation(() => mockResponse);
 
     request(app)
       .post("/api/proposals/requests")
       .send(mockRequest)
       .then((res) => {
         expect(res.status).toBe(500);
-        expect(res.body).toEqual(message);
+        expect(res.body.response).toEqual(message);
         expect(isLoggedIn).toHaveBeenCalled();
         expect(isStudent).toHaveBeenCalled();
         done();

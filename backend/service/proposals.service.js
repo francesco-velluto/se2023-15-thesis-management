@@ -75,10 +75,10 @@ exports.insertThesisRequest = async (request) => {
       resolve({ status: 201, data: this.rowToThesisRequest(result.rows[0]) });
     } catch (err) {
       console.error("[BACKEND-SERVER] Error in insertThesisRequest", err);
-      let error = new Error("Internal Server Error");
-      error.status = 500;
-      error.data = "Internal Server Error";
-      reject(error);
+      const internalServerError = new Error("Internal Server Error");
+      internalServerError.status = 500;
+      internalServerError.data = "Internal Server Error";
+      reject(internalServerError);
     }
   })
 };

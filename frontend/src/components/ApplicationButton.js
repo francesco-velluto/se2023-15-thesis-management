@@ -87,7 +87,7 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
         </Button>
         <Modal show={showModal} onHide={handleClose} backdrop="static">
           <Modal.Header closeButton>
-            <Modal.Title>Add a PDF file (optionnal)</Modal.Title>
+            <Modal.Title>Add a PDF file (optional)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <UploadResume setCallbackUploadId={setUploadId} />
