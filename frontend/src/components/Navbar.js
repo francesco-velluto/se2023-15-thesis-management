@@ -1,6 +1,6 @@
 import { Navbar, Nav, Button, Col, Form, Dropdown, InputGroup } from 'react-bootstrap';
 import { FaCalendar, FaCheck } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { LoggedUserContext } from '../context/AuthenticationContext';
 import { VirtualClockContext } from '../context/VirtualClockContext';
 import { useContext, useEffect, useState } from 'react';
@@ -15,6 +15,8 @@ function NavbarContainer() {
     const { handleLogout } = useContext(LoggedUserContext);
     const { loggedUser } = useContext(LoggedUserContext);
     const [showDropdown, setShowDropdown] = useState(false);
+
+    const navigate = useNavigate();
 
     const toggleDropdown = () => {
         setShowDropdown(!showDropdown);
@@ -81,7 +83,8 @@ function NavbarContainer() {
                                 {' ' + (loggedUser.name || 'Guest')}
                             </Dropdown.Toggle>
                             <Dropdown.Menu >
-                                <Dropdown.Item id="logout-id" onClick={handleLogout} >Logout</Dropdown.Item>
+                                <Dropdown.Item className="navbar-menu-item" onClick={() => navigate("/profile")} >Profile</Dropdown.Item>
+                                <Dropdown.Item className="navbar-menu-item" id="logout-id" onClick={handleLogout} >Logout</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                     </Col>
