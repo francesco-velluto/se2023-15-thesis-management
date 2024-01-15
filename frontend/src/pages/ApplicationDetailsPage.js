@@ -141,10 +141,10 @@ function ApplicationDetails() {
                         <ProposalInfo infoProposal={infoProposal} />
 
                         <Row className="py-1 my-2">
-                            <Col className="text-start" >
+                            <Col xs={4} className="text-start" >
                                 <Button variant="outline-secondary" onClick={() => navigate("/applications")}> Return </Button>
                             </Col>
-                            <Col className="text-end" >
+                            <Col xs={8} className="text-end" >
                                 <Button id="accept-application" className="mx-2" variant="outline-success" onClick={() => handleButton("Accepted")}>Accept</Button>
                                 <Button id="reject-application" className="mx-2" variant="outline-danger" onClick={() => handleButton("Rejected")}>Reject</Button>
                             </Col>
