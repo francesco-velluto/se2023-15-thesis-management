@@ -674,7 +674,7 @@ function ProposalDetailsPage({ mode }) {
                     )}
                   </Card>
                 </Col>
-                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "ps-1" : "mb-1 mb-md-0 me-0"}>
+                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "ps-1" : "me-0"}>
                   <Card className="h-100">
                     <Card.Body>
                       <Card.Title>
@@ -913,7 +913,7 @@ function ProposalDetailsPage({ mode }) {
                         </Card.Title>
                         <Form.Group>
                           <div className="text-plus">
-                            <Col xs={10}>
+                            <Col>
                               <Form.Control
                                 as={"input"}
                                 name="proposal-keywords"
@@ -925,7 +925,7 @@ function ProposalDetailsPage({ mode }) {
                                 }}
                               />
                             </Col>
-                            <Col>
+              
                               <Button
                                 id="add-keyword-btn"
                                 onClick={() => {
@@ -960,7 +960,7 @@ function ProposalDetailsPage({ mode }) {
                               >
                                 Add
                               </Button>
-                            </Col>
+                            
                           </div>
                         </Form.Group>
                         <ListGroup id="proposal-keywords-list" className="mt-2">
