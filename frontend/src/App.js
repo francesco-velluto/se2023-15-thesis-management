@@ -7,9 +7,9 @@ import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage";
 import ApplicationDetails from "./pages/ApplicationDetailsPage";
 
-import { Alert, Card, Col, Container, Row } from "react-bootstrap";
+import {Alert, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import { LoggedUserContext, LoggedUserProvider } from "./context/AuthenticationContext";
-import { useContext, useEffect } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
 import ApplicationList from "./pages/ApplicationList";
 import { VirtualClockProvider } from "./context/VirtualClockContext";
@@ -41,14 +41,25 @@ function App() {
 }
 
 function Main() {
+    const [ isLoadingUser, setIsLoadingUser ] = useState(true);           // flag to indicate if the user is loading
     const { loggedUser, setLoggedUser } = useContext(LoggedUserContext);    // context for logged user
 
+    const handleLoadingUser = async () => {
+        await setIsLoadingUser(true);
+
+        try {
+            // reload current session, it gets the user information from the server
+            let user = await fetchCurrentUser();
+            await setLoggedUser(user);
+        } catch (err) {
+            console.error("Error while fetching the current user", err);
+        }
+
+        await setIsLoadingUser(false);
+    };
+
     useEffect(() => {
-        fetchCurrentUser()                        // reload current session, it gets the user information from the server
-            .then(user => {
-                setLoggedUser(user);
-            })
-            .catch(err => { });
+        handleLoadingUser();
     }, []);
 
     return (
@@ -57,20 +68,20 @@ function Main() {
                 <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect />} />
                 <Route path='/applications'>
                     <Route index element={
-                    	!loggedUser ? <UnAuthorizationPage /> :
+                    	!loggedUser ? <UnAuthorizationPage isLoadingUser={isLoadingUser}/> :
                         	(loggedUser && loggedUser.role === 0) ? <ApplicationList /> : <StudentApplicationsPage />
                     } />
-                    <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage />} />
-                    <Route path="upload/:upload_id" element={loggedUser ? <PreviewUploadedFile /> : <UnAuthorizationPage />} />
-                    <Route path="file/:application_id" element={loggedUser ? <PreviewApplicationFile /> : <UnAuthorizationPage />} />
+                    <Route path=":application_id" element={loggedUser && loggedUser.role === 0 ? <ApplicationDetails /> :<UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path="upload/:upload_id" element={loggedUser ? <PreviewUploadedFile /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path="file/:application_id" element={loggedUser ? <PreviewApplicationFile /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
                 </Route>
                 <Route path="/proposals">
-                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage />} />
-                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode="read" /> : <UnAuthorizationPage />} />
-                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="add" /> : <UnAuthorizationPage />} />
-                    <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage />} />
-                    <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage />} />
-                    <Route path="requests/new" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage />} />
+                    <Route index element={loggedUser ? (loggedUser.role === 1 ? <StudentProposalsPage /> : <ProfessorProposalsPage />) : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path=":proposal_id" element={loggedUser ? <ProposalDetailsPage mode="read" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="add" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path="requests" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
                 </Route>
             </Route>
             <Route path='*' element={<NotFoundPage />} />
@@ -89,12 +100,29 @@ function PageLayout() {
 /**
  * Informs the user that he does not have authorization for this page
  */
-export function UnAuthorizationPage({error, message}) {
+export function UnAuthorizationPage({error, message, isLoadingUser}) {
     const titleMessage = error || "Access Not Authorized";
     const bodyMessage = message || "You are not allowed to access this page!";
 
-    return (
-        <Container className="text-center" >
+    return ( isLoadingUser ?
+        <Container className="text-center align-items-center align-content-center general-loading-container">
+            <Row>
+                <Col>
+                    <Spinner animation="grow" role="status" variant="primary" />
+                </Col>
+            </Row>
+            <Row>
+                <Col>
+                    <Card bg="light" className="rounded p-3">
+                        <p className="lead">
+                            Loading, please wait...
+                        </p>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+        :
+        <Container className="text-center general-error-container" >
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -135,7 +163,7 @@ UnAuthorizationPage.propTypes = {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center" >
+        <Container className="text-center general-error-container" >
             <Row>
                 <Col>
                     <Alert variant="danger">

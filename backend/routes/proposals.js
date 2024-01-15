@@ -37,6 +37,26 @@ const isArrayOfStrings = (array) => {
  */
 
 /**
+ * GET /api/proposals/requests
+ *
+ * @params none
+ * @body none
+ * @returns { proposal: { request_id: number, title: string, ... } }
+ * @status 200 Success status
+ * @error 401 Unauthorized - if the user is not logged in
+ * @error 404 Not found - thesis request not found for this logged student
+ * @error 500 Internal Server Error - if something went wrong
+ *
+ * @note Refer to the official documentation for more details
+ */
+router.get(
+  "/requests",
+  isLoggedIn,
+  isStudent,
+  proposalsController.getThesisRequest
+);
+
+/**
  * GET /api/proposals
  *
  * @params none
@@ -221,6 +241,7 @@ router.delete(
  * @returns { proposal: { request_id: number, title: string, ... } }
  * @status 201 Success status
  * @error 401 Unauthorized - if the user is not logged in
+ * @error 403 Unauthorized - there is already a thesis request for the authenticated student
  * @error 404 Invalid teacher - teacher not found in the db
  * @error 422 Invalid body - invalid fields in request body
  * @error 500 Internal Server Error - if something went wrong

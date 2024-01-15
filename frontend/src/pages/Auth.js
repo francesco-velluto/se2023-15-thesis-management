@@ -2,34 +2,60 @@ import React, { useContext, useEffect, useState } from 'react';
 import { APICall } from '../api/GenericAPI';
 import { LoggedUserContext } from '../context/AuthenticationContext';
 import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Card, Col, Container, Row } from 'react-bootstrap';
+import {Alert, Card, Col, Container, Row, Spinner} from 'react-bootstrap';
 
 const APIConfig = require('../api/api.config.js');
 const AuthenticationAPIURL = APIConfig.API_URL + '/authentication';
 
 function SamlRedirect() {
     const [errors, setErrors] = useState(undefined);
-
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
     const { setLoggedUser } = useContext(LoggedUserContext);
     const navigate = useNavigate();
 
     const handleLogin = async () => {
+        await setIsLoadingUser(true);
+
         try {
             const response = await APICall(AuthenticationAPIURL + '/whoami');
-            setLoggedUser(response.user);
+            await setLoggedUser(response.user);
             navigate("/");
         } catch (err) {
             console.log(err);
-            setErrors(err);
+
+            // if it is a simple error of not authenticated, redirect to the login page without showing the error, if not show errors
+            if (!(err.length === 1 && err[0] === 'Not authorized')) {
+                await setErrors(err);
+            }
+
             window.location.replace('http://localhost:8080/api/authentication/login');
         }
+
+        await setIsLoadingUser(false);
     }
 
     useEffect(() => {
         handleLogin();
     }, []);
 
-    return (
+    return ( isLoadingUser ?
+      <Container className="text-center align-items-center align-content-center general-loading-container">
+          <Row>
+              <Col>
+                  <Spinner animation="grow" role="status" variant="primary" />
+              </Col>
+          </Row>
+          <Row>
+              <Col>
+                  <Card bg="light" className="rounded p-3">
+                      <p className="lead">
+                          Loading, please wait...
+                      </p>
+                  </Card>
+              </Col>
+          </Row>
+      </Container>
+        :
     <>
         {errors && errors.length > 0 ? (
         <Container className="text-center" style={{ paddingTop: '5rem', backgroundColor: "#F4EEE0" }}>
@@ -62,7 +88,22 @@ function SamlRedirect() {
             </Row>
         </Container>
     ) : (
-        <p>Redirecting to Auth0...</p>
+          <Container className="text-center align-items-center align-content-center general-loading-container">
+              <Row>
+                  <Col>
+                      <Spinner animation="grow" role="status" variant="primary" />
+                  </Col>
+              </Row>
+              <Row>
+                  <Col>
+                      <Card bg="light" className="rounded p-3">
+                          <p className="lead">
+                              Redirecting to the authentication page, please wait...
+                          </p>
+                      </Card>
+                  </Col>
+              </Row>
+          </Container>
     )}
 </>
 );

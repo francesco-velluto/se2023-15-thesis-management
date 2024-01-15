@@ -21,7 +21,7 @@ function TitleBar() {
         </Col>
         {loggedUser?.role === 1 &&
           <Col xs={12} md="auto" className="my-1">
-            <Button type="button" id="add-thesis-request-btn" as={Link} to="/proposals/requests/new" className="title-bar-btn w-100">
+            <Button type="button" id="add-thesis-request-btn" as={Link} to="/proposals/requests" className="title-bar-btn w-100">
               <span className="d-flex align-items-center">
                 <FaPen className="me-1" />
                 Thesis Request
@@ -30,7 +30,7 @@ function TitleBar() {
           </Col>
         }
         <Col xs={12} md="auto" className="d-flex justify-content-center my-1" >
-          <Button type="button" id="title-btn" as={Link} to="/proposals" className="title-bar-btn w-100 mx-1">
+          <Button type="button" id="title-btn" as={Link} to="/proposals" className="title-bar-btn w-100 me-1">
             <span className="d-flex align-items-center">
               <FaFileAlt className="me-1" />
               Proposals

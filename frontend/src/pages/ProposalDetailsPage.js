@@ -297,7 +297,7 @@ function ProposalDetailsPage({ mode }) {
       case "read":
       case "update":
       case "copy":
-      // read, update and copy mode
+        // read, update and copy mode
         getProposalById(proposal_id)
           .then(async (res) => {
             let data = await res.json();
@@ -365,7 +365,7 @@ function ProposalDetailsPage({ mode }) {
             setUnauthorized(true);
             scrollToTarget();
           });
-          break;
+        break;
       case "add":
         setTitle("");
         setSupervisor(loggedUser.name + " " + loggedUser.surname);
@@ -637,7 +637,7 @@ function ProposalDetailsPage({ mode }) {
                 </Col>
               </Row>
               <Row>
-                <Col>
+                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "pe-1" : "mb-1 mb-md-0 me-0"}>
                   <Card className="h-100">
                     {mode === "read" ? (
                       <Card.Body>
@@ -674,7 +674,7 @@ function ProposalDetailsPage({ mode }) {
                     )}
                   </Card>
                 </Col>
-                <Col>
+                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "ps-1" : "me-0"}>
                   <Card className="h-100">
                     <Card.Body>
                       <Card.Title>
@@ -913,7 +913,7 @@ function ProposalDetailsPage({ mode }) {
                         </Card.Title>
                         <Form.Group>
                           <div className="text-plus">
-                            <Col xs={10}>
+                            <Col>
                               <Form.Control
                                 as={"input"}
                                 name="proposal-keywords"
@@ -925,7 +925,7 @@ function ProposalDetailsPage({ mode }) {
                                 }}
                               />
                             </Col>
-                            <Col>
+              
                               <Button
                                 id="add-keyword-btn"
                                 onClick={() => {
@@ -960,7 +960,7 @@ function ProposalDetailsPage({ mode }) {
                               >
                                 Add
                               </Button>
-                            </Col>
+                            
                           </div>
                         </Form.Group>
                         <ListGroup id="proposal-keywords-list" className="mt-2">
@@ -1043,11 +1043,11 @@ function ProposalDetailsPage({ mode }) {
                 </Col>
               </Row>
 
-              <Row>
-                <Col>
+              <Row className="d-flex justify-content-between g-3 m-2">
+                <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
                   <Button
                     id="go-back"
-                    className="w-50"
+                    className="w-100 h-100"
                     onClick={() => {
                       navigate("/proposals");
                     }}
@@ -1057,9 +1057,10 @@ function ProposalDetailsPage({ mode }) {
                 </Col>
 
                 {mode === "update" && loggedUser.role === 0 && (
-                  <Col className="d-flex justify-content-end">
+                  <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
                     <Button
                       id="add-proposal-btn"
+                      className="w-100 h-100"
                       onClick={handleUpdateProposal}
                     >
                       Save
@@ -1069,9 +1070,10 @@ function ProposalDetailsPage({ mode }) {
 
                 {(mode === "add" || mode === "copy") &&
                   loggedUser.role === 0 && (
-                    <Col className="d-flex justify-content-end">
+                    <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
                       <Button
                         id="add-proposal-btn"
+                        className="w-100 h-100"
                         onClick={handleCreateProposal}
                       >
                         Create Proposal
@@ -1080,13 +1082,20 @@ function ProposalDetailsPage({ mode }) {
                   )}
 
                 {mode === "read" && loggedUser.role === 1 && (
-                  <Col className="d-flex justify-content-end">
+                  <Col
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    className="d-flex justify-content-end mb-2"
+                  >
                     <ApplicationButton
                       setErrMsg={setErrorMessage}
                       proposalID={proposal_id}
                       applicationStatusCallback={setApplyingState}
                       setFileSent={setFileSent}
                       setIsFile={setIsFile}
+                      className="w-100 h-100"
                     />
                   </Col>
                 )}
@@ -1094,12 +1103,12 @@ function ProposalDetailsPage({ mode }) {
                 {!(mode === "update" && loggedUser.role === 0) &&
                   !(mode === "add" || mode === "copy") &&
                   !(mode === "read" && loggedUser.role === 1) && (
-                    <Col>
+                    <Col xs={12} sm={6} md={4} lg={3} className="mb-2">
                       <Dropdown className="w-100 d-flex justify-content-end">
                         <Dropdown.Toggle
                           variant="outline-dark"
                           id="dropdown-detail-actions"
-                          className="w-50"
+                          className="w-100 h-100"
                         >
                           Actions
                         </Dropdown.Toggle>
@@ -1172,6 +1181,7 @@ function ProposalDetailsPage({ mode }) {
                     </Col>
                   )}
               </Row>
+
               <Modal show={showModal} onHide={handleClose} backdrop="static">
                 <Modal.Header closeButton>
                   <Modal.Title>Are you sure?</Modal.Title>

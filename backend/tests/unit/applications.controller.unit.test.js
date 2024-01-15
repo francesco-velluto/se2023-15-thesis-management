@@ -15,11 +15,11 @@ const {
   getAllPendingApplicationsByProposalId,
   uploadFileServer,
   getUploadedFile,
-  getApplicationFile
+  getApplicationFile,
+  getAllApplicationsByProposalId, 
+  getAllApplicationsByTeacherId
 } = require("../../service/applications.service");
-const {
-  getAllApplicationsByTeacherId,
-} = require("../../service/applications.service");
+
 const {
   sendUpdateApplicationStatusEmail,
   sendNewApplicationEmail
@@ -30,7 +30,7 @@ const app = require("../../app");
 const Student = require("../../model/Student");
 const Teacher = require("../../model/Teacher");
 const Application = require("../../model/Application");
-const { setProposalArchived } = require("../../service/proposals.service");
+const { setProposalArchived, getProposalById } = require("../../service/proposals.service");
 const Proposal = require("../../model/Proposal");
 const { is } = require("date-fns/locale");
 const multer = require('multer');
@@ -1230,4 +1230,107 @@ describe("T8 - getFileInfo", () => {
     expect(mockRes.status).toHaveBeenCalledWith(500);
     expect(mockRes.json).toHaveBeenCalledWith({error: "Internal server error"});
   });
+});
+
+describe("T9 - getAllApplicationsByProposalId", () => {
+  test("T9.1 SUCCESS 200 | Get all applications by proposal ID", async () => {
+    const expectedApplications = [
+        {
+          proposal_id: "2",
+          title: "Title 1",
+          description: "Description 1",
+          level: "Bachelor",
+          application_date:"19-01-2023",
+          status: "Pending"
+        }
+      ];
+
+    const expectedProposal = { supervisor_id: "T001"};
+
+    isLoggedIn.mockImplementation((req, res, next) => {
+      req.user = { id: "T001" };
+      next(); // Authenticated
+    });
+  
+    isTeacher.mockImplementation((req, res, next) => {
+      next(); // Authorized
+    });
+
+    getProposalById.mockResolvedValueOnce({
+      data: expectedProposal,
+      status: 200,
+    });
+    getAllApplicationsByProposalId.mockResolvedValue({
+      data: expectedApplications,
+      status: 200,
+    });
+
+    const res = await request(app).get("/api/applications/proposals/2");
+
+    expect(res.status).toBe(200);
+    expect(res.body.error).toBeFalsy();
+    expect(getProposalById).toHaveBeenCalled();
+    expect(getAllApplicationsByProposalId).toHaveBeenCalled();
+    expect(res.body).toEqual(expectedApplications);
+    expect(isLoggedIn).toHaveBeenCalled();
+
+  });
+
+    test("T9.2 ERROR 401 | User not allowed to see details of applications", async () => {
+      const expectedProposal = { supervisor_id: "T002" }; // Different supervisor_id
+      const expectedError = { status: 401, error: "You are not allowed to see details of applications of this proposal" };
+  
+      isLoggedIn.mockImplementation((req, res, next) => {
+        req.user = { id: "T001" };
+        next(); // Authenticated
+      });
+  
+      isTeacher.mockImplementation((req, res, next) => {
+        next(); // Authorized
+      });
+  
+      getProposalById.mockResolvedValueOnce({
+        data: expectedProposal,
+        status: 200,
+      });
+  
+      const res = await request(app).get(`/api/applications/proposals/2`);
+  
+      expect(res.status).toBe(401);
+      expect(res.body.error).toEqual(expectedError.error);
+      expect(getProposalById).toHaveBeenCalled();
+      expect(getAllApplicationsByProposalId).not.toHaveBeenCalled();
+      expect(isLoggedIn).toHaveBeenCalled();
+    });
+
+    test("T9.3 ERROR 500 | Error fetching applications", async () => {
+      const expectedProposal = { supervisor_id: "T001" };
+      const expectedError = { status: 500, data: "Error fetching applications" };
+    
+      isLoggedIn.mockImplementation((req, res, next) => {
+        req.user = { id: "T001" };
+        next(); // Authenticated
+      });
+    
+      isTeacher.mockImplementation((req, res, next) => {
+        next(); // Authorized
+      });
+    
+      getProposalById.mockResolvedValueOnce({
+        data: expectedProposal,
+        status: 200,
+      });
+    
+      getAllApplicationsByProposalId.mockRejectedValueOnce(expectedError);
+    
+      const res = await request(app).get("/api/applications/proposals/2");
+    
+      expect(res.status).toBe(500);
+      expect(res.body.error).toEqual(expectedError.error);
+      expect(getProposalById).toHaveBeenCalled();
+      expect(getAllApplicationsByProposalId).toHaveBeenCalled();
+      expect(isLoggedIn).toHaveBeenCalled();
+    });
+    
+  
 });

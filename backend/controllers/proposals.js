@@ -144,11 +144,9 @@ module.exports = {
       const teacher = await getTeacherById(req.body.supervisor);
       if (!teacher?.data) {
         console.error("[BACKEND-SERVER] This teacher doesn't exist");
-        res
-          .status(404)
-          .json({
-            error: "This teacher doesn't exist, enter a valid teacher!",
-          });
+        res.status(404).json({
+          error: "This teacher doesn't exist, enter a valid teacher!",
+        });
         return;
       }
 
@@ -161,11 +159,33 @@ module.exports = {
         supervisor_id: req.body.supervisor,
         student_id: req.user.id,
       });
-      res.status(201).json({ response: thesisRequest });
+      res.status(thesisRequest.status).json({ response: thesisRequest.data });
     } catch (err) {
       console.error("[BACKEND-SERVER] Cannot insert new thesis request", err);
-      res.status(500).json({ error: "Internal server error has occurred" });
+      res.status(err.status).json({ error: err.data });
     }
+  },
+
+  /**
+   * Get the thesis request of the autenticated user
+   *
+   * @params none
+   * @body none
+   * @returns { proposal: { request_id: number, title: string, ... } }
+   * @status 200 Success status
+   * @error 401 Unauthorized - if the user is not logged in
+   * @error 500 Internal Server Error - if something went wrong
+   *
+   * @note Refer to the official documentation for more details
+   */
+  getThesisRequest: async (req, res) => {
+    proposalsService.getThesisRequest(req.user.id)
+      .then((result) => {
+        res.status(result.status).json({ response: result.data });
+      })
+      .catch((err) => {
+        res.status(err.status).json({ error: err.data });
+      });
   },
 
   /**

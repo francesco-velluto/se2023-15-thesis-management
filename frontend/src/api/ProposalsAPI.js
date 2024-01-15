@@ -149,6 +149,35 @@ module.exports = {
   },
 
   /**
+   * Get all the thesis request for the authenticated user
+   *
+   * GET /api/proposals/requests
+   */
+  getThesisRequest: async () => {
+    try {
+      const response = await fetch(ProposalsAPIURL + "/requests", {
+        method: "GET",
+        headers: APIConfig.API_REQUEST_HEADERS,
+        credentials: "include"
+      });
+
+      if (response.ok) {
+        const resObject = await response.json();
+        return resObject.response;
+      } else {
+        if (response.status == 404) {
+          return undefined;
+        } else {
+          const res = await response.json();
+          throw new Error(res.error);
+        }
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  },
+
+  /**
    * Get all the teachers
    *
    * GET /api/teachers

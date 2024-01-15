@@ -284,7 +284,7 @@ function ProposalRow({
         {format(parseISO(proposal.expiration_date), "dd/MM/yyyy")}
       </Col>
 
-      <Col md={2} xxl={1} className="d-none d-md-block">
+      <Col md={2} xxl={1} className="mt-3 mt-md-0 d-flex justify-content-center">
         <Dropdown>
           <Dropdown.Toggle
             variant="outline-dark"
@@ -326,46 +326,7 @@ function ProposalRow({
           </Dropdown.Menu>
         </Dropdown>
       </Col>
-
-      <Col
-        xs={12}
-        className="d-flex flex-row justify-content-center mt-3 mt-md-0 d-md-none"
-        id="proposal-detail-actions-copy"
-        onClick={() => {
-          navigate("/proposals/" + proposal.proposal_id + "/copy");
-        }}
-      >
-        <span className="d-flex align-items-center">
-          <FaCopy className="me-1" />
-          Copy
-        </span>
-      </Col>
-      <Col
-        xs={12}
-        className="d-flex flex-row justify-content-center mt-3 mt-md-0  d-md-none"
-        id="proposal-detail-actions-update"
-        onClick={() => {
-          navigate("/proposals/" + proposal.proposal_id + "/update");
-        }}
-      >
-        <span className="d-flex align-items-center">
-          <FaPen className="me-1" />
-          Update
-        </span>
-      </Col>
-      <Col
-        xs={12}
-        className="d-flex flex-row justify-content-center mt-3 mt-md-0  d-md-none"
-        id="proposal-detail-actions-archive"
-        onClick={() => {
-          setShowArchiveModal(true);
-        }}
-      >
-        <span className="d-flex align-items-center">
-          <FaArchive className="me-1" />
-          Archive
-        </span>
-      </Col>
+      
       <Col
         xs={12}
         md={1}

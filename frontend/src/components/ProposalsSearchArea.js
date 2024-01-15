@@ -247,7 +247,7 @@ function ProposalsSearchArea(props) {
                             </Alert>
                         }
 
-                        <Form onSubmit={handleSubmit} className="mb-3" style={{ width: "50vw" }} validated={false}>
+                        <Form onSubmit={handleSubmit} className="mb-3"  validated={false}>
                             <Row className="align-items-end">
                                 <Col xs={12} md={2}>
                                     <div className='m-2'>Filter by:</div>
