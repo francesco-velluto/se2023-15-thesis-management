@@ -467,7 +467,7 @@ CREATE TABLE public.thesis_request (
 );
 
 INSERT INTO public.thesis_request (request_id, supervisor_id, student_id, title, description, approval_date, status, co_supervisor_id) VALUES
-  ('R001', 'T001', 'S001', 'Specific thesis on Agile metodology', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis turpis leo, sodales maximus blandit eget, ullamcorper quis erat. Sed vitae eleifend ligula. Fusce sed nulla fringilla, convallis tortor sed, ultricies nulla. Donec vel tincidunt erat. Nullam lacus lectus, vestibulum accumsan libero sit amet, tincidunt dictum felis. Etiam pulvinar sapien eget neque dapibus, non luctus dui tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla ultrices luctus sem id tempus.', '2023-11-01', 'Approved', 'T002'),
+  ('R001', 'T001', 'S001', 'Specific thesis on Agile metodology', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis turpis leo, sodales maximus blandit eget, ullamcorper quis erat. Sed vitae eleifend ligula. Fusce sed nulla fringilla, convallis tortor sed, ultricies nulla. Donec vel tincidunt erat. Nullam lacus lectus, vestibulum accumsan libero sit amet, tincidunt dictum felis. Etiam pulvinar sapien eget neque dapibus, non luctus dui tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla ultrices luctus sem id tempus.', NULL , 'Pending', NULL),
   
 
 
