@@ -71,13 +71,13 @@ function ApplicationList() {
                                                     <Card key={application.application_id} className='my-3'>
                                                         <Card.Body>
                                                             <Row className="align-items-center">
-                                                                <Col>
+                                                                <Col xs={12} sm={6}>
                                                                     <strong>
                                                                         {application.name} {application.surname}
                                                                     </strong>
                                                                     {' '} has applied for this thesis on {formattedDate(application.application_date)}
                                                                 </Col>
-                                                                <Col className="text-end">
+                                                                <Col xs={12} sm={6} className="text-end mt-2 mt-sm-3 mt-sm-0 d-flex justify-content-center align-items-start d-sm-block">
                                                                     <Button variant="outline-secondary" className='text-end show-details-btn'
                                                                         onClick={()=>navigate(`/applications/${application.application_id}`)}>
                                                                             Show details
