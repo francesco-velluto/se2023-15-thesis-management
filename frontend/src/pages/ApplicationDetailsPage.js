@@ -449,7 +449,7 @@ ProposalInfo.propTypes = {
 function RowInfo(props) {
 
     return (
-        <Row className="fs-5 mx-4 py-1">
+        <Row className="fs-5 mx-0 mx-sm-4 py-1">
             <Col md={6} xs={12}>
                 <strong>{props.title} </strong>:
             </Col>
