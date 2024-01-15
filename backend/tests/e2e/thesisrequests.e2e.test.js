@@ -19,7 +19,7 @@ describe("End to end tests for insert thesis request", () => {
   it("Should insert a new thesis request", async () => {
     await doLogin("john.smith@example.com", "S001", driver);
 
-    await driver.get(baseURL + "/proposals/requests/new");
+    await driver.get(baseURL + "/proposals/requests");
 
     await driver.sleep(1000);
 
@@ -47,7 +47,7 @@ describe("End to end tests for insert thesis request", () => {
   it("Should show an alert if the title is missing", async () => {
     await doLogin("john.smith@example.com", "S001", driver);
 
-    await driver.get(baseURL + "/proposals/requests/new");
+    await driver.get(baseURL + "/proposals/requests");
 
     await driver.sleep(1000);
 
@@ -65,7 +65,7 @@ describe("End to end tests for insert thesis request", () => {
     await driver.sleep(1000);
 
     const currentUrl = await driver.getCurrentUrl();
-    expect(currentUrl).toEqual(baseURL + "/proposals/requests/new");
+    expect(currentUrl).toEqual(baseURL + "/proposals/requests");
 
     let alertText = await driver.findElement(By.className("alert")).getText();
     expect(alertText).toEqual("Please enter a valid title.");
@@ -76,7 +76,7 @@ describe("End to end tests for insert thesis request", () => {
   it("Should show an alert if the description is missing", async () => {
     await doLogin("john.smith@example.com", "S001", driver);
 
-    await driver.get(baseURL + "/proposals/requests/new");
+    await driver.get(baseURL + "/proposals/requests");
 
     await driver.sleep(1000);
 
@@ -94,7 +94,7 @@ describe("End to end tests for insert thesis request", () => {
     await driver.sleep(1000);
 
     const currentUrl = await driver.getCurrentUrl();
-    expect(currentUrl).toEqual(baseURL + "/proposals/requests/new");
+    expect(currentUrl).toEqual(baseURL + "/proposals/requests");
 
     let alertText = await driver.findElement(By.className("alert")).getText();
     expect(alertText).toEqual("Please enter a valid description.");
@@ -105,7 +105,7 @@ describe("End to end tests for insert thesis request", () => {
   it("Should show an alert if the supervisor is missing", async () => {
     await doLogin("john.smith@example.com", "S001", driver);
 
-    await driver.get(baseURL + "/proposals/requests/new");
+    await driver.get(baseURL + "/proposals/requests");
 
     await driver.sleep(1000);
 
@@ -121,7 +121,7 @@ describe("End to end tests for insert thesis request", () => {
     await driver.sleep(1000);
 
     const currentUrl = await driver.getCurrentUrl();
-    expect(currentUrl).toEqual(baseURL + "/proposals/requests/new");
+    expect(currentUrl).toEqual(baseURL + "/proposals/requests");
 
     let alertText = await driver.findElement(By.className("alert")).getText();
     expect(alertText).toEqual("Please enter a valid supervisor.");
