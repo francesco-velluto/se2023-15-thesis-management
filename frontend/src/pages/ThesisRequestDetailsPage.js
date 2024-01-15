@@ -246,53 +246,54 @@ function ThesisRequestDetailsPage() {
                                                         disabled={disabledFields}
                                                         required
                                                     >
-                                                        <option value={""} disabled>Select a supervisor</option>
-                                                        {
-                                                            teachersList.map((teacher, index) => (
-                                                                <option key={index} value={teacher.id}>{teacher.surname} {teacher.name} ({teacher.email})</option>
-                                                            ))
-                                                        }
-                                                    </Form.Select>
-                                                </Form.Group>
-                                            </Card.Body>
+                                                <option value={""} disabled>Select a supervisor</option>
+                                                {
+                                                    teachersList.map((teacher, index) => (
+                                                        <option key={index} value={teacher.id}>{teacher.surname} {teacher.name} ({teacher.email})</option>
+                                                    ))
+                                                }
+                                            </Form.Select>
+                                        </Form.Group>
+                                    </Card.Body>
                                         }
                                     </Card>
-                                </Col>
-                                <Col xs={12} md={6}>
-                                    <Card className="h-100">
-                                        <Card.Body>
-                                            <Card.Title>Co-Supervisor:</Card.Title>
-                                            <Form.Control
-                                                id="supervisor"
-                                                value={""}
-                                                disabled
-                                                required
-                                            />
-                                        </Card.Body>
-                                    </Card>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <Button id="go-back" onClick={() => { navigate('/') }}>
-                                        Return
-                                    </Button>
-                                </Col>
-                                {disabledFields == false &&
-                                    <Col className={"d-flex flex-row-reverse"}>
-                                        <Button
-                                            id="add-request-btn"
-                                            onClick={handleCreateRequest}>
-                                            Create Request
-                                        </Button>
-                                    </Col>
-                                }
-                            </Row>
-                        </Form>
+                            </Col>
+                            <Col xs={12} md={6}>
+                                <Card className="h-100">
+                                    <Card.Body>
+                                        <Card.Title>Co-Supervisor:</Card.Title>
+                                        <Form.Control
+                                            id="supervisor"
+                                            value={""}
+                                            disabled
+                                            required
+                                        />
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12} sm={6} className='my-2'>
+                                <Button id="go-back" className="w-100" onClick={() => { navigate('/') }}>
+                                    Return
+                                </Button>
+                            </Col>
+                            <Col xs={12} sm={6} className="my-2">
+                                <Button
+                                    id="add-request-btn"
+                                    className="w-100"
+                                    onClick={handleCreateRequest}>
+                                    Create Request
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                
                     }
-                </Container>
             </Container>
+        </Container>
         </>
+
     );
 }
 

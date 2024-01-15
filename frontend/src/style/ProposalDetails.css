@@ -59,9 +59,10 @@
 
 #add-proposal-btn,
 #add-keyword-btn,
-#add-group-btn {
+#add-group-btn,
+#add-request-btn {
     background-color: #5bc0de;
-    border-color: #5bc0de;
+    border: 2px solid #5bc0de;
 }
 
 #add-proposal-btn:hover,
@@ -106,9 +107,10 @@
 }
 
 .text-plus {
+    
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 6px;
 }
