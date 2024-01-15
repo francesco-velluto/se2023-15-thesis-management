@@ -172,7 +172,7 @@ module.exports = {
    * @params none
    * @body none
    * @returns { proposal: { request_id: number, title: string, ... } }
-   * @status 201 Success status
+   * @status 200 Success status
    * @error 401 Unauthorized - if the user is not logged in
    * @error 500 Internal Server Error - if something went wrong
    *

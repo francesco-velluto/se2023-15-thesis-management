@@ -42,8 +42,9 @@ const isArrayOfStrings = (array) => {
  * @params none
  * @body none
  * @returns { proposal: { request_id: number, title: string, ... } }
- * @status 201 Success status
+ * @status 200 Success status
  * @error 401 Unauthorized - if the user is not logged in
+ * @error 404 Not found - thesis request not found for this logged student
  * @error 500 Internal Server Error - if something went wrong
  *
  * @note Refer to the official documentation for more details

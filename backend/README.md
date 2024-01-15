@@ -439,6 +439,31 @@ The proposal is archived.
   - `401`: Not authenticated or not authorized (only students are authorized)
   - `500`: Internal Server Error
 
+#### For a student retrieves his thesis request
+
+***GET*** `api/proposals/requests`
+- Retrieving all data about thesis reques related to a student
+
+- Authentication: required
+- Authorization: must be a student
+- Request query parameters: _none_
+- Request body: _none_
+
+- `Success 200` Response body: 
+    - `request_id`: id of the thesis request
+    - `title`: title of the thesis request
+    - `description`: description of the thesis request
+    - `supervisor_id`: id of the teacher (supervisor for the thesis request)
+    - `student_id`: id of the student
+    - `co_supervisor_id`: id of the co supervisor for the thesis request
+    - `approval_date`: date of the approval
+    - `status`: status updated
+
+- `Error`
+  - `401`: Unauthorized - if the user is not logged in
+  - `404`: Not Found - Thesis request not found for this logged student
+  - `500`: Internal Server Error - if something went wrong
+
 ### For a student insert a thesis request
 
 ***POST*** `api/proposals/requests`
@@ -464,6 +489,7 @@ The proposal is archived.
 
 - `Error`
   - `401` Unauthorized - if the user is not logged in
+  - `403` Unauthorized - there is already a thesis request for the authenticated student
   - `404` Invalid teacher - teacher not found in the db
   - `422` Invalid body - invalid fields in request body
   - `500` Internal Server Error - if something went wrong
