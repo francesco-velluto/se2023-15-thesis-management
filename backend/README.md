@@ -64,6 +64,10 @@ The crono module is run in a separate process from the main server process.
 
 This will allow the server to continue to run even if the crono module crashes.
 
+## Database Trigger
+
+In the database there is a trigger that, every day or every time that the field _prop\_value_ in the table virtual_clock changes, checks if some proposals are expired and archives them. Pending applications related to these archived proposals are set to _Canceled_.
+
 ## API Documentation
 
 ### Authentication

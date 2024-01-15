@@ -24,7 +24,7 @@ module.exports = {
         await driver.sleep(2000);
     
         // click submit button
-        const submitButton = await driver.findElement(By.xpath('//div[@class="cff0ff2c6"]//button[text()="Continue"]'));
+        const submitButton = await driver.findElement(By.xpath('//div[@class="c9d281cd0"]//button[text()="Continue"]'));
         await submitButton.click();
     
         await driver.sleep(500);

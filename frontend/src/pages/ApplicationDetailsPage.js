@@ -285,7 +285,7 @@ function StudentInfo(props) {
                         <RowInfo title={"Enrollment year"} value={infoStudent.enrollment_year} />
 
                         <Row className="fs-5 mx-4 py-1 mt-3 d-flex justify-content-center align-items-center">
-                            <Button variant="outline-secondary" onClick={handleShow} className="min-width-fit-content">
+                            <Button id="career-button" variant="outline-secondary" onClick={handleShow} className="min-width-fit-content">
                                 Student's Career
                             </Button>
                         </Row>

@@ -353,7 +353,8 @@ Proin convallis turpis a orci vulputate, sed finibus purus fermentum. Donec vest
 
 Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false),
-  ('P028', 'Impact of AI to computer science', 'T011', ARRAY['AI', 'Computer Science'], 'Theoretical', ARRAY['G001'], 'A thesis on the impact of AI to computer science.', 'AI, Computer Science', 'N/A', '2024-10-15', 'Master', ARRAY['MSC001'], false, false);
+  ('P028', 'Impact of AI to computer science', 'T011', ARRAY['AI', 'Computer Science'], 'Theoretical', ARRAY['G001'], 'A thesis on the impact of AI to computer science.', 'AI, Computer Science', 'N/A', '2024-10-15', 'Master', ARRAY['MSC001'], false, false),
+  ('P029', 'Network management', 'T011', ARRAY['Cybersecurity', 'Network Security'], 'Experimental', ARRAY['G001'], 'A thesis on the management of a real network.', 'Network fundamentals', 'N/A', '2025-01-12', 'Master', ARRAY['MSC002'], false, false);
 ALTER TABLE public.proposals OWNER TO postgres;
 
 ALTER TABLE ONLY public.proposals
