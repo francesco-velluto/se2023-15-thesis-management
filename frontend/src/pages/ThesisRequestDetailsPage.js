@@ -203,14 +203,15 @@ function ThesisRequestDetailsPage() {
                             </Col>
                         </Row>
                         <Row>
-                            <Col>
-                                <Button id="go-back" onClick={() => { navigate('/') }}>
+                            <Col xs={12} sm={6} className='my-2'>
+                                <Button id="go-back" className="w-100" onClick={() => { navigate('/') }}>
                                     Return
                                 </Button>
                             </Col>
-                            <Col className={"d-flex flex-row-reverse"}>
+                            <Col xs={12} sm={6} className="my-2">
                                 <Button
                                     id="add-request-btn"
+                                    className="w-100"
                                     onClick={handleCreateRequest}>
                                     Create Request
                                 </Button>
