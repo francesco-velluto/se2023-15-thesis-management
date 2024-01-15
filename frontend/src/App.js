@@ -24,6 +24,7 @@ import PreviewUploadedFile from "./components/PreviewUploadedFile";
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import GenericLoading from "./components/GenericLoading";
 
 
 function App() {
@@ -105,24 +106,9 @@ export function UnAuthorizationPage({error, message, isLoadingUser}) {
     const bodyMessage = message || "You are not allowed to access this page!";
 
     return ( isLoadingUser ?
-        <Container className="text-center align-items-center align-content-center general-loading-container">
-            <Row>
-                <Col>
-                    <Spinner animation="grow" role="status" variant="primary" />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Card bg="light" className="rounded p-3">
-                        <p className="lead">
-                            Loading, please wait...
-                        </p>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+        <GenericLoading />
         :
-        <Container className="text-center general-error-container" >
+        <Container className="text-center" >
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -163,7 +149,7 @@ UnAuthorizationPage.propTypes = {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center general-error-container" >
+        <Container className="text-center" >
             <Row>
                 <Col>
                     <Alert variant="danger">

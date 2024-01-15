@@ -114,6 +114,7 @@ body {
 #navbar-title {
   font-size: 18px;
   font-weight: bold;
+  color: white;
 }
 
 #navbar-toggle {
@@ -670,6 +671,11 @@ footer img {
   }
 }
 
-.general-loading-container, .general-error-container {
-  margin-top: 9px;
+.generic-loading-header {
+  background-color: #003576;
+}
+
+.generic-loading-spinner {
+  margin: 9px;
+  color: #003576;
 }
