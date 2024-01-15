@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import NavbarContainer from '../components/Navbar';
 import TitleBar from '../components/TitleBar';
-import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import { getAllTeachers, insertNewThesisRequest } from '../api/ProposalsAPI';
+import { Alert, Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
+import { getAllTeachers, getThesisRequest, insertNewThesisRequest } from '../api/ProposalsAPI';
 import { useNavigate } from 'react-router-dom';
 
 function ThesisRequestDetailsPage() {
@@ -14,8 +14,10 @@ function ThesisRequestDetailsPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [teachersList, setTeacherList] = useState([]);
+    const [disabledFields, setDisabledFields] = useState(true);
     const navigate = useNavigate();
     const targetRef = useRef(null);
+    const [loading, setLoading] = useState(true);
 
     /**
      * It is used to show a message error in the page to the user
@@ -61,9 +63,9 @@ function ThesisRequestDetailsPage() {
 
         try {
             await insertNewThesisRequest(newRequest);
-            setSuccessMessage("The thesis request has been added correctly!");  // TODO: adding this success message in the home page
+            setSuccessMessage("The thesis request has been added correctly!");
             scrollToTarget();
-            navigate("/");
+            setDisabledFields(true);
         } catch (error) {
             setSuccessMessage("");
             setErrorMessage(error.message);
@@ -72,12 +74,39 @@ function ThesisRequestDetailsPage() {
     };
 
     useEffect(() => {
+        getThesisRequest()
+            .then(result => {
+                if (result) {
+                    setTitle(result.title);
+                    setDescription(result.description);
+                    setSupervisor(result.supervisor.surname + " " + result.supervisor.name);
+                    setSuccessMessage("There is already a thesis request!");
+                    scrollToTarget();
+                    setDisabledFields(true);
+                } else {
+                    setTitle("");
+                    setDescription("");
+                    setSupervisor("");
+                    setSuccessMessage("");
+                    setErrorMessage("");
+                    setDisabledFields(false);
+                }
+            }).catch(error => {
+                setSuccessMessage("");
+                setErrorMessage(error.error);
+                scrollToTarget();
+            });
+
         getAllTeachers()
-            .then(result => setTeacherList(result))
+            .then(result => {
+                setTeacherList(result);
+                setLoading(false);
+            })
             .catch(error => {
                 setSuccessMessage("");
                 setErrorMessage(error);
                 scrollToTarget();
+                setLoading(false);
             });
     }, []);
 
@@ -100,123 +129,165 @@ function ThesisRequestDetailsPage() {
                             </Row>
                         }
                     </div>
-                    <Form>
-                        <Row>
-                            <h3 id='title-page'>
-                                Add Thesis Request
-                            </h3>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Card className="h-100">
-                                    <Card.Body>
-                                        <Card.Title>
-                                            <span className="proposal-field-mandatory">*</span>
-                                            Title:
-                                        </Card.Title>
-                                        <Form.Group>
+
+                    {loading ?
+                        <Spinner
+                            animation="border"
+                            role="status"
+                            style={{ margin: "auto" }}
+                        />
+                        :
+                        <Form>
+                            <Row>
+                                {disabledFields === false &&
+                                    <h3 id='title-page'>
+                                        Add Thesis Request
+                                    </h3>
+                                }
+                                {disabledFields === true &&
+                                    <h3 id='title-page'>
+                                        View Thesis Request
+                                    </h3>
+                                }
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Card className="h-100">
+                                        {disabledFields == true ?
+                                            <Card.Body>
+                                                <Card.Title>Title:</Card.Title>
+                                                <Card.Text>{title}</Card.Text>
+                                            </Card.Body>
+                                            :
+                                            <Card.Body>
+                                                <Card.Title>
+                                                    <span className="proposal-field-mandatory">*</span>
+                                                    Title:
+                                                </Card.Title>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        type='text'
+                                                        name='title'
+                                                        rows={1}
+                                                        aria-label='Enter title'
+                                                        placeholder='Enter title'
+                                                        value={title}
+                                                        onChange={(e) => {
+                                                            setTitle(e.target.value);
+                                                        }}
+                                                        disabled={disabledFields}
+                                                        required
+                                                    />
+                                                </Form.Group>
+                                            </Card.Body>
+                                        }
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Card className="h-100">
+                                        {disabledFields == true ?
+                                            <Card.Body>
+                                                <Card.Title>Description:</Card.Title>
+                                                <Card.Text>{description}</Card.Text>
+                                            </Card.Body>
+                                            :
+                                            <Card.Body>
+                                                <Card.Title>
+                                                    <span className="proposal-field-mandatory">*</span>
+                                                    Description:
+                                                </Card.Title>
+                                                <Form.Group>
+                                                    <Form.Control
+                                                        as='textarea'
+                                                        name='description'
+                                                        aria-label='Enter description'
+                                                        placeholder='Enter description'
+                                                        value={description}
+                                                        onChange={(e) => {
+                                                            setDescription(e.target.value);
+                                                        }}
+                                                        rows={10}
+                                                        maxLength={10000}
+                                                        disabled={disabledFields}
+                                                        required
+                                                    />
+                                                </Form.Group>
+                                            </Card.Body>
+                                        }
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col xs={12} md={6} className="mb-1 mb-md-0">
+                                    <Card className="h-100">
+                                        {disabledFields == true ?
+                                            <Card.Body>
+                                                <Card.Title>Supervisor:</Card.Title>
+                                                <Card.Text>{supervisor}</Card.Text>
+                                            </Card.Body>
+                                            :
+                                            <Card.Body>
+                                                <Card.Title>
+                                                    <span className="proposal-field-mandatory">*</span>
+                                                    Supervisor:
+                                                </Card.Title>
+                                                <Form.Group>
+                                                    <Form.Select
+                                                        id="supervisor"
+                                                        name='supervisor'
+                                                        defaultValue={supervisor}
+                                                        onChange={(e) => {
+                                                            setSupervisor(e.target.value);
+                                                        }}
+                                                        disabled={disabledFields}
+                                                        required
+                                                    >
+                                                        <option value={""} disabled>Select a supervisor</option>
+                                                        {
+                                                            teachersList.map((teacher, index) => (
+                                                                <option key={index} value={teacher.id}>{teacher.surname} {teacher.name} ({teacher.email})</option>
+                                                            ))
+                                                        }
+                                                    </Form.Select>
+                                                </Form.Group>
+                                            </Card.Body>
+                                        }
+                                    </Card>
+                                </Col>
+                                <Col xs={12} md={6}>
+                                    <Card className="h-100">
+                                        <Card.Body>
+                                            <Card.Title>Co-Supervisor:</Card.Title>
                                             <Form.Control
-                                                type='text'
-                                                name='title'
-                                                rows={1}
-                                                aria-label='Enter title'
-                                                placeholder='Enter title'
-                                                value={title}
-                                                onChange={(e) => {
-                                                    setTitle(e.target.value);
-                                                }}
-                                                required
-                                            />
-                                        </Form.Group>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Card className="h-100">
-                                    <Card.Body>
-                                        <Card.Title>
-                                            <span className="proposal-field-mandatory">*</span>
-                                            Description:
-                                        </Card.Title>
-                                        <Form.Group>
-                                            <Form.Control
-                                                as='textarea'
-                                                name='description'
-                                                aria-label='Enter description'
-                                                placeholder='Enter description'
-                                                value={description}
-                                                onChange={(e) => {
-                                                    setDescription(e.target.value);
-                                                }}
-                                                rows={10}
-                                                maxLength={10000}
-                                                required
-                                            />
-                                        </Form.Group>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col xs={12} md={6} className="mb-1 mb-md-0">
-                                <Card className="h-100">
-                                    <Card.Body>
-                                        <Card.Title>
-                                            <span className="proposal-field-mandatory">*</span>
-                                            Supervisor:
-                                        </Card.Title>
-                                        <Form.Group>
-                                            <Form.Select
                                                 id="supervisor"
-                                                name='supervisor'
-                                                defaultValue={supervisor}
-                                                onChange={(e) => {
-                                                    setSupervisor(e.target.value);
-                                                }}
+                                                value={""}
+                                                disabled
                                                 required
-                                            >
-                                                <option value={""} disabled>Select a supervisor</option>
-                                                {
-                                                    teachersList.map((teacher, index) => (
-                                                        <option key={index} value={teacher.id}>{teacher.surname} {teacher.name} ({teacher.email})</option>
-                                                    ))
-                                                }
-                                            </Form.Select>
-                                        </Form.Group>
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                            <Col xs={12} md={6}>
-                                <Card className="h-100">
-                                    <Card.Body>
-                                        <Card.Title>Co-Supervisor:</Card.Title>
-                                        <Form.Control
-                                            id="supervisor"
-                                            value={""}
-                                            disabled
-                                            required
-                                        />
-                                    </Card.Body>
-                                </Card>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Button id="go-back" onClick={() => { navigate('/') }}>
-                                    Return
-                                </Button>
-                            </Col>
-                            <Col className={"d-flex flex-row-reverse"}>
-                                <Button
-                                    id="add-request-btn"
-                                    onClick={handleCreateRequest}>
-                                    Create Request
-                                </Button>
-                            </Col>
-                        </Row>
-                    </Form>
+                                            />
+                                        </Card.Body>
+                                    </Card>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Button id="go-back" onClick={() => { navigate('/') }}>
+                                        Return
+                                    </Button>
+                                </Col>
+                                {disabledFields == false &&
+                                    <Col className={"d-flex flex-row-reverse"}>
+                                        <Button
+                                            id="add-request-btn"
+                                            onClick={handleCreateRequest}>
+                                            Create Request
+                                        </Button>
+                                    </Col>
+                                }
+                            </Row>
+                        </Form>
+                    }
                 </Container>
             </Container>
         </>

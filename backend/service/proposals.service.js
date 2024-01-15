@@ -3,6 +3,7 @@
 const db = require("./db");
 const Proposal = require("../model/Proposal");
 const ThesisRequest = require("../model/ThesisRequest.js");
+const { getTeacherById } = require("./teachers.service.js");
 
 exports.rowToProposal = (row) => {
   return new Proposal(
@@ -37,26 +38,81 @@ exports.rowToThesisRequest = (row) => {
 };
 
 exports.insertThesisRequest = async (request) => {
-  try {
-    const result = await db.query(
-      `INSERT INTO thesis_request
+  return new Promise(async (resolve, reject) => {
+    try {
+      const thesis = await this.getThesisRequest(request.student_id);
+      if (thesis) {
+        console.error("[BACKEND-SERVER] Error in insertThesisRequest");
+        const alreadyExistsError = new Error("There is already a thesis request!");
+        alreadyExistsError.status = 403;
+        alreadyExistsError.data = "There is already a thesis request!";
+        reject(alreadyExistsError);
+        return;
+      }
+    } catch (err) {
+      if (err.status != 404) {
+        console.error("[BACKEND-SERVER] Error in insertThesisRequest", err);
+        reject(err);
+        return;
+      }
+    }
+
+    try {
+      const result = await db.query(
+        `INSERT INTO thesis_request
         (request_id, title, description, supervisor_id, student_id, status)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *;`,
-      [
-        request.request_id,
-        request.title,
-        request.description,
-        request.supervisor_id,
-        request.student_id,
-        "pending"
-      ]
-    );
-    return this.rowToThesisRequest(result.rows[0]);
-  } catch (err) {
-    console.log(err);
-    throw err;
-  }
+        [
+          request.request_id,
+          request.title,
+          request.description,
+          request.supervisor_id,
+          request.student_id,
+          "pending"
+        ]
+      );
+      resolve({ status: 201, data: this.rowToThesisRequest(result.rows[0]) });
+    } catch (err) {
+      console.error("[BACKEND-SERVER] Error in insertThesisRequest", err);
+      let error = new Error("Internal Server Error");
+      error.status = 500;
+      error.data = "Internal Server Error";
+      reject(error);
+    }
+  })
+};
+
+exports.getThesisRequest = async (student_id) => {
+  return new Promise((resolve, reject) => {
+    db.query(
+      `SELECT request_id, title, description, supervisor_id, student_id, status 
+       FROM thesis_request
+       WHERE student_id = $1;`,
+      [student_id]
+    )
+      .then(async (rows) => {
+        if (rows.rows.length == 0) {
+          console.error("[BACKEND-SERVER] Error in getThesisRequest");
+          const notFoundError = new Error("Thesis request not found!");
+          notFoundError.status = 404;
+          notFoundError.data = "Thesis request not found!";
+          reject(notFoundError);
+          return;
+        }
+        let thesisRequest = this.rowToThesisRequest(rows.rows[0]);
+        thesisRequest.supervisor = (await getTeacherById(thesisRequest.supervisor_id)).data;
+        delete thesisRequest.supervisor_id;
+        resolve({ status: 200, data: thesisRequest });
+      })
+      .catch((err) => {
+        console.error("[BACKEND-SERVER] Error in getThesisRequest", err);
+        const error = new Error("Internal Server Error");
+        error.status = 500;
+        error.data = "Internal Server Error";
+        reject(error);
+      });
+  });
 };
 
 exports.getMaxThesisRequestIdNumber = async () => {
@@ -267,7 +323,7 @@ exports.getProposalById = (proposal_id) => {
         const error4 = new Error("Internal Server Error");
         error4.status = 500;
         error4.data = "Internal Server Error";
-        reject(error4);      
+        reject(error4);
       });
   });
 };

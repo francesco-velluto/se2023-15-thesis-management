@@ -81,7 +81,7 @@ function Main() {
                     <Route path="new" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="add" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
                     <Route path=":proposal_id/update" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage mode="update" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
                     <Route path=":proposal_id/copy" element={loggedUser && loggedUser.role === 0 ? <ProposalDetailsPage  mode="copy" /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
-                    <Route path="requests/new" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
+                    <Route path="requests" element={loggedUser && loggedUser.role === 1 ? <ThesisRequestDetailsPage /> : <UnAuthorizationPage isLoadingUser={isLoadingUser}/>} />
                 </Route>
             </Route>
             <Route path='*' element={<NotFoundPage />} />
