@@ -138,6 +138,9 @@ body {
 
 #show-proposal-detail,
 #proposal-detail-actions,
+#proposal-detail-actions-copy,
+#proposal-detail-actions-update,
+#proposal-detail-actions-archive,
 #show-details-proposal {
   margin-top: -2px;
   cursor: pointer;
@@ -189,6 +192,7 @@ body {
   border-color: #003576;
   color: #003576;
   background-color: white;
+  
 }
 
 #dropdown-proposal-actions:hover {
