@@ -38,22 +38,16 @@ exports.rowToThesisRequest = (row) => {
 };
 
 exports.insertThesisRequest = async (request) => {
-  return new Promise(async (resolve, reject) => {
     try {
       const thesis = await this.getThesisRequest(request.student_id);
       if (thesis) {
-        console.error("[BACKEND-SERVER] Error in insertThesisRequest");
-        const alreadyExistsError = new Error("There is already a thesis request!");
-        alreadyExistsError.status = 403;
-        alreadyExistsError.data = "There is already a thesis request!";
-        reject(alreadyExistsError);
-        return;
+        console.error("[BACKEND-SERVER] Error in insertThesisRequest");      
+        return { status: 403, data: "There is already a thesis request!" };
       }
     } catch (err) {
       if (err.status != 404) {
         console.error("[BACKEND-SERVER] Error in insertThesisRequest", err);
-        reject(err);
-        return;
+        return err;
       }
     }
 
@@ -72,15 +66,11 @@ exports.insertThesisRequest = async (request) => {
           "pending"
         ]
       );
-      resolve({ status: 201, data: this.rowToThesisRequest(result.rows[0]) });
+      return { status: 201, data: this.rowToThesisRequest(result.rows[0]) };
     } catch (err) {
       console.error("[BACKEND-SERVER] Error in insertThesisRequest", err);
-      const internalServerError = new Error("Internal Server Error");
-      internalServerError.status = 500;
-      internalServerError.data = "Internal Server Error";
-      reject(internalServerError);
+      return {status : 500, data: "Internal Server Error"}
     }
-  })
 };
 
 exports.getThesisRequest = async (student_id) => {
