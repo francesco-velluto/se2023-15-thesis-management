@@ -622,7 +622,7 @@ The proposal is archived.
 
 ### Students
 
-**GET** `/api/students/student_id`
+**GET** `/api/students/:student_id`
 
 - Get the info of a student given its id
 
@@ -643,6 +643,30 @@ The proposal is archived.
     - `cod_degree`: id of the degree attended by the student
     - `enrollment_year`: enrollement year of the student
     - `role`: the role of the student is 1
+
+- `Error`:
+  - `404`: Student not found
+  - `401`: Not authenticated or not authorized
+  - `500`: Internal server error
+
+**GET** `/api/students/:student_id/career`
+
+- Get the career of a student
+
+- Authentication: required
+- Authorization: must be a teacher with a thesis application from the student
+- Request query parameters:
+  - `student_id`: the id of the student
+- Request body: _none_
+
+- `Success 200`  Response body:
+  - `career`: Array of exams passed by the student with those fields
+    - `id`: id of the student,
+    - `cod_course`: id of the course,
+    - `title_course`: name of the course,
+    - `cfu`: number of cfu of the course,
+    - `grade`: final grade of the exam,
+    - `date`: date of the exam
 
 - `Error`:
   - `404`: Student not found
