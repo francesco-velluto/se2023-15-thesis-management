@@ -377,13 +377,13 @@ body {
   background-color: whitesmoke;
 }
 
-#back-to-homepage-button {
+#back-to-homepage-button, #no-application {
   color: black;
   border: 2px solid #666;
   background-color: #f0f0f0;
 }
 
-#back-to-homepage-button:hover {
+#back-to-homepage-button:hover, #no-application:hover {
   background-color: darkgray;
 }
 

@@ -3,6 +3,7 @@ import TitleBar from "../components/TitleBar";
 import { Alert, Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import { useContext, useEffect, useState } from "react";
 import { fetchFileInfo } from '../api/ApplicationsAPI';
+import { useNavigate } from "react-router-dom";
 
 import ApplicationsAPI from "../api/ApplicationsAPI";
 
@@ -16,10 +17,14 @@ function StudentApplicationsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [applications, setApplications] = useState([]);
+    const [isApplication, setIsApplication] = useState(false);
+
     const [fileInfo, setFileInfo] = useState({});
     const [isUploaded, setIsUploaded] = useState(false);
 
     const { loggedUser } = useContext(LoggedUserContext);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         try {
@@ -35,7 +40,8 @@ function StudentApplicationsPage() {
                         if (res.data.length !== 0 ) {
                             setFileInfo(prevState => ({ ...prevState, [application.id]: res }));
                             setIsUploaded(true);
-                        }
+                            setIsApplication(true);
+                        }                        
                     } catch (err) {
                         console.error("Error fetching uploaded file:", err);
                     }
@@ -73,7 +79,7 @@ function StudentApplicationsPage() {
                                 <Alert variant='danger'>{error}</Alert>
                             </Col>
                         </Row>
-                    ) : applications?.map((application) =>
+                    ) :  applications?.map((application) =>
                             <Row key={application.id} className={"justify-content-center student-application-row"}>
                                 <Col lg={7}>
                                     <Card text={"light"}
@@ -129,6 +135,7 @@ function StudentApplicationsPage() {
                         )
                     )
                 }
+                { isApplication ? (
                 <Row className={"justify-content-center"}>
                     <Col lg={2}>
                         <Button id='back-to-homepage-button' className="w-100 my-3" as={Link} to="/">
@@ -136,8 +143,31 @@ function StudentApplicationsPage() {
                         </Button>
                     </Col>
                 </Row>
+            ) : (
+                <Card style={{margin: "2rem"}}>
+                    <Row>
+                        <Col xs={12} className="d-flex flex-row justify-content-center text-center my-4">
+                            <p style={{ fontSize: '1.5rem', color: '#555' }}>
+                                You haven't applied for any thesis yet
+                            </p>
+                        </Col>
+                        <Col xs={12} className="d-flex flex-row justify-content-center my-4">
+                            <Button
+                                onClick={() => {
+                                    navigate("/proposals/");
+                                }}
+                                id="no-application"
+                            >
+                                Go to proposals list
+                            </Button>
+                        </Col>
+                    </Row>
+                </Card>
+            
+            )}
             </Container>
         </>
+
     );
 }
 
