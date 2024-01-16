@@ -41,6 +41,10 @@ const UploadResume = ({ setCallbackUploadId }) => {
     const enteredFilename = e.target.value;
     setFilename(enteredFilename);
     setIsFileName(true);
+    if (enteredFilename === "" ) {
+      setIsFileName(false);
+
+    }
   };
 
 
@@ -127,7 +131,7 @@ const UploadResume = ({ setCallbackUploadId }) => {
               <AiOutlineDelete size={30} />
             </Button>
           </div>
-          <Button onClick={handleUpload} id="upload-button" disabled={!isFilename}>
+          <Button onClick={handleUpload} id="upload-button" disabled={!isFilename || !isActive}>
             Upload
           </Button>
         </div>

@@ -1,5 +1,5 @@
 import { BrowserRouter, Link, Outlet, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import ProfilePage from "./pages/ProfilePage";
 import SamlRedirect from "./pages/Auth";
 import PropTypes from 'prop-types';
 
@@ -7,7 +7,7 @@ import ProposalDetailsPage from "./pages/ProposalDetailsPage";
 import StudentApplicationsPage from "./pages/StudentApplicationsPage";
 import ApplicationDetails from "./pages/ApplicationDetailsPage";
 
-import {Alert, Card, Col, Container, Row, Spinner} from "react-bootstrap";
+import {Alert, Card, Col, Container, Row} from "react-bootstrap";
 import { LoggedUserContext, LoggedUserProvider } from "./context/AuthenticationContext";
 import React, {useContext, useEffect, useState} from "react";
 import { fetchCurrentUser } from "./api/AuthenticationAPI";
@@ -24,6 +24,7 @@ import PreviewUploadedFile from "./components/PreviewUploadedFile";
 
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import GenericLoading from "./components/GenericLoading";
 
 
 function App() {
@@ -65,7 +66,8 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect />} />
+                <Route index path='/' element={loggedUser ? <ProfilePage /> : <SamlRedirect redirectTo={"/"} />} />
+                <Route path='/profile' element={loggedUser ? <ProfilePage /> : <SamlRedirect redirectTo={"/profile"} />} />
                 <Route path='/applications'>
                     <Route index element={
                     	!loggedUser ? <UnAuthorizationPage isLoadingUser={isLoadingUser}/> :
@@ -105,24 +107,9 @@ export function UnAuthorizationPage({error, message, isLoadingUser}) {
     const bodyMessage = message || "You are not allowed to access this page!";
 
     return ( isLoadingUser ?
-        <Container className="text-center align-items-center align-content-center general-loading-container">
-            <Row>
-                <Col>
-                    <Spinner animation="grow" role="status" variant="primary" />
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Card bg="light" className="rounded p-3">
-                        <p className="lead">
-                            Loading, please wait...
-                        </p>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+        <GenericLoading />
         :
-        <Container className="text-center general-error-container" >
+        <Container className="text-center" >
             <Row>
                 <Col>
                     <Alert variant="danger">
@@ -163,7 +150,7 @@ UnAuthorizationPage.propTypes = {
 */
 function NotFoundPage() {
     return (
-        <Container className="text-center general-error-container" >
+        <Container className="text-center" >
             <Row>
                 <Col>
                     <Alert variant="danger">

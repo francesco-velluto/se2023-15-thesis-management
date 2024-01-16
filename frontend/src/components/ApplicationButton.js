@@ -55,6 +55,8 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
 
   const handleButtonClick = async () => {
     try {
+      setShowModal(false);
+
       await applicationStatusCallback("applying");
       const response = await insertNewApplication({ proposalID }, uploadId);
       if(uploadId){
