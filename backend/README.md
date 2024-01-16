@@ -443,6 +443,105 @@ The proposal is archived.
   - `401`: Not authenticated or not authorized (only students are authorized)
   - `500`: Internal Server Error
 
+#### For a student upload a new file
+
+***POST*** `api/applications/upload`
+- Upload a new file
+
+- Authentication: required
+- Authorization: must be a student
+- Request query parameters: _none_
+- Request body:
+    - file: form field with the file to upload
+
+- `Success 200` Response body:
+  - `upload_id`: id of the uploaded file, it can be used to retrieve the file later on
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized (only students are authorized)
+  - `500`: Internal Server Error
+
+#### For a student preview uploaded file
+
+***GET*** `api/applications/upload/:upload_id`
+- Preview an uploaded file
+
+- Authentication: required
+- Authorization: must be the student who uploaded the file
+- Request query parameters:
+  - `upload_id`: id of the uploaded file
+- Request body: _none_
+
+- `Success 200` Response body:
+  - `Content-Type: application/pdf`
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized (only students are authorized)
+  - `404`: File not found
+  - `500`: Internal Server Error
+
+#### For a student get info of uploaded file
+
+***GET*** `api/applications/upload/:upload_id/info`
+- Get info of an uploaded file
+
+- Authentication: required
+- Authorization: must be the student who uploaded the file
+- Request query parameters:
+  - `upload_id`: id of the uploaded file
+- Request body: _none_
+
+- `Success 200` Response body:
+  - `data`: object with the file info
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized (only students are authorized)
+  - `404`: File not found
+  - `500`: Internal Server Error
+
+#### Preview uploaded file in an application
+
+***GET*** `api/applications/file/:application_id`
+- Preview the uploaded file for an application
+
+- Authentication: required
+- Authorization: must be the student who made the application and uploaded the file or the teacher supervisor of the proposal
+- Request query parameters:
+  - `application_id`: id of the application
+- Request body: _none_
+
+- `Success 200` Response body:
+  - `Content-Type: application/pdf`
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized
+  - `404`: File not found
+  - `500`: Internal Server Error
+
+#### Get info of uploaded file in an application
+
+***GET*** `api/applications/file/:application_id/info`
+- Retrieve information on the uploaded file for an application
+
+- Authentication: required
+- Authorization: must be the student who made the application and uploaded the file or the teacher supervisor of the proposal
+- Request query parameters:
+  - `application_id`: id of the application
+- Request body: _none_
+
+- `Success 200` Response body:
+  - `data`: object with the file info
+
+- `Error`
+  - `400`: Bad Request, parameters not found in the request body
+  - `401`: Not authenticated or not authorized
+  - `404`: File not found
+  - `500`: Internal Server Error
+
 #### For a student retrieves his thesis request
 
 ***GET*** `api/proposals/requests`
@@ -453,7 +552,7 @@ The proposal is archived.
 - Request query parameters: _none_
 - Request body: _none_
 
-- `Success 200` Response body: 
+- `Success 200` Response body:
     - `request_id`: id of the thesis request
     - `title`: title of the thesis request
     - `description`: description of the thesis request
@@ -508,7 +607,7 @@ The proposal is archived.
 - Request query parameters: proposal_id
 - Request body: _none_
 
-- `Success 200` Response body: 
+- `Success 200` Response body:
   - Array of applications each one containing these information:
     - `id`: application id
     - `proposal_id`: proposal id

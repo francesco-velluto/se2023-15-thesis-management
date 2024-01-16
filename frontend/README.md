@@ -12,10 +12,10 @@ This will install all the dependencies and start the server on port 3000.
 ## Users Credentials
 
 - user with the role of student
-    - email: `john.smith@example.com` 
+    - email: `john.smith@example.com`
     - password: `S001`
 - user with the role of teacher
-    - email: `michael.wilson@example.com` 
+    - email: `michael.wilson@example.com`
     - password: `T002`
 
 ## API Interface
@@ -95,6 +95,10 @@ All pages are in the `src/pages` folder. The pages are placed in different files
 ### HomePage
 
 The home page is in `src/pages/HomePage.js`.
+
+### ProfilePage
+
+The user profile page is in `src/pages/ProfilePage.js`.
 
 ### LoginPage
 
