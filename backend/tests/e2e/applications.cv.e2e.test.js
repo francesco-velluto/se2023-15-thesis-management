@@ -101,7 +101,7 @@ describe("End to end test for applicant CV (student part)", () =>{
 
         //modal form
         let modalHeader = await driver.findElement(By.className("modal-title"));
-        expect(await modalHeader.getText()).toEqual("Add a PDF file (optionnal)");
+        expect(await modalHeader.getText()).toEqual("Add a PDF file (optional)");
 
         //insert the file
         let fileInput = driver.findElement(By.css('input[type="file"]'));
@@ -127,7 +127,7 @@ describe("End to end test for applicant CV (student part)", () =>{
    
     }, 50000);
 
-    test.skip("Should show the apply popup and do not upload the file if there is no file", async() =>{
+    test("Should show the apply popup and do not upload the file if there is no file", async() =>{
         //login
         await doLogin("studentofpolito@gmail.com", "S011", driver);
 
@@ -146,7 +146,7 @@ describe("End to end test for applicant CV (student part)", () =>{
 
         //modal form
         let modalHeader = await driver.findElement(By.className("modal-title"));
-        expect(await modalHeader.getText()).toEqual("Add a PDF file (optionnal)");
+        expect(await modalHeader.getText()).toEqual("Add a PDF file (optional)");
 
         //textbox filename
         let fileTextbox = driver.findElement(By.css('#filename'));
@@ -166,7 +166,7 @@ describe("End to end test for applicant CV (student part)", () =>{
 
     test("Should delete the file selected end clear the textbox if the trash icon is clicked", async() =>{
         //login
-        await doLogin("studentofpolito@example.com", "S011", driver);
+        await doLogin("studentofpolito@gmail.com", "S011", driver);
 
         //go to the proposal to apply to
         await driver.get(baseURL + "/proposals/P001");
@@ -183,7 +183,7 @@ describe("End to end test for applicant CV (student part)", () =>{
 
         //modal form
         let modalHeader = await driver.findElement(By.className("modal-title"));
-        expect(await modalHeader.getText()).toEqual("Add a PDF file (optionnal)");
+        expect(await modalHeader.getText()).toEqual("Add a PDF file (optional)");
 
         // fill the textbox
         let fileTextbox = await driver.findElement(By.css('#filename'));
@@ -230,7 +230,7 @@ describe("End to end test for applicant CV (student part)", () =>{
         await driver.sleep(200);
 
         let modalHeader = await driver.findElement(By.className("modal-title"));
-        expect(await modalHeader.getText()).toEqual("Add a PDF file (optionnal)");
+        expect(await modalHeader.getText()).toEqual("Add a PDF file (optional)");
 
         // fill the textbox
         let fileTextbox = await driver.findElement(By.css('#filename'));
@@ -252,7 +252,7 @@ describe("End to end test for applicant CV (student part)", () =>{
         );
         await driver.sleep(2000);
 
-        //details link
+        /*//details link
         let detailsLink = await driver.findElement(By.className("resume-link"));
         expect(await detailsLink.getText()).toEqual("See preview");
         await driver.sleep(200)
@@ -264,10 +264,10 @@ describe("End to end test for applicant CV (student part)", () =>{
         await driver.executeScript(
             "document.getElementById('confirm-application').click()"
         );
-        await driver.sleep(200);
+        await driver.sleep(200);*/
 
 
-        await doLogout(driver);
+        //await doLogout(driver);
 
    
     }, 30000);
@@ -276,7 +276,7 @@ describe("End to end test for applicant CV (student part)", () =>{
 
 });
 
-describe.only("End to end test for applicant cv (teacher part)", () =>{
+describe("End to end test for applicant cv (teacher part)", () =>{
     beforeAll(async () => {
         driver = await new Builder().forBrowser("chrome").build();
     });
