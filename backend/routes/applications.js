@@ -50,9 +50,9 @@ router.get(
 );
 
 /**
- * 
+ *
  * GET /api/applications/proposals/:proposal_id
- * 
+ *
  * @params proposal_id
  * @body none
  * @returns {
@@ -70,7 +70,7 @@ router.get(
   authenticationController.isLoggedIn,
   authenticationController.isTeacher,
   applicationsController.getAllApplicationsByProposalId
-); 
+);
 
 router.post(
   "/",
@@ -105,10 +105,37 @@ router.get(
 );
 
 
-router.post('/upload', authenticationController.isLoggedIn, authenticationController.isStudent, applicationsController.uploadFileServer);
-router.get('/upload/:upload_id', authenticationController.isLoggedIn, authenticationController.isStudent, applicationsController.previewFile);
-router.get('/upload/:upload_id/info', authenticationController.isLoggedIn, authenticationController.isStudent, applicationsController.getFileInfo);
-router.get('/file/:application_id', authenticationController.isLoggedIn, applicationsController.previewFile);
-router.get('/file/:application_id/info', authenticationController.isLoggedIn, applicationsController.getFileInfo);
+router.post(
+  "/upload",
+  authenticationController.isLoggedIn,
+  authenticationController.isStudent,
+  applicationsController.uploadFileServer
+);
+
+router.get(
+  "/upload/:upload_id",
+  authenticationController.isLoggedIn,
+  authenticationController.isStudent,
+  applicationsController.previewFile
+);
+
+router.get(
+  "/upload/:upload_id/info",
+  authenticationController.isLoggedIn,
+  authenticationController.isStudent,
+  applicationsController.getFileInfo
+);
+
+router.get(
+  "/file/:application_id",
+  authenticationController.isLoggedIn,
+  applicationsController.previewFile
+);
+
+router.get(
+  "/file/:application_id/info",
+  authenticationController.isLoggedIn,
+  applicationsController.getFileInfo
+);
 
 module.exports = router;

@@ -60,7 +60,7 @@ const UploadResume = ({ setCallbackUploadId }) => {
         formData.append('file', file, filename);
         const response = await uploadFile(loggedUser.id, formData);
 
-        const upload_id = response.rows[0].upload_id;
+        const upload_id = response.upload_id;
         setUploadId(upload_id);
         setCallbackUploadId(upload_id);
 
@@ -123,8 +123,8 @@ const UploadResume = ({ setCallbackUploadId }) => {
               id="filename"
               title="Filename"
               className='filename-input'
-              value={filename} 
-              onChange={handleFilenameChange} 
+              value={filename}
+              onChange={handleFilenameChange}
               required
             />
             <Button onClick={handleReset} id="reset-button" title="Reset file">

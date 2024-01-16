@@ -16,7 +16,7 @@ const {
   uploadFileServer,
   getUploadedFile,
   getApplicationFile,
-  getAllApplicationsByProposalId, 
+  getAllApplicationsByProposalId,
   getAllApplicationsByTeacherId
 } = require("../../service/applications.service");
 
@@ -742,12 +742,12 @@ describe("T5 - insertNewApplication", () => {
     const mockReq = {
       proposal_id: "P011",
     };
-  
+
     isLoggedIn.mockImplementation((req, res, next) => {
-      req.user = { id: "S001" }; 
-      next(); 
+      req.user = { id: "S001" };
+      next();
     });
-  
+
     const mockRes = {
       rows: [
         {
@@ -777,21 +777,21 @@ describe("T5 - insertNewApplication", () => {
       })
       .catch((err) => done(err));
   });
-  
+
 
   test("T5.2 ERROR 500 | Internal Server Error", (done) => {
     const mockApplicationReq = {
       proposal_id: "P011",
     };
-  
+
     isLoggedIn.mockImplementation((req, res, next) => {
-      req.user = { id: "S001" }; 
-      next(); 
+      req.user = { id: "S001" };
+      next();
     });
-  
+
     const errorMessage = "An error occurred during application insertion";
     insertNewApplication.mockRejectedValue(new Error(errorMessage));
-  
+
     request(app)
       .post("/api/applications")
       .send(mockApplicationReq)
@@ -806,22 +806,22 @@ describe("T5 - insertNewApplication", () => {
       })
       .catch((err) => done(err));
   });
-  
+
   test("T5.3 - ERROR 400 | Missing parameters in insert new application controller", (done) => {
     const mockApplicationReq = {}; // Empty request body
-  
+
     isLoggedIn.mockImplementation((req, res, next) => {
-      req.user = { id: "S001" }; 
-      next(); 
+      req.user = { id: "S001" };
+      next();
     });
-  
+
     request(app)
       .post("/api/applications")
       .send(mockApplicationReq)
       .then((res) => {
         expect(res.status).toBe(400);
         expect(res.text).toBe("Parameters not found in insert new application controller");
-        expect(insertNewApplication).not.toHaveBeenCalled(); 
+        expect(insertNewApplication).not.toHaveBeenCalled();
         done();
       })
       .catch((err) => done(err));
@@ -860,12 +860,12 @@ describe("T6 - uploadFileServer", (done) => {
       },
     }));
 
-    uploadFileServer.mockResolvedValue({data: "File uploaded successfully"});
+    uploadFileServer.mockResolvedValue({upload_id: "1234"});
 
     await controller.uploadFileServer(mockReq, mockRes);
 
     expect(mockRes.status).toHaveBeenCalledWith(201);
-    expect(mockRes.json).toHaveBeenCalledWith({data: "File uploaded successfully"});
+    expect(mockRes.json).toHaveBeenCalledWith({upload_id: "1234"});
   });
 
   test("T6.2 - ERROR 500 | Internal server error", async () => {
@@ -1251,7 +1251,7 @@ describe("T9 - getAllApplicationsByProposalId", () => {
       req.user = { id: "T001" };
       next(); // Authenticated
     });
-  
+
     isTeacher.mockImplementation((req, res, next) => {
       next(); // Authorized
     });
@@ -1279,23 +1279,23 @@ describe("T9 - getAllApplicationsByProposalId", () => {
     test("T9.2 ERROR 401 | User not allowed to see details of applications", async () => {
       const expectedProposal = { supervisor_id: "T002" }; // Different supervisor_id
       const expectedError = { status: 401, error: "You are not allowed to see details of applications of this proposal" };
-  
+
       isLoggedIn.mockImplementation((req, res, next) => {
         req.user = { id: "T001" };
         next(); // Authenticated
       });
-  
+
       isTeacher.mockImplementation((req, res, next) => {
         next(); // Authorized
       });
-  
+
       getProposalById.mockResolvedValueOnce({
         data: expectedProposal,
         status: 200,
       });
-  
+
       const res = await request(app).get(`/api/applications/proposals/2`);
-  
+
       expect(res.status).toBe(401);
       expect(res.body.error).toEqual(expectedError.error);
       expect(getProposalById).toHaveBeenCalled();
@@ -1306,31 +1306,31 @@ describe("T9 - getAllApplicationsByProposalId", () => {
     test("T9.3 ERROR 500 | Error fetching applications", async () => {
       const expectedProposal = { supervisor_id: "T001" };
       const expectedError = { status: 500, data: "Error fetching applications" };
-    
+
       isLoggedIn.mockImplementation((req, res, next) => {
         req.user = { id: "T001" };
         next(); // Authenticated
       });
-    
+
       isTeacher.mockImplementation((req, res, next) => {
         next(); // Authorized
       });
-    
+
       getProposalById.mockResolvedValueOnce({
         data: expectedProposal,
         status: 200,
       });
-    
+
       getAllApplicationsByProposalId.mockRejectedValueOnce(expectedError);
-    
+
       const res = await request(app).get("/api/applications/proposals/2");
-    
+
       expect(res.status).toBe(500);
       expect(res.body.error).toEqual(expectedError.error);
       expect(getProposalById).toHaveBeenCalled();
       expect(getAllApplicationsByProposalId).toHaveBeenCalled();
       expect(isLoggedIn).toHaveBeenCalled();
     });
-    
-  
+
+
 });

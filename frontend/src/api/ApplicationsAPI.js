@@ -133,30 +133,30 @@ module.exports = {
     uploadFile: async (student_id,formData) => {
         try {
             if (!formData) {
-            throw new Error('FormData is required');
+                throw new Error('FormData is required');
             }
 
             const response = await fetch(ApplicationsAPIURL + '/upload', {
-            method: 'POST',
-            headers: {
-                "Accept": "application/json",
+                method: 'POST',
+                headers: {
+                    "Accept": "application/json",
                 },
-            body: formData,
-            credentials: 'include',
+                body: formData,
+                credentials: 'include',
             });
 
             if (response.ok) {
-            try {
-                const jsonData = await response.json();
-                return jsonData;
-            } catch (error) {
-                console.error('Error parsing JSON from server response:', error);
-                throw new Error('Invalid response from server');
-            }
+                try {
+                    const jsonData = await response.json();
+                    return jsonData;
+                } catch (error) {
+                    console.error('Error parsing JSON from server response:', error);
+                    throw new Error('Invalid response from server');
+                }
             } else {
-            const errorText = await response.text();
-            console.error('Error response from server:', errorText);
-            throw new Error(errorText || 'Unknown error');
+                const errorText = await response.text();
+                console.error('Error response from server:', errorText);
+                throw new Error(errorText || 'Unknown error');
             }
         } catch (err) {
             throw new Error(err.message || 'Error uploading file');
@@ -209,7 +209,7 @@ module.exports = {
                 const url = `${ApplicationsAPIURL}/${
                     upload_id ? `upload/${upload_id}/info` : `file/${application_id}/info`
                   }`;
-                  
+
                 const response = await fetch(url, {
                     method: 'GET',
                     headers: APIConfig.API_REQUEST_HEADERS,

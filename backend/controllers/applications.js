@@ -92,7 +92,7 @@ module.exports = {
 
     getAllApplicationsByProposalId: (req, res) => {
         const proposal_id = req.params.proposal_id;
-    
+
         proposalsService.getProposalById(proposal_id)
             .then((result) => {
                 if (result.data.supervisor_id !== req.user.id) {
@@ -105,13 +105,13 @@ module.exports = {
                         .catch((err) => {
                             res.status(500).json({ errors: [err.data] });
                         });
-                    }   
+                    }
             })
             .catch((err) => {
                 return res.status(err.status).json({ error: err.data });
             });
     },
-    
+
 
     insertNewApplication: (req, res) => {
         if (req?.body && Object.keys(req.body).length !== 0) {
@@ -318,10 +318,10 @@ module.exports = {
 
             applicationsService.uploadFileServer(req.user.id, req.file.filename, date)
             .then(function (response) {
-                res.status(201).json(response);
+                res.status(201).json({ upload_id: response.upload_id });
             })
             .catch(function (err) {
-                res.status(500).json({err});
+                res.status(500).json({ error: err });
             });
         }
         });
