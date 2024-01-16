@@ -58,7 +58,7 @@ function NavbarContainer() {
                                         value={selectedDate}
                                         onChange={(ev) => setSelectedDate(ev.target.value)}
                                     />
-                                    {!dayjs(selectedDate).isSame(currentDate) &&
+                                    {dayjs(selectedDate).isAfter(currentDate) &&
                                     <Button variant='success' disabled={dayjs(selectedDate).isSame(currentDate)} id="apply-new-date" onClick={() => updateCurrentDate(selectedDate)} >
                                         <FaCheck />
                                     </Button>}
