@@ -18,7 +18,7 @@ class RetrySendTeacherNotificationEmail extends CronoJob {
      * @returns {string} The schedule for the job to run.
      */
     get schedule() {
-        return '*/5 * * * *';
+        return '*/1 * * * *';
     }
 
     /**
