@@ -17,6 +17,8 @@ function ApplicationList() {
     }
 
     useEffect(() => {
+      setLoading(true);
+
         getAllApplicationsByTeacher()
             .then(applicationsList => {
                 setApplications(applicationsList);

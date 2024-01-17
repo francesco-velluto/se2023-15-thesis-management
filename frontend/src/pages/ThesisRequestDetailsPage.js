@@ -133,11 +133,12 @@ function ThesisRequestDetailsPage() {
                     </div>
 
                     {loading ?
-                        <Spinner
-                            animation="border"
-                            role="status"
-                            style={{ margin: "auto" }}
-                        />
+                      <Row>
+                          <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+                              <Spinner animation="border" className="loadingSpinner" />
+                              <span className="mt-3 loadingText">Loading...</span>
+                          </Col>
+                      </Row>
                         :
                         <Form>
                             <Row>
