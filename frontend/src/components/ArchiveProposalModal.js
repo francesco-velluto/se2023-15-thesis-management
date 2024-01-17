@@ -97,7 +97,7 @@ function ArchiveProposalModal({
           <Container fluid className="text-center mb-4">
             <h3>{proposal_title}</h3>
           </Container>
-          {acceptedApplication.length === 0 ? (
+          
             <>
               <p>Are you sure you want to archive this proposal?</p>
               <p>
@@ -135,25 +135,13 @@ function ArchiveProposalModal({
               {applications && pendingApplications.length > 0 && (
                 <Button
                   className="mt-5"
-                  variant="outline-info"
+                  variant="outline-primary"
                   onClick={() => navigate("/applications")}
                 >
                   Browse applications
                 </Button>
               )}
             </>
-          ) : (
-            <p>
-              You cannot archive this proposal because an application to it has
-              been already <strong>accepted</strong> by student{" "}
-              {students[0].name} {students[0].surname} on date{" "}
-              <p>
-                {new Date(
-                  acceptedApplication[0].application_date
-                ).toDateString()}
-              </p>
-            </p>
-          )}
         </Modal.Body>
       )}
       <Modal.Footer>

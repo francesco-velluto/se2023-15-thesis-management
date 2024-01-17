@@ -637,7 +637,7 @@ function ProposalDetailsPage({ mode }) {
                 </Col>
               </Row>
               <Row>
-                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "pe-1" : "mb-1 mb-md-0 me-0"}>
+                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "" : "mb-1 mb-md-0 me-0"}>
                   <Card className="h-100">
                     {mode === "read" ? (
                       <Card.Body>
@@ -674,7 +674,7 @@ function ProposalDetailsPage({ mode }) {
                     )}
                   </Card>
                 </Col>
-                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "ps-1" : "me-0"}>
+                <Col xs={mode === "read" ? "6" : "12"} md={"6"} className={mode === "read" ? "" : "me-0"}>
                   <Card className="h-100">
                     <Card.Body>
                       <Card.Title>
