@@ -3,7 +3,6 @@ import TitleBar from "../components/TitleBar";
 import { Alert, Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
 import React, { useContext, useEffect, useState } from "react";
 import { fetchFileInfo } from '../api/ApplicationsAPI';
-import { useNavigate } from "react-router-dom";
 
 import ApplicationsAPI from "../api/ApplicationsAPI";
 
@@ -22,8 +21,6 @@ function StudentApplicationsPage() {
     const [isUploaded, setIsUploaded] = useState(false);
 
     const { loggedUser } = useContext(LoggedUserContext);
-    const navigate = useNavigate();
-
 
     useEffect(() => {
         try {

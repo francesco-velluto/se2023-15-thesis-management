@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Form, Button, Col, Row, Alert, Container, Spinner } from 'react-bootstrap';
+import { Form, Button, Col, Row, Alert, Container } from 'react-bootstrap';
 import { getAllProposals } from "../api/ProposalsAPI";
 import { Typeahead } from 'react-bootstrap-typeahead';
 import { VirtualClockContext } from "../context/VirtualClockContext";
@@ -383,7 +383,7 @@ FilterElement.propTypes = {
     }),
     setSearchData: PropTypes.func,
   };
-    
+
 
 
 export default ProposalsSearchArea;

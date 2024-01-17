@@ -27,7 +27,7 @@ function ArchiveProposalModal({
       setLoading(true);
       const applicationsDB = await getAllApplicationsByProposalId(proposal_id);
       setApplications(applicationsDB || []);
-  
+
       if (applicationsDB && applicationsDB.length > 0) {
         for (const application of applicationsDB) {
           const studentInfo = await getStudentById(application.student_id);
@@ -35,17 +35,17 @@ function ArchiveProposalModal({
             if (!students.some((student) => student.id === application.student_id)) {
               students.push(studentInfo);
             }
-  
+
             return students;
           });
         }
       }
-  
+
       setLoading(false);
     }
     getApplications();
   }, []);
-  
+
 
   async function handleArchiveProposal() {
     try {
@@ -97,7 +97,7 @@ function ArchiveProposalModal({
           <Container fluid className="text-center mb-4">
             <h3>{proposal_title}</h3>
           </Container>
-          
+
             <>
               <p>Are you sure you want to archive this proposal?</p>
               <p>
@@ -127,7 +127,7 @@ function ArchiveProposalModal({
                         </li>
                       );
                     }
-                    return null; 
+                    return null;
                   })}
                 </ul>
               </div>

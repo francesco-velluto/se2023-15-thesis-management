@@ -156,7 +156,7 @@ function ThesisRequestDetailsPage() {
                             <Row>
                                 <Col>
                                     <Card className="h-100">
-                                        {disabledFields == true ?
+                                        {disabledFields === true ?
                                             <Card.Body>
                                                 <Card.Title>Title:</Card.Title>
                                                 <Card.Text>{title}</Card.Text>
@@ -190,7 +190,7 @@ function ThesisRequestDetailsPage() {
                             <Row>
                                 <Col>
                                     <Card className="h-100">
-                                        {disabledFields == true ?
+                                        {disabledFields === true ?
                                             <Card.Body>
                                                 <Card.Title>Description:</Card.Title>
                                                 <Card.Text>{description}</Card.Text>
@@ -225,7 +225,7 @@ function ThesisRequestDetailsPage() {
                             <Row>
                                 <Col xs={12} md={6} className="mb-1 mb-md-0">
                                     <Card className="h-100">
-                                        {disabledFields == true ?
+                                        {disabledFields === true ?
                                             <Card.Body>
                                                 <Card.Title>Supervisor:</Card.Title>
                                                 <Card.Text>{supervisor}</Card.Text>
