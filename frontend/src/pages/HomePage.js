@@ -146,52 +146,39 @@ function HomePage() {
                       <Card className="my-3">
                         <Card.Body>
                           <Row className="align-items-center">
-                            <Col>
-                              <Row>
-                                <h5>
-                                  <b>{applications[0].title}</b>
-                                </h5>
-                              </Row>
-                              <Row className="my-1">
-                                <p className="my-0">Applied on</p>
-                                <p>
-                                  {formattedDate(
-                                    applications[0].application_date
-                                  )}
-                                </p>
-                              </Row>
-                              <Row className="d-flex min-width-fit-content ms-1">
-                                <Badge
-                                  pill
-                                  bg={
-                                    applications[0].status === "Pending"
-                                      ? "warning"
-                                      : applications[0].status === "Accepted"
-                                      ? "success"
-                                      : "danger"
-                                  }
-                                >
-                                  {applications[0].status}
-                                </Badge>
-                              </Row>
-                            </Col>
-                            <Col
-                              xs={12}
-                              sm={6}
-                              className="text-end mt-2 mt-sm-3 mt-sm-0 d-flex justify-content-center align-items-start d-sm-block"
-                            >
-                              <Button
-                                variant="outline-secondary"
-                                className="text-end show-details-btn"
-                                onClick={() =>
-                                  navigate(
-                                    `/proposals/${applications[0].proposal_id}`
-                                  )
+                            <Row>
+                              <h5>
+                                <b>{applications[0].title}</b>
+                              </h5>
+                            </Row>
+                            <Row>
+                              <p>
+                                {applications[0].supervisor_name}{" "}
+                                {applications[0].supervisor_surname}{" "}
+                              </p>
+                            </Row>
+                            <Row className="mb-1">
+                              <p>
+                                You applied on{" "}
+                                {formattedDate(
+                                  applications[0].application_date
+                                )}
+                              </p>
+                            </Row>
+                            <Row className="d-flex min-width-fit-content ms-1">
+                              <Badge
+                                pill
+                                bg={
+                                  applications[0].status === "Pending"
+                                    ? "warning"
+                                    : applications[0].status === "Accepted"
+                                    ? "success"
+                                    : "danger"
                                 }
                               >
-                                Show proposal details
-                              </Button>
-                            </Col>
+                                {applications[0].status}
+                              </Badge>
+                            </Row>
                           </Row>
                         </Card.Body>
                       </Card>
