@@ -327,38 +327,6 @@ function StudentInfo(props) {
                             </Modal.Footer>
                         </Modal>
 
-                        <Accordion defaultActiveKey={null}>
-                            <Accordion.Item id="career-accordion">
-                                <Accordion.Header id="career-title">Student's Career</Accordion.Header>
-                                <Accordion.Body>
-                                    {career &&
-                                        <Table hover id="career-table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Course</th>
-                                                    <th>CFU</th>
-                                                    <th>Grade</th>
-                                                    <th>Date</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {career.map((exam) =>
-                                                    <tr key={exam.cod_course}>
-                                                        <td>{exam.title_course}</td>
-                                                        <td>{exam.cfu}</td>
-                                                        <td>{exam.grade}</td>
-                                                        <td>{format(parseISO(exam.date), "yyyy-MM-dd")}</td>
-                                                    </tr>)}
-                                                {career.length === 0 &&
-                                                    <h2>No exams passed yet.</h2>
-                                                }
-                                            </tbody>
-                                        </Table>}
-                                    {!career && <h2>Error fetching student's career</h2>}
-                                </Accordion.Body>
-                            </Accordion.Item>
-                        </Accordion>
-
                         {isUploaded && fileInfo && (
                             <div className="file-div">
                                 <Row className="d-flex align-items-center">
