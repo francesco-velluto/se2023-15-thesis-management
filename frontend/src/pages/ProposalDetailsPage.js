@@ -1332,7 +1332,7 @@ function ProposalDetailsPage({ mode }) {
                         <Col className="d-flex align-items-center text-danger">
                           <AiOutlineFilePdf size={50} />
                           <i>
-                            An error occured, your file has not been sent with
+                            An error occurred, your file has not been sent with
                             your application
                           </i>
                         </Col>
