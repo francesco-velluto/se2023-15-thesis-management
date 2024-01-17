@@ -158,7 +158,7 @@ function ProposalDetailsPage({ mode }) {
       return false;
     }
 
-    if (!expDate) {
+    if (!expDate || dayjs(expDate).isBefore(currentDate)) {
       setErrorMessage("Please select a valid expiration date.");
       scrollToTarget();
       return false;
@@ -925,7 +925,7 @@ function ProposalDetailsPage({ mode }) {
                                 }}
                               />
                             </Col>
-              
+
                               <Button
                                 id="add-keyword-btn"
                                 onClick={() => {
@@ -960,7 +960,7 @@ function ProposalDetailsPage({ mode }) {
                               >
                                 Add
                               </Button>
-                            
+
                           </div>
                         </Form.Group>
                         <ListGroup id="proposal-keywords-list" className="mt-2">
