@@ -4,8 +4,10 @@ import { Button, Container, Modal } from "react-bootstrap";
 import { LoggedUserContext } from "../context/AuthenticationContext";
 import PropTypes from "prop-types";
 import UploadResume from './UploadFile';
+import { propTypes } from 'react-bootstrap/esm/Image';
 
 const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, setFileSent, setIsFile }) => {
+  const [isActive, setIsActive] = useState(false);
   const [applied, setApplied] = useState(false);
   const [disabled, setDisabled] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +26,10 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
 
 
   const { loggedUser } = useContext(LoggedUserContext);
+
+  const handleIsActiveChange = (value) => {
+    setIsActive(value);
+  };
 
   const getApplicationList = async () => {
     try {
@@ -92,13 +98,14 @@ const ApplicationButton = ({ proposalID, setErrMsg, applicationStatusCallback, s
             <Modal.Title>Add a PDF file (optional)</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <UploadResume setCallbackUploadId={setUploadId} />
+            <UploadResume setCallbackUploadId={setUploadId} onIsActiveChange={handleIsActiveChange} />
           </Modal.Body>
           <Modal.Footer>
             <Button
               id="confirm-application"
               variant="success"
               onClick={handleButtonClick}
+              disabled={isActive && uploadId===null}
             >
               Confirm
             </Button>
@@ -114,6 +121,7 @@ ApplicationButton.propTypes = {
   applicationStatusCallback: PropTypes.func, 
   setFileSent: PropTypes.func, 
   setIsFile: PropTypes.func,   
+  isActive: propTypes.bool,
 
 }
 

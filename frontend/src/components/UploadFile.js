@@ -8,7 +8,7 @@ import { NativeTypes } from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
 import Swal from 'sweetalert2';
 
-const UploadResume = ({ setCallbackUploadId }) => {
+const UploadResume = ({ setCallbackUploadId, onIsActiveChange  }) => {
   const { loggedUser } = useContext(LoggedUserContext);
   const [file, setFile] = useState(null);
   const [isActive, setIsActive] = useState(false);
@@ -31,11 +31,13 @@ const UploadResume = ({ setCallbackUploadId }) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
     setIsActive(true);
+    onIsActiveChange(true);
   };
 
   const handleFileDrop = (files) => {
     setFile(files[0]);
     setIsActive(true);
+    onIsActiveChange(true);
   };
 
   const handleFilenameChange = (e) => {
@@ -84,6 +86,7 @@ const UploadResume = ({ setCallbackUploadId }) => {
     setFilename("");
     setIsActive(false);
     setIsFileName(false);
+    onIsActiveChange(false);
   };
 
   const formatDate = (dateString) => {
@@ -170,6 +173,7 @@ const UploadResume = ({ setCallbackUploadId }) => {
 
 UploadResume.propTypes = {
   setCallbackUploadId: PropTypes.func,
+  onIsActiveChange: PropTypes.func
 };
 
 export default UploadResume;
