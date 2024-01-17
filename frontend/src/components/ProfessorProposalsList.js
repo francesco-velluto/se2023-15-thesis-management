@@ -48,7 +48,7 @@ function ProfessorProposalsList() {
           setErrorMessage(err.message);
           setIsLoading(false);
         });
-      
+
     }
 
     loadProposals();
@@ -93,7 +93,7 @@ function ProfessorProposalsList() {
           </Row>
         )}
       </div>
-      
+
       {!errorMessage && proposals.length > 0 && (
         <Row className="mt-1 mb-4 mx-2 p-2">
           <Col xs={12} md={3} className="text-center text-md-start">
@@ -297,7 +297,7 @@ function ProposalRow({
           <Dropdown.Menu>
             <Dropdown.Item
               id="copy-proposal-id"
-              
+
               onClick={() => {
                 navigate("/proposals/" + proposal.proposal_id + "/copy");
               }}
@@ -306,7 +306,7 @@ function ProposalRow({
             </Dropdown.Item>
             <Dropdown.Item
               id="update-proposal-id"
-              
+
               onClick={() => {
                 navigate("/proposals/" + proposal.proposal_id + "/update");
               }}
@@ -316,7 +316,7 @@ function ProposalRow({
             </Dropdown.Item>
             <Dropdown.Item
               id="archive-proposal-id"
-              
+
               onClick={() => {
                 setShowArchiveModal(true);
               }}
@@ -326,7 +326,7 @@ function ProposalRow({
           </Dropdown.Menu>
         </Dropdown>
       </Col>
-      
+
       <Col
         xs={12}
         md={1}
@@ -368,15 +368,14 @@ function ProposalRow({
 }
 
 ProposalRow.propTypes = {
-  proposal: PropTypes.arrayOf(
+  proposal:
     PropTypes.shape({
-      proposal_id: PropTypes.number,
+      proposal_id: PropTypes.string,
       title: PropTypes.string,
       level: PropTypes.string,
       type: PropTypes.string,
       expiration_date: PropTypes.string,
-    })
-  ).isRequired,
+    }).isRequired,
   setSuccessMessage: PropTypes.func,
   setErrorMessage: PropTypes.func,
   setArchived: PropTypes.func,
