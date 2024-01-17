@@ -220,10 +220,8 @@ function ProposalsSearchArea(props) {
         (isLoading ?
             (<Container>
                 <Row className="justify-content-md-center">
-                    <Col md="auto">
-                        <Spinner animation="border">
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>
+                    <Col md="auto text-center justify-content-center">
+                        <span>Initializing search engine, please wait...</span>
                     </Col>
                 </Row>
             </Container>)

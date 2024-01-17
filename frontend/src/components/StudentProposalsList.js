@@ -10,14 +10,14 @@ import PropTypes from "prop-types";
 function StudentProposalsList(props) {
     const [proposals, setProposals] = useState([]);
     const [filteredProposals, setFilteredProposals] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
 
     const { currentDate } = useContext(VirtualClockContext);  //! VIRTUAL CLOCK: remove this line in production
 
     useEffect(() => {
         async function loadProposals() {
-            setIsLoading(true);
+            await setIsLoading(true);
             getAllProposals().then(async res => {
                 if (!res.ok) {
                     setErrorMessage(res.statusText);
@@ -25,8 +25,8 @@ function StudentProposalsList(props) {
                     return
                 }
                 let db_proposals = (await res.json()).proposals;
-                setProposals(db_proposals);
-                setFilteredProposals(db_proposals);
+                await setProposals(db_proposals);
+                await setFilteredProposals(db_proposals);
                 setIsLoading(false);
             }).catch((err) => {
                 setErrorMessage(err.message);
