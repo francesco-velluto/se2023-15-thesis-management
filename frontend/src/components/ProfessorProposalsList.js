@@ -1,5 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
-import { Alert, Button, Col, Container, Dropdown, Row, Spinner } from "react-bootstrap";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {Alert, Button, Card, Col, Container, Dropdown, Row, Spinner} from "react-bootstrap";
 import { getAllProfessorProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, parseISO } from "date-fns";
@@ -167,7 +167,11 @@ function ProfessorProposalsList() {
       {!isLoading && !errorMessage && proposals.length === 0 && (
         <Row>
           <Col xs={12} className="d-flex flex-row justify-content-center">
-            You didn't create any proposal yet
+            <Card className='my-3 fs-5 w-75 text-center' >
+              <Card.Body>
+                You didn't create any proposal yet, or the created ones are not active anymore!
+              </Card.Body>
+            </Card>
           </Col>
           <Col xs={12} className="d-flex flex-row justify-content-center my-4">
             <Button
