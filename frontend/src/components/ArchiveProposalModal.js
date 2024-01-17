@@ -135,7 +135,7 @@ function ArchiveProposalModal({
               {applications && pendingApplications.length > 0 && (
                 <Button
                   className="mt-5"
-                  variant="outline-warning"
+                  variant="outline-info"
                   onClick={() => navigate("/applications")}
                 >
                   Browse applications
