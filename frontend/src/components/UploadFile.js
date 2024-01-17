@@ -6,6 +6,7 @@ import { useDrop } from 'react-dnd';
 import { AiOutlineFilePdf, AiOutlineSearch, AiOutlineDelete } from 'react-icons/ai';
 import { NativeTypes } from 'react-dnd-html5-backend';
 import PropTypes from 'prop-types';
+import Swal from 'sweetalert2';
 
 const UploadResume = ({ setCallbackUploadId }) => {
   const { loggedUser } = useContext(LoggedUserContext);
@@ -63,8 +64,6 @@ const UploadResume = ({ setCallbackUploadId }) => {
         const upload_id = response.upload_id;
         setUploadId(upload_id);
         setCallbackUploadId(upload_id);
-
-        alert('File uploaded successfully');
         setIsUploaded(true);
 
         const info = await fetchFileInfo({ upload_id: upload_id });
@@ -72,7 +71,11 @@ const UploadResume = ({ setCallbackUploadId }) => {
       }
     } catch (error) {
       console.error('Error uploading file:', error);
-      alert('An error occurred: ', error);
+      Swal.fire({
+        icon: "error",
+        title: "An error occured",
+        text: "Something went wrong!",
+      });
     }
   };
 
