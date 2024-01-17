@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react";
-import { Alert, Card, Col, Container, Row } from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import {Alert, Card, Col, Container, Row, Spinner} from "react-bootstrap";
 import { getAllProposals } from "../api/ProposalsAPI";
 import { useNavigate } from "react-router-dom";
 import { format, isSameDay, parseISO, parse } from "date-fns";
@@ -79,11 +79,12 @@ function StudentProposalsList(props) {
         <Container className={"student-proposal-container"}>
             {
                 isLoading &&
-                <Row>
-                    <Col>
-                        <Alert variant="danger">Loading...</Alert>
-                    </Col>
-                </Row>
+                  <Row>
+                      <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+                          <Spinner animation="border" className="loadingSpinner" />
+                          <span className="mt-3 loadingText">Loading...</span>
+                      </Col>
+                  </Row>
             }
             {
                 !errorMessage && filteredProposals.length > 0 &&
@@ -118,16 +119,24 @@ function StudentProposalsList(props) {
                 </Row>
             }
 
-            {!errorMessage && filteredProposals.length > 0 ?
+            {!errorMessage && filteredProposals.length > 0 &&
                 filteredProposals.map((proposal) => (
                     <ProposalRow key={proposal.proposal_id} data={proposal} />
-                )) :
-                <Row>
-                    <Col className="d-flex flex-row justify-content-center fw-bold fs-5">
-                        There are no available thesis proposals!
-                    </Col>
-                </Row>
+                ))
             }
+            {
+              !errorMessage && filteredProposals && filteredProposals.length === 0 && !isLoading &&
+              <Row>
+                  <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+                      <Card className='my-3 fs-5 w-75 text-center' >
+                          <Card.Body>
+                              There are no available thesis proposals!
+                          </Card.Body>
+                      </Card>
+                  </Col>
+              </Row>
+            }
+
             {
                 errorMessage &&
                 <Row>

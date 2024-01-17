@@ -1,7 +1,7 @@
 import NavbarContainer from "../components/Navbar";
 import TitleBar from "../components/TitleBar";
 import { Alert, Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { fetchFileInfo } from '../api/ApplicationsAPI';
 import { useNavigate } from "react-router-dom";
 
@@ -27,6 +27,8 @@ function StudentApplicationsPage() {
 
     useEffect(() => {
         try {
+            setIsLoading(true);
+
             ApplicationsAPI.getAllApplicationsByStudent(loggedUser.id)
             .then(applicationsList => {
                 setApplications(applicationsList);
@@ -63,11 +65,10 @@ function StudentApplicationsPage() {
             <TitleBar/>
             <Container className={"justify-content-center student-applications-container"}>
                 {isLoading ? (
-                    <Row className={"justify-content-center"}>
-                        <Col>
-                            <Spinner animation="border">
-                                <span className="visually-hidden">Loading...</span>
-                            </Spinner>
+                    <Row>
+                        <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+                            <Spinner animation="border" className="loadingSpinner" />
+                            <span className="mt-3 loadingText">Loading...</span>
                         </Col>
                     </Row>
                 ) : (
@@ -141,27 +142,25 @@ function StudentApplicationsPage() {
                         </Button>
                     </Col>
                 </Row>
-            ) : (
-                <Card style={{margin: "2rem"}}>
-                    <Row>
-                        <Col xs={12} className="d-flex flex-row justify-content-center text-center my-4">
-                            <p style={{ fontSize: '1.5rem', color: '#555' }}>
-                                You haven't applied for any thesis yet
-                            </p>
-                        </Col>
-                        <Col xs={12} className="d-flex flex-row justify-content-center my-4">
-                            <Button
-                                onClick={() => {
-                                    navigate("/proposals/");
-                                }}
-                                id="no-application"
-                            >
-                                Go to proposals list
-                            </Button>
-                        </Col>
-                    </Row>
-                </Card>
-
+            ) : !isLoading && (
+              <>
+                  <Row>
+                      <Col className="d-flex flex-column justify-content-center align-items-center mt-5">
+                          <Card className='my-3 fs-5 w-75 text-center' >
+                              <Card.Body>
+                                  You haven't applied for any thesis yet!
+                              </Card.Body>
+                          </Card>
+                      </Col>
+                  </Row>
+                  <Row className={"justify-content-center"}>
+                      <Col lg={2}>
+                          <Button id='no-application' className="my-3" as={Link} to="/proposals/">
+                              Go to proposals list
+                          </Button>
+                      </Col>
+                  </Row>
+              </>
             )}
             </Container>
         </>
