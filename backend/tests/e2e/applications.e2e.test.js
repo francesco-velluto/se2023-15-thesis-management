@@ -317,7 +317,7 @@ describe("End to end tests for Browse applications decisions", () => {
         const proposalTitle = await driver
           .findElement(By.className("proposal-details-title"))
           .getAttribute("value");
-        console.log(proposalTitle);
+
           // simulate click with js
         await driver.executeScript(
           "document.getElementById('apply-button').click()"

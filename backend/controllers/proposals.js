@@ -6,7 +6,6 @@ const applicationsService = require("../service/applications.service");
 const dayjs = require("dayjs");
 const { getTeacherById } = require("../service/teachers.service");
 const { getVirtualDate } = require("../service/virtualclock.service");
-const { sendUpdateApplicationStatusEmail } = require("./email.notifier");
 
 module.exports = {
   /**

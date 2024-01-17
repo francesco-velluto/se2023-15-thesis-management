@@ -135,7 +135,6 @@ module.exports = {
             } else {
                 // okay it's another call to the DB but it will be removed in production so...
                 const { data: application_date } = await getVirtualDate();  //! VIRTUAL_CLOCK: remove this line in production
-                console.log(application_date)
                 const query = "INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES ($1,$2,$3,$4) RETURNING * ;";
                 const res = await db.query(query, [proposal_id, student_id, status, application_date])
                 return res;
@@ -297,18 +296,18 @@ module.exports = {
             console.error('[BACKEND-SERVER] Error in getAllApplicationsByProposalId: ', error);
             throw error;
         }
-    }, 
+    },
 
     getUploadedFile: async (student_id, upload_id) => {
         try {
             const { rows, rowCount }  = await db.query('SELECT * FROM temp_file_uploads WHERE student_id = $1 and upload_id = $2',
             [student_id, upload_id]
-            );  
+            );
             if (rowCount != 0) {
-                return { success: true, data: rows[0] };  
+                return { success: true, data: rows[0] };
             }
             else {
-                return { success: false, data: undefined };  
+                return { success: false, data: undefined };
             }
         }
         catch (error){
@@ -324,14 +323,14 @@ module.exports = {
           [filename, student_id, date_uploaded]
           );
           return { success: true, rows: rows };
-          
+
         } catch (error) {
           console.error(error);
           return { success: false, error: 'Database Error' };
         }
-      
-      }, 
-    
+
+      },
+
 
     AddApplicationFile: async(student_id, application_id, upload_id) => {
         try {
@@ -350,21 +349,21 @@ module.exports = {
             console.error(error);
             return { success: false, error: 'Database Error' };
           }
-    }, 
+    },
 
     getApplicationFile: async (id, application_id) => {
         try {
             const { rows, rowCount }  = await db.query('SELECT f.application_id, f.student_id, f.filename, f.date_uploaded ' +
-                                                        'FROM application_file f JOIN applications a ON f.application_id = a.id ' + 
-                                                        'JOIN proposals p ON a.proposal_id = p.proposal_id ' + 
+                                                        'FROM application_file f JOIN applications a ON f.application_id = a.id ' +
+                                                        'JOIN proposals p ON a.proposal_id = p.proposal_id ' +
                                                         'WHERE (f.student_id = $1 OR p.supervisor_id = $1) AND f.application_id = $2',
             [id, application_id]
-            ); 
+            );
             if (rowCount != 0) {
-                return { success: true, data: rows[0] };  
+                return { success: true, data: rows[0] };
             }
             else {
-                return { success: false, data: undefined };  
+                return { success: false, data: undefined };
             }
         }
         catch (error){

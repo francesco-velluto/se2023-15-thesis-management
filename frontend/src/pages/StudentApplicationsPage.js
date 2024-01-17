@@ -34,7 +34,6 @@ function StudentApplicationsPage() {
                 const fetchFileInformation = async (application) => {
                     try {
                         const res = await fetchFileInfo({ application_id: application.id });
-                        console.log(res.data)
                         if (res.data.length !== 0 ) {
                             setFileInfo(prevState => ({ ...prevState, [application.id]: res }));
                             setIsUploaded(true);
