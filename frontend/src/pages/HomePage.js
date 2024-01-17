@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { LoggedUserContext } from "../context/AuthenticationContext";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Badge, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
@@ -143,9 +143,58 @@ function HomePage() {
                   ) : (
                     <>
                       <h3>Your last application</h3>
-                      <Row>{applications[0].title}</Row>
-                      <p>Applied on {formattedDate(applications[0].application_date)}</p>
-                      <p>{applications[0].status}</p>
+                      <Card className="my-3">
+                        <Card.Body>
+                          <Row className="align-items-center">
+                            <Col>
+                              <Row>
+                                <h5>
+                                  <b>{applications[0].title}</b>
+                                </h5>
+                              </Row>
+                              <Row className="my-1">
+                                <p className="my-0">Applied on</p>
+                                <p>
+                                  {formattedDate(
+                                    applications[0].application_date
+                                  )}
+                                </p>
+                              </Row>
+                              <Row className="d-flex min-width-fit-content ms-1">
+                                <Badge
+                                  pill
+                                  bg={
+                                    applications[0].status === "Pending"
+                                      ? "warning"
+                                      : applications[0].status === "Accepted"
+                                      ? "success"
+                                      : "danger"
+                                  }
+                                >
+                                  {applications[0].status}
+                                </Badge>
+                              </Row>
+                            </Col>
+                            <Col
+                              xs={12}
+                              sm={6}
+                              className="text-end mt-2 mt-sm-3 mt-sm-0 d-flex justify-content-center align-items-start d-sm-block"
+                            >
+                              <Button
+                                variant="outline-secondary"
+                                className="text-end show-details-btn"
+                                onClick={() =>
+                                  navigate(
+                                    `/proposals/${applications[0].proposal_id}`
+                                  )
+                                }
+                              >
+                                Show proposal details
+                              </Button>
+                            </Col>
+                          </Row>
+                        </Card.Body>
+                      </Card>
                       <Button
                         variant="secondary"
                         className="mt-2"
