@@ -318,7 +318,7 @@ module.exports = {
 
             applicationsService.uploadFileServer(req.user.id, req.file.filename, date)
             .then(function (response) {
-                res.status(201).json({ upload_id: response.upload_id });
+                res.status(201).json({ upload_id: response.rows[0].upload_id });
             })
             .catch(function (err) {
                 res.status(500).json({ error: err });
