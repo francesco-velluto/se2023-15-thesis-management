@@ -860,7 +860,7 @@ describe("T6 - uploadFileServer", (done) => {
       },
     }));
 
-    uploadFileServer.mockResolvedValue({upload_id: "1234"});
+    uploadFileServer.mockResolvedValue({rows: [{upload_id: "1234"}]});
 
     await controller.uploadFileServer(mockReq, mockRes);
 

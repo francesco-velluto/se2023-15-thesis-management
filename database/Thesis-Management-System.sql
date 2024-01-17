@@ -381,7 +381,6 @@ CREATE TABLE public.applications (
 );
 
 INSERT INTO public.applications (proposal_id, student_id, status, application_date) VALUES
-  ('P001', 'S001', 'Pending', '2023-11-01'),
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),
@@ -477,7 +476,7 @@ CREATE TABLE public.thesis_request (
 
 INSERT INTO public.thesis_request (request_id, supervisor_id, student_id, title, description, approval_date, status, co_supervisor_id) VALUES
   ('R001', 'T001', 'S001', 'Specific thesis on Agile metodology', ' Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis turpis leo, sodales maximus blandit eget, ullamcorper quis erat. Sed vitae eleifend ligula. Fusce sed nulla fringilla, convallis tortor sed, ultricies nulla. Donec vel tincidunt erat. Nullam lacus lectus, vestibulum accumsan libero sit amet, tincidunt dictum felis. Etiam pulvinar sapien eget neque dapibus, non luctus dui tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla ultrices luctus sem id tempus.', NULL , 'Pending', NULL);
-  
+
 
 
 
@@ -507,10 +506,10 @@ BEGIN
         UPDATE public.proposals SET archived = true WHERE expiration_date <= NEW.prop_value AND deleted = false;
         UPDATE public.applications SET status = 'Canceled'
             FROM public.proposals
-            WHERE public.applications.proposal_id = public.proposals.proposal_id 
+            WHERE public.applications.proposal_id = public.proposals.proposal_id
             AND public.proposals.archived = true
-            AND public.applications.status = 'Pending'; 
-           
+            AND public.applications.status = 'Pending';
+
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -524,7 +523,7 @@ EXECUTE FUNCTION public.aggiorna_proposal();
 --
 -- Name: temp_file_uploads; Type: TABLE; Schema: public; Owner: postgres
 -- Since, the file is upload as the same time a student apply for thesis, the application_id is not created yet
--- So here, you store the file with its id, to link it after to the application_id. 
+-- So here, you store the file with its id, to link it after to the application_id.
 --
 
 CREATE TABLE public.temp_file_uploads (
@@ -552,7 +551,7 @@ ALTER TABLE public.temp_file_uploads OWNER TO postgres;
 
 CREATE TABLE public.application_file (
     id SERIAL PRIMARY KEY,
-    application_id INT NOT NULL, 
+    application_id INT NOT NULL,
     student_id VARCHAR(10) NOT NULL,
     filename VARCHAR(100) NOT NULL,
     date_uploaded DATE
@@ -565,9 +564,8 @@ ALTER TABLE ONLY public.application_file
     ADD CONSTRAINT application_file_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
 
 INSERT INTO public.application_file ( application_id,filename, student_id,  date_uploaded) VALUES
-  ('1', 'Resume_S001.pdf', 'S001', '2023-11-01'),
-  ('5', 'Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
-  ('6', 'Resume_S012.pdf', 'S012', '2023-11-15');
+  ('4', 'Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
+  ('5', 'Resume_S012.pdf', 'S012', '2023-11-15');
 
 ALTER TABLE public.application_file OWNER TO postgres;
 --

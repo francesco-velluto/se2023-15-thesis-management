@@ -17,7 +17,6 @@ function StudentApplicationsPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [applications, setApplications] = useState([]);
-    const [isApplication, setIsApplication] = useState(false);
 
     const [fileInfo, setFileInfo] = useState({});
     const [isUploaded, setIsUploaded] = useState(false);
@@ -40,8 +39,7 @@ function StudentApplicationsPage() {
                         if (res.data.length !== 0 ) {
                             setFileInfo(prevState => ({ ...prevState, [application.id]: res }));
                             setIsUploaded(true);
-                            setIsApplication(true);
-                        }                        
+                        }
                     } catch (err) {
                         console.error("Error fetching uploaded file:", err);
                     }
@@ -51,7 +49,7 @@ function StudentApplicationsPage() {
                     fetchFileInformation(application);
                 });
             })
-        
+
         } catch (err) {
             console.error('[FRONTEND ERROR] Error in get student application list: ' + err[0]);
             setError(err[0]);
@@ -135,7 +133,7 @@ function StudentApplicationsPage() {
                         )
                     )
                 }
-                { isApplication ? (
+                { applications.length > 0 ? (
                 <Row className={"justify-content-center"}>
                     <Col lg={2}>
                         <Button id='back-to-homepage-button' className="w-100 my-3" as={Link} to="/">
@@ -163,7 +161,7 @@ function StudentApplicationsPage() {
                         </Col>
                     </Row>
                 </Card>
-            
+
             )}
             </Container>
         </>

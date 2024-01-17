@@ -25,6 +25,7 @@ import PreviewUploadedFile from "./components/PreviewUploadedFile";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import GenericLoading from "./components/GenericLoading";
+import HomePage from "./pages/HomePage";
 
 
 function App() {
@@ -66,7 +67,7 @@ function Main() {
     return (
         <Routes>
             <Route path='/' element={<PageLayout />} >
-                <Route index path='/' element={loggedUser ? <ProfilePage /> : <SamlRedirect redirectTo={"/"} />} />
+                <Route index path='/' element={loggedUser ? <HomePage /> : <SamlRedirect redirectTo={"/"} />} />
                 <Route path='/profile' element={loggedUser ? <ProfilePage /> : <SamlRedirect redirectTo={"/profile"} />} />
                 <Route path='/applications'>
                     <Route index element={
