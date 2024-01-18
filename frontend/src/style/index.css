@@ -36,6 +36,10 @@ body {
   width: 100%;
 }
 
+.profile-page-content {
+  max-width: 500px;
+  width: 100%;
+}
 
 ::-webkit-scrollbar {
   width: 10px;

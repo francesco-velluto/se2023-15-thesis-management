@@ -14,7 +14,7 @@ function ProfilePage() {
       <NavbarContainer />
       <TitleBar />
       <Container fluid className="home-page">
-        <Row className="home-page-content p-3">
+        <Row className="profile-page-content p-3">
           {loggedUser && (
             <Card bg="light" className="rounded p-4">
               <Row>
