@@ -18,7 +18,7 @@ class RetrySendTeacherNotificationEmail extends CronoJob {
      * @returns {string} The schedule for the job to run.
      */
     get schedule() {
-        return '*/1 * * * *';
+        return '*/5 * * * *';
     }
 
     /**
@@ -39,12 +39,13 @@ class RetrySendTeacherNotificationEmail extends CronoJob {
                 const notificationSubject = notification.subject;
 
                 const notificationContent = notification.content;
+                console.log(notificationContent);
 
                 let notificationHTMLContent = "";
 
                 switch (notification.campaign) {
                     case "New Application":
-                        notificationHTMLContent = applicationEmailTemplate.getEmailBody(notificationContent.student, notificationContent.supervisor, notificationContent.proposal_id, notificationContent.proposal_title, notification.proposal_expiration_date, notificationContent.application_date, notificationContent.application_id);
+                        notificationHTMLContent = applicationEmailTemplate.getEmailBody(notificationContent.student, notificationContent.supervisor, notificationContent.proposal_id, notificationContent.proposal_title, notificationContent.proposal_expiration_date, notificationContent.applicationDate, notificationContent.application_id);
                         break;
                     default:
                         throw new Error("Invalid notification campaign for teacher notification with id " + notificationId + ": " + notification.campaign);
