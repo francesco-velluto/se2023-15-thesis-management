@@ -34,13 +34,13 @@ sections:
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-|   #0   |    16   |   -    |  54h 40m   |   61h 20m    |
+|   #0   |    16   |   -    |  50h 35m   |   51h 15m    |
 |   #1   |    6    |   5    |     8h     |   9h 10m     |
 |   #2   |    8    |   8    |    16h     |   18h 20m    |
 |   #3   |    6    |   3    |     7h     |   6h 05m     |
 |   #4   |    3    |   3    |     4h     |     4h       |
 |   #5   |    7    |   8    |  10h 30m   |   11h 25m    |
-| TOTAL  |    46   |   27   |  50h 35m   |   51h 15m    |
+| TOTAL  |    46   |   27   |  96h 05m   |   100h 15m   |
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
