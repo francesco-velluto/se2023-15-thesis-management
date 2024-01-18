@@ -568,7 +568,6 @@ function ProposalDetailsPage({ mode }) {
                             whiteSpace: "pre-line",
                           }}
                           onKeyDown={() => {}}
-                          role="button"
                           tabIndex={0}
                         >
                           <span>
