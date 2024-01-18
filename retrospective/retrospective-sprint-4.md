@@ -48,7 +48,7 @@ sections:
   - Standard Deviation Actual: 2h 17m
 
 - **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
-  - 0.05
+  - 0.04
 
 ## QUALITY MEASURES
 
