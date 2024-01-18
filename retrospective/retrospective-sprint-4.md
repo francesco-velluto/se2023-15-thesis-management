@@ -78,30 +78,26 @@ sections:
 ## ASSESSMENT
 
 - What caused your errors in estimation (if any)?
-    - The estimation of all the new stories as requested and subsequently a change in the request led us to spend more time on that activity, even though it was no longer required later on.
-    - We have some delays in the implementation of some tasks, for example tasks related to the e2e test or the front-end graphic, due to random or unexpected errors.
+    - We found some estimation errors due to end to end tests because we had to reimplement some of them after changes in the front-end side.
     
 - What lessons did you learn (both positive and negative) in this sprint?
-    - good 😌 Preparing a speech in advance and conducting a rehearsal the day before the demo helped us arrive more prepared for the presentation.
-    - good 😌 Designing, thinking, and implementing with a focus on maintaining consistently low technical debt has allowed us to save a significant amount of time in bug fixing, implementing new features, project management in general, etc...
-    - good 😌 We have improved communication by discussing a list of things to do before meetings, arriving more prepared and allowing us not to waste too much time. For example, we used Telegram.
-    - good 😌 We continued assigning chunks of tasks of the same user story to the same person and this fact avoid dependencies between team members.
-    - bad  😕 We should inquire more about certain details, perhaps by actively following the series of questions posed to the Product Owner in the Telegram chat or staying continuously updated by reading the published FAQ. This, for instance, would have allowed us to avoid reworking the implementation of the Virtual Clock.
-    - bad  😕 SonarCloud, although an excellent tool, keeping up with all the reported bugs and code smells has slightly increased the development and release time of a feature, leading to an accumulation of delays in case of dependencies among team members.
+    - good 😌 We discovered that Telegram surveys are a very useful tool to quickly and easily decide on the implementation of a simple feature.    
+    - good 😌 Planning some time for general bug fixing and/or UX improvements is a good idea, as it allows us to improve the quality of the product and to avoid accumulating technical debt, especially after the implementation of new user stories.
+    - bad  😕 We should have waited for the very end of implementation to start writing the tests, as we had to rewrite some of them after changes in the front-end side.
+    - bad  😕 We should have performed code review before testing because it had revealed some bugs that are a problem for who was implementing tests.
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
-    - We managed to prepare a dataset before the presentation so that we could showcase all the new implemented features and existing functionalities to their best advantage.
-    - Furthermore, we also managed to prepare a PowerPoint presentation showcasing the new features implemented in this sprint, aiming for an even better and smoother presentation during the demo.
-    - In the implementation of tests (especially end-to-end), we conducted black-box testing, which allowed us to perform more tests and find more bugs.
-    
+    - We managed to maintain a high quality of the product, with a low number of bugs and code smells, with an increment of the number of story points committed.
+    - We also managed to consult the FAQ document more often in order not to loose some specifications about the user stories we commited and not to waste time in the correction of features.
+
 
 - Which ones you were not able to achieve? Why?
     - None.
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
-    - Improve the quality of the product, maintaining high coverage and low bugs and code smells, without decreasing the number of story points committed. We can do it continuing working as always, considering the technical debt and SonarCloud.
-    - Consult the FAQ document more often in order not to loose some specifications about the user stories we commited and not to waste time in the correction of features. 
+    - We will try to plan a  shared task to perform a functional review of the entire application, in order to find any bugs or UX improvements that we may have missed.
+     
     
 
 - One thing you are proud of as a Team!!
-    - We promote teamwork and mutual support, ensuring everyone succeeds together. 💜
+    - Even if we had small relations and communication problems we managed to overcome them without loosing the focus on the quality of the team work. 💜
