@@ -104,7 +104,7 @@ function ArchiveProposalModal({
                 Pay attention, this will cancel all the pending applications on
                 it...
               </p>
-              <p>
+              <p className={pendingApplications.length > 0 ? "text-danger" : ""}>
                 Actually there {pendingApplications.length !== 1 ? "are" : "is"}{" "}
                 <span style={{ fontWeight: "bold" }}>
                   {pendingApplications.length}
