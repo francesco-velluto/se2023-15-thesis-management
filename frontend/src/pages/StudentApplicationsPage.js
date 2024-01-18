@@ -149,12 +149,12 @@ function StudentApplicationsPage() {
                           </Card>
                       </Col>
                   </Row>
-                  <Row className={"justify-content-center"}>
-                      <Col lg={2}>
-                          <Button id='no-application' className="my-3" as={Link} to="/proposals/">
-                              Go to proposals list
-                          </Button>
-                      </Col>
+                  <Row>
+                      <Col className="d-flex flex-column justify-content-center align-items-center">
+                        <Button id='no-application' className="my-3" as={Link} to="/proposals/">
+                            Go to proposals list
+                        </Button>
+                        </Col>
                   </Row>
               </>
             )}
