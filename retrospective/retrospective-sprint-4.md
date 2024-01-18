@@ -68,14 +68,14 @@ sections:
 - **Technical Debt management:**
   - **Total hours estimated:** 3h (code smells + coverage + bugs + security hotspots issues)
   - **Total hours spent:** 2h 30m
-  - **Hours estimated for remediation by SonarQube:**  (all code smells)
-  - **Hours estimated for remediation by SonarQube only for the selected and planned issues:** 
-  - **Hours spent on remediation:** 
-  - **debt ratio (as reported by SonarQube under "Measures-Maintainability"):** was , now %
+  - **Hours estimated for remediation by SonarQube:** 11h (all code smells)
+  - **Hours estimated for remediation by SonarQube only for the selected and planned issues:** 5h 56m
+  - **Hours spent on remediation:** 2h 30m
+  - **debt ratio (as reported by SonarQube under "Measures-Maintainability"):** was 0.2%, now 0.1%
   - **rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability ):**
-    - Reliability: was , now 
-    - Security: was , now 
-    - Maintainability: was , now 
+    - Reliability: was A, now A
+    - Security: was A, now A
+    - Maintainability: was A, now A
 
 ## ASSESSMENT
 
