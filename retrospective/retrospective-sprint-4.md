@@ -42,10 +42,10 @@ sections:
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
-  - Average Estimate: 2h 35m
-  - Average Actual: 2h 42m
-  - Standard Deviation Estimate: 2h 39m
-  - Standard Deviation Actual: 2h 45m
+  - Average Estimate: 2h 01m
+  - Average Actual: 2h 06m
+  - Standard Deviation Estimate: 2h 10m
+  - Standard Deviation Actual: 2h 17m
 
 - **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
   - 0.05
