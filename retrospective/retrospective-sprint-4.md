@@ -13,65 +13,67 @@ sections:
 ### Macro statistics
 
 - **Number of stories committed vs. done:**
-  we committed to do 4 stories and we did 4 stories.
-  The 4 new stories are:
-  - Update Proposal
-  - Copy Proposal
-  - Delete Proposal
-  - Notify Application Decision
+  we committed to do 5 stories and we did 5 stories.
+  The 5 new stories are:
+  - Archive Proposal
+  - Access applicant CV
+  - Notify Application
+  - Proposal expiration
+  - Insert Student Request
 
 - **Total points committed vs. done:**
-  We committed to do 11 points and we did 11 points.
+  We committed to do 27 points and we did 27 points.
 
 - **Nr of hours planned vs. spent (as a team):**
 
-  Planned: 95h 40m
+  Planned: 96h 05m
 
-  Spent: 100h 10m
+  Spent: 100h 15m
 
 ### Detailed statistics
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-|   #0   |   15    |   -    |  54h 40m   | 61h 20m      |
-|   #1   |   6    |   3    |  12h        | 11h          |
-|   #2   |   8    |   3    |   10h 30m   | 11h 50m      |
-|   #3   |   5    |   3    |   10h 30m   | 11h          |
-|   #4   |   3    |   2    |     5h      | 5h           |
-| TOTAL |  37   |   11   |  95h 40m    | 100h 10m     |
+|   #0   |    16   |   -    |  54h 40m   |   61h 20m    |
+|   #1   |    6    |   5    |     8h     |   9h 10m     |
+|   #2   |    8    |   8    |    16h     |   18h 20m    |
+|   #3   |    6    |   3    |     7h     |   6h 05m     |
+|   #4   |    3    |   3    |     4h     |     4h       |
+|   #5   |    7    |   8    |  10h 30m   |   11h 25m    |
+| TOTAL  |    46   |   27   |  50h 35m   |   51h 15m    |
 
 
 - **Hours per task average, standard deviation (estimate and actual):**
-  - Average Estimate: 2h 35m
-  - Average Actual: 2h 42m
-  - Standard Deviation Estimate: 2h 39m
-  - Standard Deviation Actual: 2h 45m
+  - Average Estimate: 2h 01m
+  - Average Actual: 2h 06m
+  - Standard Deviation Estimate: 2h 10m
+  - Standard Deviation Actual: 2h 17m
 
 - **Total task estimation error ratio: (sum of total hours estimation / sum of total hours spent) - 1:**
-  - 0.05
+  - 0.04
 
 ## QUALITY MEASURES
 
 - **Unit Testing:**
-  - **Total hours estimated:** 11h
-  - **Total hours spent:** 11h 45m
-  - **Nr of automated unit test cases:** 164
-  - **Coverage (if available):** 84-2%
+  - **Total hours estimated:** 9h
+  - **Total hours spent:** 8h 15m
+  - **Nr of automated unit test cases:** 237
+  - **Coverage (if available):** 82.3%
 - **E2E testing:**
-  - **Total hours estimated:** 12h
-  - **Total hours spent:** 13h 25m
+  - **Total hours estimated:** 9h
+  - **Total hours spent:** 9h 50m
 - **Code review:**
-  - **Total hours estimated:** 2h
-  - **Total hours spent:** 2h 10m
+  - **Total hours estimated:** 2h 30m
+  - **Total hours spent:** 2h 20m
 - **Technical Debt management:**
-  - **Total hours estimated:** 6h (code smells + coverage + bugs + security hotspots issues)
-  - **Total hours spent:** 6h 20m
-  - **Hours estimated for remediation by SonarQube:** 15h 10m (all code smells)
-  - **Hours estimated for remediation by SonarQube only for the selected and planned issues:** 6h
-  - **Hours spent on remediation:** 2h 10m
-  - **debt ratio (as reported by SonarQube under "Measures-Maintainability"):** was 0.5, now 0.2%
+  - **Total hours estimated:** 3h (code smells + coverage + bugs + security hotspots issues)
+  - **Total hours spent:** 2h 30m
+  - **Hours estimated for remediation by SonarQube:** 11h (all code smells)
+  - **Hours estimated for remediation by SonarQube only for the selected and planned issues:** 5h 56m
+  - **Hours spent on remediation:** 2h 30m
+  - **debt ratio (as reported by SonarQube under "Measures-Maintainability"):** was 0.2%, now 0.1%
   - **rating for each quality characteristic reported in SonarQube under "Measures" (namely reliability, security, maintainability ):**
-    - Reliability: was C, now A
+    - Reliability: was A, now A
     - Security: was A, now A
     - Maintainability: was A, now A
 
