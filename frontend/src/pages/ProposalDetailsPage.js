@@ -35,6 +35,7 @@ import dayjs from "dayjs";
 import "../style/ProposalDetails.css";
 import ArchiveProposalModal from "../components/ArchiveProposalModal";
 import { FaArchive, FaCopy, FaPen, FaTrash } from "react-icons/fa";
+import { ar } from "date-fns/locale";
 
 /**
  * This page supports three modes:
@@ -288,6 +289,20 @@ function ProposalDetailsPage({ mode }) {
   }, [deleted]);
 
   useEffect(() => {
+    if(archived) {
+      const countdownInterval = setInterval(() => {
+        setTimer((prevCount) => prevCount - 1);
+      }, 1000);
+
+      // Reindirizzamento dopo 5 secondi
+      setTimeout(() => {
+        clearInterval(countdownInterval);
+        navigate("/proposals");
+      }, 5000);
+    }
+  }, [archived]);
+
+  useEffect(() => {
     setIsLoading(true);
     setErrorMessage(null); // reset error message when component is re-rendered
     setUnauthorized(false);
@@ -416,7 +431,22 @@ function ProposalDetailsPage({ mode }) {
             </p>
           </Alert>
         </Container>
-      ) : (
+      ) : archived ? (
+        <Container>
+          <Alert variant="info" className="d-flex justify-content-center">
+            <p>
+              <strong>
+                This proposal has been archived and is no longer available!
+              </strong>
+              <br />
+              <br />
+              You will be redirected to the proposals list in {timer} ...
+            </p>
+          </Alert>
+        </Container>
+      )
+      
+      : (
         <Container className="proposal-details-container" fluid>
           <Form>
             <Container>
