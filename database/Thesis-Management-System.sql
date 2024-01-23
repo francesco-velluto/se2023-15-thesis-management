@@ -73,7 +73,7 @@ CREATE TABLE public.degree (
 INSERT INTO public.degree (cod_degree, title_degree) VALUES
   ('BSC001', 'Bachelor of Science'),
   ('BSC002', 'Bachelor of Arts'),
-  ('MSC001', 'Master of Science'),
+  ('MSC001', 'Master of Science in Computer Engineering'),
   ('MSC002', 'Master of Arts'),
   ('PHD001', 'Doctor of Philosophy'),
   ('PHD002', 'Doctor of Education'),
@@ -98,7 +98,8 @@ INSERT INTO public.group (cod_group, title_group) VALUES
   ('G001', 'Group 1'),
   ('G002', 'Group 2'),
   ('G003', 'Group 3'),
-  ('G004', 'Group 4');
+  ('G004', 'Group 4'),
+  ('G005', 'Electronics');
 
 ALTER TABLE public.group OWNER TO postgres;
 
@@ -130,7 +131,7 @@ INSERT INTO public.student (id, surname, name, gender, nationality, email, cod_d
   ('S008', 'Nguyen', 'Linh', 'F', 'Vietnam', 'linh.nguyen@example.com', 'MSC002', 2020),
   ('S009', 'Martinez', 'Carlos', 'M', 'Mexico', 'carlos.martinez@example.com', 'PHD001', 2021),
   ('S010', 'Wang', 'Xiaoyun', 'F', 'China', 'xiaoyun.wang@example.com', 'PHD001', 2020),
-  ('S011', 'Woods', 'Bryan', 'M', 'Italy', 'studentofpolito@gmail.com', 'MSC002', 2021),
+  ('S011', 'Woods', 'Bryan', 'M', 'Italy', 'studentofpolito@gmail.com', 'MSC001', 2021),
   ('S012', 'Moss', 'Elmo', 'M', 'Italy', 's317549@studenti.polito.it', 'MSC001', 2021);
 
 ALTER TABLE public.student OWNER TO postgres;
@@ -164,7 +165,7 @@ INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department)
   ('T008', 'Wang', 'Xiaojie', 'xiaojie.wang@example.com', 'G004', 'D004'),
   ('T009', 'Garcia', 'Carlos', 'carlos.garcia@example.com', 'G004', 'D004'),
   ('T010', 'Chen', 'Yun', 'yun.chen@example.com', 'G003', 'D003'),
-  ('T011', 'Pauli', 'Juan Stefano', 'teacherofpolito@gmail.com', 'G001', 'D001');
+  ('T011', 'Pauli', 'Juan Stefano', 'teacherofpolito@gmail.com', 'G005', 'DET');
 
 ALTER TABLE public.teacher OWNER TO postgres;
 
@@ -353,15 +354,15 @@ Proin convallis turpis a orci vulputate, sed finibus purus fermentum. Donec vest
 
 Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum nec elementum scelerisque, pulvinar ac leo. Donec a feugiat neque. Nunc eleifend fermentum mauris at imperdiet. Praesent eget nisi ut ipsum bibendum ullamcorper at sed dolor. Nunc interdum mollis velit ut auctor. Mauris vestibulum massa leo, ut pulvinar nisi ullamcorper ut.', 'Knowledge in Web app', 'N/A', '2024-10-25', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P027', 'Global Marketing Trends', 'T002', ARRAY['Global Marketing', 'Trends'], 'Theoretical', ARRAY['G002'], 'A thesis on global marketing trends and consumer behavior.', 'Marketing, Consumer Behavior', 'N/A', '2024-10-30', 'Master', ARRAY['MSC002'], false, false),
-  ('P028', 'Impact of AI to computer science', 'T011', ARRAY['AI', 'Computer Science'], 'Theoretical', ARRAY['G001'], 'A thesis on the impact of AI to computer science.', 'AI, Computer Science', 'N/A', '2024-10-15', 'Master', ARRAY['MSC001'], false, false),
-  ('P029', 'Advanced AI Algorithms', 'T011', ARRAY['AI', 'Algorithms'], 'Research', ARRAY['GroupID1'], 'Investigating advanced AI algorithms for improved performance and efficiency.', 'AI, Machine Learning, Python', 'No specific notes.', '2024-12-31', 'Master', ARRAY['MSC001'], false, false),
-  ('P030', 'Human-Computer Interaction Study', 'T011', ARRAY['HCI', 'User Interaction'], 'Experimental', ARRAY['GroupID2'], 'Conducting a study on human-computer interaction to enhance user experience.', 'UI/UX Design, Psychology, Programming', 'Please consider ethical guidelines during research.', '2024-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P031', 'Data Privacy in Cloud Computing', 'T011', ARRAY['Data Privacy', 'Cloud Computing'], 'Research', ARRAY['GroupID1'], 'Investigating data privacy challenges in cloud computing environments.', 'Cybersecurity, Cloud Computing, Data Privacy', 'Ensure compliance with legal regulations.', '2024-11-30', 'Master', ARRAY['MSC002'], false, false),
-  ('P032', 'Social Media Analytics', 'T011', ARRAY['Social Media', 'Analytics'], 'Experimental', ARRAY['GroupID2'], 'Analyzing user behavior on social media platforms using advanced analytics.', 'Data Science, Social Media Marketing', 'Consider the ethical implications of data collection.', '2024-10-15', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P033', 'Blockchain Applications', 'T011', ARRAY['Blockchain', 'Applications'], 'Research', ARRAY['GroupID1'], 'Exploring practical applications of blockchain technology in various industries.', 'Blockchain Development, Cryptography', 'No specific notes.', '2024-12-31', 'Master', ARRAY['MSC003'], false, false),
-  ('P034', 'Game Development Techniques', 'T011', ARRAY['Game Development', 'Techniques'], 'Theoretical', ARRAY['GroupID2'], 'Studying theoretical aspects and modern techniques in game development.', 'Game Design, Programming', 'No specific notes.', '2024-09-30', 'Bachelor', ARRAY['BSC001'], false, false),
-  ('P035', 'Health Informatics', 'T011', ARRAY['Health Informatics', 'Medical Data'], 'Research', ARRAY['GroupID1'], 'Conducting research on the integration of informatics in healthcare for improved patient outcomes.', 'Healthcare IT, Medical Informatics', 'Ensure compliance with healthcare data regulations.', '2024-11-15', 'Master', ARRAY['MSC002'], false, false),
-  ('P036', 'Network management', 'T011', ARRAY['Cybersecurity', 'Network Security'], 'Experimental', ARRAY['G001'], 'A thesis on the management of a real network.', 'Network fundamentals', 'N/A', '2025-01-12', 'Master', ARRAY['MSC002'], false, false);
+  ('P028', 'Impact of AI to computer science', 'T011', ARRAY['AI', 'Computer Science'], 'Theoretical', ARRAY['G005'], 'A thesis on the impact of AI to computer science.', 'AI, Computer Science', 'N/A', '2024-10-15', 'Master', ARRAY['MSC001'], false, false),
+  ('P029', 'Advanced AI Algorithms', 'T011', ARRAY['AI', 'Algorithms'], 'Research', ARRAY['G005'], 'Investigating advanced AI algorithms for improved performance and efficiency.', 'AI, Machine Learning, Python', 'No specific notes.', '2024-12-31', 'Master', ARRAY['MSC001'], false, false),
+  ('P030', 'Human-Computer Interaction Study', 'T011', ARRAY['HCI', 'User Interaction'], 'Experimental', ARRAY['G005'], 'Conducting a study on human-computer interaction to enhance user experience.', 'UI/UX Design, Psychology, Programming', 'Please consider ethical guidelines during research.', '2024-12-31', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P031', 'Data Privacy in Cloud Computing', 'T011', ARRAY['Data Privacy', 'Cloud Computing'], 'Research', ARRAY['G005'], 'Investigating data privacy challenges in cloud computing environments.', 'Cybersecurity, Cloud Computing, Data Privacy', 'Ensure compliance with legal regulations.', '2024-11-30', 'Master', ARRAY['MSC002'], false, false),
+  ('P032', 'Social Media Analytics', 'T011', ARRAY['Social Media', 'Analytics'], 'Experimental', ARRAY['G005'], 'Analyzing user behavior on social media platforms using advanced analytics.', 'Data Science, Social Media Marketing', 'Consider the ethical implications of data collection.', '2024-10-15', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P033', 'Blockchain Applications', 'T011', ARRAY['Blockchain', 'Applications'], 'Research', ARRAY['G005'], 'Exploring practical applications of blockchain technology in various industries.', 'Blockchain Development, Cryptography', 'No specific notes.', '2024-12-31', 'Master', ARRAY['MSC003'], false, false),
+  ('P034', 'Game Development Techniques', 'T011', ARRAY['Game Development', 'Techniques'], 'Theoretical', ARRAY['G005'], 'Studying theoretical aspects and modern techniques in game development.', 'Game Design, Programming', 'No specific notes.', '2024-09-30', 'Bachelor', ARRAY['BSC001'], false, false),
+  ('P035', 'Health Informatics', 'T011', ARRAY['Health Informatics', 'Medical Data'], 'Research', ARRAY['G005'], 'Conducting research on the integration of informatics in healthcare for improved patient outcomes.', 'Healthcare IT, Medical Informatics', 'Ensure compliance with healthcare data regulations.', '2024-11-15', 'Master', ARRAY['MSC002'], false, false),
+  ('P036', 'Network management', 'T011', ARRAY['Cybersecurity', 'Network Security'], 'Experimental', ARRAY['G005'], 'A thesis on the management of a real network.', 'Network fundamentals', 'N/A', '2025-01-12', 'Master', ARRAY['MSC002'], false, false);
 
 ALTER TABLE public.proposals OWNER TO postgres;
 
@@ -384,8 +385,6 @@ INSERT INTO public.applications (proposal_id, student_id, status, application_da
   ('P015', 'S003', 'Canceled', '2023-11-05'),
   ('P018', 'S004', 'Pending', '2023-10-25'),
   ('P021', 'S005', 'Pending', '2023-11-08'),
-  ('P021', 'S011', 'Pending', '2023-10-12'),
-  ('P024', 'S012', 'Pending', '2023-11-15'),
   ('P008', 'S008', 'Accepted', '2023-10-10'),
   ('P009', 'S009', 'Pending', '2023-11-18'),
   ('P010', 'S010', 'Accepted', '2023-10-05'),
@@ -539,7 +538,6 @@ ALTER TABLE ONLY public.temp_file_uploads
 
 INSERT INTO public.temp_file_uploads (filename,student_id, date_uploaded) VALUES
   ('Resume_S001.pdf', 'S001', '2023-11-01'),
-  ('Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
   ('Recommendation_Letter_S012.pdf', 'S012', '2023-11-15');
 
 ALTER TABLE public.temp_file_uploads OWNER TO postgres;
@@ -562,10 +560,6 @@ ALTER TABLE ONLY public.application_file
 
 ALTER TABLE ONLY public.application_file
     ADD CONSTRAINT application_file_fk_student FOREIGN KEY (student_id) REFERENCES public.student(id);
-
-INSERT INTO public.application_file ( application_id,filename, student_id,  date_uploaded) VALUES
-  ('4', 'Cover_Letter_S011.pdf', 'S011', '2023-10-12'),
-  ('5', 'Resume_S012.pdf', 'S012', '2023-11-15');
 
 ALTER TABLE public.application_file OWNER TO postgres;
 --
