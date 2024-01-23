@@ -130,8 +130,8 @@ INSERT INTO public.student (id, surname, name, gender, nationality, email, cod_d
   ('S008', 'Nguyen', 'Linh', 'F', 'Vietnam', 'linh.nguyen@example.com', 'MSC002', 2020),
   ('S009', 'Martinez', 'Carlos', 'M', 'Mexico', 'carlos.martinez@example.com', 'PHD001', 2021),
   ('S010', 'Wang', 'Xiaoyun', 'F', 'China', 'xiaoyun.wang@example.com', 'PHD001', 2020),
-  ('S011', 'John', 'Martinez', 'M', 'Italy', 'studentofpolito@gmail.com', 'MSC002', 2021),
-  ('S012', 'Francesco', 'Velluto', 'M', 'Italy', 's317549@studenti.polito.it', 'MSC001', 2021);
+  ('S011', 'Woods', 'Bryan', 'M', 'Italy', 'studentofpolito@gmail.com', 'MSC002', 2021),
+  ('S012', 'Moss', 'Elmo', 'M', 'Italy', 's317549@studenti.polito.it', 'MSC001', 2021);
 
 ALTER TABLE public.student OWNER TO postgres;
 
@@ -164,7 +164,7 @@ INSERT INTO public.teacher (id, surname, name, email, cod_group, cod_department)
   ('T008', 'Wang', 'Xiaojie', 'xiaojie.wang@example.com', 'G004', 'D004'),
   ('T009', 'Garcia', 'Carlos', 'carlos.garcia@example.com', 'G004', 'D004'),
   ('T010', 'Chen', 'Yun', 'yun.chen@example.com', 'G003', 'D003'),
-  ('T011', 'Mario', 'Rossi', 'teacherofpolito@gmail.com', 'G001', 'D001');
+  ('T011', 'Pauli', 'Juan Stefano', 'teacherofpolito@gmail.com', 'G001', 'D001');
 
 ALTER TABLE public.teacher OWNER TO postgres;
 
