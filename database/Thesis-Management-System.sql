@@ -362,8 +362,9 @@ Aliquam erat volutpat. Ut sit amet fermentum turpis. Integer sem urna, bibendum 
   ('P033', 'Blockchain Applications', 'T011', ARRAY['Blockchain', 'Applications'], 'Research', ARRAY['G005'], 'Exploring practical applications of blockchain technology in various industries.', 'Blockchain Development, Cryptography', 'No specific notes.', '2024-12-31', 'Master', ARRAY['MSC003'], false, false),
   ('P034', 'Game Development Techniques', 'T011', ARRAY['Game Development', 'Techniques'], 'Theoretical', ARRAY['G005'], 'Studying theoretical aspects and modern techniques in game development.', 'Game Design, Programming', 'No specific notes.', '2024-09-30', 'Bachelor', ARRAY['BSC001'], false, false),
   ('P035', 'Health Informatics', 'T011', ARRAY['Health Informatics', 'Medical Data'], 'Research', ARRAY['G005'], 'Conducting research on the integration of informatics in healthcare for improved patient outcomes.', 'Healthcare IT, Medical Informatics', 'Ensure compliance with healthcare data regulations.', '2024-11-15', 'Master', ARRAY['MSC002'], false, false),
-  ('P036', 'Network management', 'T011', ARRAY['Cybersecurity', 'Network Security'], 'Experimental', ARRAY['G005'], 'A thesis on the management of a real network.', 'Network fundamentals', 'N/A', '2025-01-12', 'Master', ARRAY['MSC002'], false, false);
-
+  ('P036', 'Network management', 'T011', ARRAY['Cybersecurity', 'Network Security'], 'Experimental', ARRAY['G005'], 'A thesis on the management of a real network.', 'Network fundamentals', 'N/A', '2025-01-12', 'Master', ARRAY['MSC002'], false, false),
+  ('P037', 'Social network analysis', 'T004', ARRAY['Mobile app', 'Java', 'Internet'], 'Theoretical', ARRAY['G002'], 'Studying the evolution of the social networks in the years', 'Network fundamentals', 'N/A', '2024-09-22', 'Master', ARRAY['MSC001'], false, false),
+  ('P038', 'OS development', 'T007', ARRAY['C', 'OS', 'Algorithms'], 'Experimental', ARRAY['G002'], 'Develop a new OS', 'OS, C', 'N/A', '2024-11-22', 'Master', ARRAY['MSC001'], false, false);
 ALTER TABLE public.proposals OWNER TO postgres;
 
 ALTER TABLE ONLY public.proposals
