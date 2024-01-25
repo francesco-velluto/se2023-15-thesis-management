@@ -445,7 +445,7 @@ function ProposalDetailsPage({ mode }) {
           </Alert>
         </Container>
       )
-      
+
       : (
         <Container className="proposal-details-container" fluid>
           <Form>
@@ -749,8 +749,8 @@ function ProposalDetailsPage({ mode }) {
                           name="proposal-programmes"
                         >
                           {programmes.map((programme, index) => (
-                            <Badge key={index} bg="">
-                              {programme.title_degree}
+                            <Badge className="programme-badge" key={index} bg="">
+                              <span>{programme.title_degree}</span>
                             </Badge>
                           ))}
                         </Card.Text>

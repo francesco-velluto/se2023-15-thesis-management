@@ -298,7 +298,20 @@ body {
   background-color: #003576;
 }
 
+@media (max-width: 767px) {
+  .programme-badge {
+    max-width: 220px; /* Set your desired maximum width */
+    display: inline-block; /* Make sure the width constraint is applied */
+    word-wrap: break-word;
+  }
 
+  .programme-badge span {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
 /*************************/
 /* ARCHIVE MODAL *******/
 /*************************/
